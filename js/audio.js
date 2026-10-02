@@ -220,12 +220,6 @@
       tone({ t, type: 'triangle', f: 880, to: 300, glide: 0.42, attack: 0.01, decay: 0.45, gain: 0.13 });
       noise({ t, filter: 'bandpass', f: 1600, to: 500, glide: 0.4, q: 1.1, attack: 0.04, decay: 0.36, gain: 0.08 });
     },
-    // A curious, rising "hmm?" for a question mark.
-    wonder() {
-      const t = now();
-      tone({ t, type: 'triangle', f: 392, to: 523, glide: 0.12, attack: 0.01, decay: 0.2, gain: 0.12 });
-      tone({ t: t + 0.18, type: 'triangle', f: 523, to: 880, glide: 0.2, attack: 0.01, decay: 0.32, gain: 0.12 });
-    },
     // Comic surprise: a quick rising "zwip!" and a low "bwong".
     shock() {
       const t = now();

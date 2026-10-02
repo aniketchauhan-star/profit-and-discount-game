@@ -200,6 +200,16 @@
     return letters;
   }
 
+  // The plain text of each part of a split bubble text (a part ends at a segment with `end: true`).
+  function partTexts(text) {
+    const parts = [''];
+    (typeof text === 'string' ? [{ t: text }] : text).forEach(seg => {
+      parts[parts.length - 1] += seg.t;
+      if (seg.end) parts.push('');
+    });
+    return parts.map(p => p.replace(/\s*\n\s*/g, ' ').trim());
+  }
+
   /**
    * Comic speech bubble, sized to fit its text.
    *  anchor   [x, y] stage point where one corner (or edge middle) of the balloon sits
@@ -253,6 +263,8 @@
       el: root,
       // The whole line as plain text (for the voice).
       words: (typeof o.text === 'string' ? o.text : o.text.map(seg => seg.t).join('')).replace(/\n/g, ' '),
+      // Each part's plain text, for a bubble that is said one part at a time.
+      parts: partTexts(o.text),
       show() {
         Sound.bloop();
         return settle(root.animate([
@@ -789,7 +801,7 @@
    *  definition   a card with `term` as its header and the definition ({word} highlighted, *term* stressed,
    *               \n = new line) read out word by word.            open() → showBook() (or showNow()) → define()
    *  compare      { top, bottom } price boxes ({ price, label, tone: 'yellow' | 'blue' }) with a down arrow
-   *               and a "?" between them.                          open() → showBook() (or showNow()) → compare()
+   *               between them.                                    open() → showBook() (or showNow()) → compare()
    */
   function pricePanel(parent, { price, term, abbr, definition, compare }) {
     const root = el('div', 'mp', parent);
@@ -820,8 +832,6 @@
       const mid = el('div', 'cmp-mid', side);
       mid.innerHTML = downArrow();
       parts.arrow = mid.firstElementChild;
-      parts.q = el('div', 'cmp-q', mid);
-      el('span', '', parts.q).textContent = '?';
       parts.bottom = side.appendChild(box(compare.bottom));
       panel.setAttribute('aria-label', `${compare.top.label} ${compare.top.price}, ${compare.bottom.label} ${compare.bottom.price}`);
     } else {
@@ -834,7 +844,7 @@
       panel.setAttribute('aria-label', `${price}: ${term} ${abbr || ''}`.trim());
     }
     panel.setAttribute('role', 'group');
-    [panel, bookBox, parts.lens, parts.pill, parts.card, parts.head, parts.top, parts.arrow, parts.q, parts.bottom]
+    [panel, bookBox, parts.lens, parts.pill, parts.card, parts.head, parts.top, parts.arrow, parts.bottom]
       .forEach(n => { if (n) n.style.opacity = '0'; });
 
     const local = node => panelBox(panel, node);
@@ -916,9 +926,9 @@
       define(ctx, opts) {
         return revealDefinition(ctx, parts, opts);
       },
-      // Top price box, then the arrow grows down and the "?" pops, then the bottom price box.
-      // onTop / onAsk / onBottom are called at each step; what they return (e.g. a voice line) is waited for.
-      async compare(ctx, { onTop, onAsk, onBottom } = {}) {
+      // Top price box, then the arrow grows down, then the bottom price box.
+      // onTop / onBottom are called as each box appears; what they return (e.g. a voice line) is waited for.
+      async compare(ctx, { onTop, onBottom } = {}) {
         Sound.bloop();
         reveal(parts.top, [
           { opacity: 0, transform: 'translateY(-40px) scale(.94)' },
@@ -932,13 +942,7 @@
           { clipPath: 'inset(0 0 100% 0)' },
           { clipPath: 'inset(0 0 0 0)' },
         ], { duration: reducedMotion ? 1 : T(900), easing: 'cubic-bezier(.45,0,.3,1)', fill: 'backwards' }));
-        Sound.wonder();
-        reveal(parts.q, [
-          { opacity: 0, transform: 'scale(0) rotate(-40deg)' },
-          { opacity: 1, transform: 'scale(1.3) rotate(10deg)', offset: 0.6 },
-          { opacity: 1, transform: 'none' },
-        ], { duration: T(600), easing: 'cubic-bezier(.2,.8,.3,1)' });
-        await Promise.all([ctx.wait(1000), onAsk && onAsk()]);
+        await ctx.wait(400);
 
         Sound.bloop();
         reveal(parts.bottom, [
@@ -946,7 +950,6 @@
           { opacity: 1, transform: 'none' },
         ], { duration: T(800), easing: SOFT });
         await Promise.all([ctx.wait(900), onBottom && onBottom()]);
-        parts.q.classList.add('is-asking'); // the "?" keeps wondering
       },
     };
   }

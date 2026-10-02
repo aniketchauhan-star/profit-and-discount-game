@@ -18,12 +18,11 @@
   const DIR = 'game assets/voice/';
 
   // How each character sounds: `gender` picks the voice, pitch and rate shape it. A female part played
-  // by a male voice is pitched up (`fallbackPitch`, or pitch + 0.45).
+  // by a male voice is pitched up (pitch + 0.45).
   const CAST = {
     boy: { gender: 'm', pitch: 1.25, rate: 0.92 },  // Aniket
     man: { gender: 'm', pitch: 0.9, rate: 0.88 },   // the shopkeeper
-    bird: { gender: 'f', pitch: 1.3, rate: 0.95 },  // Swifty
-    narrator: { gender: 'f', pitch: 1, rate: 0.88, fallbackPitch: 1.1 }, // reads the summary screens: calm and clear
+    bird: { gender: 'f', pitch: 1.3, rate: 0.95 },  // Swifty, who also explains every teaching screen
   };
 
   const synth = 'speechSynthesis' in window ? window.speechSynthesis : null;
@@ -52,12 +51,16 @@
   // A price in front of one of these nouns is read as "200 rupee", like "a 200 rupee discount".
   const RUPEE_BEFORE_NOUN = /₹\s?(\d[\d,]*\d|\d) (?=(?:discount|reduction|book|note|notes|profit|loss|price|item|article|gift)\b)/gi;
 
-  // "It's ₹800!" → "It's 800 rupees!", without line breaks or highlight marks.
+  // "It's ₹800!" → "It's 800 rupees!", "D = MP − SP" → "D equals M P minus S P",
+  // without line breaks or highlight marks.
   function spoken(text) {
     return text
       .replace(/\b(a|an) ₹\s?(\d[\d,]*\d|\d) (?=[a-z])/gi, '$1 $2 rupee ') // "a ₹200 discount" → "a 200 rupee discount"
       .replace(RUPEE_BEFORE_NOUN, '$1 rupee ') // "this ₹200 reduction" → "this 200 rupee reduction"
       .replace(/₹\s?(\d[\d,]*\d|\d)/g, '$1 rupees') // digits (with any 1,000-style commas), not a trailing comma
+      .replace(/\b(M|S|C)P\b/g, '$1 P') // the short forms are read letter by letter
+      .replace(/\s*=\s*/g, ' equals ')
+      .replace(/\s*−\s*/g, ' minus ')
       .replace(/[{}*]/g, '')
       .replace(/\s*[\n—]\s*/g, ' ')
       .replace(/\s+/g, ' ')
@@ -89,7 +92,7 @@
         u.lang = 'en-IN';
       }
       const femaleVoice = voice && FEMALE.test(voice.name);
-      u.pitch = cast.gender === 'f' && !femaleVoice ? (cast.fallbackPitch ?? Math.min(2, cast.pitch + 0.45)) : cast.pitch;
+      u.pitch = cast.gender === 'f' && !femaleVoice ? Math.min(2, cast.pitch + 0.45) : cast.pitch;
       u.rate = cast.rate;
       let done = false;
       const end = () => {
@@ -107,7 +110,7 @@
     });
   }
 
-  // Speaks one line as `who` ('boy' | 'man' | 'bird' | 'narrator'); resolves when it has finished or was stopped.
+  // Speaks one line as `who` ('boy' | 'man' | 'bird'); resolves when it has finished or was stopped.
   // Silent (resolves at once) while sound effects are off.
   function say(id, text, who = 'boy') {
     stop();

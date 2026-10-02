@@ -65,6 +65,11 @@
   const PRICE_TAG = { x: 942, y: 352, text: '₹800', radius: 72 }; // small ₹800 just above the money
   const STICKER = { look: { x: 1057, y: 867, r: 84 }, shock: { x: 1050, y: 878, r: 98 } }; // ₹1000 on the cover
 
+  // Where Swifty stands (her feet) on the teaching screens 17–20: in the bottom-right corner, with the panel
+  // on her left and her speech bubbles above her head (kept between CORNER.bubbles). She stays there from
+  // one screen to the next.
+  const CORNER = { x: 1690, y: 1010, s: 0.8, bubbles: [1440, 1900] };
+
   // Camera for screens with a card on the right (the question, the reduction): both characters
   // stay in view on the left. QUIZ_DRIFT is where its slow drift goes.
   const QUIZ_CAMERA = 'translateX(-282px) scale(1.04)';
@@ -248,7 +253,7 @@
       lamps: [[1472, 106, 330]],
       dust: [300, 60, 1500, 700],
       shot: 'counter-talk',
-      setup: blurredFromStart, // so only the definition card visibly fades away
+      setup: setupGuide, // starts out blurred, so only the definition card visibly fades away
       play: playFormula,
     },
     {
@@ -258,7 +263,7 @@
       lamps: [[1472, 106, 330]],
       dust: [300, 60, 1500, 700],
       shot: 'counter-talk',
-      setup: blurredFromStart,
+      setup: setupGuide,
       play: playFormulaReveal,
     },
     {
@@ -268,7 +273,7 @@
       lamps: [[1472, 106, 330]],
       dust: [300, 60, 1500, 700],
       shot: 'counter-talk',
-      setup: blurredFromStart,
+      setup: setupGuide,
       play: playApply,
     },
     {
@@ -278,7 +283,7 @@
       lamps: [[1472, 106, 330]],
       dust: [300, 60, 1500, 700],
       shot: 'counter-talk',
-      setup: blurredFromStart,
+      setup: setupGuide,
       play: playSummary,
     },
   ];
@@ -429,6 +434,48 @@
     if (speaker) speaker.idle();
   }
 
+  // Where Swifty's speech bubble goes: centred above her head (kept between `within`), or beside her head
+  // on the right.
+  function overHead(bird, within) {
+    const crest = bird.y - bird.s * (SWIFTY.stand.anchorY - 20);
+    return { anchor: [bird.x, crest - 26], corner: 'bc', within, tip: [bird.x - 14, crest - 2], lean: 26 };
+  }
+
+  function besideHead(bird) {
+    const head = { x: bird.x, y: bird.y - bird.s * SWIFTY.stand.bodyY };
+    return { anchor: [head.x + 92, head.y + 46], corner: 'bl', tip: [head.x + 62, head.y + 22] };
+  }
+
+  // Swifty's lines on a teaching screen. Each one comes in a speech bubble (placed by `place(bird)`) that is
+  // typed while her voice says it, and takes the place of the bubble before. A bubble can be split into
+  // parts (see FX.bubble) that she says one at a time, in step with what happens on screen.
+  function swiftyTalk(ctx, ui, bird, place) {
+    let line = null;
+    const talk = {
+      bird,
+      get line() { return line; },
+      // Puts up the bubble for her next line, once the one before has gone.
+      async show(text) {
+        if (line) {
+          await line.hide();
+          await ctx.wait(120);
+        }
+        line = FX.bubble(ui, Object.assign(place(bird), { text, voice: 'bird', rotate: 1.5 }));
+        await line.show();
+      },
+      // Types part `i` of the bubble while she says it; never quicker than `ms`.
+      part(id, i, ms = 0) {
+        return Promise.all([speakPart(ctx, line, i, id, line.parts[i], 'bird', bird), ctx.wait(ms)]);
+      },
+      // A whole line in a new bubble, typed while she says it; never quicker than `ms`.
+      async say(id, text, ms = 0) {
+        await talk.show(text);
+        await Promise.all([speak(ctx, line, id, 'bird', bird), ctx.wait(ms)]);
+      },
+    };
+    return talk;
+  }
+
   async function playPay(ctx, scene) {
     const L = scene.layer;
     FX.glow(L, 950, 515, 460, 300, { cls: 'glow--money', delay: 0 });
@@ -494,8 +541,9 @@
     await card.enter(ctx);
   }
 
-  // Right answer: the scene blurs, the card comes to the middle and turns over to say why
-  // (Swifty's voice reads it out), and after 3 seconds a Next button moves the story on.
+  // Right answer: the scene blurs, the card comes to the middle and turns over to say why; Swifty flies in,
+  // stands at its lower-right corner and reads it out, pointing at it. After 3 seconds a Next button moves
+  // the story on.
   async function answerRight(ctx, scene, card, button) {
     const [x, y] = stagePoint(button);
     FX.burst(scene.ui, x, y, { count: 18, dist: [110, 230], size: [14, 28] });
@@ -507,7 +555,17 @@
     await card.flip({ title: 'Correct!', text: why });
     const r = stageRect(card.card);
     FX.twinkles(scene.ui, [[r.left + 6, r.top + 40], [r.right - 4, r.top + 150], [r.right - 30, r.bottom - 10], [r.left + 24, r.bottom - 60]]);
+
+    const feet = { x: r.right + 60, y: r.bottom + 80 };
+    const bird = new FX.Bird(scene.ui, SWIFTY, { scale: 0.8 });
+    bird.place(2140, feet.y - 300);
+    await bird.flyTo(ctx, { x: feet.x, y: feet.y, s: 0.8, duration: 1300, lift: 100, ease: 'out' });
+    await bird.land();
+    bird.point();
+    await ctx.wait(400);
+    bird.talk(); // still leaning towards the card
     await Voice.say('correct', 'Correct! ' + why, 'bird');
+    bird.point();
     await ctx.wait(3000, { real: true });
     nextButton(scene);
   }
@@ -589,16 +647,13 @@
 
     // Swifty ties it back to the story, from the space above her head; then the button appears.
     const panel = stageRect(defs.panel);
-    const crest = bird.y - bird.s * (SWIFTY.stand.anchorY - 20);
-    const answer = FX.bubble(ui, {
-      anchor: [bird.x, crest - 26], corner: 'bc', within: [panel.left + 30, panel.right - 24],
-      tip: [bird.x - 14, crest - 2], lean: 26,
+    const answer = FX.bubble(ui, Object.assign(overHead(bird, [panel.left + 30, panel.right - 24]), {
       text: [
         { t: 'Here, ' }, { t: '₹800', em: true }, { t: ' is the\nshopkeeper’s\n' },
         { t: 'Selling Price', cls: 'stress' }, { t: '.' },
       ],
       voice: 'bird', rotate: 1.5,
-    });
+    }));
     await answer.show();
     await speak(ctx, answer, 'here', 'bird', bird);
     answer.emphasize();
@@ -645,7 +700,8 @@
 
   // The Marked Price: the scene blurs, a panel with the book comes to the middle, Swifty flies in,
   // lands on the book and says "₹1000 is the price written on the book." while the sticker zooms
-  // into a lens; then the name "Marked Price (MP)" drops in under it.
+  // into a lens; then the name "Marked Price (MP)" drops in under it, and she says it in a new bubble.
+  // She stays on the book for screens 11 and 12.
   async function playMarked(ctx, scene) {
     const ui = scene.ui;
     el('div', 'fb-dim', ui);
@@ -657,53 +713,50 @@
     await ctx.wait(600);
     mp.showBook();
     await ctx.wait(1000);
-
-    // Swifty flies in and lands on the top edge of the book.
-    const book = stageRect(mp.book);
-    const k = book.height / 540; // the book picture's own units → stage px
-    const perch = { x: book.left + 300 * k, y: book.top + 12 * k };
-    const bird = new FX.Bird(ui, SWIFTY, { scale: 0.5 });
-    bird.place(-220, perch.y - 240);
-    await bird.flyTo(ctx, { x: perch.x, y: perch.y, duration: 1600, lift: 100, ease: 'out' });
-    await bird.land();
+    const bird = await flyToBook(ctx, ui, mp);
     await ctx.wait(300);
 
     // Her line, beside her head, while the sticker glows.
     mp.highlight();
-    const head = { x: bird.x, y: bird.y - bird.s * SWIFTY.stand.bodyY };
-    const line = FX.bubble(ui, {
-      anchor: [head.x + 92, head.y + 46], corner: 'bl', tip: [head.x + 62, head.y + 22],
-      text: [{ t: '₹1000', em: true }, { t: ' is the price\nwritten on the book.' }],
-      voice: 'bird', rotate: 1.5,
-    });
-    await line.show();
-    const saying = speak(ctx, line, 'mp-line', 'bird', bird);
+    const talk = swiftyTalk(ctx, ui, bird, besideHead);
+    await talk.show([{ t: '₹1000', em: true }, { t: ' is the price\nwritten on the book.' }]);
+    const saying = speak(ctx, talk.line, 'mp-line', 'bird', bird);
     saying.catch(() => {}); // if the player leaves mid-line, the wait below reports it
     await ctx.wait(500);
     await mp.zoom(); // the price, big, while she says it
     await saying;
-    line.emphasize();
+    talk.line.emphasize();
     await ctx.wait(900);
 
     // The name for it.
     await mp.name();
     bird.wave();
     await ctx.wait(300);
-    bird.talk();
-    await Voice.say('mp-term', 'Marked Price. M P.', 'bird');
-    bird.idle();
-    await ctx.wait(1300);
+    await talk.say('mp-term', [{ t: 'It is called the\n' }, { t: 'Marked Price (MP)', cls: 'key' }, { t: '.' }]);
+    talk.line.emphasize();
+    ctx.advance(3000); // then the definition
+  }
 
-    // Her part is done: her bubble goes and she flies off; then the definition.
-    line.hide();
-    await bird.takeOff(ctx);
-    bird.flyTo(ctx, { x: 2160, y: -90, duration: 1100, lift: 40, ease: 'in' }).then(() => bird.remove(), () => {});
-    ctx.advance(2000);
+  // Where Swifty stands in the price panels (screens 10–12): on the top edge of the book.
+  function bookPerch(mp) {
+    const book = stageRect(mp.book);
+    const k = book.height / 540; // the book picture's own units → stage px
+    return { x: book.left + 300 * k, y: book.top + 12 * k };
+  }
+
+  // Swifty flies in from the left and lands on the book.
+  async function flyToBook(ctx, ui, mp) {
+    const perch = bookPerch(mp);
+    const bird = new FX.Bird(ui, SWIFTY, { scale: 0.5 });
+    bird.place(-220, perch.y - 240);
+    await bird.flyTo(ctx, { x: perch.x, y: perch.y, duration: 1600, lift: 100, ease: 'out' });
+    await bird.land();
+    return bird;
   }
 
   // Screens 11 and 12 carry on from the price panel before them. Their setup runs before the cross-fade
-  // starts, so the picture behind is already blurred and (coming from the previous panel) the panel and
-  // book are already in place: only the right side visibly changes during the fade.
+  // starts, so the picture behind is already blurred and (coming from the previous panel) the panel, the
+  // book and Swifty on it are already in place: only the right side visibly changes during the fade.
   const PANEL_FLOW = ['mp', 'mpdef', 'compare'];
 
   function setupPricePanel(scene, side) {
@@ -711,48 +764,62 @@
     hush(scene, true, { instant: true });
     scene.mp = FX.pricePanel(scene.ui, Object.assign({ price: '₹1000', term: 'Marked Price', abbr: '(MP)' }, side));
     scene.carried = PANEL_FLOW.indexOf(scene.cameFrom) === PANEL_FLOW.indexOf(scene.id) - 1;
-    if (scene.carried) scene.mp.showNow();
+    scene.bird = null;
+    if (!scene.carried) return;
+    scene.mp.showNow();
+    const perch = bookPerch(scene.mp);
+    scene.bird = new FX.Bird(scene.ui, SWIFTY, { scale: 0.5 });
+    scene.bird.place(perch.x, perch.y);
+    scene.bird.shadowOn(true);
   }
 
-  // Brings the panel in (when the screen was reached some other way, e.g. from the scenes panel),
-  // or just lets the cross-fade finish.
+  // Lets the cross-fade finish; or (when the screen was reached some other way, e.g. from the scenes
+  // panel) brings the panel in and Swifty flies onto the book. Resolves with Swifty.
   async function enterPricePanel(ctx, scene) {
     if (scene.carried) {
       await ctx.wait(700);
-      return;
+      return scene.bird;
     }
     await ctx.wait(300);
     scene.mp.open();
     await ctx.wait(600);
     scene.mp.showBook();
     await ctx.wait(1000);
+    return flyToBook(ctx, scene.ui, scene.mp);
   }
 
-  // The Marked Price definition: a card eases in beside the book and the narrator reads it
-  // while the words appear one by one; "marked" and "printed" light up the sticker on the book.
+  // The Marked Price definition: a card eases in beside the book and Swifty reads it out while the words
+  // appear one by one; "marked" and "printed" light up the sticker on the book.
   const MP_DEFINITION = 'The price {marked} or\n{printed} on an article\nis called its\n*Marked Price.*';
 
   async function playDefine(ctx, scene) {
-    await enterPricePanel(ctx, scene);
+    const bird = await enterPricePanel(ctx, scene);
     await scene.mp.define(ctx, {
-      onRead: () => Voice.say('mp-def', 'Marked Price. ' + MP_DEFINITION, 'narrator'),
+      onRead: () => {
+        bird.talk();
+        return Voice.say('mp-def', 'Marked Price. ' + MP_DEFINITION, 'bird').then(() => bird.idle());
+      },
       onMarked: () => scene.mp.highlight(),
     });
     ctx.advance(3000); // then compare it with the Selling Price
   }
 
-  // Compare MP and SP: ₹1000 Marked Price, an arrow down with a "?", ₹800 Selling Price.
+  // Compare MP and SP: ₹1000 Marked Price, an arrow down, ₹800 Selling Price, with Swifty saying each
+  // step from the book.
   async function playCompare(ctx, scene) {
-    await enterPricePanel(ctx, scene);
+    const bird = await enterPricePanel(ctx, scene);
+    const talk = swiftyTalk(ctx, scene.ui, bird, besideHead);
     await scene.mp.compare(ctx, {
       onTop: () => {
         scene.mp.highlight(); // the ₹1000 on the book ↔ the Marked Price
-        return Voice.say('cmp-mp', 'The Marked Price is ₹1000.', 'narrator');
+        return talk.say('cmp-mp', [{ t: 'The Marked Price\nis ' }, { t: '₹1000', em: true }, { t: '.' }]);
       },
-      onBottom: () => Voice.say('cmp-sp', 'But the book was sold for ₹800. That is the Selling Price.', 'narrator'),
+      onBottom: () => talk.say('cmp-sp', [
+        { t: 'But the book was sold\nfor ' }, { t: '₹800', em: true }, { t: '. That is the\nSelling Price.' },
+      ]),
     });
     await ctx.wait(500);
-    await Voice.say('cmp-why', 'Why is the Selling Price less than the Marked Price?', 'narrator');
+    await talk.say('cmp-why', 'Why is the Selling Price\nless than the Marked Price?');
     ctx.advance(3000); // the shopkeeper explains
   }
 
@@ -925,7 +992,7 @@
 
   // The definition of a discount. Coming from screen 15, the panel, Swifty and her bubble are first exactly
   // as they were; then the panel goes, the definition card springs up, Swifty hops over to its corner and
-  // points at it, and reads it out while the words appear.
+  // points at it, and reads it out while the words appear. Then she hops down to her corner (CORNER).
   const DISCOUNT_DEFINITION = 'The {reduction} given on the\n{marked price} of an item\nis called a *discount.*';
 
   function setupDiscountDef(scene) {
@@ -989,16 +1056,17 @@
     bird.point();
     await ctx.wait(1300);
 
-    // Her part is done: she flies off, leaving the definition up; then the formula.
+    // She hops down to her corner, leaving the definition up; then the formula.
     bird.lean(0);
     await bird.takeOff(ctx);
-    bird.flyTo(ctx, { x: 2160, y: -90, duration: 1100, lift: 40, ease: 'in' }).then(() => bird.remove(), () => {});
+    await bird.flyTo(ctx, { x: CORNER.x, y: CORNER.y, s: CORNER.s, duration: 1000, lift: 60 });
+    await bird.land();
     ctx.advance(2400);
   }
 
   // The discount formula, built one piece at a time: the ₹1000 lifts off the book's sticker into the
-  // Marked Price box, then − ₹800 Selling Price, then = ₹200 Discount; then the narrator reads the
-  // formula in words while each part lights up.
+  // Marked Price box, then − ₹800 Selling Price, then = ₹200 Discount, with Swifty saying each step from
+  // her corner; then she says the formula in words while each part lights up.
   async function playFormula(ctx, scene) {
     const fp = FX.formulaPanel(scene.ui, {
       price: '₹1000',
@@ -1009,8 +1077,7 @@
       ],
       ops: ['−', '='],
     });
-    // The narrator's line, never quicker than `ms` (also when sound is off).
-    const narrate = (id, words, ms) => Promise.all([Voice.say(id, words, 'narrator'), ctx.wait(ms)]);
+    const talk = await cornerSwifty(ctx, scene);
 
     await ctx.wait(700); // the definition card finishes fading away first
     fp.open();
@@ -1024,14 +1091,14 @@
     await fp.box(0, { empty: true });
     await ctx.wait(200);
     await fp.fly();
-    await narrate('f-mp', 'The Marked Price is ₹1000.', 700);
+    await talk.say('f-mp', [{ t: 'The Marked Price\nis ' }, { t: '₹1000', em: true }, { t: '.' }], 700);
 
     // − Selling Price
     await ctx.wait(250);
     fp.op(0);
     await ctx.wait(350);
     await fp.box(1);
-    await narrate('f-sp', 'Subtract the Selling Price, ₹800.', 700);
+    await talk.say('f-sp', [{ t: 'Subtract the\nSelling Price, ' }, { t: '₹800', em: true }, { t: '.' }], 700);
 
     // = Discount
     await ctx.wait(250);
@@ -1040,18 +1107,16 @@
     await fp.box(2, { stamp: true });
     const d = stageRect(fp.boxes[2]);
     FX.burst(scene.ui, d.left + d.width / 2, d.top + d.height / 2, { count: 16, dist: [120, 230], size: [12, 24] });
-    await narrate('f-d', 'We get ₹200. That is the Discount!', 900);
+    await talk.say('f-d', [{ t: 'We get ' }, { t: '₹200', em: true }, { t: '.\nThat is the ' }, { t: 'Discount!', cls: 'key' }], 900);
+    talk.line.emphasize();
     await ctx.wait(600);
 
-    // The formula in words: each part lights up as it is read.
-    const rule = [
-      ['rule-1', 'Marked Price,', [fp.boxes[0]]],
-      ['rule-2', 'minus Selling Price,', [fp.ops[0], fp.boxes[1]]],
-      ['rule-3', 'equals Discount.', [fp.ops[1], fp.boxes[2]]],
-    ];
-    for (const [id, words, parts] of rule) {
-      parts.forEach((part, i) => ctx.wait(i * 420).then(() => fp.ping(part), () => {}));
-      await narrate(id, words, 900);
+    // The formula in words, one part at a time: each part lights up as she says it.
+    await talk.show([{ t: 'Marked Price,', end: true }, { t: '\nminus Selling Price,', end: true }, { t: '\nequals Discount.' }]);
+    const lit = [[fp.boxes[0]], [fp.ops[0], fp.boxes[1]], [fp.ops[1], fp.boxes[2]]];
+    for (const [i, parts] of lit.entries()) {
+      parts.forEach((part, k) => ctx.wait(k * 420).then(() => fp.ping(part), () => {}));
+      await talk.part(`rule-${i + 1}`, i, 900);
     }
     await ctx.wait(400);
     fp.glow(2); // the Discount keeps glowing
@@ -1066,9 +1131,33 @@
     hush(scene, true, { instant: true });
   }
 
-  // The formula: first in words on a pink strip, read out part by part; then the first letters of each
-  // term light up and fly down to make the short form D = MP − SP; then Swifty flies in, points at it,
-  // and a yellow note on it says "Use MP and SP."
+  // Screens 17–20 start out blurred; coming from the screen before, Swifty is already in her corner.
+  const GUIDE_FLOW = ['discount-def', 'formula', 'formula-reveal', 'apply', 'summary'];
+
+  function setupGuide(scene) {
+    blurredFromStart(scene);
+    scene.bird = null;
+    if (scene.cameFrom !== GUIDE_FLOW[GUIDE_FLOW.indexOf(scene.id) - 1]) return;
+    scene.bird = new FX.Bird(scene.ui, SWIFTY, { scale: CORNER.s });
+    scene.bird.place(CORNER.x, CORNER.y);
+    scene.bird.shadowOn(true);
+  }
+
+  // Swifty in her corner, ready to talk (her bubbles go above her head): already there, or flying in now.
+  async function cornerSwifty(ctx, scene) {
+    let bird = scene.bird;
+    if (!bird) {
+      bird = new FX.Bird(scene.ui, SWIFTY, { scale: CORNER.s });
+      bird.place(2140, CORNER.y - 300);
+      await bird.flyTo(ctx, { x: CORNER.x, y: CORNER.y, s: CORNER.s, duration: 1300, lift: 100, ease: 'out' });
+      await bird.land();
+    }
+    return swiftyTalk(ctx, scene.ui, bird, b => overHead(b, CORNER.bubbles));
+  }
+
+  // The formula: first in words on a pink strip, then in short. Swifty says it from her corner, part by
+  // part as each part appears; the first letters of each term light up and fly down to make the short
+  // form D = MP − SP; then she points at it, and a yellow note on it says "Use MP and SP."
   async function playFormulaReveal(ctx, scene) {
     const ui = scene.ui;
     const fr = FX.formulaReveal(ui, {
@@ -1079,69 +1168,57 @@
       ],
       ops: ['=', '−'],
     });
-    // The narrator's line, never quicker than `ms` (also when sound is off).
-    const narrate = (id, words, ms) => Promise.all([Voice.say(id, words, 'narrator'), ctx.wait(ms)]);
-    // Reads a formula in parts; each part's pieces pop as it is read.
-    const readOut = async parts => {
-      for (const [id, words, pieces] of parts) {
-        pieces.forEach((piece, i) => ctx.wait(i * 420).then(() => fr.ping(piece), () => {}));
-        await narrate(id, words, 900);
-      }
-    };
+    const talk = await cornerSwifty(ctx, scene);
+    const bird = talk.bird;
 
     await ctx.wait(700); // the formula panel finishes fading away first
     fr.open();
     await ctx.wait(800);
 
     // In words, one part at a time.
+    await talk.show([{ t: 'Discount', end: true }, { t: '\nequals Marked Price,', end: true }, { t: '\nminus Selling Price.' }]);
     fr.term(0);
-    await narrate('fr-1', 'Discount', 700);
+    await talk.part('fr-1', 0, 700);
     fr.op(0);
     await ctx.wait(300);
     fr.term(1);
-    await narrate('fr-2', 'equals Marked Price,', 900);
+    await talk.part('fr-2', 1, 900);
     fr.op(1);
     await ctx.wait(300);
     fr.term(2);
-    await narrate('fr-3', 'minus Selling Price.', 900);
+    await talk.part('fr-3', 2, 900);
     await ctx.wait(600);
 
     // In short: each term's first letters fly down into the blue box.
     fr.showShort();
-    await narrate('fr-4', 'We can write it in short.', 900);
-    const shorts = [
-      ['fr-5', 'D for Discount,'],
-      ['fr-6', 'M P for Marked Price,'],
-      ['fr-7', 'S P for Selling Price.'],
-    ];
-    for (const [i, [id, words]] of shorts.entries()) {
+    await talk.say('fr-4', 'We can write it\nin short.', 900);
+    await talk.show([{ t: 'D for Discount,', end: true }, { t: '\nMP for Marked Price,', end: true }, { t: '\nSP for Selling Price.' }]);
+    for (let i = 0; i < 3; i++) {
       if (i) {
         fr.shortOp(i - 1);
         await ctx.wait(350);
       }
       fr.lightUp(i);
-      const saying = narrate(id, words, 800);
+      const saying = talk.part(`fr-${5 + i}`, i, 800);
+      saying.catch(() => {}); // if the player leaves mid-line, the waits below report it
       await ctx.wait(450);
       await fr.fly(i);
       await saying;
     }
     await ctx.wait(400);
-    await readOut([
-      ['fr-8', 'So, D', [fr.shortTerms[0]]],
-      ['fr-9', 'equals M P', [fr.shortOps[0], fr.shortTerms[1]]],
-      ['fr-10', 'minus S P.', [fr.shortOps[1], fr.shortTerms[2]]],
-    ]);
+
+    // The short form, read out: each part pops as she says it.
+    await talk.show([{ t: 'So, D', end: true }, { t: ' = MP', end: true }, { t: ' − SP.' }]);
+    const read = [[fr.shortTerms[0]], [fr.shortOps[0], fr.shortTerms[1]], [fr.shortOps[1], fr.shortTerms[2]]];
+    for (const [i, pieces] of read.entries()) {
+      pieces.forEach((piece, k) => ctx.wait(k * 420).then(() => fr.ping(piece), () => {}));
+      await talk.part(`fr-${8 + i}`, i, 900);
+    }
     await ctx.wait(500);
 
-    // Swifty flies in, lands at the bottom right and points at it; the note on it.
-    const panel = stageRect(fr.panel);
-    const feet = { x: panel.right - 150, y: panel.bottom - 26 };
-    const bird = new FX.Bird(ui, SWIFTY, { scale: 0.8 });
-    bird.place(2140, feet.y - 280);
-    await bird.flyTo(ctx, { x: feet.x, y: feet.y, s: 0.8, duration: 1400, lift: 100, ease: 'out' });
-    await bird.land();
-    await ctx.wait(200);
+    // She points at it; her bubble goes and the note on it says the last line.
     bird.point();
+    talk.line.hide();
     await ctx.wait(500);
     const box = stageRect(fr.shortBox);
     const noteX = box.left + box.width * 0.62;
@@ -1150,21 +1227,18 @@
       text: 'Use MP and SP.', voice: 'bird', tone: 'yellow', rotate: -1.5,
     });
     await note.show();
-    bird.talk();
-    await Promise.all([note.type(ctx, { blips: !Voice.available }), Voice.say('fr-use', 'Use M P and S P.', 'bird'), ctx.wait(900)]);
+    await Promise.all([speak(ctx, note, 'fr-use', 'bird', bird), ctx.wait(900)]);
     bird.point();
     await ctx.wait(1500);
-
-    // Her part is done: she flies off; then the formula is used on Aniket's book.
     bird.lean(0);
-    await bird.takeOff(ctx);
-    bird.flyTo(ctx, { x: 2160, y: -90, duration: 1100, lift: 40, ease: 'in' }).then(() => bird.remove(), () => {});
-    ctx.advance(2400);
+    bird.idle();
+    ctx.advance(2400); // then the formula is used on Aniket's book
   }
 
-  // The formula used on Aniket's book, written out line by line: the ₹1000 flies off the book's sticker
-  // into "Marked Price = ₹1000", then "Selling Price = ₹800"; in "Discount = ₹1000 − ₹800" the two prices
-  // fly down from the lines above; "= ₹200"; and the answer box lands.
+  // The formula used on Aniket's book, written out line by line, with Swifty saying each step from her
+  // corner: the ₹1000 flies off the book's sticker into "Marked Price = ₹1000", then "Selling Price = ₹800";
+  // in "Discount = ₹1000 − ₹800" the two prices fly down from the lines above; "= ₹200"; and the answer box
+  // lands.
   async function playApply(ctx, scene) {
     const we = FX.workedExample(scene.ui, {
       price: '₹1000',
@@ -1177,33 +1251,37 @@
       ],
       answer: { label: 'Discount', value: '₹200' },
     });
-    // The narrator's line, never quicker than `ms` (also when sound is off).
-    const narrate = (id, words, ms) => Promise.all([Voice.say(id, words, 'narrator'), ctx.wait(ms)]);
+    const talk = await cornerSwifty(ctx, scene);
 
     await ctx.wait(700); // the formula reveal finishes fading away first
     we.open();
     await ctx.wait(700);
     we.showBook();
-    await narrate('ap-0', "Let's find the discount on Aniket's book.", 1200);
+    await talk.say('ap-0', 'Let’s find the discount\non Aniket’s book.', 1200);
 
     // Marked Price = ₹1000, straight off the book's sticker
     await we.write(0);
     we.highlight();
     await ctx.wait(400);
     await we.fromSticker(0, 0);
-    await narrate('ap-1', 'Marked Price is ₹1000.', 700);
+    await talk.say('ap-1', [{ t: 'Marked Price is ' }, { t: '₹1000', em: true }, { t: '.' }], 700);
 
     // Selling Price = ₹800
     await we.write(1);
     await we.show(1, 0);
-    await narrate('ap-2', 'Selling Price is ₹800.', 700);
+    await talk.say('ap-2', [{ t: 'Selling Price is ' }, { t: '₹800', em: true }, { t: '.' }], 700);
     await we.rule(2);
     await ctx.wait(300);
 
     // Discount = ₹1000 − ₹800: the formula, with the prices brought down from the lines above
     await we.write(3);
-    await narrate('ap-3', 'Discount equals Marked Price minus Selling Price.', 1000);
-    const saying = narrate('ap-4', '₹1000 minus ₹800', 900);
+    await talk.say('ap-3', 'Discount equals\nMarked Price minus\nSelling Price.', 1000);
+    await talk.show([
+      { t: '₹1000', em: true }, { t: ' minus ' }, { t: '₹800', em: true, end: true },
+      { t: '\nequals ' }, { t: '₹200', em: true }, { t: '.' },
+    ]);
+    const saying = talk.part('ap-4', 0, 900);
+    saying.catch(() => {}); // if the player leaves mid-line, the waits below report it
     await we.copy([0, 0], [3, 0]);
     await we.show(3, 1);
     await we.copy([1, 0], [3, 2]);
@@ -1213,19 +1291,21 @@
     // = ₹200
     await we.write(4);
     await we.show(4, 0, { stamp: true });
-    await narrate('ap-5', 'equals ₹200.', 700);
+    await talk.part('ap-5', 1, 700);
+    talk.line.emphasize();
     await ctx.wait(400);
 
     // The answer
     await we.answer();
     const a = stageRect(we.answerEl);
     FX.burst(scene.ui, a.left + a.width / 2, a.top + a.height / 2, { count: 18, dist: [130, 250], size: [12, 24] });
-    await narrate('ap-6', 'So, the discount on the book is ₹200!', 900);
+    await talk.say('ap-6', [{ t: 'So, the discount on\nthe book is ' }, { t: '₹200', em: true }, { t: '!' }], 900);
+    talk.line.emphasize();
     ctx.advance(3000); // then a quick summary
   }
 
-  // A quick summary. Swifty flies back in and goes over the three terms, one card at a time
-  // (Marked Price → Selling Price → Discount), then the formula.
+  // A quick summary. Swifty, in her corner, goes over the three terms one card at a time
+  // (Marked Price → Selling Price → Discount), then the formula, each line in her speech bubble.
   async function playSummary(ctx, scene) {
     const ui = scene.ui;
     const sp = FX.summaryPanel(ui, {
@@ -1237,41 +1317,30 @@
       ],
       formula: [{ t: 'Discount', tone: 'd' }, { t: '=' }, { t: 'MP', tone: 'mp' }, { t: '−' }, { t: 'SP', tone: 'sp' }],
     });
-    const panel = stageRect(sp.panel); // measured before it animates
-    const feet = { x: panel.right + 60, y: panel.bottom + 64 }; // she stands at the panel's lower-right corner
-    // Swifty's line (her beak moves while she says it), never quicker than `ms`.
-    let bird = null;
-    const say = async (id, words, ms) => {
-      bird.talk();
-      await Promise.all([Voice.say(id, words, 'bird'), ctx.wait(ms)]);
-      bird.idle();
-    };
+    const talk = await cornerSwifty(ctx, scene);
+    const bird = talk.bird;
 
     await ctx.wait(700); // the worked example finishes fading away first
     sp.open();
     await ctx.wait(500);
-    bird = new FX.Bird(ui, SWIFTY, { scale: 0.85 });
-    bird.place(2140, feet.y - 300);
-    await bird.flyTo(ctx, { x: feet.x, y: feet.y, s: 0.85, duration: 1300, lift: 100, ease: 'out' });
-    await bird.land();
     bird.wave();
     sp.title();
     await ctx.wait(300);
-    await say('sum-0', 'Let’s remember!', 900);
+    await talk.say('sum-0', 'Let’s remember!', 900);
     await ctx.wait(300);
 
     const lines = [
-      ['sum-1', 'Marked Price is the price written on an item. Here, ₹1000.'],
-      ['sum-2', 'Selling Price is the price at which it is sold. Here, ₹800.'],
-      ['sum-3', 'Discount is the amount reduced from the marked price. Here, ₹200.'],
+      ['sum-1', [{ t: 'Marked Price', cls: 'tone-mp' }, { t: ' is the\nprice written\non an item.\nHere, ' }, { t: '₹1000', em: true }, { t: '.' }]],
+      ['sum-2', [{ t: 'Selling Price', cls: 'tone-sp' }, { t: ' is the\nprice at which\nit is sold.\nHere, ' }, { t: '₹800', em: true }, { t: '.' }]],
+      ['sum-3', [{ t: 'Discount', cls: 'tone-d' }, { t: ' is the\namount reduced from\nthe marked price.\nHere, ' }, { t: '₹200', em: true }, { t: '.' }]],
     ];
-    for (const [i, [id, words]] of lines.entries()) {
+    for (const [i, [id, text]] of lines.entries()) {
       if (i) {
         await sp.arrow(i - 1);
         await ctx.wait(200);
       }
       await sp.card(ctx, i);
-      await say(id, words, 1600);
+      await talk.say(id, text, 1600);
       await ctx.wait(400);
     }
 
@@ -1280,7 +1349,10 @@
     const f = stageRect(sp.sum);
     FX.twinkles(ui, [[f.left - 8, f.top + 18], [f.right + 6, f.top + 30], [f.left + 40, f.bottom + 4], [f.right - 30, f.bottom + 2]]);
     Sound.sparkle();
-    await say('sum-4', 'And remember the formula: Discount equals M P minus S P!', 1400);
+    await talk.say('sum-4', [
+      { t: 'And remember\nthe formula:\n' }, { t: 'Discount', cls: 'tone-d' }, { t: ' = ' },
+      { t: 'MP', cls: 'tone-mp' }, { t: ' − ' }, { t: 'SP', cls: 'tone-sp' }, { t: '!' },
+    ], 1400);
     bird.wave();
     await ctx.wait(800);
     UI.setReady(true); // the story so far ends here: invite a replay
