@@ -24,6 +24,7 @@
   };
 
   const state = { sfx: readPref('bj.sfx', true), music: readPref('bj.music', true), ducked: false };
+  const ducks = new Set(); // reasons the music is lowered right now
   let ctx = null;
   let sfxBus, musicBus, noiseBuf;
 
@@ -141,6 +142,10 @@
     },
     // Tiny "voice" blips while a speech bubble types out.
     blip(voice) {
+      if (voice === 'bird') {
+        tone({ f: rand(1150, 1450), to: rand(1600, 1900), glide: 0.04, attack: 0.003, decay: 0.05, gain: 0.06 });
+        return;
+      }
       const boy = voice !== 'man';
       tone({ type: 'triangle', f: boy ? rand(560, 700) : rand(250, 320), attack: 0.004, decay: 0.05, gain: boy ? 0.07 : 0.1 });
     },
@@ -177,6 +182,63 @@
     },
     click() {
       tone({ type: 'triangle', f: 760, to: 520, glide: 0.05, attack: 0.002, decay: 0.06, gain: 0.14 });
+    },
+    // Right answer: a quick bright arpeggio with a sparkle on top.
+    correct() {
+      [1046.5, 1318.5, 1568, 2093].forEach((f, i) => {
+        tone({ t: now() + i * 0.06, type: 'triangle', f, attack: 0.004, decay: 0.4, gain: 0.12 });
+      });
+      effects.sparkle();
+    },
+    // Swifty: one soft wing beat.
+    flap() {
+      noise({ filter: 'bandpass', f: 700, to: 380, glide: 0.09, q: 0.8, attack: 0.012, decay: 0.08, gain: 0.09 });
+    },
+    // Swifty: a happy two-note chirp.
+    chirp() {
+      const t = now();
+      tone({ t, f: 2300, to: 3300, glide: 0.05, attack: 0.004, decay: 0.07, gain: 0.07 });
+      tone({ t: t + 0.09, f: 2500, to: 3700, glide: 0.06, attack: 0.004, decay: 0.09, gain: 0.07 });
+    },
+    // A marker writing on paper: a few quick scratches.
+    scribble() {
+      const t = now();
+      for (let i = 0; i < 5; i++) {
+        noise({ t: t + i * 0.06 + rand(0, 0.02), filter: 'bandpass', f: rand(2600, 4200), q: 2.5, attack: 0.004, decay: 0.04, gain: 0.06 });
+      }
+    },
+    // A rubber stamp landing: a low thud with a little slap on top.
+    stamp() {
+      const t = now();
+      tone({ t, f: 150, to: 55, glide: 0.18, attack: 0.003, decay: 0.26, gain: 0.45 });
+      noise({ t, filter: 'lowpass', f: 700, attack: 0.002, decay: 0.12, gain: 0.35 });
+      noise({ t, filter: 'bandpass', f: 2600, q: 1.4, attack: 0.001, decay: 0.03, gain: 0.2 });
+    },
+    // A price going down: a falling "whoop".
+    drop() {
+      const t = now();
+      tone({ t, type: 'triangle', f: 880, to: 300, glide: 0.42, attack: 0.01, decay: 0.45, gain: 0.13 });
+      noise({ t, filter: 'bandpass', f: 1600, to: 500, glide: 0.4, q: 1.1, attack: 0.04, decay: 0.36, gain: 0.08 });
+    },
+    // A curious, rising "hmm?" for a question mark.
+    wonder() {
+      const t = now();
+      tone({ t, type: 'triangle', f: 392, to: 523, glide: 0.12, attack: 0.01, decay: 0.2, gain: 0.12 });
+      tone({ t: t + 0.18, type: 'triangle', f: 523, to: 880, glide: 0.2, attack: 0.01, decay: 0.32, gain: 0.12 });
+    },
+    // Comic surprise: a quick rising "zwip!" and a low "bwong".
+    shock() {
+      const t = now();
+      tone({ t, type: 'triangle', f: 420, to: 1600, glide: 0.11, attack: 0.004, decay: 0.14, gain: 0.14 });
+      tone({ t: t + 0.11, f: 196, to: 98, glide: 0.5, attack: 0.006, decay: 0.55, gain: 0.32 });
+      tone({ t: t + 0.11, type: 'triangle', f: 392, to: 262, glide: 0.45, attack: 0.006, decay: 0.4, gain: 0.07 });
+      noise({ t: t + 0.11, filter: 'lowpass', f: 900, attack: 0.002, decay: 0.12, gain: 0.2 });
+    },
+    // Wrong answer: a soft two-step "buzz", never harsh.
+    wrong() {
+      const t = now();
+      tone({ t, type: 'square', f: 196, to: 160, glide: 0.18, attack: 0.005, decay: 0.2, gain: 0.06 });
+      tone({ t: t + 0.18, type: 'square', f: 147, to: 120, glide: 0.22, attack: 0.005, decay: 0.28, gain: 0.06 });
     },
   };
 
@@ -287,9 +349,12 @@
         music.stop();
       }
     },
-    // Lower the music (e.g. while Aniket walks) so the footsteps are clear.
-    duck(on) {
-      state.ducked = on;
+    // Lower the music (e.g. while Aniket walks, or while someone speaks). Each reason has its own
+    // key, so one reason ending doesn't bring the music back while another is still active.
+    duck(on, key = 'scene') {
+      if (on) ducks.add(key);
+      else ducks.delete(key);
+      state.ducked = ducks.size > 0;
       if (music.playing) setLevel();
     },
   };
