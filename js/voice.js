@@ -13,7 +13,14 @@
   // Recorded lines, by line id: { shock: 'shock.mp3', ... } (files in "game assets/voice/").
   // Line ids: wake, browse, ask, price, hint, def0-title, def0-text, def1-title, def1-text, here, correct, shock,
   // mp-line, mp-term, mp-def, cmp-mp, cmp-sp, cmp-why, reveal-1, reveal-2, reveal-3, disc-1, disc-2, dwhy-1, dwhy-2, ddef,
-  // f-mp, f-sp, f-d, rule-1, rule-2, rule-3, fr-1 … fr-10, fr-use, ap-0 … ap-6, sum-0 … sum-4.
+  // f-mp, f-sp, f-d, rule-1, rule-2, rule-3, fr-1 … fr-10, fr-use, ap-0 … ap-6, sum-0 … sum-4, sneakers, shoe-think, shoe-ask, recall-1, recall-2, hundred-1, hundred-2,
+  // half-ask, half-right-1, half-right-2, half-wrong-1 … half-wrong-3, half-so, halved-1, halved-2,
+  // quarter-ask, quarter-right-1, quarter-right-2, quarter-wrong-1 … quarter-wrong-3, quarter-so,
+  // quartered-1, quartered-2, idea-1, idea-2, wp-ask, wp-part, wp-whole, wp-rule-1 … wp-rule-3, wp-put-1, wp-put-2,
+  // wp-work, wp-equals, wp-so, cfu-ask, cfu-right-1, cfu-right-2, cfu-wrong-1 … cfu-wrong-4, cfu-so,
+  // mq-back, mq-ask, mq-right-1, mq-right-2, mq-wrong-1, mq-wrong-2, mq-so, th-1 … th-7,
+  // rp-ask, rp-right-1, rp-right-2, rp-wrong-1, rp-wrong-2, rp-so, pay-1 … pay-5, final-1, final-2,
+  // dp-1 … dp-7, ss-0 … ss-4, ss-rule-1 … ss-rule-3, ss-end.
   const RECORDINGS = {};
   const DIR = 'game assets/voice/';
 
@@ -51,8 +58,8 @@
   // A price in front of one of these nouns is read as "200 rupee", like "a 200 rupee discount".
   const RUPEE_BEFORE_NOUN = /₹\s?(\d[\d,]*\d|\d) (?=(?:discount|reduction|book|note|notes|profit|loss|price|item|article|gift)\b)/gi;
 
-  // "It's ₹800!" → "It's 800 rupees!", "D = MP − SP" → "D equals M P minus S P",
-  // without line breaks or highlight marks.
+  // "It's ₹800!" → "It's 800 rupees!", "D = MP − SP" → "D equals M P minus S P", "₹500 ÷ 2" → "500 rupees
+  // divided by 2", "30/100" → "30 over 100", without line breaks or highlight marks.
   function spoken(text) {
     return text
       .replace(/\b(a|an) ₹\s?(\d[\d,]*\d|\d) (?=[a-z])/gi, '$1 $2 rupee ') // "a ₹200 discount" → "a 200 rupee discount"
@@ -61,6 +68,9 @@
       .replace(/\b(M|S|C)P\b/g, '$1 P') // the short forms are read letter by letter
       .replace(/\s*=\s*/g, ' equals ')
       .replace(/\s*−\s*/g, ' minus ')
+      .replace(/\s*÷\s*/g, ' divided by ')
+      .replace(/\s*×\s*/g, ' times ')
+      .replace(/(\d+)\s*\/\s*(\d+)/g, '$1 over $2') // a fraction
       .replace(/[{}*]/g, '')
       .replace(/\s*[\n—]\s*/g, ' ')
       .replace(/\s+/g, ' ')

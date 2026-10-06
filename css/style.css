@@ -1043,6 +1043,9 @@ button:focus-visible, .switch input:focus-visible + .switch-track {
 .tone-d { color: #d32f2f; }   /* Discount */
 .tone-mp { color: #7a4600; }  /* Marked Price */
 .tone-sp { color: #17457e; }  /* Selling Price */
+.tone-part { color: #1f4fbf; }  /* the part (screens 32–33) */
+.tone-whole { color: #12553d; } /* the whole */
+.tone-pct { color: #d6246e; }   /* a percentage as a fraction, e.g. 30/100 (screen 36) */
 .fr-op { color: var(--ink); }
 .fr-term, .fr-op { display: inline-block; }
 .fr-letter { display: inline-block; }
@@ -1218,6 +1221,561 @@ button:focus-visible, .switch input:focus-visible + .switch-track {
 }
 .sm-op { color: var(--ink); }
 
+/* Screen 26: the sneakers on a card, with their price tag and discount tag (Swifty in her corner) */
+.pc-panel {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 34px;
+  margin-right: 420px; /* as on screens 18–21: room on the right for Swifty and her speech bubbles */
+  padding: 40px 40px 46px;
+  border: 5px solid var(--ink);
+  border-radius: 48px;
+  background:
+    radial-gradient(circle, rgba(27, 42, 51, .08) 1.6px, transparent 2.2px) 0 0 / 28px 28px,
+    linear-gradient(180deg, #fffdf7 0%, #fff3d9 100%);
+  box-shadow: 0 16px 0 var(--ink), 0 44px 90px rgba(4, 18, 22, .45);
+  pointer-events: auto;
+}
+.pc-photo { /* a product photo: the sneakers sharp, the shop softly blurred behind them */
+  width: 800px;
+  height: 350px;
+  border: 5px solid var(--ink);
+  border-radius: 30px;
+  overflow: hidden;
+  background: #f3e6d4;
+  box-shadow: 0 10px 0 var(--ink), 0 24px 40px rgba(4, 18, 22, .16);
+}
+.pc-photo img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.pc-tags { display: flex; align-items: center; gap: 34px; }
+.pc-price { /* like the white price card on the stand */
+  padding: 24px 48px 14px;
+  border: 5px solid var(--ink);
+  border-radius: 20px;
+  background: #fff;
+  box-shadow: 0 9px 0 var(--ink);
+  color: #1c2a4f;
+  font-size: 86px;
+  font-weight: 800;
+  line-height: 1;
+}
+.pc-off-pos { position: relative; transform: rotate(3deg); } /* tilted like the red tag on the stand */
+.pc-off {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 18px 30px 10px;
+  border: 5px solid var(--ink);
+  border-radius: 20px;
+  background: linear-gradient(180deg, #ef4646 0%, #d42a2a 100%);
+  box-shadow: 0 9px 0 var(--ink);
+  color: #fff;
+  font-size: 58px;
+  font-weight: 800;
+  line-height: .98;
+  text-shadow: 0 3px 0 rgba(90, 10, 10, .35);
+}
+.pc-off-line { display: block; }
+.pc-price.is-ping, .pc-off.is-ping { animation: tag-pop .8s cubic-bezier(.3, 1.6, .5, 1); }
+.pc-off-line.is-ping { animation: em-pulse .7s cubic-bezier(.3, 1.6, .5, 1); }
+@keyframes tag-pop {
+  0%, 100% { transform: none; }
+  40%      { transform: scale(1.1); }
+}
+
+/* Screens 27–28: percentages and their amounts, in a table (Swifty in her corner) */
+.pt-stack { /* the table, with its question above it and its answers below */
+  position: relative;
+  margin-right: 420px; /* as on screens 18–21: room on the right for Swifty and her speech bubbles */
+}
+.pt-table {
+  display: grid;
+  width: 940px;
+  border: 5px solid var(--ink);
+  border-radius: 34px;
+  overflow: hidden;
+  box-shadow: 0 14px 0 var(--ink), 0 40px 80px rgba(4, 18, 22, .42);
+  pointer-events: auto;
+}
+.pt-head {
+  display: grid;
+  place-items: center;
+  padding: 30px 20px 20px;
+  border-bottom: 5px solid var(--ink);
+  background: linear-gradient(180deg, #eef7ff 0%, #c9e3fb 100%);
+  color: #1f4fbf;
+  font-size: 60px;
+  font-weight: 800;
+  line-height: 1;
+}
+.pt-cell {
+  display: grid;
+  place-items: center;
+  height: 180px;
+  background-color: #fff0c8; /* cream, under a white sheen that lightens it towards the top */
+  background-image: linear-gradient(180deg, rgba(255, 255, 255, .7) 0%, rgba(255, 255, 255, 0) 100%);
+  color: var(--ink);
+  font-size: 104px;
+  font-weight: 800;
+  line-height: 1;
+  transition: background-color .6s ease, color .6s ease; /* a row changing tone fades softly */
+}
+.pt-cell--result { background-color: #ffe48a; color: #c62828; } /* a new result */
+.pt-cell--ask { background-color: #fff; } /* the value to find */
+.pt-value { display: inline-block; padding-top: 10px; } /* Baloo 2 sits a little high in its line */
+.pt-cell .pt-value { /* marked as the answer, a value sits on a bright yellow box, which fades in and out */
+  padding: 10px 0 0;
+  border: 4px solid transparent;
+  border-radius: 24px;
+  transition: background-color .5s ease, border-color .5s ease, box-shadow .5s ease, padding .5s ease;
+}
+.pt-cell .pt-value.is-marked {
+  padding: 16px 30px 6px;
+  border-color: #d9a300;
+  background-color: #ffd84a;
+  box-shadow: 0 6px 0 rgba(27, 42, 51, .22);
+  color: var(--ink);
+}
+.pt-col { border-left: 5px solid var(--ink); }  /* between the columns */
+.pt-row { border-top: 5px solid var(--ink); }  /* between the rows */
+.pt-table .pt-cell.is-closed { height: 0; border-top-width: 0; overflow: hidden; } /* a row folded away */
+.pt-table .is-unfolding { overflow: hidden; }
+.pt-cell.pt-step { position: relative; height: 90px; background-color: #fff6dc; }
+.pt-arrow { position: absolute; left: 50%; top: 0; width: 40px; height: 90px; margin-left: -20px; overflow: visible; }
+.pt-arrow path {
+  fill: none;
+  stroke: #d32f2f;
+  stroke-width: 6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 0;
+}
+.pt-step-label {
+  position: absolute;
+  left: calc(50% + 34px);
+  top: 50%;
+  margin-top: -28px;
+  padding-top: 6px;
+  color: #d32f2f;
+  font-size: 50px;
+  font-weight: 800;
+  line-height: 1;
+  white-space: nowrap;
+}
+.pt-cell.is-linked { animation: pt-flash 1.2s ease-out; }
+.pt-cell.is-linked .pt-value, .pt-value.is-ping, .pt-step-label.is-ping { animation: tag-pop .8s cubic-bezier(.3, 1.6, .5, 1); }
+.pt-arrow.is-ping { animation: arrow-nudge .8s cubic-bezier(.3, 1.6, .5, 1); }
+@keyframes pt-flash { /* a warm gold wash over the row */
+  0%   { box-shadow: inset 0 0 0 300px rgba(255, 210, 63, 0); }
+  30%  { box-shadow: inset 0 0 0 300px rgba(255, 210, 63, .55); }
+  100% { box-shadow: inset 0 0 0 300px rgba(255, 210, 63, 0); }
+}
+@keyframes arrow-nudge {
+  0%, 100% { transform: none; }
+  40%      { transform: translateY(8px); }
+}
+.pt-title { /* the question, on a pink strip above the table */
+  position: absolute;
+  bottom: calc(100% + 26px);
+  left: 0;
+  right: 0;
+  width: max-content;
+  margin: 0 auto;
+  padding: 22px 60px 14px;
+  border: 5px solid var(--ink);
+  border-radius: 30px;
+  background: linear-gradient(180deg, #ffe7ee 0%, #ffc4d4 100%);
+  box-shadow: 0 9px 0 var(--ink);
+  color: #1d2a6b;
+  font-size: 54px;
+  font-weight: 800;
+  line-height: 1;
+  white-space: nowrap;
+}
+.pt-below { position: absolute; top: calc(100% + 36px); left: 0; right: 0; }
+.pt-result { /* the answer under the table, on a green bar with a tick */
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  width: max-content;
+  margin: 0 auto;
+  padding: 14px 46px 14px 16px;
+  border: 5px solid var(--ink);
+  border-radius: 30px;
+  background: linear-gradient(180deg, #ecfbea 0%, #b6eabd 100%);
+  box-shadow: 0 9px 0 var(--ink);
+  color: var(--ink);
+  font-size: 58px;
+  font-weight: 800;
+  line-height: 1;
+}
+.pt-result-tick {
+  display: grid;
+  place-items: center;
+  width: 76px;
+  height: 76px;
+  border: 4px solid var(--ink);
+  border-radius: 50%;
+  background: linear-gradient(180deg, #4cc46a 0%, #23994a 100%);
+}
+.pt-result-tick svg { width: 44px; height: 44px; fill: none; stroke: #fff; stroke-width: 7; stroke-linecap: round; stroke-linejoin: round; }
+.pt-result-text { padding-top: 6px; white-space: nowrap; }
+.pq-choices { display: flex; justify-content: center; gap: 30px; }
+.pq-opt { /* an answer button (see .q-opt for its states: right, wrong, dimmed) */
+  flex: none;
+  width: auto;
+  height: 104px;
+  padding: 0 32px 0 14px;
+  background: linear-gradient(180deg, #f6fbff 0%, #cfe5fb 100%);
+  color: #1c2a4f;
+  font-size: 56px;
+  pointer-events: auto;
+}
+.pq-opt:hover:not(:disabled) { background: linear-gradient(180deg, #ffffff 0%, #e2f0fe 100%); }
+.pq-opt .q-chip { width: 70px; height: 70px; background: linear-gradient(180deg, #5b9cf0 0%, #2f6fd6 100%); color: #fff; font-size: 38px; }
+.pq-opt .q-label { flex: none; padding: 6px 0 0; }
+
+/* Screen 32: what a percentage means, as pairs: Part ↔ Percentage, Whole ↔ 100% (Swifty in her corner) */
+.pp-panel {
+  display: grid;
+  grid-template-columns: auto auto auto;
+  align-items: center;
+  column-gap: 26px;
+  row-gap: 44px;
+  margin-right: 420px; /* as on screens 18–21: room on the right for Swifty and her speech bubbles */
+  padding: 54px 56px 62px;
+  border: 5px solid var(--ink);
+  border-radius: 48px;
+  background:
+    radial-gradient(circle, rgba(27, 42, 51, .08) 1.6px, transparent 2.2px) 0 0 / 28px 28px,
+    linear-gradient(180deg, #fffdf7 0%, #fff3d9 100%);
+  box-shadow: 0 16px 0 var(--ink), 0 44px 90px rgba(4, 18, 22, .45);
+  pointer-events: auto;
+}
+.pp-box {
+  display: grid;
+  place-items: center;
+  width: 380px;
+  height: 150px;
+  border: 5px solid var(--ink);
+  border-radius: 30px;
+  box-shadow: 0 9px 0 var(--ink);
+  font-size: 64px;
+  font-weight: 800;
+  line-height: 1;
+}
+.pp-box--part { background: linear-gradient(180deg, #eef7ff 0%, #c4e0fb 100%); color: #1f4fbf; }
+.pp-box--whole { background: linear-gradient(180deg, #e8fcf2 0%, #a9ecc8 100%); color: #12553d; }
+.pp-box--pct { background: linear-gradient(180deg, #fff8d6 0%, #ffe07a 100%); color: var(--ink); }
+.pp-text { padding-top: 8px; }
+.pp-arrow { width: 110px; height: 60px; overflow: visible; }
+.pp-arrow path {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 0;
+}
+.pp-box.is-ping { animation: tag-pop .8s cubic-bezier(.3, 1.6, .5, 1); }
+.pp-arrow.is-ping { animation: tag-pop .8s cubic-bezier(.3, 1.6, .5, 1); }
+
+/* Screen 33: "₹125 is what percent of ₹500?": the question, the part and the whole, and the formula worked
+   out line by line (Swifty in her corner) */
+.pf-panel {
+  position: relative; /* the flying numbers are positioned inside it */
+  display: grid;
+  grid-template-columns: auto auto;
+  align-items: center;
+  column-gap: 40px;
+  row-gap: 34px;
+  margin-right: 420px; /* as on screens 18–21: room on the right for Swifty and her speech bubbles */
+  padding: 38px 44px 48px;
+  border: 5px solid var(--ink);
+  border-radius: 48px;
+  background:
+    radial-gradient(circle, rgba(27, 42, 51, .08) 1.6px, transparent 2.2px) 0 0 / 28px 28px,
+    linear-gradient(180deg, #fffdf7 0%, #fff3d9 100%);
+  box-shadow: 0 16px 0 var(--ink), 0 44px 90px rgba(4, 18, 22, .45);
+  pointer-events: auto;
+}
+.pf-question { /* the question, on a purple strip */
+  grid-column: 1 / -1;
+  justify-self: center;
+  padding: 22px 56px 14px;
+  border: 5px solid var(--ink);
+  border-radius: 30px;
+  background: linear-gradient(180deg, #f4eaff 0%, #d8bbf7 100%);
+  box-shadow: 0 9px 0 var(--ink);
+  color: #23205f;
+  font-size: 54px;
+  font-weight: 800;
+  line-height: 1;
+  white-space: nowrap;
+}
+.pf-q-value { display: inline-block; transition: color .5s ease; }
+.pf-q-value.is-part { color: #1f4fbf; }
+.pf-q-value.is-whole { color: #12553d; }
+.pf-boxes { display: flex; flex-direction: column; gap: 34px; }
+.pf-box {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 28px 12px 12px;
+  border: 5px solid var(--ink);
+  border-radius: 28px;
+  box-shadow: 0 9px 0 var(--ink);
+  font-size: 50px;
+  font-weight: 800;
+  line-height: 1;
+  white-space: nowrap;
+}
+.pf-box--part { background: #f2f8ff; }
+.pf-box--whole { background: #eefcf4; }
+.pf-box-label { padding: 14px 20px 6px; border-radius: 18px; }
+.pf-box--part .pf-box-label { background: #cfe3fb; color: #1f4fbf; }
+.pf-box--whole .pf-box-label { background: #b5eccf; color: #12553d; }
+.pf-box-eq, .pf-box-value { position: relative; top: 4px; } /* sits level with the label's text; a copy flying out lines up exactly */
+.pf-box-eq { color: var(--ink); }
+.pf-sheet { /* the formula, line by line, = signs lined up */
+  display: grid;
+  grid-template-columns: auto auto auto;
+  align-items: center;
+  column-gap: 20px;
+  row-gap: 16px;
+  padding: 52px 42px 30px; /* room on top for the little arrow over "Part" */
+  border: 5px solid var(--ink);
+  border-radius: 30px;
+  background: #fff;
+  box-shadow: 0 10px 0 var(--ink), 0 24px 40px rgba(4, 18, 22, .14);
+  color: var(--ink);
+  font-size: 48px;
+  font-weight: 800;
+  line-height: 1;
+}
+.pf-label { padding-top: 8px; color: #d32f2f; white-space: nowrap; }
+.pf-eq { padding-top: 8px; }
+.pf-expr { display: flex; align-items: center; gap: 16px; }
+.pf-frac { display: inline-flex; flex-direction: column; align-items: center; }
+.pf-num, .pf-den { position: relative; padding: 6px 8px 0; }
+.pf-bar { align-self: stretch; height: 5px; margin: 6px 0; border-radius: 3px; background: currentColor; } /* the fraction's colour */
+.pf-times { padding-top: 8px; white-space: nowrap; }
+.pf-answer { position: relative; z-index: 0; margin-left: 8px; padding-top: 10px; font-size: 66px; }
+.pf-answer::before { /* marked as the answer, it sits on a bright yellow box */
+  content: '';
+  position: absolute;
+  z-index: -1;
+  inset: -4px -22px -10px -16px; /* clear of the = sign before it */
+  border: 4px solid #d9a300;
+  border-radius: 22px;
+  background: #ffd84a;
+  box-shadow: 0 6px 0 rgba(27, 42, 51, .22);
+  opacity: 0;
+  transform: scale(.7);
+  transition: opacity .45s ease, transform .55s cubic-bezier(.3, 1.6, .5, 1);
+}
+.pf-answer.is-marked::before { opacity: 1; transform: none; }
+.pf-hint { position: absolute; left: 50%; bottom: 100%; width: 34px; height: 40px; margin: 0 0 -2px -17px; overflow: visible; }
+.pf-hint path { fill: none; stroke: #1f4fbf; stroke-width: 6; stroke-linecap: round; stroke-linejoin: round; }
+.pf-hint.is-ping { animation: arrow-nudge .8s cubic-bezier(.3, 1.6, .5, 1) 2; }
+.pf-q-value.is-ping { animation: tag-pop .8s cubic-bezier(.3, 1.6, .5, 1); }
+
+/* Screen 34: a quick check: the question on the purple strip, three answers stacked under it (Swifty in her corner) */
+.qp-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 38px;
+  margin-right: 420px; /* as on screens 18–21: room on the right for Swifty and her speech bubbles */
+  padding: 40px 48px 50px;
+  border: 5px solid var(--ink);
+  border-radius: 48px;
+  background:
+    radial-gradient(circle, rgba(27, 42, 51, .08) 1.6px, transparent 2.2px) 0 0 / 28px 28px,
+    linear-gradient(180deg, #fffdf7 0%, #fff3d9 100%);
+  box-shadow: 0 16px 0 var(--ink), 0 44px 90px rgba(4, 18, 22, .45);
+  pointer-events: auto;
+}
+.pq-choices--stack { flex-direction: column; align-items: center; gap: 26px; }
+.pq-choices--stack .pq-opt { width: 620px; padding: 0 20px 0 16px; }
+.pq-choices--stack .pq-opt .q-label { flex: 1; padding: 6px 70px 0 0; } /* centred, balancing the letter chip */
+.pq-opt.is-ping { animation: tag-pop .8s cubic-bezier(.3, 1.6, .5, 1); }
+
+/* Screens 35 and 37: the sneakers and a question about them. The panel sits further left than the others: the
+   Next button goes between it and Swifty, level with the last answer. */
+.pqp-panel {
+  display: grid;
+  grid-template-columns: auto auto;
+  align-items: center;
+  column-gap: 40px;
+  margin-right: 560px;
+  padding: 40px 40px 46px;
+  border: 5px solid var(--ink);
+  border-radius: 48px;
+  background:
+    radial-gradient(circle, rgba(27, 42, 51, .08) 1.6px, transparent 2.2px) 0 0 / 28px 28px,
+    linear-gradient(180deg, #fffdf7 0%, #fff3d9 100%);
+  box-shadow: 0 16px 0 var(--ink), 0 44px 90px rgba(4, 18, 22, .45);
+  pointer-events: auto;
+}
+.pqp-item { display: flex; flex-direction: column; align-items: center; gap: 26px; }
+.pqp-item .pc-photo { width: 440px; height: 192px; }
+.pqp-item .pc-tags { gap: 22px; }
+.pqp-item .pc-price { padding: 18px 30px 10px; font-size: 58px; }
+.pqp-item .pc-off { padding: 12px 20px 6px; font-size: 40px; }
+.pqp-side { display: flex; flex-direction: column; align-items: center; gap: 30px; }
+.pqp-question { /* the question, on a pink strip (as on screens 28 and 30) */
+  padding: 20px 44px 12px;
+  border: 5px solid var(--ink);
+  border-radius: 30px;
+  background: linear-gradient(180deg, #ffe7ee 0%, #ffc4d4 100%);
+  box-shadow: 0 9px 0 var(--ink);
+  color: #1d2a6b;
+  font-size: 50px;
+  font-weight: 800;
+  line-height: 1.12;
+  text-align: center;
+  white-space: pre-line;
+}
+.pqp-answers .pq-choices--stack { gap: 22px; }
+.pqp-answers .pq-choices--stack .pq-opt { width: 500px; height: 96px; font-size: 48px; }
+
+/* Screens 36 and 38: a worked solution: value boxes on the left (38), the working written line by line */
+.ws-panel {
+  display: flex;
+  align-items: center;
+  gap: 44px;
+  margin-right: 420px; /* as on screens 18–21: room on the right for Swifty and her speech bubbles */
+  padding: 40px 44px 46px;
+  border: 5px solid var(--ink);
+  border-radius: 48px;
+  background:
+    radial-gradient(circle, rgba(27, 42, 51, .08) 1.6px, transparent 2.2px) 0 0 / 28px 28px,
+    linear-gradient(180deg, #fffdf7 0%, #fff3d9 100%);
+  box-shadow: 0 16px 0 var(--ink), 0 44px 90px rgba(4, 18, 22, .45);
+  pointer-events: auto;
+}
+.ws-boxes { display: flex; flex-direction: column; align-items: center; }
+.cmp-box.ws-box { width: 400px; height: 150px; gap: 12px; }
+.ws-box .cmp-label { font-size: 36px; }
+.ws-box .cmp-price { font-size: 72px; }
+.pf-sheet.ws-sheet { padding: 40px 46px 34px; row-gap: 28px; }
+.ws-sheet .pf-label { justify-self: end; color: var(--ink); } /* each label sits right up to its = sign */
+.ws-sheet--big { font-size: 56px; }
+.ws-text { padding-top: 8px; white-space: nowrap; }
+.ws-band { /* the rule being used, on a light-blue band */
+  align-self: stretch;
+  justify-self: stretch;
+  margin: -12px -22px;
+  border-radius: 20px;
+  background: #dcecff;
+}
+.ws-band--yellow { background: #fff0b3; } /* the rule, as on the storyboard's yellow strip (screen 40) */
+.ws-panel .is-ping { animation: tag-pop .8s cubic-bezier(.3, 1.6, .5, 1); }
+
+/* Screen 39: the shop's tags updated: the old price crossed out in red, and the new price stuck on in green */
+.strike { position: absolute; overflow: visible; pointer-events: none; }
+.strike path {
+  fill: none;
+  stroke: #e53935;
+  stroke-width: 9;
+  stroke-linecap: round;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 0;
+  filter: drop-shadow(0 2px 0 rgba(255, 255, 255, .75));
+}
+.stick-tag {
+  position: absolute;
+  padding: 18px 36px 10px;
+  border: 5px solid var(--ink);
+  border-radius: 20px;
+  box-shadow: 0 9px 0 var(--ink), 0 18px 30px rgba(0, 0, 0, .25);
+  color: #fff;
+  font-size: 70px;
+  font-weight: 800;
+  line-height: 1;
+  white-space: nowrap;
+  transform: rotate(-2deg);
+}
+.stick-tag--green { background: linear-gradient(180deg, #4fd27f 0%, #1f9a55 100%); text-shadow: 0 3px 0 rgba(10, 60, 30, .35); }
+.tone-pay { color: #1f9a55; } /* the new price (screen 39) */
+
+/* Screen 41: the sneakers, summed up: a table of the four amounts, and the three rules (Swifty in her corner) */
+.ss-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 26px;
+  margin-right: 420px; /* as on screens 18–21: room on the right for Swifty and her speech bubbles */
+  padding: 34px 44px 44px;
+  border: 5px solid var(--ink);
+  border-radius: 48px;
+  background:
+    radial-gradient(circle, rgba(27, 42, 51, .08) 1.6px, transparent 2.2px) 0 0 / 28px 28px,
+    linear-gradient(180deg, #fffdf7 0%, #fff3d9 100%);
+  box-shadow: 0 16px 0 var(--ink), 0 44px 90px rgba(4, 18, 22, .45);
+  pointer-events: auto;
+}
+.ss-title { /* as on screen 21's summary */
+  padding: 16px 50px 10px;
+  border: 5px solid var(--ink);
+  border-radius: 24px;
+  background: linear-gradient(180deg, #4a8fe7 0%, #2361c4 100%);
+  box-shadow: 0 7px 0 var(--ink);
+  color: #fff;
+  font-size: 46px;
+  font-weight: 800;
+  line-height: 1;
+  text-shadow: 0 4px 0 rgba(10, 40, 90, .45);
+  white-space: nowrap;
+}
+.ss-table {
+  display: grid;
+  grid-template-columns: auto auto;
+  border: 5px solid var(--ink);
+  border-radius: 26px;
+  overflow: hidden;
+  box-shadow: 0 10px 0 var(--ink);
+  font-size: 42px;
+  font-weight: 800;
+  line-height: 1;
+}
+.ss-label { padding: 20px 30px 12px; white-space: nowrap; }
+.ss-label--mp { background: #fff3c9; color: #7a4600; }
+.ss-label--d { background: #ffe2de; color: #d32f2f; }
+.ss-label--sp { background: #e2efff; color: #17457e; }
+.ss-value {
+  min-width: 250px;
+  padding: 20px 36px 12px;
+  border-left: 4px solid var(--ink);
+  background: #fff;
+  color: var(--ink);
+  text-align: center;
+  white-space: nowrap;
+}
+.ss-row { border-top: 4px solid var(--ink); } /* between the rows */
+.ss-rules { /* the rules, on a pink box (as on the storyboard and screen 19's strip) */
+  display: grid;
+  grid-template-columns: auto auto auto;
+  align-items: center;
+  column-gap: 16px;
+  row-gap: 14px;
+  padding: 24px 44px 26px;
+  border: 5px solid var(--ink);
+  border-radius: 26px;
+  background: linear-gradient(180deg, #ffe7ee 0%, #ffc9d7 100%);
+  box-shadow: 0 9px 0 var(--ink);
+  color: var(--ink);
+  font-size: 42px;
+  font-weight: 800;
+  line-height: 1;
+}
+.ss-rules .pf-label { justify-self: end; color: var(--ink); } /* each rule's left side sits right up to its = sign */
+.ss-panel .is-ping { animation: tag-pop .8s cubic-bezier(.3, 1.6, .5, 1); }
+
 /* Screen 14: ₹1000 → (₹200 reduced) → ₹800, on a card on the right */
 .red-pos {
   position: absolute;
@@ -1313,7 +1871,7 @@ button:focus-visible, .switch input:focus-visible + .switch-track {
   content: '';
   position: absolute;
   inset: 0;
-  border-radius: 50%;
+  border-radius: var(--ring-round, 50%); /* a circle, or a frame with rounded corners */
 }
 .spot-ring::before {
   border: 6px solid #ffd23f;
@@ -1819,7 +2377,9 @@ kbd {
   .exclaim-inner, .walker.is-idle .walker-body, #btn-next.is-ready, .rotate-phone,
   .story-next, .spot-ring::after, .red-tag.is-pulsing,
   .dc-stamp.is-landed, .cmp-box.is-key, .cmp-box.is-glowing, .fm-box.is-ping, .fm-op.is-ping, .fm-box.is-ping::after,
-  .fr-term.is-ping, .fr-op.is-ping, .we-answer.is-landed {
+  .fr-term.is-ping, .fr-op.is-ping, .we-answer.is-landed, .pc-price.is-ping, .pc-off.is-ping, .pc-off-line.is-ping,
+  .pt-cell.is-linked, .pt-cell.is-linked .pt-value, .pt-value.is-ping, .pt-step-label.is-ping, .pt-arrow.is-ping,
+  .pp-box.is-ping, .pp-arrow.is-ping, .pf-hint.is-ping, .pf-q-value.is-ping, .pq-opt.is-ping, .ws-panel .is-ping, .ss-panel .is-ping {
     animation: none !important;
   }
   .qcard-pos { transition: none; }
