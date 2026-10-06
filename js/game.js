@@ -58,14 +58,18 @@
     book: ASSETS + 'ui/book.png',
   };
 
+  // The counter picture once more, with Aniket puzzled by the word "discount": it lines up exactly with
+  // "aniket give a book to shopkepper.png" (only his face differs), so it can fade in over it.
+  const PUZZLED = ASSETS + 'what is discount.png';
+
   // Shapes on the artwork (stage px).
   const TITLE_PLATE = [[150, 340], [860, 340], [884, 420], [862, 520], [800, 668], [200, 668], [128, 600], [108, 430]];
   const SHOP_SIGN = [[380, 148], [1885, 18], [1885, 172], [380, 292]];
   const MONEY = [[832, 470], [985, 436], [1066, 498], [1064, 582], [915, 586], [836, 545]];
   const PRICE_TAG = { x: 942, y: 352, text: '₹800', radius: 72 }; // small ₹800 just above the money
-  const STICKER = { look: { x: 1057, y: 867, r: 84 }, shock: { x: 1050, y: 878, r: 98 } }; // ₹1000 on the cover
+  const STICKER = { look: { x: 1049, y: 842, r: 84 }, shock: { x: 1108, y: 868, r: 106 } }; // ₹1000 on the cover
 
-  // Where Swifty stands (her feet) on the teaching screens 17–20: in the bottom-right corner, with the panel
+  // Where Swifty stands (her feet) on the teaching screens 18–21: in the bottom-right corner, with the panel
   // on her left and her speech bubbles above her head (kept between CORNER.bubbles). She stays there from
   // one screen to the next.
   const CORNER = { x: 1690, y: 1010, s: 0.8, bubbles: [1440, 1900] };
@@ -85,25 +89,41 @@
       play: playTitle,
     },
     {
-      id: 'outside', num: '1', title: 'The Bookstore', sub: 'Aniket walks to the store',
+      id: 'morning', num: '1', title: 'Good Morning!', sub: '“I’m going to the mall today.”',
+      bg: ASSETS + 'morning.png',
+      kb: { origin: '55% 6%', from: 'scale(1.02)', to: 'scale(1.06) translate(-6px, 4px)' }, // zooms from the top, so his bubble never nears the edge
+      lamps: [[92, 548, 280], [1755, 105, 420]], // the bedside lamp, and the sun in the window
+      dust: [1000, 40, 1900, 700],                 // specks floating in the sunlight
+      play: playMorning,
+    },
+    {
+      id: 'home', num: '2', title: 'Off to the Mall', sub: 'Aniket sets off from home',
+      bg: ASSETS + 'outside home.png',
+      kb: { origin: '50% 70%', from: 'scale(1.02)', to: 'scale(1.05) translate(-8px, 0)' },
+      lamps: [[160, 70, 420]], // the morning sun
+      dust: [0, 40, 1900, 760],
+      play: playLeaveHome,
+    },
+    {
+      id: 'outside', num: '3', title: 'The Bookstore', sub: 'Aniket walks to the store',
       bg: ASSETS + 'book store outside view.png',
       kb: { origin: '50% 62%', from: 'scale(1.02)', to: 'scale(1.06) translate(-6px, -4px)' },
       lamps: [[918, 382, 320], [1498, 352, 320]],
       dust: [420, 260, 1840, 820],
-      exit: 'zoom', zoomOrigin: '52% 56%', // 1 → 2: the camera pushes into the store while fading
+      exit: 'zoom', zoomOrigin: '52% 56%', // 3 → 4: the camera pushes into the store while fading
       play: playOutside,
     },
     {
-      id: 'see', num: '2', title: 'He Sees a Book', sub: 'Aniket spots a book on the table',
+      id: 'see', num: '4', title: 'He Sees a Book', sub: 'Aniket spots a book on the table',
       bg: ASSETS + 'aniket saw a book.png',
       kb: { origin: '54% 40%', from: 'scale(1.02)', to: 'scale(1.08)' },
       lamps: [[1065, 140, 300], [1570, 116, 300]],
       dust: [200, 80, 1800, 800],
-      shot: 'shelf', // same camera as screen 3, so the fade looks like he picks the book up
+      shot: 'shelf', // same camera as screen 5, so the fade looks like he picks the book up
       play: playSee,
     },
     {
-      id: 'browse', num: '3', title: 'An Interesting Book', sub: '“This book looks interesting!”',
+      id: 'browse', num: '5', title: 'An Interesting Book', sub: '“This book looks interesting!”',
       bg: ASSETS + 'aniket hold the book scene.png',
       kb: { origin: '54% 40%', from: 'scale(1.02)', to: 'scale(1.08)' },
       lamps: [[1065, 140, 300], [1570, 116, 300]],
@@ -112,7 +132,7 @@
       play: playBrowse,
     },
     {
-      id: 'ask', num: '4', title: 'How Much?', sub: '“How much is this book?”',
+      id: 'ask', num: '6', title: 'How Much?', sub: '“How much is this book?”',
       bg: ASSETS + 'aniket give a book to shopkepper.png',
       kb: { origin: '50% 38%', from: 'scale(1.02)', to: 'scale(1.065) translate(-6px, 0)' },
       lamps: [[1472, 106, 330]],
@@ -120,19 +140,19 @@
       play: playAsk,
     },
     {
-      id: 'pay', num: '5', title: 'Paying ₹800', sub: 'Handing over the money',
+      id: 'pay', num: '7', title: 'Paying ₹800', sub: 'Handing over the money',
       bg: ASSETS + 'aniket give money to shopkeeper.png',
       kb: { origin: '50% 46%', from: 'scale(1.02)', to: 'scale(1.075)' },
       lamps: [[1408, 86, 330]],
       dust: [300, 60, 1500, 700],
-      shot: 'counter', // screen 6 carries on from this exact picture
+      shot: 'counter', // screen 8 carries on from this exact picture
       play: playPay,
     },
     {
-      id: 'quiz', num: '6', title: 'Cost or Selling?', sub: 'For the shopkeeper, ₹800 is the —',
+      id: 'quiz', num: '8', title: 'Cost or Selling?', sub: 'For the shopkeeper, ₹800 is the —',
       bg: ASSETS + 'aniket give money to shopkeeper.png',
       kb: null, // this screen moves its own camera (see playQuiz)
-      origin: '50% 46%', // same camera origin as screen 5, so the hand-over is seamless
+      origin: '50% 46%', // same camera origin as screen 7, so the hand-over is seamless
       lamps: [[1408, 86, 330]],
       dust: [300, 60, 1500, 700],
       shot: 'counter',
@@ -140,25 +160,16 @@
       play: playQuiz,
     },
     {
-      id: 'hold', num: '7', title: 'His New Book', sub: 'Aniket holds the book he bought',
-      bg: ASSETS + 'aniket hold the book scene.png',
-      kb: { origin: '54% 40%', from: 'scale(1.02)', to: 'scale(1.08)' },
-      lamps: [[1065, 140, 300], [1570, 116, 300]],
-      dust: [200, 80, 1800, 800],
-      exit: 'zoom', zoomOrigin: '58% 47%', // 7 → 8: the camera pushes in on the book while fading
-      play: playHold,
-    },
-    {
-      id: 'look', num: '8', title: 'A Closer Look', sub: 'Aniket looks at the cover',
+      id: 'look', num: '9', title: 'A Closer Look', sub: 'Aniket looks at the cover',
       bg: ASSETS + 'boy see the book .png',
       kb: { origin: '55% 80%', from: 'scale(1.02)', to: 'scale(1.065)' },
       lamps: [[1292, 128, 300]],
       dust: [150, 60, 1500, 760],
-      shot: 'cover', // the same close-up as screen 9, so the cut there only changes his face
+      shot: 'cover', // the same view as screen 10 (from behind Aniket), so the cut there only changes his reaction
       play: playLook,
     },
     {
-      id: 'shock', num: '9', title: 'What Is This?', sub: '“₹1000 is written on this book!”',
+      id: 'shock', num: '10', title: 'What Is This?', sub: '“₹1000 is written on this book!”',
       bg: ASSETS + 'shocked aniket.png',
       kb: { origin: '55% 80%', from: 'scale(1.02)', to: 'scale(1.065)' },
       lamps: [[1292, 128, 300]],
@@ -167,17 +178,17 @@
       play: playShock,
     },
     {
-      id: 'mp', num: '10', title: 'Marked Price', sub: '₹1000 is the price written on the book',
+      id: 'mp', num: '11', title: 'Marked Price', sub: '₹1000 is the price written on the book',
       bg: ASSETS + 'shocked aniket.png',
       kb: { origin: '55% 80%', from: 'scale(1.02)', to: 'scale(1.065)' },
       lamps: [[1292, 128, 300]],
       dust: [150, 60, 1500, 760],
-      shot: 'cover', // carries straight on from screen 9's picture, which then blurs behind the panel
+      shot: 'cover', // carries straight on from screen 10's picture, which then blurs behind the panel
       backdrop: true, // a soft blurred copy behind keeps the blurred picture's edges clean
       play: playMarked,
     },
     {
-      id: 'mpdef', num: '11', title: 'What Is Marked Price?', sub: 'The price printed on an article',
+      id: 'mpdef', num: '12', title: 'What Is Marked Price?', sub: 'The price printed on an article',
       bg: ASSETS + 'shocked aniket.png',
       kb: { origin: '55% 80%', from: 'scale(1.02)', to: 'scale(1.065)' },
       lamps: [[1292, 128, 300]],
@@ -188,7 +199,7 @@
       play: playDefine,
     },
     {
-      id: 'compare', num: '12', title: 'Compare MP and SP', sub: '₹1000 Marked Price, ₹800 Selling Price',
+      id: 'compare', num: '13', title: 'Compare MP and SP', sub: '₹1000 Marked Price, ₹800 Selling Price',
       bg: ASSETS + 'shocked aniket.png',
       kb: { origin: '55% 80%', from: 'scale(1.02)', to: 'scale(1.065)' },
       lamps: [[1292, 128, 300]],
@@ -204,32 +215,33 @@
       play: playCompare,
     },
     {
-      id: 'reveal', num: '13', title: 'You Paid ₹200 Less', sub: 'The shopkeeper explains the reduction',
+      id: 'reveal', num: '14', title: 'You Paid ₹200 Less', sub: 'The shopkeeper explains the reduction',
       bg: ASSETS + 'aniket give a book to shopkepper.png',
       kb: { origin: '50% 46%', from: QUIZ_CAMERA, to: QUIZ_DRIFT }, // framed left, like the question screen
       lamps: [[1472, 106, 330]],
       dust: [300, 60, 1500, 700],
       backdrop: true, // the picture is shifted left: a soft blurred copy fills in past its right edge
-      shot: 'counter-talk', // screen 14 carries on from this exact picture
+      shot: 'counter-talk', // screen 15 carries on from this exact picture
       setup: scene => instantly(scene, () => scene.el.classList.add('is-feathered')),
       play: playReveal,
     },
     {
-      id: 'discount', num: '14', title: 'What Is a Discount?', sub: '“Discount? What does that mean?”',
+      id: 'discount', num: '15', title: 'What Is a Discount?', sub: '“Discount? What does that mean?”',
       bg: ASSETS + 'aniket give a book to shopkepper.png',
+      react: PUZZLED, // fades in over the picture when he hears "discount" (see playDiscount)
       kb: { origin: '50% 46%', from: 'scale(1.02)', to: 'scale(1.065) translate(-6px, 0)' },
       lamps: [[1472, 106, 330]],
       dust: [300, 60, 1500, 700],
       backdrop: true,
       shot: 'counter-talk',
-      glide: true, // coming from screen 13, the camera glides back from its framing (see glideCamera)
+      glide: true, // coming from screen 14, the camera glides back from its framing (see glideCamera)
       setup: setupDiscount,
       play: playDiscount,
     },
     {
-      id: 'discount-why', num: '15', title: 'Discount!', sub: 'The ₹200 reduction is called a Discount',
-      bg: ASSETS + 'aniket give a book to shopkepper.png',
-      kb: { origin: '50% 46%', from: 'scale(1.02)', to: 'scale(1.065) translate(-6px, 0)' }, // as on screen 14
+      id: 'discount-why', num: '16', title: 'Discount!', sub: 'The ₹200 reduction is called a Discount',
+      bg: PUZZLED,
+      kb: { origin: '50% 46%', from: 'scale(1.02)', to: 'scale(1.065) translate(-6px, 0)' }, // as on screen 15
       lamps: [[1472, 106, 330]],
       dust: [300, 60, 1500, 700],
       shot: 'counter-talk',
@@ -237,9 +249,9 @@
       play: playDiscountWhy,
     },
     {
-      id: 'discount-def', num: '16', title: 'Discount Definition', sub: 'The reduction on the marked price',
-      bg: ASSETS + 'aniket give a book to shopkepper.png',
-      kb: { origin: '50% 46%', from: 'scale(1.02)', to: 'scale(1.065) translate(-6px, 0)' }, // as on screens 14–15
+      id: 'discount-def', num: '17', title: 'Discount Definition', sub: 'The reduction on the marked price',
+      bg: PUZZLED,
+      kb: { origin: '50% 46%', from: 'scale(1.02)', to: 'scale(1.065) translate(-6px, 0)' }, // as on screens 15–16
       lamps: [[1472, 106, 330]],
       dust: [300, 60, 1500, 700],
       shot: 'counter-talk',
@@ -247,9 +259,9 @@
       play: playDiscountDef,
     },
     {
-      id: 'formula', num: '17', title: 'The Discount Formula', sub: 'Marked Price − Selling Price = Discount',
-      bg: ASSETS + 'aniket give a book to shopkepper.png',
-      kb: { origin: '50% 46%', from: 'scale(1.02)', to: 'scale(1.065) translate(-6px, 0)' }, // as on screens 14–16
+      id: 'formula', num: '18', title: 'The Discount Formula', sub: 'Marked Price − Selling Price = Discount',
+      bg: PUZZLED,
+      kb: { origin: '50% 46%', from: 'scale(1.02)', to: 'scale(1.065) translate(-6px, 0)' }, // as on screens 15–17
       lamps: [[1472, 106, 330]],
       dust: [300, 60, 1500, 700],
       shot: 'counter-talk',
@@ -257,9 +269,9 @@
       play: playFormula,
     },
     {
-      id: 'formula-reveal', num: '18', title: 'Formula Reveal', sub: 'D = MP − SP',
-      bg: ASSETS + 'aniket give a book to shopkepper.png',
-      kb: { origin: '50% 46%', from: 'scale(1.02)', to: 'scale(1.065) translate(-6px, 0)' }, // as on screens 14–17
+      id: 'formula-reveal', num: '19', title: 'Formula Reveal', sub: 'D = MP − SP',
+      bg: PUZZLED,
+      kb: { origin: '50% 46%', from: 'scale(1.02)', to: 'scale(1.065) translate(-6px, 0)' }, // as on screens 15–18
       lamps: [[1472, 106, 330]],
       dust: [300, 60, 1500, 700],
       shot: 'counter-talk',
@@ -267,9 +279,9 @@
       play: playFormulaReveal,
     },
     {
-      id: 'apply', num: '19', title: 'Aniket’s Discount', sub: 'Discount = ₹1000 − ₹800 = ₹200',
-      bg: ASSETS + 'aniket give a book to shopkepper.png',
-      kb: { origin: '50% 46%', from: 'scale(1.02)', to: 'scale(1.065) translate(-6px, 0)' }, // as on screens 14–18
+      id: 'apply', num: '20', title: 'Aniket’s Discount', sub: 'Discount = ₹1000 − ₹800 = ₹200',
+      bg: PUZZLED,
+      kb: { origin: '50% 46%', from: 'scale(1.02)', to: 'scale(1.065) translate(-6px, 0)' }, // as on screens 15–19
       lamps: [[1472, 106, 330]],
       dust: [300, 60, 1500, 700],
       shot: 'counter-talk',
@@ -277,9 +289,9 @@
       play: playApply,
     },
     {
-      id: 'summary', num: '20', title: 'Quick Summary', sub: 'Let’s remember!',
-      bg: ASSETS + 'aniket give a book to shopkepper.png',
-      kb: { origin: '50% 46%', from: 'scale(1.02)', to: 'scale(1.065) translate(-6px, 0)' }, // as on screens 14–19
+      id: 'summary', num: '21', title: 'Quick Summary', sub: 'Let’s remember!',
+      bg: PUZZLED,
+      kb: { origin: '50% 46%', from: 'scale(1.02)', to: 'scale(1.065) translate(-6px, 0)' }, // as on screens 15–20
       lamps: [[1472, 106, 330]],
       dust: [300, 60, 1500, 700],
       shot: 'counter-talk',
@@ -339,6 +351,84 @@
       Game.starting = false;
       go(1);
     }, 380);
+  }
+
+  // Good morning: Aniket wakes up stretching while birds chirp outside, then says what he'll do today.
+  async function playMorning(ctx, scene) {
+    await ctx.wait(500);
+    Sound.chirp();
+    await ctx.wait(420);
+    Sound.chirp();
+    await ctx.wait(600);
+    const line = FX.bubble(scene.layer, {
+      anchor: [968, 206], corner: 'bl', tip: [922, 372], // on the wall between his hair and his raised fist
+      text: 'I’m going to\nthe mall today.\nLet’s see what\nI can find!', voice: 'boy', rotate: -1.5,
+    });
+    await line.show();
+    await speak(ctx, line, 'wake', 'boy');
+    ctx.advance(3000); // then he sets off
+  }
+
+  // The left leaf of the gate outside Aniket's home, cut out of "outside home.png" (ui/gate-leaf.png), and
+  // the view behind it with the bars painted out (ui/gate-gap.png). Both cover this box (stage px); the
+  // leaf turns on its hinges, `hinge` px in from the box's left edge.
+  const GATE = { x: 803.8, y: 502.7, w: 232, h: 293.8, hinge: 10.3 };
+
+  // The gate leaf, ready to swing open (into the garden) and shut again.
+  function homeGate(parent) {
+    const box = { left: `${GATE.x}px`, top: `${GATE.y}px`, width: `${GATE.w}px`, height: `${GATE.h}px` };
+    const gap = el('img', 'gate-part', parent, box);
+    const leaf = el('img', 'gate-part', parent, Object.assign({ transformOrigin: `${GATE.hinge}px 50%` }, box));
+    gap.src = ASSETS + 'ui/gate-gap.png';
+    leaf.src = ASSETS + 'ui/gate-leaf.png';
+    gap.alt = leaf.alt = '';
+    const swing = (turns, ms, easing) => FX.settle(leaf.animate(
+      turns.map(([deg, offset]) => ({ transform: `perspective(900px) rotateY(${deg}deg)`, offset })),
+      { duration: reducedMotion ? 1 : ms, easing, fill: 'forwards' }
+    ));
+    return {
+      open() {
+        Sound.gateOpen();
+        return swing([[0, 0], [78, 0.75], [72, 1]], 800, 'cubic-bezier(.3,.6,.35,1)');
+      },
+      close() {
+        return swing([[72, 0], [-2, 0.85], [0, 1]], 560, 'cubic-bezier(.55,0,.7,1)').then(() => {
+          if (leaf.isConnected) Sound.gateShut();
+        });
+      },
+    };
+  }
+
+  // Outside his home: the gate swings open, Aniket steps out of it onto the pavement, the gate shuts behind
+  // him, and he walks off to the left, out of the picture. A straight cut then finds him at the mall.
+  async function playLeaveHome(ctx, scene) {
+    const gate = homeGate(scene.layer);
+    const walker = new FX.Walker(scene.layer, WALK_SHEET, { matte: true, face: -1 }); // faces left
+    const inGate = { x: 985, y: 790, s: 0.55 }; // in the open gateway (out of sight until he steps out)
+    const out = { x: 895, y: 870, s: 0.59 };    // on the pavement, in front of the gate
+    const away = { x: -230, y: 777, s: 0.57 };  // off-screen left, along the pavement
+    walker.place(inGate.x, inGate.y, inGate.s);
+    walker.setFrame(WALK_SHEET.idle);
+    walker.root.style.opacity = '0';
+    const pan = x => (x / STAGE_W) * 1.6 - 0.8;
+
+    await ctx.wait(700);
+    await gate.open();
+    // One step out of the gateway, coming out of the porch's shade.
+    walker.root.style.opacity = '';
+    FX.settle(walker.root.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 420, easing: 'ease-out' }));
+    await walker.walk(ctx, { from: inGate, to: out, speed: 200, decel: 60, onStep: x => Sound.step(pan(x)) });
+    walker.idle(true);
+    await ctx.wait(250);
+    await gate.close();
+    await ctx.wait(300);
+
+    // Off to the mall.
+    walker.idle(false);
+    Sound.duck(true);
+    await walker.walk(ctx, { from: out, to: away, speed: 280, decel: 0, onStep: x => Sound.step(pan(x)) });
+    Sound.duck(false);
+    ctx.advance(800); // he's gone: on to the mall
   }
 
   async function playOutside(ctx, scene) {
@@ -498,7 +588,7 @@
     const L = scene.layer;
     const cam = scene.world;
 
-    // Start exactly where screen 5's camera was, then glide left to make room for the card.
+    // Start exactly where screen 7's camera was, then glide left to make room for the card.
     const start = scene.startFrom && scene.startFrom !== 'none' ? scene.startFrom : 'scale(1.02)';
     const pan = cam.animate([{ transform: start }, { transform: QUIZ_CAMERA }], {
       duration: reducedMotion ? 1 : 1100, delay: 300, easing: 'cubic-bezier(.65,0,.35,1)', fill: 'both',
@@ -514,7 +604,7 @@
       pan.cancel();
     });
 
-    // The ₹800 from screen 5 is still showing at first; it bows out as the camera moves.
+    // The ₹800 from screen 7 is still showing at first; it bows out as the camera moves.
     const price = FX.badge(L, PRICE_TAG);
     price.el.querySelector('.badge-rays').style.transition = 'none';
     price.el.style.opacity = '1';
@@ -664,13 +754,6 @@
     nextButton(scene);
   }
 
-  // Back in the story: Aniket holds the book he bought (no words). The fade then pushes in on the book.
-  async function playHold(ctx, scene) {
-    FX.glow(scene.layer, 1105, 505, 440, 440, { cls: 'glow--book', delay: 0 });
-    await ctx.wait(600);
-    ctx.advance(2600);
-  }
-
   // A closer look at the cover: the ₹1000 sticker starts to glow.
   async function playLook(ctx, scene) {
     await ctx.wait(1000);
@@ -688,7 +771,7 @@
     FX.ring(scene.layer, STICKER.shock);
     await ctx.wait(650);
     const line = FX.bubble(scene.layer, {
-      anchor: [1075, 360], corner: 'bl', tip: [1010, 378],
+      anchor: [1112, 350], corner: 'bl', tip: [1068, 326], // beside the yellow surprise lines by his head
       text: [{ t: 'What is this?\n' }, { t: '₹1000', em: true }, { t: ' is written\non this book!' }],
       voice: 'boy', rotate: -1.5,
     });
@@ -701,7 +784,7 @@
   // The Marked Price: the scene blurs, a panel with the book comes to the middle, Swifty flies in,
   // lands on the book and says "₹1000 is the price written on the book." while the sticker zooms
   // into a lens; then the name "Marked Price (MP)" drops in under it, and she says it in a new bubble.
-  // She stays on the book for screens 11 and 12.
+  // She stays on the book for screens 12 and 13.
   async function playMarked(ctx, scene) {
     const ui = scene.ui;
     el('div', 'fb-dim', ui);
@@ -737,7 +820,7 @@
     ctx.advance(3000); // then the definition
   }
 
-  // Where Swifty stands in the price panels (screens 10–12): on the top edge of the book.
+  // Where Swifty stands in the price panels (screens 11–13): on the top edge of the book.
   function bookPerch(mp) {
     const book = stageRect(mp.book);
     const k = book.height / 540; // the book picture's own units → stage px
@@ -754,7 +837,7 @@
     return bird;
   }
 
-  // Screens 11 and 12 carry on from the price panel before them. Their setup runs before the cross-fade
+  // Screens 12 and 13 carry on from the price panel before them. Their setup runs before the cross-fade
   // starts, so the picture behind is already blurred and (coming from the previous panel) the panel, the
   // book and Swifty on it are already in place: only the right side visibly changes during the fade.
   const PANEL_FLOW = ['mp', 'mpdef', 'compare'];
@@ -863,8 +946,10 @@
     ctx.advance(3000); // then the word for it
   }
 
-  // "Discount". Coming from screen 13 the picture, the card and the bubble are first exactly as they
-  // were; then the bubble and the card go, and the camera glides back to the middle.
+  // "Discount". Coming from screen 14 the picture, the card and the bubble are first exactly as they
+  // were; then the bubble and the card go, and the camera glides back to the middle. The shopkeeper says
+  // the new word; Aniket's face turns puzzled (PUZZLED fades in over the picture) and he wonders about it
+  // in a thought cloud.
   function setupDiscount(scene) {
     scene.carried = scene.cameFrom === 'reveal';
     if (!scene.carried) return;
@@ -900,21 +985,25 @@
     Sound.ding();
     await ctx.wait(1400);
 
-    // …then Aniket.
+    // …then Aniket. He doesn't know the word: his face turns puzzled, and he wonders about it.
     await shop.hide();
-    await ctx.wait(250);
-    const boy = FX.bubble(scene.layer, DISCOUNT_ASK);
-    await boy.show();
-    await speak(ctx, boy, 'disc-2', 'boy');
+    scene.el.classList.add('is-reacting');
+    Sound.wonder();
+    await ctx.wait(700);
+    const wondering = FX.thought(scene.layer, DISCOUNT_THOUGHT);
+    await wondering.show();
+    await speak(ctx, wondering, 'disc-2', 'boy');
+    wondering.emphasize();
     ctx.advance(3000); // Swifty explains
   }
 
-  const DISCOUNT_ASK = {
-    anchor: [778, 318], corner: 'bl', tip: [738, 372],
-    text: 'Discount?\nWhat does\nthat mean?', voice: 'boy', rotate: -1.5,
+  // Aniket's thought: a cloud above and to the right of his head, its puffs rising from the top of his hair.
+  const DISCOUNT_THOUGHT = {
+    at: [990, 190], tip: [748, 226],
+    text: [{ t: 'Discount?', cls: 'key' }, { t: '\nWhat does\nthat mean?' }], voice: 'boy',
   };
 
-  // Discount, explained. Coming from screen 14, Aniket's question is first still there; then the counter
+  // Discount, explained. Coming from screen 15, Aniket's thought cloud is first still there; then the counter
   // blurs, a panel builds ₹1000 Marked Price → ₹200 reduced → ₹800 Selling Price, Swifty flies in and
   // explains, and the word DISCOUNT lands like a stamp.
   const DISCOUNT_FLOW = {
@@ -946,7 +1035,7 @@
     scene.oldLine = null;
     if (scene.cameFrom === 'discount-def') hush(scene, true, { instant: true }); // back from the definition
     if (scene.cameFrom !== 'discount') return;
-    scene.oldLine = FX.bubble(scene.layer, DISCOUNT_ASK);
+    scene.oldLine = FX.thought(scene.layer, DISCOUNT_THOUGHT);
     scene.oldLine.showNow();
   }
 
@@ -990,7 +1079,7 @@
     ctx.advance(3000); // then the definition
   }
 
-  // The definition of a discount. Coming from screen 15, the panel, Swifty and her bubble are first exactly
+  // The definition of a discount. Coming from screen 16, the panel, Swifty and her bubble are first exactly
   // as they were; then the panel goes, the definition card springs up, Swifty hops over to its corner and
   // points at it, and reads it out while the words appear. Then she hops down to her corner (CORNER).
   const DISCOUNT_DEFINITION = 'The {reduction} given on the\n{marked price} of an item\nis called a *discount.*';
@@ -1071,7 +1160,7 @@
     const fp = FX.formulaPanel(scene.ui, {
       price: '₹1000',
       terms: [
-        { label: 'Marked Price', value: '₹1000', tone: 'yellow' }, // the colours used since screen 12
+        { label: 'Marked Price', value: '₹1000', tone: 'yellow' }, // the colours used since screen 13
         { label: 'Selling Price', value: '₹800', tone: 'blue' },
         { label: 'Discount', value: '₹200', tone: 'red' },
       ],
@@ -1131,7 +1220,7 @@
     hush(scene, true, { instant: true });
   }
 
-  // Screens 17–20 start out blurred; coming from the screen before, Swifty is already in her corner.
+  // Screens 18–21 start out blurred; coming from the screen before, Swifty is already in her corner.
   const GUIDE_FLOW = ['discount-def', 'formula', 'formula-reveal', 'apply', 'summary'];
 
   function setupGuide(scene) {
@@ -1162,7 +1251,7 @@
     const ui = scene.ui;
     const fr = FX.formulaReveal(ui, {
       terms: [
-        { words: 'Discount', short: 'D', tone: 'd' }, // the colours used since screen 12
+        { words: 'Discount', short: 'D', tone: 'd' }, // the colours used since screen 13
         { words: 'Marked Price', short: 'MP', tone: 'mp' },
         { words: 'Selling Price', short: 'SP', tone: 'sp' },
       ],
@@ -1243,7 +1332,7 @@
     const we = FX.workedExample(scene.ui, {
       price: '₹1000',
       rows: [
-        { label: 'Marked Price', tone: 'mp', value: [{ t: '₹1000', tone: 'mp' }] }, // the colours used since screen 12
+        { label: 'Marked Price', tone: 'mp', value: [{ t: '₹1000', tone: 'mp' }] }, // the colours used since screen 13
         { label: 'Selling Price', tone: 'sp', value: [{ t: '₹800', tone: 'sp' }] },
         'rule',
         { label: 'Discount', tone: 'd', value: [{ t: '₹1000', tone: 'mp' }, { t: '−', op: true }, { t: '₹800', tone: 'sp' }] },
@@ -1310,7 +1399,7 @@
     const ui = scene.ui;
     const sp = FX.summaryPanel(ui, {
       title: 'Let’s remember!',
-      cards: [ // the colours used since screen 12
+      cards: [ // the colours used since screen 13
         { term: 'Marked Price', tone: 'mp', value: '₹1000', desc: 'Price written\non an item.' },
         { term: 'Selling Price', tone: 'sp', value: '₹800', desc: 'Price at which\nit is sold.' },
         { term: 'Discount', tone: 'd', value: '₹200', desc: 'Amount reduced from\nthe marked price.' },
@@ -1503,7 +1592,7 @@
   function activate(scene, mode, camera) {
     scene.layer.replaceChildren();
     scene.ui.replaceChildren();
-    scene.el.classList.remove('is-leaving', 'is-entering', 'is-feathered', 'is-asking', 'is-hushed', 'is-instant');
+    scene.el.classList.remove('is-leaving', 'is-entering', 'is-feathered', 'is-asking', 'is-hushed', 'is-instant', 'is-reacting');
     scene.el.classList.add('is-active');
     if (mode === 'cut' && !reducedMotion) {
       void scene.el.offsetWidth; // restart the settle-in animation
@@ -1554,7 +1643,7 @@
   }
 
   function deactivate(scene) {
-    scene.el.classList.remove('is-active', 'is-entering', 'is-leaving', 'is-feathered', 'is-asking', 'is-hushed', 'is-instant');
+    scene.el.classList.remove('is-active', 'is-entering', 'is-leaving', 'is-feathered', 'is-asking', 'is-hushed', 'is-instant', 'is-reacting');
     scene.el.style.zIndex = '';
     scene.el.style.transitionDuration = '';
     if (scene.kbAnim) {
@@ -1580,13 +1669,13 @@
       .catch(err => { if (err !== CANCELLED) console.error(err); });
   }
 
-  // Cross-fade only between these neighbouring screens (Bookstore → sees the book → holds it → How Much?,
-  // and question → holds his new book → closer look), both ways; and, going forward only, between screens
+  // Cross-fade only between these neighbouring screens (Good morning → leaving home, Bookstore → sees the
+  // book → holds it → How Much?, and question → closer look at his new book), both ways; and, going forward only, between screens
   // over the same blurred picture: the price panels (Marked Price → its definition → MP vs SP, so only their
   // right side changes), MP vs SP → the counter, and the Discount definition → formula → formula reveal → worked example
   // → summary.
   // Every other change is a straight cut.
-  const FADES = [['outside', 'see'], ['see', 'browse'], ['browse', 'ask'], ['quiz', 'hold'], ['hold', 'look']];
+  const FADES = [['morning', 'home'], ['outside', 'see'], ['see', 'browse'], ['browse', 'ask'], ['quiz', 'look']];
   const FORWARD_FADES = [['mp', 'mpdef'], ['mpdef', 'compare'], ['compare', 'reveal'], ['discount-def', 'formula'], ['formula', 'formula-reveal'], ['formula-reveal', 'apply'], ['apply', 'summary']];
   const FADE_MS = 1200 * PACE;
   const fadesBetween = (a, b) =>
@@ -1618,7 +1707,7 @@
     const forward = i === Game.index + 1;
     const changing = from && from !== to;
     const fade = changing && fadesBetween(from, to);
-    // Same camera shot (2 ↔ 3, 5 → 6): carry the camera over so nothing jumps.
+    // Same camera shot (4 ↔ 5, 7 → 8): carry the camera over so nothing jumps.
     const sameFraming = from && to && from.kb && to.kb && ['origin', 'from', 'to'].every(k => from.kb[k] === to.kb[k]);
     const carry = changing && from.shot && from.shot === to.shot && (forward || sameFraming);
     const camera = carry ? cameraOf(from) : null;
@@ -1634,7 +1723,7 @@
     }
 
     // The new scene fades in on top while the old one drifts forward underneath
-    // (1 → 2 pushes right into the store; same-shot fades are a pure dissolve).
+    // (3 → 4 pushes right into the store; same-shot fades are a pure dissolve).
     Sound.whoosh();
     activate(to, 'fade', camera);
     to.el.style.zIndex = 2;
@@ -1773,10 +1862,12 @@
       scene.parallax = el('div', 'scene-parallax', scene.el);
       scene.world = el('div', 'scene-world', scene.parallax);
       scene.world.style.setProperty('--kb-origin', scene.kb ? scene.kb.origin : scene.origin);
-      const img = el('img', scene.backdrop ? 'scene-bg scene-bg--feather' : 'scene-bg', scene.world);
-      img.src = scene.bg;
-      img.alt = '';
-      img.draggable = false;
+      [scene.bg, scene.react].filter(Boolean).forEach((src, i) => { // the picture, and a reaction to fade in over it
+        const img = el('img', (scene.backdrop ? 'scene-bg scene-bg--feather' : 'scene-bg') + (i ? ' scene-react' : ''), scene.world);
+        img.src = src;
+        img.alt = '';
+        img.draggable = false;
+      });
       scene.ambient = el('div', 'scene-ambient', scene.world);
       scene.lamps.forEach(([x, y, r]) => FX.glow(scene.ambient, x, y, r, r * 0.8));
       if (!reducedMotion) FX.motes(scene.ambient, { area: scene.dust, count: 16 });
@@ -1794,7 +1885,7 @@
       el('span', 'si-num', item).textContent = scene.num;
       const thumb = el('span', 'si-thumb', item);
       const img = el('img', '', thumb);
-      img.src = scene.bg;
+      img.src = scene.react || scene.bg; // a screen's reaction picture shows best what it is about
       img.alt = '';
       el('span', 'si-now', thumb).textContent = 'NOW';
       const text = el('span', 'si-text', item);
@@ -1925,8 +2016,9 @@
 
     const fill = $('#loader-fill');
     const label = $('#loader-text');
-    const images = SCENES.map(s => s.bg).concat(
-      ASSETS + 'start button.png', WALK_SHEET.src, SWIFTY.fly.src, SWIFTY.stand.src, ART.money, ART.book
+    const images = SCENES.flatMap(s => [s.bg, s.react]).filter(Boolean).concat(
+      ASSETS + 'start button.png', WALK_SHEET.src, SWIFTY.fly.src, SWIFTY.stand.src, ART.money, ART.book,
+      ASSETS + 'ui/gate-leaf.png', ASSETS + 'ui/gate-gap.png'
     );
     const fonts = document.fonts
       ? Promise.race([document.fonts.load('800 40px "Baloo 2"', 'Ab₹'), sleep(2500)]).catch(() => {})

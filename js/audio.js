@@ -220,6 +220,31 @@
       tone({ t, type: 'triangle', f: 880, to: 300, glide: 0.42, attack: 0.01, decay: 0.45, gain: 0.13 });
       noise({ t, filter: 'bandpass', f: 1600, to: 500, glide: 0.4, q: 1.1, attack: 0.04, decay: 0.36, gain: 0.08 });
     },
+    // The garden gate: a latch click and a soft creak as it swings open…
+    gateOpen() {
+      const t = now();
+      noise({ t, filter: 'bandpass', f: 3200, q: 3, attack: 0.001, decay: 0.03, gain: 0.25 });
+      tone({ t: t + 0.06, type: 'sawtooth', f: 210, to: 290, glide: 0.45, attack: 0.05, decay: 0.42, gain: 0.025 });
+      tone({ t: t + 0.06, type: 'triangle', f: 420, to: 560, glide: 0.45, attack: 0.05, decay: 0.4, gain: 0.03 });
+    },
+    // …and a metal clank as it shuts, with the latch catching.
+    gateShut() {
+      const t = now();
+      noise({ t, filter: 'bandpass', f: 1800, q: 2, attack: 0.001, decay: 0.08, gain: 0.3 });
+      tone({ t, type: 'triangle', f: 260, to: 190, glide: 0.1, attack: 0.002, decay: 0.18, gain: 0.12 });
+      noise({ t: t + 0.03, filter: 'bandpass', f: 4200, q: 4, attack: 0.001, decay: 0.03, gain: 0.15 });
+    },
+    // A thought cloud's little puffs popping up: soft "plip"s, each one a little higher (i = 0, 1, 2).
+    puff(i = 0) {
+      const k = Math.pow(1.26, i);
+      tone({ f: 600 * k, to: 980 * k, glide: 0.05, attack: 0.003, decay: 0.1, gain: 0.13 });
+    },
+    // A curious, rising "hmm?" (Aniket puzzled by a new word).
+    wonder() {
+      const t = now();
+      tone({ t, type: 'triangle', f: 392, to: 523, glide: 0.12, attack: 0.01, decay: 0.2, gain: 0.12 });
+      tone({ t: t + 0.18, type: 'triangle', f: 523, to: 880, glide: 0.2, attack: 0.01, decay: 0.32, gain: 0.12 });
+    },
     // Comic surprise: a quick rising "zwip!" and a low "bwong".
     shock() {
       const t = now();

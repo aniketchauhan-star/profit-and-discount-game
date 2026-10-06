@@ -92,7 +92,7 @@ button:focus-visible, .switch input:focus-visible + .switch-track {
 }
 .scene.is-active { display: block; }
 .scene.is-entering { animation: scene-settle 1.1s cubic-bezier(.2, .7, .2, 1) both; } /* after a cut */
-/* Cross-fade (1 ↔ 2, 2 ↔ 3): the old scene drifts forward underneath while the new one fades in on top. */
+/* Cross-fade (e.g. 3 ↔ 4, 4 ↔ 5): the old scene drifts forward underneath while the new one fades in on top. */
 .scene.is-leaving {
   transform: scale(var(--leave-scale, 1.05));
   transition: transform 1.8s cubic-bezier(.4, 0, .6, 1); /* game.js sets it to the fade length */
@@ -121,6 +121,11 @@ button:focus-visible, .switch input:focus-visible + .switch-track {
   filter: blur(22px) brightness(.9);
 }
 /* The sharp picture's right edge feathers into that backdrop (the fade starts off to the right). */
+/* A reaction picture (e.g. Aniket puzzled) that lines up exactly with the picture under it, faded in by
+   the screen's script, so only the character's face visibly changes. It only fades in; resetting it
+   (when the screen starts again) is instant. */
+.scene-bg.scene-react { opacity: 0; transition: none; }
+.scene.is-reacting .scene-bg.scene-react { opacity: 1; transition: opacity .6s ease; }
 .scene-bg--feather {
   -webkit-mask-image: linear-gradient(90deg, #000 84%, transparent 100%);
   mask-image: linear-gradient(90deg, #000 84%, transparent 100%);
@@ -279,6 +284,20 @@ button:focus-visible, .switch input:focus-visible + .switch-track {
 }
 .em.pulse, .key.pulse { animation: em-pulse .7s cubic-bezier(.3, 1.6, .5, 1); }
 .bubble.is-static .ch { transition: none; } /* a bubble carried over, already typed */
+
+/* Thought cloud (FX.thought): a puffy cloud, and a trail of little puffs that gently bob, down to the
+   thinker's head. It shares the speech bubble's outline, fill, shadow and text styles. */
+.thought-cloud { position: absolute; inset: 0; }
+.thought-puff { position: absolute; }
+.thought-puff-bob {
+  position: absolute;
+  inset: 0;
+  animation: puff-bob 2.8s ease-in-out infinite;
+}
+@keyframes puff-bob {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-4px); }
+}
 @keyframes em-pulse {
   0%   { transform: scale(1); }
   35%  { transform: scale(1.12) rotate(-3deg); }
@@ -338,7 +357,7 @@ button:focus-visible, .switch input:focus-visible + .switch-track {
   50%      { transform: rotate(3deg) scale(1.035); }
 }
 
-/* ---------- Question card (screen 6) ---------- */
+/* ---------- Question card (screen 8) ---------- */
 
 .q-scrim { /* darkens the right of the scene behind the card */
   position: absolute;
@@ -660,7 +679,7 @@ button:focus-visible, .switch input:focus-visible + .switch-track {
 .def--yellow .hl::before { background: linear-gradient(90deg, #ffd25c, #ffbf2e); }
 
 
-/* ---------- Marked Price panel (screen 10) ---------- */
+/* ---------- Marked Price panel (screen 11) ---------- */
 
 .mp {
   position: absolute;
@@ -738,11 +757,11 @@ button:focus-visible, .switch input:focus-visible + .switch-track {
   white-space: nowrap;
 }
 .mp-abbr { color: #c2185b; }
-/* Screens 11 and 12 line their right side up with the book: top ≈ the book's top, bottom = its bottom. */
+/* Screens 12 and 13 line their right side up with the book: top ≈ the book's top, bottom = its bottom. */
 .mp-side--define,
 .mp-side--compare { justify-content: flex-end; gap: 0; padding-bottom: 8px; }
 
-/* Screen 11: the definition card */
+/* Screen 12: the definition card */
 .mp-def {
   display: flex;
   flex-direction: column;
@@ -784,7 +803,7 @@ button:focus-visible, .switch input:focus-visible + .switch-track {
 }
 .mp-def-text .w.on { opacity: 1; transform: none; }
 
-/* Screen 12: Marked Price → Selling Price */
+/* Screen 13: Marked Price → Selling Price */
 .cmp-box {
   flex: none;
   width: 440px;
@@ -823,7 +842,7 @@ button:focus-visible, .switch input:focus-visible + .switch-track {
 }
 .cmp-arrow path { stroke: var(--ink); stroke-width: 6; stroke-linejoin: round; }
 
-/* Screen 15: the discount panel: price flow on the left, Swifty and the DISCOUNT stamp on the right */
+/* Screen 16: the discount panel: price flow on the left, Swifty and the DISCOUNT stamp on the right */
 .dc-panel {
   position: relative;
   display: grid;
@@ -879,7 +898,7 @@ button:focus-visible, .switch input:focus-visible + .switch-track {
   100% { transform: scale(1);    box-shadow: 0 10px 0 var(--ink), 0 0 0 26px rgba(229, 57, 53, 0); }
 }
 
-/* Screen 16: a definition on a card of its own (Swifty stands at its lower-right corner) */
+/* Screen 17: a definition on a card of its own (Swifty stands at its lower-right corner) */
 .dd {
   position: absolute;
   inset: 0;
@@ -903,11 +922,11 @@ button:focus-visible, .switch input:focus-visible + .switch-track {
 .dd-text .stress { display: inline-block; color: #d32f2f; }
 .dd-text .stress.pulse { animation: em-pulse .7s cubic-bezier(.3, 1.6, .5, 1); }
 
-/* Screens 17–20: the panel sits on the left; Swifty stands in the bottom-right corner, with her speech
+/* Screens 18–21: the panel sits on the left; Swifty stands in the bottom-right corner, with her speech
    bubbles above her head. */
 .fm-panel, .fr-panel, .we-panel, .sm-panel { margin-right: 420px; }
 
-/* Screen 17: the book, then Marked Price − Selling Price = Discount, built one piece at a time */
+/* Screen 18: the book, then Marked Price − Selling Price = Discount, built one piece at a time */
 .fm-panel {
   position: relative; /* the flying price is positioned inside it */
   display: flex;
@@ -977,7 +996,7 @@ button:focus-visible, .switch input:focus-visible + .switch-track {
   100% { opacity: 0; transform: scale(1.16); }
 }
 
-/* Screen 18: the formula in words on a pink strip, then in short (D = MP − SP) in a blue box */
+/* Screen 19: the formula in words on a pink strip, then in short (D = MP − SP) in a blue box */
 .fr-panel {
   position: relative; /* the flying letters are positioned inside it */
   display: flex;
@@ -1057,7 +1076,7 @@ button:focus-visible, .switch input:focus-visible + .switch-track {
 .bubble--yellow .b-fill path { fill: #fff2bf; }
 .bubble--yellow .b-text { color: #b3261e; }
 
-/* Screen 19: the book, a solution written out line by line (= signs lined up), and the answer */
+/* Screen 20: the book, a solution written out line by line (= signs lined up), and the answer */
 .we-panel {
   position: relative; /* the flying prices are positioned inside it */
   display: flex;
@@ -1119,7 +1138,7 @@ button:focus-visible, .switch input:focus-visible + .switch-track {
   50%      { box-shadow: 0 10px 0 var(--ink), 0 24px 44px rgba(4, 18, 22, .18), 0 0 0 16px rgba(255, 201, 60, .35); }
 }
 
-/* Screen 20: Let's remember! (three cards joined by arrows, and the formula) */
+/* Screen 21: Let's remember! (three cards joined by arrows, and the formula) */
 .sm-panel {
   display: flex;
   flex-direction: column;
@@ -1199,7 +1218,7 @@ button:focus-visible, .switch input:focus-visible + .switch-track {
 }
 .sm-op { color: var(--ink); }
 
-/* Screen 13: ₹1000 → (₹200 reduced) → ₹800, on a card on the right */
+/* Screen 14: ₹1000 → (₹200 reduced) → ₹800, on a card on the right */
 .red-pos {
   position: absolute;
   right: 56px;
@@ -1364,6 +1383,9 @@ button:focus-visible, .switch input:focus-visible + .switch-track {
   border-radius: 50%;
   background: radial-gradient(closest-side, rgba(52, 36, 20, .45), rgba(52, 36, 20, .2) 55%, rgba(52, 36, 20, 0));
 }
+.walker--matte .walker-reflect { display: none; } /* outdoors: no shine on the ground */
+/* Screen 2: the left leaf of Aniket's gate, cut out of the picture so it can swing open over the view behind it */
+.gate-part { position: absolute; display: block; pointer-events: none; }
 .walker.is-idle .walker-body { animation: breathe 2.6s ease-in-out infinite; }
 @keyframes breathe {
   0%, 100% { transform: scaleY(1); }
@@ -1793,7 +1815,7 @@ kbd {
 
 @media (prefers-reduced-motion: reduce) {
   .mote, .twinkle { display: none; }
-  .glow, .bubble-float, .start-btn, .badge-inner, .badge-rays,
+  .glow, .bubble-float, .thought-puff-bob, .start-btn, .badge-inner, .badge-rays,
   .exclaim-inner, .walker.is-idle .walker-body, #btn-next.is-ready, .rotate-phone,
   .story-next, .spot-ring::after, .red-tag.is-pulsing,
   .dc-stamp.is-landed, .cmp-box.is-key, .cmp-box.is-glowing, .fm-box.is-ping, .fm-op.is-ping, .fm-box.is-ping::after,

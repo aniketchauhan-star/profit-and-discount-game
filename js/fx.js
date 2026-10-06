@@ -210,6 +210,57 @@
     return parts.map(p => p.replace(/\s*\n\s*/g, ' ').trim());
   }
 
+  // The words of a speech bubble or thought cloud, laid out in `host` and measured (the letters are
+  // invisible but already take their space): `box` is the text box and `w` × `h` its size.
+  function lineText(host, o) {
+    const box = el('div', 'b-text', host, { fontSize: px(o.size || 34) });
+    const letters = buildLetters(box, o.text);
+    const h = box.offsetHeight;
+    const w = Math.max(box.offsetWidth, h + 24);
+    box.style.width = px(w);
+    return { box, letters, w, h };
+  }
+
+  // What speech bubbles and thought clouds have in common: the line as plain text (for the voice),
+  // typing it out, and making its highlights pulse.
+  function lineMethods(root, letters, o) {
+    return {
+      el: root,
+      // The whole line as plain text (for the voice).
+      words: (typeof o.text === 'string' ? o.text : o.text.map(seg => seg.t).join('')).replace(/\n/g, ' '),
+      // Each part's plain text, for a bubble that is said one part at a time.
+      parts: partTexts(o.text),
+      // Types the text letter by letter; `ctx.wait` throws if the player leaves the scene.
+      // The little voice blips are left out while a real voice reads the line.
+      // { part } types only up to the end of that part (see buildLetters), continuing from where it stopped.
+      async type(ctx, { speed = 46, blips = true, part } = {}) {
+        let n = 0;
+        for (const letter of letters) {
+          if (letter.classList.contains('on')) continue;
+          if (part !== undefined && +letter.dataset.part > part) break;
+          letter.classList.add('on');
+          const c = letter.textContent;
+          if (blips && /[A-Za-z0-9₹]/.test(c) && n++ % 2 === 0) Sound.blip(o.voice);
+          let delay = speed;
+          if (letter.dataset.end) delay += speed * 0.8;
+          if (/[!?.,]/.test(c)) delay += 140;
+          await ctx.wait(delay);
+        }
+      },
+      emphasize() {
+        root.querySelectorAll('.em, .key').forEach(e => e.classList.add('pulse'));
+      },
+    };
+  }
+
+  // Outline + fill trick: stroke every shape, then fill them all on top so the seams disappear.
+  function paintShapes(art, paths, shadow = [6, 8]) {
+    [['b-shadow', { transform: `translate(${shadow[0]} ${shadow[1]})`, opacity: 0.2 }], ['b-line', {}], ['b-fill', {}]].forEach(([cls, extra]) => {
+      const g = svg('g', Object.assign({ class: cls }, extra), art);
+      paths.forEach(d => svg('path', { d }, g));
+    });
+  }
+
   /**
    * Comic speech bubble, sized to fit its text.
    *  anchor   [x, y] stage point where one corner (or edge middle) of the balloon sits
@@ -223,13 +274,7 @@
   function bubble(parent, o) {
     const root = el('div', o.tone ? `bubble bubble--${o.tone}` : 'bubble', parent);
     const float = el('div', 'bubble-float', root);
-    const textBox = el('div', 'b-text', float, { fontSize: px(o.size || 34) });
-    const letters = buildLetters(textBox, o.text);
-
-    // Measure the laid-out text (letters are invisible but already take their space).
-    const h = textBox.offsetHeight;
-    const w = Math.max(textBox.offsetWidth, h + 24);
-    textBox.style.width = px(w);
+    const { box: textBox, letters, w, h } = lineText(float, o);
     const corner = o.corner || 'bl';
     let x = { r: o.anchor[0] - w, c: o.anchor[0] - w / 2 }[corner[1]] ?? o.anchor[0];
     if (o.within) x = Math.max(o.within[0], Math.min(o.within[1] - w, x));
@@ -251,20 +296,10 @@
     const tail = tailPath(base, tip, half, o.bend !== undefined ? o.bend : 10);
     const art = svg('svg', { width: w, height: h, viewBox: `0 0 ${w} ${h}` });
     float.insertBefore(art, textBox);
-    // Outline + fill trick: stroke both shapes, then fill both on top so the seam disappears.
-    [['b-shadow', { transform: 'translate(6 8)', opacity: 0.2 }], ['b-line', {}], ['b-fill', {}]].forEach(([cls, extra]) => {
-      const g = svg('g', Object.assign({ class: cls }, extra), art);
-      svg('path', { d: body }, g);
-      svg('path', { d: tail }, g);
-    });
+    paintShapes(art, [body, tail]);
     const rot = o.rotate || 0;
 
-    return {
-      el: root,
-      // The whole line as plain text (for the voice).
-      words: (typeof o.text === 'string' ? o.text : o.text.map(seg => seg.t).join('')).replace(/\n/g, ' '),
-      // Each part's plain text, for a bubble that is said one part at a time.
-      parts: partTexts(o.text),
+    return Object.assign(lineMethods(root, letters, o), {
       show() {
         Sound.bloop();
         return settle(root.animate([
@@ -273,26 +308,6 @@
           { opacity: 1, transform: `scale(.97) rotate(${rot - 0.5}deg)`, offset: 0.8 },
           { opacity: 1, transform: `scale(1) rotate(${rot}deg)` },
         ], { duration: T(480), easing: 'cubic-bezier(.2,.8,.3,1)', fill: 'forwards' }));
-      },
-      // Types the text letter by letter; `ctx.wait` throws if the player leaves the scene.
-      // The little voice blips are left out while a real voice reads the line.
-      // { part } types only up to the end of that part (see buildLetters), continuing from where it stopped.
-      async type(ctx, { speed = 46, blips = true, part } = {}) {
-        let n = 0;
-        for (const letter of letters) {
-          if (letter.classList.contains('on')) continue;
-          if (part !== undefined && +letter.dataset.part > part) break;
-          letter.classList.add('on');
-          const c = letter.textContent;
-          if (blips && /[A-Za-z0-9₹]/.test(c) && n++ % 2 === 0) Sound.blip(o.voice);
-          let delay = speed;
-          if (letter.dataset.end) delay += speed * 0.8;
-          if (/[!?.,]/.test(c)) delay += 140;
-          await ctx.wait(delay);
-        }
-      },
-      emphasize() {
-        root.querySelectorAll('.em, .key').forEach(e => e.classList.add('pulse'));
       },
       // Already up and fully typed (to carry a bubble over from the screen before, unchanged).
       showNow() {
@@ -308,7 +323,129 @@
           { opacity: 0, transform: `scale(.3) rotate(${rot - 8}deg)` },
         ], { duration: T(260), easing: 'cubic-bezier(.5,0,.75,0)', fill: 'forwards' })).then(() => root.remove());
       },
-    };
+    });
+  }
+
+  // ---------- thought cloud ----------
+
+  // An ellipse as a path, always drawn the same way round, so overlapping ones fill as one shape.
+  const ellipsePath = (cx, cy, rx, ry) =>
+    `M ${num(cx - rx)} ${num(cy)} a ${num(rx)} ${num(ry)} 0 1 0 ${num(2 * rx)} 0 a ${num(rx)} ${num(ry)} 0 1 0 ${num(-2 * rx)} 0 Z`;
+
+  // A puffy cloud around a w × h text box: an ellipse ringed with round bumps, big and small in turn,
+  // spread evenly along its edge. `a` × `b` is the cloud's outer half-size.
+  function cloudPath(w, h) {
+    const cx = w / 2;
+    const cy = h / 2;
+    const ea = w / 2 + 14;
+    const eb = h / 2 + 12;
+    const r = Math.max(20, Math.min(30, (ea + eb) * 0.15));
+    const pts = []; // points along the ellipse with the distance travelled so far, to space the bumps evenly
+    for (let i = 0, s = 0; i <= 360; i++) {
+      const t = (i / 360) * Math.PI * 2 - Math.PI / 2;
+      const p = { x: cx + ea * Math.cos(t), y: cy + eb * Math.sin(t), s };
+      if (i) p.s = s += Math.hypot(p.x - pts[i - 1].x, p.y - pts[i - 1].y);
+      pts.push(p);
+    }
+    const total = pts[pts.length - 1].s;
+    const n = 2 * Math.max(4, Math.round(total / (r * 3.1))); // even, so big and small bumps alternate all the way round
+    let d = ellipsePath(cx, cy, ea, eb);
+    for (let k = 0, j = 0; k < n; k++) {
+      const s = (k / n) * total;
+      while (pts[j + 1].s < s) j++;
+      const br = k % 2 ? r * 0.82 : r;
+      d += ' ' + ellipsePath(pts[j].x, pts[j].y, br, br);
+    }
+    return { d, a: ea + r, b: eb + r };
+  }
+
+  /**
+   * Thought cloud, sized to fit its text, with a trail of three little puffs leading down to the
+   * thinker's head. show(): the puffs pop up one by one from the head, then the cloud billows out.
+   * The rest works like a speech bubble (type, emphasize, showNow, hide, words).
+   *  at    [x, y] stage point at the middle of the cloud
+   *  tip   [x, y] where the trail starts: the thinker's head
+   *  text  see buildLetters; size (px, default 34), voice ('boy' | 'man' | 'bird')
+   */
+  function thought(parent, o) {
+    const root = el('div', 'bubble thought', parent);
+    const cloud = el('div', 'thought-cloud', root);
+    const float = el('div', 'bubble-float', cloud);
+    const { box, letters, w, h } = lineText(float, o);
+    const x = o.at[0] - w / 2;
+    const y = o.at[1] - h / 2;
+    Object.assign(root.style, { left: px(x), top: px(y), width: px(w), height: px(h) });
+    const shape = cloudPath(w, h);
+    const art = svg('svg', { width: w, height: h, viewBox: `0 0 ${w} ${h}` });
+    float.insertBefore(art, box);
+    paintShapes(art, [shape.d]);
+
+    // The trail: from the head towards the middle of the cloud, small puffs to big ones, bowing gently upwards.
+    const head = [o.tip[0] - x, o.tip[1] - y];
+    const dist = Math.hypot(w / 2 - head[0], h / 2 - head[1]);
+    const u = [(w / 2 - head[0]) / dist, (h / 2 - head[1]) / dist];
+    const edge = 1 / Math.hypot(u[0] / (shape.a - 12), u[1] / (shape.b - 12)); // middle → the cloud's edge, towards the head
+    const room = dist - edge;
+    const radii = [7.5, 11, 15];
+    const gap = Math.max(5, Math.min(30, (room - 2 - 2 * radii.reduce((t, pr) => t + pr, 0)) / 3));
+    const up = u[0] >= 0 ? [u[1], -u[0]] : [-u[1], u[0]];
+    let along = 2;
+    const puffs = radii.map((pr, i) => {
+      along += pr;
+      const bow = Math.sin(Math.PI * Math.min(1, along / room)) * room * 0.08;
+      const pcx = head[0] + u[0] * along + up[0] * bow;
+      const pcy = head[1] + u[1] * along + up[1] * bow;
+      along += pr + gap;
+      const puff = el('div', 'thought-puff', root, { left: px(pcx - pr), top: px(pcy - pr), width: px(2 * pr), height: px(2 * pr), opacity: '0' });
+      const bob = el('div', 'thought-puff-bob', puff, { animationDelay: `${-i * 0.45}s` });
+      paintShapes(svg('svg', { width: 2 * pr, height: 2 * pr, viewBox: `0 0 ${2 * pr} ${2 * pr}` }, bob), [ellipsePath(pr, pr, pr, pr)], [3, 4]);
+      return puff;
+    });
+    // The cloud billows out from where the trail meets it.
+    cloud.style.transformOrigin = `${num(w / 2 - u[0] * edge)}px ${num(h / 2 - u[1] * edge)}px`;
+    cloud.style.opacity = '0';
+    const later = (ms, fn) => setTimeout(() => root.isConnected && fn(), ms);
+
+    return Object.assign(lineMethods(root, letters, o), {
+      show() {
+        root.style.opacity = '1';
+        const step = T(150);
+        puffs.forEach((puff, i) => {
+          puff.style.opacity = '';
+          settle(puff.animate(reducedMotion ? [{ opacity: 0 }, { opacity: 1 }] : [
+            { opacity: 0, transform: 'scale(0)' },
+            { opacity: 1, transform: 'scale(1.3)', offset: 0.6 },
+            { opacity: 1, transform: 'scale(1)' },
+          ], { duration: T(260), delay: i * step, easing: 'cubic-bezier(.2,.8,.3,1)', fill: 'backwards' }));
+          later(i * step, () => Sound.puff(i));
+        });
+        later(puffs.length * step, () => Sound.bloop());
+        cloud.style.opacity = '';
+        return settle(cloud.animate(reducedMotion ? [{ opacity: 0 }, { opacity: 1 }] : [
+          { opacity: 0, transform: 'scale(.1)' },
+          { opacity: 1, transform: 'scale(1.07, 1.04)', offset: 0.55 },
+          { opacity: 1, transform: 'scale(.97, .99)', offset: 0.8 },
+          { opacity: 1, transform: 'scale(1)' },
+        ], { duration: T(620), delay: puffs.length * step, easing: 'cubic-bezier(.2,.8,.3,1)', fill: 'backwards' }));
+      },
+      // Already up and fully typed (to carry a cloud over from the screen before, unchanged).
+      showNow() {
+        root.classList.add('is-static');
+        letters.forEach(letter => letter.classList.add('on'));
+        root.style.opacity = '1';
+        [cloud, ...puffs].forEach(n => { n.style.opacity = ''; });
+        requestAnimationFrame(() => root.classList.remove('is-static'));
+      },
+      // The cloud melts away, then the puffs, back towards the head; then it is removed.
+      hide() {
+        const melt = (node, delay) => settle(node.animate(reducedMotion ? [{ opacity: 1 }, { opacity: 0 }] : [
+          { opacity: 1, transform: 'scale(1)' },
+          { opacity: 0, transform: 'scale(1.08)' },
+        ], { duration: T(300), delay, easing: 'ease-in', fill: 'forwards' }));
+        const gone = [melt(cloud, 0), ...puffs.slice().reverse().map((puff, i) => melt(puff, T(70) * (i + 1)))];
+        return Promise.all(gone).then(() => root.remove());
+      },
+    });
   }
 
   // ---------- price badge (starburst) ----------
@@ -1898,11 +2035,14 @@
    * Plays a cleaned walk strip (see WALK_SHEET in game.js).
    * Frames are picked by *distance walked*, not by time: each frame stays up while the body travels
    * the stride measured from the planted foot. That keeps the feet from skating at any speed.
+   * { matte: true } leaves out the reflection on the shiny mall floor (e.g. outdoors);
+   * { face: -1 } mirrors him, to walk to the left.
    */
   class Walker {
-    constructor(parent, sheet) {
+    constructor(parent, sheet, { matte = false, face = 1 } = {}) {
       this.sheet = sheet;
-      this.root = el('div', 'walker', parent);
+      this.face = face;
+      this.root = el('div', matte ? 'walker walker--matte' : 'walker', parent);
       el('div', 'walker-shadow', this.root);
       this.reflection = this._layer('walker-sprite walker-reflect');
       this.body = this._layer('walker-sprite walker-body');
@@ -1932,7 +2072,7 @@
     // (x, y) = point between the feet on the floor; s = sprite scale.
     place(x, y, s) {
       this.x = x;
-      this.root.style.transform = `translate(${num(x)}px, ${num(y)}px) scale(${s.toFixed(4)})`;
+      this.root.style.transform = `translate(${num(x)}px, ${num(y)}px) scale(${(s * this.face).toFixed(4)}, ${s.toFixed(4)})`;
     }
 
     // Index into sheet.loop whose stride span (centred on the frame) contains `phase`.
@@ -2008,7 +2148,7 @@
   }
 
   window.FX = {
-    CANCELLED, el, rand, settle, glow, motes, twinkles, burst, shine, exclaim, bubble, badge, ring, question, definitions, pricePanel,
+    CANCELLED, el, rand, settle, glow, motes, twinkles, burst, shine, exclaim, bubble, thought, badge, ring, question, definitions, pricePanel,
     reduction, discountPanel, definitionCard, formulaPanel, formulaReveal, workedExample, summaryPanel, Bird, Walker,
     setPace(p) { pace = p; },
   };

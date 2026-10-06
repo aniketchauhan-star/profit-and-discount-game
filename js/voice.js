@@ -11,7 +11,7 @@
   'use strict';
 
   // Recorded lines, by line id: { shock: 'shock.mp3', ... } (files in "game assets/voice/").
-  // Line ids: browse, ask, price, hint, def0-title, def0-text, def1-title, def1-text, here, correct, shock,
+  // Line ids: wake, browse, ask, price, hint, def0-title, def0-text, def1-title, def1-text, here, correct, shock,
   // mp-line, mp-term, mp-def, cmp-mp, cmp-sp, cmp-why, reveal-1, reveal-2, reveal-3, disc-1, disc-2, dwhy-1, dwhy-2, ddef,
   // f-mp, f-sp, f-d, rule-1, rule-2, rule-3, fr-1 … fr-10, fr-use, ap-0 … ap-6, sum-0 … sum-4.
   const RECORDINGS = {};
