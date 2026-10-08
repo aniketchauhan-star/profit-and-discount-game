@@ -42,6 +42,14 @@
     for (const k in vars) node.style.setProperty('--' + k, vars[k]);
   }
 
+  const classes = (...names) => names.filter(Boolean).join(' ');
+  // Restarts the animation that class `cls` gives `node` (e.g. a pop while something is talked about).
+  const replay = (node, cls) => {
+    node.classList.remove(cls);
+    void node.offsetWidth;
+    node.classList.add(cls);
+  };
+
   // ---------- ambient light ----------
 
   function glow(parent, x, y, w, h, opts = {}) {
@@ -1485,128 +1493,6 @@
     };
   }
 
-  // ---------- worked example (the formula used on the book) ----------
-
-  /**
-   * The book on the left; on the right a solution written out line by line with its = signs lined up, and
-   * under it an answer box.
-   *  rows    [{ label, tone, value: [{ t, tone } | { t, op: true }] }], or 'rule' for a dividing line
-   *  answer  { label, value }
-   * write(i) writes row i's label and = sign; its values then come in with fromSticker(i, j),
-   * copy([i, j], [k, l]) (a value flies down from another line) or show(i, j). rule(i) draws a dividing
-   * line; answer() lands the answer box.
-   */
-  function workedExample(parent, { price, rows, answer }) {
-    const root = el('div', 'mp', parent); // the same centring wrapper as the price panels
-    const panel = el('div', 'we-panel', root);
-    const bookBox = el('div', 'we-book', panel);
-    bookBox.innerHTML = bookArt(price);
-    const sticker = bookBox.querySelector('.mp-sticker-card');
-    const side = el('div', 'we-side', panel);
-    const sheet = el('div', 'we-sheet', side);
-    const lines = rows.map(row => {
-      if (row === 'rule') return { rule: el('div', 'we-rule', sheet) };
-      const label = el('div', `we-label${row.tone ? ' tone-' + row.tone : ''}`, sheet);
-      label.textContent = row.label || '';
-      const eq = el('div', 'we-eq', sheet);
-      eq.textContent = '=';
-      const cell = el('div', 'we-value', sheet);
-      const vals = row.value.map(v => Object.assign(el('span', v.op ? 'we-op' : `we-num tone-${v.tone}`, cell), { textContent: v.t }));
-      return { label, eq, vals };
-    });
-    const ans = el('div', 'we-answer', side);
-    el('span', '', ans).textContent = `${answer.label} = `;
-    el('span', 'we-answer-value', ans).textContent = answer.value;
-    sheet.setAttribute('role', 'group');
-    sheet.setAttribute('aria-label', rows.filter(r => r !== 'rule')
-      .map(r => `${r.label || ''} = ${r.value.map(v => v.t).join(' ')}`).join(', '));
-    [panel, bookBox, ans, ...lines.flatMap(l => (l.rule ? [l.rule] : [l.label, l.eq, ...l.vals]))]
-      .forEach(n => { n.style.opacity = '0'; });
-    const wipe = (node, ms) => reveal(node, [{ clipPath: 'inset(0 100% 0 0)' }, { clipPath: 'inset(0 0 0 0)' }], {
-      duration: T(ms), easing: 'cubic-bezier(.3,.1,.3,1)',
-    });
-    const settleIn = node => reveal(node, [{ transform: 'scale(1.18)' }, { transform: 'none' }], {
-      duration: T(320), easing: 'cubic-bezier(.3,1.6,.5,1)',
-    });
-
-    return {
-      el: root,
-      panel,
-      open() {
-        Sound.whoosh();
-        return reveal(panel, [
-          { opacity: 0, transform: 'translateY(80px) scale(.82)' },
-          { opacity: 1, transform: 'translateY(-8px) scale(1.015)', offset: 0.7 },
-          { opacity: 1, transform: 'none' },
-        ], { duration: T(680), easing: 'cubic-bezier(.2,.8,.3,1)' });
-      },
-      showBook() {
-        Sound.bloop();
-        return reveal(bookBox, [
-          { opacity: 0, transform: 'translateY(60px) rotate(-6deg) scale(.9)' },
-          { opacity: 1, transform: 'translateY(-6px) rotate(1deg) scale(1.02)', offset: 0.7 },
-          { opacity: 1, transform: 'none' },
-        ], { duration: T(800), easing: 'cubic-bezier(.2,.8,.3,1)' });
-      },
-      // A pulsing ring around the price sticker on the book.
-      highlight() {
-        const r = panelBox(panel, sticker);
-        Sound.sparkle();
-        return ring(panel, { x: (r.l + r.r) / 2, y: (r.t + r.b) / 2, r: Math.max(r.r - r.l, r.b - r.t) * 0.72 });
-      },
-      // Row i's label and = sign are written in, left to right.
-      async write(i) {
-        const { label, eq } = lines[i];
-        Sound.scribble();
-        if (label.textContent) await wipe(label, 520);
-        else label.style.opacity = '';
-        await wipe(eq, 220);
-      },
-      // The price on the book's sticker flies into row i's value j.
-      async fromSticker(i, j) {
-        Sound.swish();
-        await flyInto(panel, sticker, lines[i].vals[j], { text: price, card: true });
-        Sound.pop();
-        await settleIn(lines[i].vals[j]);
-      },
-      // A copy of one value flies down into another line (putting the numbers into the formula).
-      async copy([i, j], [k, l]) {
-        const from = lines[i].vals[j];
-        const to = lines[k].vals[l];
-        Sound.swish();
-        await flyInto(panel, from, to, { text: from.textContent, cls: from.className.replace('we-num', '').trim(), lift: 60, ms: 800 });
-        Sound.pop();
-        await settleIn(to);
-      },
-      // Row i's value j pops in; { stamp } lands it harder (an answer).
-      show(i, j, { stamp = false } = {}) {
-        const node = lines[i].vals[j];
-        if (stamp) Sound.stamp();
-        else Sound.bloop();
-        return reveal(node, [
-          { opacity: 0, transform: stamp ? 'scale(1.8) rotate(-6deg)' : 'scale(.55)' },
-          { opacity: 1, transform: stamp ? 'scale(.94)' : 'scale(1.08)', offset: 0.62 },
-          { opacity: 1, transform: 'none' },
-        ], { duration: T(560), easing: 'cubic-bezier(.2,.8,.3,1)' });
-      },
-      // The dividing line is drawn across.
-      rule(i) {
-        Sound.swish();
-        return wipe(lines[i].rule, 600);
-      },
-      // The answer box lands like a stamp.
-      answer() {
-        Sound.stamp();
-        return reveal(ans, [
-          { opacity: 0, transform: 'translateY(-30px) scale(1.6) rotate(-6deg)' },
-          { opacity: 1, transform: 'scale(.95) rotate(1deg)', offset: 0.6 },
-          { opacity: 1, transform: 'none' },
-        ], { duration: T(620), easing: 'cubic-bezier(.3,.6,.3,1)' }).then(() => ans.classList.add('is-landed'));
-      },
-      answerEl: ans,
-    };
-  }
-
   // ---------- summary (Let's remember!) ----------
 
   /**
@@ -1851,9 +1737,17 @@
 
   // The pieces of a worked line, built in `expr`: each { t, cls } (a word or number), { op } (an operator,
   // e.g. '−'), { frac: [top, bottom], cls, top, bottom, split } (a stacked fraction: `top` and `bottom` colour
-  // its halves; `split` hides them, to bring them in one at a time) or { answer } (the answer). Returns the nodes.
+  // its halves; `split` hides them, to bring them in one at a time), { answer } (the answer) or { slot, t, cls }
+  // (an empty box showing the faint word `slot`, which the player fills with `t`: see workedSheet's drag).
+  // Returns the nodes.
   function lineParts(expr, parts) {
     return parts.map(part => {
+      if (part.slot) {
+        const box = el('span', classes('ws-slot', part.cls), expr);
+        el('span', 'ws-slot-hint', box).textContent = part.slot;
+        el('span', 'ws-slot-value', box).textContent = part.t;
+        return box;
+      }
       if (part.frac) {
         const f = el('div', classes('pf-frac', part.cls), expr);
         const halves = [
@@ -1878,11 +1772,12 @@
    *           label  [{ t, cls }] left of the = sign (none: the line carries on the one above)
    *           parts  what it equals, each { t, cls } (a word or number), { op } (an operator, e.g. '−'),
    *                  { frac: [top, bottom], cls } (a stacked fraction; `top` and `bottom` can colour its two
-   *                  halves; { split: true } brings its halves in one at a time: see show) or { answer }
+   *                  halves; { split: true } brings its halves in one at a time: see show), { answer }, or
+   *                  { slot, t, cls } (an empty box for the player to drag a value into: see drag)
    *           band   the line sits on a band (the rule being used): light blue, or 'yellow'
    *  big    larger writing (for a sheet on its own)
-   * Reveal it with open() → box(i) … → write(r) (its label is written in, then its = pops) → part(r, j) … or
-   * fly(i, r, j) (box i's value lifts out and flies into that part) → answer(r) → mark(r) (on a yellow box).
+   * Reveal it with open() → box(i) … → write(r) (its label is written in, then its = pops) → part(r, j) … →
+   * drag(…) (the player fills the empty boxes) → answer(r) → mark(r) (on a yellow box).
    * A split fraction's part(r, j) only draws its bar; show(node) then pops in its top or bottom (.pf-num,
    * .pf-den). ping(node) pops anything while it is talked about: `boxes`, and `rows[r].parts[j]`.
    */
@@ -1923,7 +1818,8 @@
     panel.setAttribute('aria-label', [
       ...boxes.map(b => `${b.label} ${b.value}`),
       ...lines.map(l => `${l.label.textContent} = ${l.parts.map(n => (n.classList.contains('pf-frac')
-        ? `${n.firstChild.textContent} over ${n.lastChild.textContent}` : n.textContent)).join(' ')}`),
+        ? `${n.firstChild.textContent} over ${n.lastChild.textContent}`
+        : n.classList.contains('ws-slot') ? n.lastChild.textContent : n.textContent)).join(' ')}`),
     ].join('. '));
     [panel, ...boxEls, ...arrows, ...lines.flatMap(l => [l.label, l.eq, ...l.parts])].forEach(n => { n.style.opacity = '0'; });
 
@@ -1935,9 +1831,6 @@
     ], { duration: T(480), easing: EASE });
     const wipe = (node, ms) => reveal(node, [{ clipPath: 'inset(0 100% 0 0)' }, { clipPath: 'inset(0 0 0 0)' }], {
       duration: T(ms), easing: 'cubic-bezier(.3,.1,.3,1)',
-    });
-    const settleIn = node => reveal(node, [{ transform: 'scale(1.18)' }, { transform: 'none' }], {
-      duration: T(320), easing: 'cubic-bezier(.3,1.6,.5,1)',
     });
 
     return {
@@ -1985,22 +1878,14 @@
           node.style.opacity = '';
           return reveal(node.querySelector('.pf-bar'), [{ transform: 'scaleX(0)' }, { transform: 'none' }], { duration: T(420), easing: 'ease-out' });
         }
-        if (node.classList.contains('pf-frac') || node.textContent.length > 5) {
+        if (!lines[r].spec[j].slot && (node.classList.contains('pf-frac') || node.textContent.length > 5)) {
           Sound.scribble();
           return wipe(node, 560);
         }
         Sound.pop();
         return pop(node);
       },
-      // Box i's value lifts out (an exact copy, so it lifts off cleanly) and glides into part j of line r,
-      // landing as that part's text (e.g. ₹1800 → 1800).
-      async fly(i, r, j) {
-        const to = lines[r].parts[j];
-        Sound.swish();
-        await flyInto(panel, values[i], to, { text: values[i].textContent, cls: lines[r].spec[j].cls || '', lift: -24, ms: 850 });
-        Sound.pop();
-        await settleIn(to);
-      },
+      drag: (pairs, handlers) => dragValues(panel, pairs.map(([i, r, j]) => [values[i], lines[r].parts[j]]), handlers),
       // A hidden piece (e.g. the top of a split fraction) pops in.
       show(node) {
         Sound.pop();
@@ -2027,285 +1912,213 @@
     };
   }
 
-  // ---------- percentage table (Percentage | Amount) ----------
-
-  // A step between two rows of the table: a red arrow going down (its label goes beside it).
-  const STEP_ARROW = '<svg class="pt-arrow" viewBox="0 0 40 90" aria-hidden="true"><path pathLength="1" d="M20 6 V 80 M 7 64 L 20 81 L 33 64"/></svg>';
-  const classes = (...names) => names.filter(Boolean).join(' ');
-  // Restarts the animation that class `cls` gives `node` (e.g. a pop while something is talked about).
-  const replay = (node, cls) => {
-    node.classList.remove(cls);
-    void node.offsetWidth;
-    node.classList.add(cls);
-  };
-  // Applies `change` to `node` with its transitions off, so it takes effect at once.
-  const at = (node, change) => {
-    node.style.transition = 'none';
-    change();
-    void node.offsetWidth;
-    node.style.transition = '';
-  };
+  // ---------- dragging values into empty boxes ----------
 
   /**
-   * A table with a header row (e.g. Percentage | Amount) and rows whose values appear one cell at a time.
-   *  cols   the header cells
-   *  rows   { cells: ['100%', '₹500'], tones } (a tone per cell: 'result', yellow with a red value, for a new
-   *         result; 'ask', white, for the value to find, e.g. '?'), or { step: '÷ 2' }: in every column a red
-   *         arrow going down, with its label, from the row above to the row below. { closed: true } starts a
-   *         row folded away.
-   *  title  optional question on a pink strip above the table
-   * Reveal it with open() → head() → cell(r, c) …, or show it with its first n rows at once with showNow(n)
-   * (carried over from the screen before). unfold(rows) opens folded rows: the table grows and, staying
-   * centred, makes room. showTitle(); step(r, c) draws a step's arrow and pops its label; set(r, c, text,
-   * tone) changes a value (e.g. '?' → '₹250'); ping(r, c) pops a value or a step while it is talked about, and
-   * pingHead(c) a column's name;
-   * link(r) makes a row flash and its values pop together; mark(r, c) sets a value on a bright yellow box (the
-   * answer), unmark(r, c) takes it off again; retone(r, tones) changes a row's colours (softly); conclude(text)
-   * puts the answer under the table, on a green bar with a tick, and clearBelow() fades out what is under the
-   * table. fold(rows) folds rows away (the reverse of unfold); fit(scale, { lift }) eases the table, with its
-   * question and answers, to another size (e.g. to fit more rows). Where it makes sense, { instant: true }
-   * gives the end state at once (to carry the table over from the screen before). `below` is the place under
-   * the table for answer buttons (see choices) or that bar.
+   * The player puts each value into its empty box: pairs [[value, box], …], both inside `panel` (positioned);
+   * value n belongs in box n. A value can be dragged (mouse or touch), or tapped (or picked with Enter) and then
+   * its box tapped. Let go over its own box, it settles in and the box shows its text (onRight(n)); over another
+   * box it shakes there and goes back (onWrong(n, m): value n on box m); anywhere else it just goes back. A faint
+   * copy of a value shows the way at the start, and again whenever nothing has happened for a while. Resolves
+   * once every box is filled.
    */
-  function percentTable(parent, { cols, rows, title }) {
-    const root = el('div', 'mp', parent); // the same centring wrapper as the other panels
-    const stack = el('div', 'pt-stack', root); // the table, with its title above and its answers below
-    const titleEl = title ? el('div', 'pt-title', stack) : null;
-    const table = el('div', 'pt-table', stack);
-    const below = el('div', 'pt-below', stack);
-    table.style.gridTemplateColumns = `repeat(${cols.length}, 1fr)`;
-    const label = (node, text, cls = 'pt-value') => {
-      const span = el('span', cls, node);
-      span.textContent = text;
-      span.style.opacity = '0';
-      return span;
-    };
-    if (titleEl) {
-      titleEl.textContent = title;
-      titleEl.style.opacity = '0';
-    }
-    const heads = cols.map((t, c) => label(el('div', classes('pt-head', c && 'pt-col'), table), t));
-    const grid = rows.map((row, r) => cols.map((_, c) => {
-      const base = ['pt-cell', r && 'pt-row', c && 'pt-col', row.closed && 'is-closed'];
-      if (row.step) {
-        const cell = el('div', classes(...base, 'pt-step'), table);
-        cell.insertAdjacentHTML('beforeend', STEP_ARROW);
-        const arrow = cell.lastElementChild;
-        arrow.style.opacity = '0';
-        return { cell, arrow, label: label(cell, row.step, 'pt-step-label') };
-      }
-      const tone = row.tones && row.tones[c];
-      const cell = el('div', classes(...base, tone && 'pt-cell--' + tone), table);
-      return { cell, value: label(cell, row.cells[c]) };
-    }));
-    // What the table says, for screen readers (kept up to date as values change).
-    const describe = () => {
-      const lines = grid.map(row => (row[0].value
-        ? row.map((s, c) => `${cols[c]} ${s.value.textContent}`).join(', ')
-        : row[0].label.textContent));
-      stack.setAttribute('aria-label', (title ? title + ' ' : '') + lines.join('; '));
-    };
-    stack.setAttribute('role', 'group');
-    describe();
-    table.style.opacity = '0';
-    const EASE = 'cubic-bezier(.2,.8,.3,1)';
-    const pop = node => reveal(node, [
-      { opacity: 0, transform: 'scale(.3) rotate(-8deg)' },
-      { opacity: 1, transform: 'scale(1.14) rotate(2deg)', offset: 0.6 },
-      { opacity: 1, transform: 'none' },
-    ], { duration: T(560), easing: EASE });
-    // A cell's classes with its tone changed to `tone` (none: the plain cream).
-    const toned = (cell, tone) => classes(...cell.className.split(' ').filter(n => !n.startsWith('pt-cell--')), tone && 'pt-cell--' + tone);
-    const restart = (node, cls) => {
-      node.classList.remove(cls);
-      void node.offsetWidth; // restart its animation
-      node.classList.add(cls);
-    };
+  function dragValues(panel, pairs, { onRight, onWrong } = {}) {
+    return new Promise(resolve => {
+      const values = pairs.map(([value]) => value);
+      const boxes = pairs.map(([, box]) => box);
+      const filled = new Set(); // boxes done
+      const moving = new Set(); // values on their way somewhere
+      let picked = -1;          // a value picked up with a tap or a key, waiting for a box
+      let held = null;          // the value being dragged: { n, id, x, y, chip }
+      let idle = null;
 
-    return {
-      el: root,
-      table,
-      below,
-      open() {
-        Sound.whoosh();
-        return reveal(table, [
-          { opacity: 0, transform: 'translateY(80px) scale(.82)' },
-          { opacity: 1, transform: 'translateY(-8px) scale(1.015)', offset: 0.7 },
-          { opacity: 1, transform: 'none' },
-        ], { duration: T(680), easing: EASE });
-      },
-      // The table with its header and its first n rows, already in place.
-      showNow(n) {
-        table.style.opacity = '';
-        heads.forEach(h => { h.style.opacity = ''; });
-        grid.slice(0, n).forEach(row => row.forEach(s => {
-          [s.value, s.arrow, s.label].forEach(x => { if (x) x.style.opacity = ''; });
-        }));
-      },
-      // The column names drop in, one after the other.
-      head() {
-        Sound.bloop();
-        return Promise.all(heads.map((h, i) => reveal(h, [
-          { opacity: 0, transform: 'translateY(-34px)' },
-          { opacity: 1, transform: 'none' },
-        ], { duration: T(560), delay: i * T(220), easing: EASE })));
-      },
-      // One value pops into its cell.
-      cell(r, c) {
-        Sound.pop();
-        return pop(grid[r][c].value);
-      },
-      // Folded rows open up to their full height; the table grows and glides to stay centred.
-      unfold(list) {
-        Sound.whoosh();
-        return Promise.all(list.flatMap(r => grid[r].map(({ cell }) => {
-          cell.classList.remove('is-closed');
-          if (reducedMotion) return Promise.resolve();
-          const h = cell.offsetHeight;
-          const border = getComputedStyle(cell).borderTopWidth;
-          cell.classList.add('is-unfolding');
-          return settle(cell.animate([
-            { height: '0px', borderTopWidth: '0px' },
-            { height: `${h}px`, borderTopWidth: border },
-          ], { duration: T(750), easing: 'cubic-bezier(.3,.7,.4,1)' })).then(() => cell.classList.remove('is-unfolding'));
-        })));
-      },
-      // The question drops in above the table.
-      showTitle() {
-        Sound.bloop();
-        return reveal(titleEl, [
-          { opacity: 0, transform: 'translateY(-40px) scale(.9)' },
-          { opacity: 1, transform: 'translateY(4px) scale(1.02)', offset: 0.7 },
-          { opacity: 1, transform: 'none' },
-        ], { duration: T(620), easing: EASE });
-      },
-      // A step: its arrow draws itself downwards, then its label pops in.
-      async step(r, c) {
-        const s = grid[r][c];
-        Sound.drop();
-        s.arrow.style.opacity = '';
-        await settle(s.arrow.querySelector('path').animate([{ strokeDashoffset: 1 }, { strokeDashoffset: 0 }], {
-          duration: reducedMotion ? 1 : T(650), easing: 'cubic-bezier(.45,0,.3,1)', fill: 'backwards',
-        }));
-        Sound.pop();
-        await pop(s.label);
-      },
-      // A value changes (e.g. '?' → '₹250'): it shrinks away and the new one pops in, with the cell's new tone.
-      async set(r, c, text, tone) {
-        const s = grid[r][c];
-        const out = s.value.animate([{ opacity: 1, transform: 'none' }, { opacity: 0, transform: 'scale(.4)' }], {
-          duration: reducedMotion ? 1 : T(220), easing: 'ease-in', fill: 'forwards',
-        });
-        await settle(out);
-        s.value.textContent = text;
-        s.cell.className = toned(s.cell, tone);
-        out.cancel();
-        describe();
-        Sound.pop();
-        return pop(s.value);
-      },
-      // A value, or a step (its arrow and label), pops while it is talked about.
-      ping(r, c) {
-        const s = grid[r][c];
-        [s.value, s.label, s.arrow].forEach(x => { if (x) restart(x, 'is-ping'); });
-      },
-      // A column's name pops (e.g. "both sides": Percentage and Amount).
-      pingHead(c) {
-        restart(heads[c], 'is-ping');
-      },
-      // The whole row flashes gold and its values pop together.
-      link(r) {
-        Sound.ding();
-        grid[r].forEach(({ cell }) => restart(cell, 'is-linked'));
-      },
-      // A value is marked as the answer: it sits on a bright yellow box.
-      mark(r, c, { instant = false } = {}) {
-        const { value } = grid[r][c];
-        if (instant) return Promise.resolve(at(value, () => value.classList.add('is-marked')));
-        value.classList.add('is-marked');
-        Sound.pop();
-        if (reducedMotion) return Promise.resolve();
-        return settle(value.animate([
-          { transform: 'scale(.7)' },
-          { transform: 'scale(1.1)', offset: 0.6 },
-          { transform: 'none' },
-        ], { duration: T(520), easing: EASE }));
-      },
-      // The box comes off again (it fades away).
-      unmark(r, c) {
-        grid[r][c].value.classList.remove('is-marked');
-      },
-      // A row's colours change, softly: tones per cell, as in `rows` (null: the plain cream).
-      retone(r, tones, { instant = false } = {}) {
-        grid[r].forEach(({ cell }, c) => {
-          const change = () => { cell.className = toned(cell, tones && tones[c]); };
-          if (instant) at(cell, change);
-          else change();
-        });
-      },
-      // Rows fold away: they shrink to nothing while the table, staying centred, closes up.
-      fold(list) {
-        return Promise.all(list.flatMap(r => grid[r].map(({ cell }) => {
-          if (reducedMotion) {
-            cell.classList.add('is-closed');
-            return Promise.resolve();
-          }
-          const h = cell.offsetHeight;
-          const border = getComputedStyle(cell).borderTopWidth;
-          cell.classList.add('is-unfolding');
-          // What is in the row fades out first, so no clipped bits show as it closes.
-          Array.from(cell.children).forEach(n => n.animate([{ opacity: 1 }, { opacity: 0 }], {
-            duration: T(220), easing: 'ease-out', fill: 'forwards',
-          }));
-          const anim = cell.animate([
-            { height: `${h}px`, borderTopWidth: border },
-            { height: '0px', borderTopWidth: '0px' },
-          ], { duration: T(650), easing: 'cubic-bezier(.4,0,.6,1)', fill: 'forwards' });
-          return settle(anim).then(() => {
-            cell.classList.add('is-closed');
-            cell.classList.remove('is-unfolding');
-            anim.cancel();
-          });
-        })));
-      },
-      // The table, with its question and answers, eases to another size (scale), raised by `lift` px.
-      fit(scale, { lift = 0, instant = false } = {}) {
-        const to = `translateY(${-lift}px) scale(${scale})`;
-        if (instant || reducedMotion) {
-          stack.style.transform = to;
-          return Promise.resolve();
-        }
-        const from = getComputedStyle(stack).transform;
-        const anim = stack.animate([{ transform: from === 'none' ? 'none' : from }, { transform: to }], {
-          duration: T(750), easing: 'cubic-bezier(.3,.7,.4,1)', fill: 'forwards',
+      // A pointer, or a node's centre, in the panel's own pixels (the stage is scaled to fit the window).
+      const inPanel = (cx, cy) => {
+        const P = panel.getBoundingClientRect();
+        const k = P.width / panel.offsetWidth;
+        return [(cx - P.left) / k - panel.clientLeft, (cy - P.top) / k - panel.clientTop];
+      };
+      const centre = node => {
+        const b = panelBox(panel, node);
+        return [(b.l + b.r) / 2, (b.t + b.b) / 2];
+      };
+      // The empty box under the pointer (with a little leeway), or -1.
+      const boxAt = (cx, cy) => boxes.findIndex((box, m) => {
+        if (filled.has(m)) return false;
+        const r = box.getBoundingClientRect();
+        const pad = r.height * 0.4;
+        return cx > r.left - pad && cx < r.right + pad && cy > r.top - pad && cy < r.bottom + pad;
+      });
+      // A copy of value n to move about; at(chip, [x, y], s) centres it on (x, y), at scale s.
+      const chipOf = n => {
+        const chip = el('div', 'fly-chip ws-chip', panel);
+        chip.textContent = values[n].textContent;
+        const cs = getComputedStyle(values[n]);
+        Object.assign(chip.style, { fontSize: cs.fontSize, color: cs.color });
+        return chip;
+      };
+      const at = (chip, [x, y], s) => `translate(${num(x - chip.offsetWidth / 2)}px, ${num(y - chip.offsetHeight / 2)}px) scale(${num(s)})`;
+      // The size of value n's text in its box, compared with its copy's.
+      const fit = (n, chip) => parseFloat(getComputedStyle(boxes[n].lastChild).fontSize) / parseFloat(chip.style.fontSize);
+      const glide = (chip, to, s, ms) => {
+        const end = at(chip, to, s);
+        const anim = chip.animate([{ transform: chip.style.transform || end }, { transform: end }], {
+          duration: reducedMotion ? 1 : ms, easing: 'cubic-bezier(.3,.7,.3,1)', fill: 'forwards',
         });
         return settle(anim).then(() => {
-          stack.style.transform = to;
+          chip.style.transform = end;
           anim.cancel();
         });
-      },
-      // Whatever is under the table (the answers, the green bar) fades away.
-      clearBelow() {
-        return Promise.all(Array.from(below.children).map(n => settle(n.animate([
-          { opacity: 1, transform: 'none' },
-          { opacity: 0, transform: 'translateY(30px) scale(.94)' },
-        ], { duration: reducedMotion ? 1 : T(380), easing: 'cubic-bezier(.5,0,.75,0)', fill: 'forwards' })).then(() => n.remove())));
-      },
-      // The answer, under the table: a green bar with a tick. Resolves with the bar.
-      conclude(text, { instant = false } = {}) {
-        const bar = el('div', 'pt-result', below);
-        bar.setAttribute('role', 'status');
-        el('span', 'pt-result-tick', bar).innerHTML = ICON_CHECK;
-        el('span', 'pt-result-text', bar).textContent = text;
-        if (instant) return Promise.resolve(bar);
-        Sound.chime();
-        return reveal(bar, [
-          { opacity: 0, transform: 'translateY(50px) scale(.85)' },
-          { opacity: 1, transform: 'translateY(-6px) scale(1.03)', offset: 0.7 },
-          { opacity: 1, transform: 'none' },
-        ], { duration: T(640), easing: EASE }).then(() => bar);
-      },
-    };
+      };
+      const goBack = async (n, chip) => {
+        await glide(chip, centre(values[n]), 1, 320);
+        chip.remove();
+        values[n].classList.remove('is-lifted');
+        moving.delete(n);
+      };
+
+      const pick = n => {
+        if (picked >= 0) values[picked].classList.remove('is-picked');
+        picked = n;
+        boxes.forEach((box, m) => box.classList.toggle('is-waiting', n >= 0 && !filled.has(m)));
+        if (n >= 0) {
+          values[n].classList.add('is-picked');
+          Sound.blip();
+        }
+      };
+
+      async function drop(n, m, chip) {
+        pick(-1);
+        moving.add(n);
+        if (!chip) { // tapped: it lifts out of its box first
+          chip = chipOf(n);
+          chip.style.transform = at(chip, centre(values[n]), 1);
+          values[n].classList.add('is-lifted');
+        }
+        if (m !== n) { // the wrong box: it shakes there, and goes back
+          Sound.wrong();
+          replay(boxes[m], 'is-wrong');
+          await glide(chip, centre(boxes[m]), fit(m, chip), 240);
+          await settle(chip.animate([{ translate: '0 0' }, { translate: '-12px 0' }, { translate: '12px 0' }, { translate: '-8px 0' }, { translate: '0 0' }], {
+            duration: reducedMotion ? 1 : 360,
+          }));
+          await goBack(n, chip);
+          if (onWrong) onWrong(n, m);
+          return;
+        }
+        filled.add(m);
+        Sound.swish();
+        await glide(chip, centre(boxes[m].lastChild), fit(m, chip), 300);
+        chip.remove();
+        moving.delete(n);
+        values[n].classList.remove('is-lifted');
+        values[n].classList.add('is-used');
+        [values[n], boxes[m]].forEach(node => node.removeAttribute('tabindex'));
+        boxes[m].classList.add('is-filled');
+        Sound.pop();
+        reveal(boxes[m].lastChild, [{ transform: 'scale(1.25)' }, { transform: 'none' }], { duration: 320, easing: 'cubic-bezier(.3,1.6,.5,1)' });
+        if (onRight) onRight(n);
+        if (filled.size === pairs.length) {
+          clearTimeout(idle);
+          resolve();
+        }
+      }
+
+      // A faint copy of the first empty box's value glides into it, and fades.
+      const showHow = () => {
+        idle = null;
+        const n = boxes.findIndex((box, m) => !filled.has(m));
+        if (n < 0 || !panel.isConnected) return;
+        if (held || picked >= 0 || moving.has(n) || reducedMotion) {
+          wait();
+          return;
+        }
+        const ghost = chipOf(n);
+        ghost.classList.add('is-ghost');
+        const from = at(ghost, centre(values[n]), 1);
+        const to = at(ghost, centre(boxes[n].lastChild), fit(n, ghost));
+        settle(ghost.animate([
+          { transform: from, opacity: 0 },
+          { transform: from, opacity: 0.6, offset: 0.15 },
+          { transform: to, opacity: 0.6, offset: 0.75 },
+          { transform: to, opacity: 0 },
+        ], { duration: 1900, easing: 'ease-in-out', fill: 'forwards' })).then(() => ghost.remove());
+        wait();
+      };
+      const wait = (ms = 9000) => {
+        clearTimeout(idle);
+        idle = setTimeout(showHow, ms);
+      };
+
+      values.forEach((value, n) => {
+        value.classList.add('ws-drag');
+        value.tabIndex = 0;
+        value.setAttribute('role', 'button');
+        value.setAttribute('aria-label', `${value.textContent}: drag it into its box`);
+        value.addEventListener('pointerdown', e => {
+          if (filled.has(n) || moving.has(n) || held) return;
+          e.preventDefault();
+          value.setPointerCapture(e.pointerId);
+          held = { n, id: e.pointerId, x: e.clientX, y: e.clientY, chip: null };
+          wait();
+        });
+        value.addEventListener('pointermove', e => {
+          if (!held || held.id !== e.pointerId) return;
+          if (!held.chip) {
+            if (Math.hypot(e.clientX - held.x, e.clientY - held.y) < 8) return; // not a drag yet (maybe a tap)
+            pick(-1);
+            held.chip = chipOf(n);
+            held.chip.classList.add('is-held');
+            value.classList.add('is-lifted');
+            Sound.blip();
+          }
+          held.chip.style.transform = at(held.chip, inPanel(e.clientX, e.clientY), 1.1);
+          const m = boxAt(e.clientX, e.clientY);
+          boxes.forEach((box, k) => box.classList.toggle('is-over', k === m));
+        });
+        const letGo = e => {
+          if (!held || held.id !== e.pointerId) return;
+          const { chip } = held;
+          held = null;
+          boxes.forEach(box => box.classList.remove('is-over'));
+          if (!chip) { // a tap: picks the value up (or puts it down again)
+            if (e.type === 'pointerup') pick(picked === n ? -1 : n);
+            return;
+          }
+          chip.classList.remove('is-held');
+          moving.add(n);
+          const m = e.type === 'pointerup' ? boxAt(e.clientX, e.clientY) : -1;
+          if (m < 0) goBack(n, chip);
+          else drop(n, m, chip);
+        };
+        value.addEventListener('pointerup', letGo);
+        value.addEventListener('pointercancel', letGo);
+        value.addEventListener('keydown', e => {
+          if ((e.key === 'Enter' || e.key === ' ') && !filled.has(n) && !moving.has(n)) {
+            e.preventDefault();
+            pick(picked === n ? -1 : n);
+          }
+        });
+      });
+      boxes.forEach((box, m) => {
+        box.tabIndex = 0;
+        box.setAttribute('role', 'button');
+        box.setAttribute('aria-label', `the ${box.firstChild.textContent} box`);
+        const put = () => {
+          if (picked < 0 || filled.has(m)) return;
+          wait();
+          drop(picked, m, null);
+        };
+        box.addEventListener('click', put);
+        box.addEventListener('keydown', e => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            put();
+          }
+        });
+      });
+      wait(700);
+    });
   }
 
   // ---------- answer buttons in a row (A, B, C …) ----------
@@ -2752,107 +2565,6 @@
     };
   }
 
-  // ---------- discount panel (₹1000 → ₹200 reduced → ₹800, and the word for it) ----------
-
-  /**
-   * Panel that sums up a discount: on the left a price flow (each step { price, label, tone }, with an arrow
-   * growing down between steps), on the right a spot where a character stands (`spot`) and a word stamp.
-   * Reveal it with open() → flow() → stamp(); highlight(i) makes one step of the flow pulse.
-   */
-  function discountPanel(parent, { steps, word }) {
-    const root = el('div', 'mp', parent); // the same centring wrapper as the price panels
-    const panel = el('div', 'dc-panel', root);
-    const flowEl = el('div', 'dc-flow', panel);
-    const boxes = [];
-    const arrows = [];
-    steps.forEach((step, i) => {
-      if (i) {
-        const holder = el('div', 'dc-arrow', flowEl);
-        holder.innerHTML = downArrow();
-        arrows.push(holder.firstElementChild);
-      }
-      const box = el('div', `cmp-box cmp-box--${step.tone} dc-box`, flowEl);
-      el('div', 'cmp-price', box).textContent = step.price;
-      el('div', 'cmp-label', box).textContent = step.label;
-      boxes.push(box);
-    });
-    const right = el('div', 'dc-right', panel);
-    const spot = el('div', 'dc-spot', right);
-    const stampEl = el('div', 'dc-stamp', right);
-    el('span', '', stampEl).textContent = word;
-    panel.setAttribute('role', 'group');
-    panel.setAttribute('aria-label', `${steps.map(s => `${s.price} ${s.label}`).join(', ')}: ${word}`);
-    [panel, ...boxes, ...arrows, stampEl].forEach(n => { n.style.opacity = '0'; });
-
-    return {
-      el: root,
-      panel,
-      spot,
-      stampEl,
-      open() {
-        Sound.whoosh();
-        return reveal(panel, [
-          { opacity: 0, transform: 'translateY(80px) scale(.82)' },
-          { opacity: 1, transform: 'translateY(-8px) scale(1.015)', offset: 0.7 },
-          { opacity: 1, transform: 'none' },
-        ], { duration: T(680), easing: 'cubic-bezier(.2,.8,.3,1)' });
-      },
-      // The flow builds from the top: each box pops in, and an arrow grows down to the next one.
-      async flow(ctx) {
-        for (const [i, box] of boxes.entries()) {
-          if (i) {
-            const arrow = arrows[i - 1];
-            arrow.style.opacity = '';
-            Sound.swish();
-            await settle(arrow.animate([{ clipPath: 'inset(0 0 100% 0)' }, { clipPath: 'inset(0 0 0 0)' }], {
-              duration: reducedMotion ? 1 : T(500), easing: 'cubic-bezier(.45,0,.3,1)', fill: 'backwards',
-            }));
-          }
-          if (steps[i].tone === 'red') Sound.drop();
-          else Sound.bloop();
-          reveal(box, [
-            { opacity: 0, transform: 'scale(.6)' },
-            { opacity: 1, transform: 'scale(1.06)', offset: 0.65 },
-            { opacity: 1, transform: 'none' },
-          ], { duration: T(560), easing: 'cubic-bezier(.2,.8,.3,1)' });
-          await ctx.wait(650);
-        }
-      },
-      // One step pulses with a red ring: twice, or for as long as it stays the key point (`keep`).
-      highlight(i, keep = false) {
-        const box = boxes[i];
-        box.classList.remove('is-glowing', 'is-key');
-        void box.offsetWidth; // restart the animation
-        box.classList.add(keep ? 'is-key' : 'is-glowing');
-      },
-      // Already complete, with the reduction glowing (to carry the panel over from the screen before).
-      showNow() {
-        [panel, ...boxes, ...arrows, stampEl].forEach(n => { n.style.opacity = ''; });
-        stampEl.classList.add('is-landed');
-        boxes[1].classList.add('is-key');
-      },
-      // Shrinks away and is removed.
-      close() {
-        return settle(panel.animate([
-          { opacity: 1, transform: 'none' },
-          { opacity: 0, transform: 'translateY(50px) scale(.9)' },
-        ], { duration: reducedMotion ? 1 : T(420), easing: 'cubic-bezier(.5,0,.75,0)', fill: 'forwards' })).then(() => root.remove());
-      },
-      // The word lands like a rubber stamp, then keeps gently pulsing.
-      stamp() {
-        Sound.stamp();
-        stampEl.style.opacity = '';
-        return settle(stampEl.animate([
-          { opacity: 0, transform: 'scale(2.4) rotate(-14deg)' },
-          { opacity: 1, transform: 'scale(.92) rotate(-3deg)', offset: 0.55 },
-          { opacity: 1, transform: 'scale(1.04) rotate(-5deg)', offset: 0.78 },
-          { opacity: 1, transform: 'rotate(-4deg)' },
-        ], { duration: reducedMotion ? 1 : T(560), easing: 'cubic-bezier(.3,.6,.3,1)', fill: 'backwards' }))
-          .then(() => stampEl.classList.add('is-landed'));
-      },
-    };
-  }
-
   // ---------- definitions panel ----------
 
   const ARROW = '<svg class="def-arrow" viewBox="0 0 64 40" aria-hidden="true"><path pathLength="1" d="M6 20h44M36 7l15 13-15 13"/></svg>';
@@ -3269,7 +2981,7 @@
 
   window.FX = {
     CANCELLED, el, rand, settle, glow, motes, twinkles, burst, shine, exclaim, bubble, thought, badge, ring, question, definitions, pricePanel,
-    reduction, discountPanel, definitionCard, formulaPanel, formulaReveal, workedExample, summaryPanel, productCard, productQuestion, workedSheet, summarySheet, strike, stickTag, percentTable, choices, pairsPanel, percentFormula, questionPanel, Bird, Walker,
+    reduction, definitionCard, formulaPanel, formulaReveal, summaryPanel, productCard, productQuestion, workedSheet, summarySheet, strike, stickTag, choices, pairsPanel, percentFormula, questionPanel, Bird, Walker,
     setPace(p) { pace = p; },
   };
 })();
