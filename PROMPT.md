@@ -12,7 +12,7 @@ A short animated **story game** for kids that runs in a web browser. It asks a f
 
 - **Format:** 16:9, on a fixed **1920 × 1080** stage that scales to fit any screen (black bars when the screen is a different shape).
 - **Tech:** plain HTML + CSS + JavaScript. It opens by double-clicking `index.html`, with no server, installs, or internet needed.
-- **Look:** bright, friendly, comic-book style. Rounded bold font (**Baloo 2**, which includes the **₹** sign).
+- **Look:** bright, friendly, comic-book style. Rounded bold font (**Baloo 2**). The **₹** sign is drawn in its everyday shape (taken from Nunito Black and sized to match Baloo 2's figures), not Baloo 2's own Devanagari-style one. Both fonts are bundled in `fonts/`, so no internet is needed.
 - **Speech bubbles:** text size **34 px**, and each bubble is sized to fit its text.
 - **Characters:** **Aniket** (boy, green T-shirt, navy backpack), the **Shopkeeper** (glasses, navy apron) and **Swifty** (a teal bird with a backpack, the helper; "she").
 - **Voices:** every line is spoken aloud in an **Indian-English voice** (see section 6).
