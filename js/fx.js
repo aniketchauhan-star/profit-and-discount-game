@@ -42,7 +42,54 @@
     for (const k in vars) node.style.setProperty('--' + k, vars[k]);
   }
 
+  // The hand-made ("paper") look's filters, used from the CSS (filter: url(#…)):
+  //  #paper-cut     an edge cut by hand with scissors: a gentle wobble
+  //  #paper-deckle  a big sheet's deckled edge: a finer, rougher wobble
+  //  #ink-brush     a line drawn with a brush pen: a slight wobble, and heavier on its lower-right side
+  //                 (the dark parts are copied a little down and to the right, under the original)
+  function inkDefs() {
+    if (document.getElementById('ink-defs')) return;
+    const holder = el('div', '', document.body);
+    holder.id = 'ink-defs';
+    holder.setAttribute('aria-hidden', 'true');
+    holder.style.cssText = 'position:absolute;width:0;height:0;overflow:hidden';
+    holder.innerHTML = `<svg width="0" height="0" focusable="false"><defs>
+  <filter id="paper-cut" x="-4%" y="-8%" width="108%" height="116%" color-interpolation-filters="sRGB">
+    <feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="4" result="n"/>
+    <feDisplacementMap in="SourceGraphic" in2="n" scale="5" xChannelSelector="R" yChannelSelector="G"/>
+  </filter>
+  <filter id="paper-deckle" x="-2%" y="-2%" width="104%" height="104%" color-interpolation-filters="sRGB">
+    <feTurbulence type="fractalNoise" baseFrequency="0.09" numOctaves="3" seed="9" result="n"/>
+    <feDisplacementMap in="SourceGraphic" in2="n" scale="9" xChannelSelector="R" yChannelSelector="G"/>
+  </filter>
+  <filter id="ink-brush" x="-6%" y="-10%" width="112%" height="120%" color-interpolation-filters="sRGB">
+    <feTurbulence type="fractalNoise" baseFrequency="0.045" numOctaves="2" seed="2" result="n"/>
+    <feDisplacementMap in="SourceGraphic" in2="n" scale="3.5" xChannelSelector="R" yChannelSelector="G" result="wob"/>
+    <feColorMatrix in="wob" type="matrix" values="0 0 0 0 .18  0 0 0 0 .16  0 0 0 0 .14  -.5 -.5 -.5 1 0" result="ink"/>
+    <feOffset in="ink" dx="2" dy="2.4" result="heavy"/>
+    <feMerge><feMergeNode in="heavy"/><feMergeNode in="wob"/></feMerge>
+  </filter>
+</defs></svg>`;
+  }
+
   const classes = (...names) => names.filter(Boolean).join(' ');
+  // Something that holds writing (a sheet, a table, a box of rules) is never shown empty: it starts hidden, and
+  // the first thing written on it calls the function this returns, which brings it in (once) just before.
+  const sheetFirst = node => {
+    let shown = null;
+    return () => {
+      if (!shown) {
+        Sound.bloop();
+        reveal(node, [
+          { opacity: 0, transform: 'translateY(26px) scale(.95)' },
+          { opacity: 1, transform: 'translateY(-3px) scale(1.01)', offset: 0.7 },
+          { opacity: 1, transform: 'none' },
+        ], { duration: T(460), easing: 'cubic-bezier(.2,.8,.3,1)' });
+        shown = new Promise(resolve => setTimeout(resolve, reducedMotion ? 0 : T(110))); // the writing starts as it comes in
+      }
+      return shown;
+    };
+  };
   // Restarts the animation that class `cls` gives `node` (e.g. a pop while something is talked about).
   const replay = (node, cls) => {
     node.classList.remove(cls);
@@ -153,26 +200,74 @@
   // ---------- comic speech bubble ----------
 
   // Rounded rectangle whose straight edges bulge outward by `b` px: a soft comic balloon.
-  function balloonPath(w, h, r, b) {
+  // A speech balloon's body: a rounded rectangle, w × h, with round corners of radius r that run on smoothly
+  // into its straight sides.
+  function balloonPath(w, h, r) {
     return [
-      `M ${r} 0`, `Q ${w / 2} ${-b} ${w - r} 0`, `A ${r} ${r} 0 0 1 ${w} ${r}`,
-      `Q ${w + b} ${h / 2} ${w} ${h - r}`, `A ${r} ${r} 0 0 1 ${w - r} ${h}`,
-      `Q ${w / 2} ${h + b} ${r} ${h}`, `A ${r} ${r} 0 0 1 0 ${h - r}`,
-      `Q ${-b} ${h / 2} 0 ${r}`, `A ${r} ${r} 0 0 1 ${r} 0`, 'Z',
+      `M ${r} 0`, `H ${w - r}`, `A ${r} ${r} 0 0 1 ${w} ${r}`, `V ${h - r}`, `A ${r} ${r} 0 0 1 ${w - r} ${h}`,
+      `H ${r}`, `A ${r} ${r} 0 0 1 0 ${h - r}`, `V ${r}`, `A ${r} ${r} 0 0 1 ${r} 0`, 'Z',
     ].join(' ');
   }
 
-  // Curved wedge from a base point inside the balloon to the tip (both in balloon coordinates).
-  function tailPath([bx, by], [tx, ty], halfWidth, bend) {
-    const len = Math.hypot(tx - bx, ty - by) || 1;
-    const nx = -(ty - by) / len;
-    const ny = (tx - bx) / len;
-    const p1 = [bx + nx * halfWidth, by + ny * halfWidth];
-    const p2 = [bx - nx * halfWidth, by - ny * halfWidth];
-    const c1 = [(p1[0] + tx) / 2 + nx * bend, (p1[1] + ty) / 2 + ny * bend];
-    const c2 = [(p2[0] + tx) / 2 + nx * bend * 0.4, (p2[1] + ty) / 2 + ny * bend * 0.4];
-    const f = pt => `${num(pt[0])} ${num(pt[1])}`;
-    return `M ${f(p1)} Q ${f(c1)} ${f([tx, ty])} Q ${f(c2)} ${f(p2)} Z`;
+  // A smooth line through points (Catmull-Rom, as cubic curves), continuing a path.
+  function smoothThrough(pts) {
+    const f = p => `${num(p[0])} ${num(p[1])}`;
+    let d = '';
+    for (let i = 0; i < pts.length - 1; i++) {
+      const p0 = pts[i - 1] || pts[i], p1 = pts[i], p2 = pts[i + 1], p3 = pts[i + 2] || p2;
+      d += ` C ${f([p1[0] + (p2[0] - p0[0]) / 6, p1[1] + (p2[1] - p0[1]) / 6])} ${f([p2[0] - (p3[0] - p1[0]) / 6, p2[1] - (p3[1] - p1[1]) / 6])} ${f(p2)}`;
+    }
+    return d;
+  }
+
+  // A speech balloon's tail, to the tip `tip` (in the balloon's own px), from whichever edge faces it best (the
+  // bottom or top edge are preferred): a smooth horn whose middle leaves the edge straight out and curves on to
+  // the tip, widest where it flares into the body (so the outline runs on without a hard corner), tapering to a
+  // point. `lean`: how far along the edge, back towards the middle, it starts; `bend` curves it sideways.
+  function tailPath(w, h, r, [tx, ty], { half = 17, lean = 40, bend = 0 } = {}) {
+    const flare = half * 0.75;
+    const room = half + flare + 4; // how far from a corner it can start
+    const clamp = (v, lo, hi) => Math.max(lo, Math.min(Math.max(lo, hi), v));
+    const toward = (v, mid) => (v < mid ? 1 : -1);
+    const edges = [];
+    if (ty > h - r) edges.push({ B: [clamp(tx + lean * toward(tx, w / 2), r + room, w - r - room), h], n: [0, 1], k: 1 });
+    if (ty < r) edges.push({ B: [clamp(tx + lean * toward(tx, w / 2), r + room, w - r - room), 0], n: [0, -1], k: 1 });
+    // a side, only for a speaker beside the balloon (not below or above it), and with a straight stretch long
+    // enough for a tail
+    const beside = h - 2 * (r + room) >= 0 && ty > -30 && ty < h + 30;
+    if (tx < 0 && beside) edges.push({ B: [0, clamp(ty + lean * 0.5 * toward(ty, h / 2), r + room, h - r - room)], n: [-1, 0], k: 0.85 });
+    if (tx > w && beside) edges.push({ B: [w, clamp(ty + lean * 0.5 * toward(ty, h / 2), r + room, h - r - room)], n: [1, 0], k: 0.85 });
+    if (!edges.length) edges.push({ B: [clamp(tx, r + room, w - r - room), h], n: [0, 1], k: 1 });
+    const facing = e => {
+      const dx = tx - e.B[0], dy = ty - e.B[1];
+      return ((dx * e.n[0] + dy * e.n[1]) / (Math.hypot(dx, dy) || 1)) * e.k;
+    };
+    const { B, n } = edges.reduce((best, e) => (facing(e) > facing(best) ? e : best));
+    const L = Math.hypot(tx - B[0], ty - B[1]) || 1;
+    const side = [-(ty - B[1]) / L, (tx - B[0]) / L];
+    // the middle line: a quadratic curve from B (leaving the edge straight out) to the tip
+    const C = [0, 1].map(i => B[i] + n[i] * L * 0.42 + ([tx, ty][i] - B[i]) * 0.18 + side[i] * bend);
+    const at = s => [0, 1].map(i => (1 - s) * (1 - s) * B[i] + 2 * (1 - s) * s * C[i] + s * s * [tx, ty][i]);
+    const dir = s => {
+      const d = [0, 1].map(i => 2 * (1 - s) * (C[i] - B[i]) + 2 * s * ([tx, ty][i] - C[i]));
+      const l = Math.hypot(d[0], d[1]) || 1;
+      return [d[0] / l, d[1] / l];
+    };
+    const width = s => half * Math.pow(1 - s, 1.05) + flare * Math.pow(1 - s, 7);
+    const left = [];
+    const right = [];
+    for (let i = 0; i <= 28; i++) {
+      const s = i / 28;
+      const m = at(s);
+      const d = dir(s);
+      const wv = width(s);
+      left.push([m[0] - d[1] * wv, m[1] + d[0] * wv]);
+      right.push([m[0] + d[1] * wv, m[1] - d[0] * wv]);
+    }
+    right.reverse();
+    const f = p => `${num(p[0])} ${num(p[1])}`;
+    const inside = p => [p[0] - n[0] * 10, p[1] - n[1] * 10]; // its base reaches into the body: no gap
+    return `M ${f(inside(left[0]))} L ${f(left[0])}${smoothThrough(left)}${smoothThrough(right)} L ${f(inside(right[right.length - 1]))} Z`;
   }
 
   // Splits text into per-letter spans (kept inside per-word spans so words never break apart).
@@ -261,14 +356,18 @@
     };
   }
 
-  // The gentle float of speech bubbles and thought clouds (see .bubble-float), kept in step with one clock:
-  // a bubble carried over to the next screen then floats exactly where the old one was.
-  const FLOAT_MS = 3400;
-  const syncFloat = node => { node.style.animationDelay = `${-(performance.now() % FLOAT_MS)}ms`; };
-
   // Outline + fill trick: stroke every shape, then fill them all on top so the seams disappear.
-  function paintShapes(art, paths, shadow = [6, 8]) {
-    [['b-shadow', { transform: `translate(${shadow[0]} ${shadow[1]})`, opacity: 0.2 }], ['b-line', {}], ['b-fill', {}]].forEach(([cls, extra]) => {
+  // A soft, flat shadow under the shapes; their outline (every shape stroked, then all filled on top, so the
+  // seams where they overlap disappear); and a fill that turns from white at the top to a warm cream at the
+  // bottom (`height`: where the bottom is; the colours are set in the CSS: .b-stop-…).
+  let paintId = 0;
+  function paintShapes(art, paths, { shadow = [0, 8], height } = {}) {
+    const id = 'bfill' + (++paintId);
+    const box = art.viewBox.baseVal;
+    const grad = svg('linearGradient', { id, gradientUnits: 'userSpaceOnUse', x1: 0, y1: 0, x2: 0, y2: height || (box && box.height) || 100 }, svg('defs', {}, art));
+    [['b-stop-top', 0], ['b-stop-mid', 0.62], ['b-stop-bottom', 1]].forEach(([cls, offset]) => svg('stop', { class: cls, offset }, grad));
+    art.style.setProperty('--b-fill', `url(#${id})`);
+    [['b-shadow', { transform: `translate(${shadow[0]} ${shadow[1]})` }], ['b-line', {}], ['b-fill', {}]].forEach(([cls, extra]) => {
       const g = svg('g', Object.assign({ class: cls }, extra), art);
       paths.forEach(d => svg('path', { d }, g));
     });
@@ -287,7 +386,6 @@
   function bubble(parent, o) {
     const root = el('div', o.tone ? `bubble bubble--${o.tone}` : 'bubble', parent);
     const float = el('div', 'bubble-float', root);
-    syncFloat(float);
     const { box: textBox, letters, w, h } = lineText(float, o);
     const corner = o.corner || 'bl';
     let x = { r: o.anchor[0] - w, c: o.anchor[0] - w / 2 }[corner[1]] ?? o.anchor[0];
@@ -299,19 +397,14 @@
       transformOrigin: `${num(tip[0])}px ${num(tip[1])}px`, // grows out of the speaker's mouth
     });
 
-    // The tail leaves the bottom edge (or the top edge, when it points up) on the side nearest the speaker.
-    const r = Math.min(36, h / 2);
-    const half = o.tailWidth || 16;
-    const side = tip[0] < w / 2 ? 1 : -1;
-    const lean = o.lean ?? 70; // how far along the edge from the speaker the tail starts
-    const up = tip[1] < 0;
-    const base = [Math.max(r + half, Math.min(w - r - half, tip[0] + lean * side)), up ? 10 : h - 10];
-    const body = balloonPath(w, h, r, 5);
-    const tail = tailPath(base, tip, half, o.bend !== undefined ? o.bend : 10);
+    // A rounded body, and a tail that sweeps out from the edge facing the speaker to the tip.
+    const r = Math.min(40, h / 2);
+    const body = balloonPath(w, h, r);
+    const tail = tailPath(w, h, r, tip, { half: o.tailWidth || 17, lean: o.lean ?? 40, bend: o.bend || 0 });
     const art = svg('svg', { width: w, height: h, viewBox: `0 0 ${w} ${h}` });
     float.insertBefore(art, textBox);
     paintShapes(art, [body, tail]);
-    const rot = o.rotate || 0;
+    const rot = 0; // it sits straight, so its words are crisp (it only tilts a little as it pops up)
 
     return Object.assign(lineMethods(root, letters, o), {
       show() {
@@ -385,7 +478,6 @@
     const root = el('div', 'bubble thought', parent);
     const cloud = el('div', 'thought-cloud', root);
     const float = el('div', 'bubble-float', cloud);
-    syncFloat(float);
     const { box, letters, w, h } = lineText(float, o);
     const x = o.at[0] - w / 2;
     const y = o.at[1] - h / 2;
@@ -413,7 +505,7 @@
       along += pr + gap;
       const puff = el('div', 'thought-puff', root, { left: px(pcx - pr), top: px(pcy - pr), width: px(2 * pr), height: px(2 * pr), opacity: '0' });
       const bob = el('div', 'thought-puff-bob', puff, { animationDelay: `${-i * 0.45}s` });
-      paintShapes(svg('svg', { width: 2 * pr, height: 2 * pr, viewBox: `0 0 ${2 * pr} ${2 * pr}` }, bob), [ellipsePath(pr, pr, pr, pr)], [3, 4]);
+      paintShapes(svg('svg', { width: 2 * pr, height: 2 * pr, viewBox: `0 0 ${2 * pr} ${2 * pr}` }, bob), [ellipsePath(pr, pr, pr, pr)], { shadow: [0, 4] });
       return puff;
     });
     // The cloud billows out from where the trail meets it.
@@ -675,7 +767,7 @@
           { transform: 'translateX(0) rotate(0deg)' },
         ], { duration: T(950), easing: 'cubic-bezier(.22,.9,.28,1)' }));
 
-        await ctx.wait(560);
+        await ctx.wait(300); // its words come in as it arrives (it is never empty)
         reveal(tape, [
           { opacity: 0, transform: 'translateY(-46px) rotate(-18deg) scale(.6)' },
           { opacity: 1, transform: 'translateY(4px) rotate(-2deg) scale(1.06)', offset: 0.7 },
@@ -776,6 +868,8 @@
     const wipe = (node, ms) => reveal(node, [{ clipPath: 'inset(0 100% 0 0)' }, { clipPath: 'inset(0 0 0 0)' }], {
       duration: T(ms), easing: 'cubic-bezier(.3,.1,.3,1)',
     });
+    const showTable = sheetFirst(table);
+    const showRules = sheetFirst(box);
 
     return {
       el: root,
@@ -792,13 +886,9 @@
           { opacity: 1, transform: 'none' },
         ], { duration: T(600), easing: EASE });
       },
-      // The (empty) table pops in, ready for its rows.
-      showTable() {
-        Sound.pop();
-        return pop(table);
-      },
-      // Row i: its label slides in, then its value pops in.
+      // Row i: its label slides in, then its value pops in (the table comes in with its first row).
       async row(i) {
+        await showTable();
         const [label, value] = cells[i];
         Sound.swish();
         await reveal(label, [
@@ -808,13 +898,9 @@
         Sound.pop();
         await pop(value);
       },
-      // The (empty) box of rules pops in.
-      showRules() {
-        Sound.pop();
-        return pop(box);
-      },
-      // Rule i is written in: its label, its = sign, then what it equals.
+      // Rule i is written in: its label, its = sign, then what it equals (the box comes in with its first rule).
       async rule(i) {
+        await showRules();
         const { label, eq, expr } = lines[i];
         Sound.scribble();
         await wipe(label, 420);
@@ -950,12 +1036,13 @@
         { opacity: 0, transform: 'translateX(70px) scale(.96)' },
         { opacity: 1, transform: 'none' },
       ], { duration: T(750), easing: 'cubic-bezier(.25,.1,.25,1)' });
-      await ctx.wait(380);
     }
-    reveal(head, [
-      { opacity: 0, transform: 'translateY(-34px)' },
-      { opacity: 1, transform: 'none' },
-    ], { duration: T(620), easing: 'cubic-bezier(.2,.8,.3,1)' });
+    if (head) { // it drops in as the card comes in (the card is never empty)
+      reveal(head, [
+        { opacity: 0, transform: 'translateY(-34px)' },
+        { opacity: 1, transform: 'none' },
+      ], { duration: T(620), easing: 'cubic-bezier(.2,.8,.3,1)' });
+    }
     const reading = onRead ? onRead() : null;
     await ctx.wait(800);
     for (const word of words) {
@@ -991,18 +1078,19 @@
     return {
       el: root,
       card,
-      // The card springs up.
+      // The card springs up, with its heading on it (it is never empty).
       open() {
         Sound.whoosh();
+        head.style.opacity = '';
         return reveal(card, [
           { opacity: 0, transform: 'translateY(70px) scale(.86)' },
           { opacity: 1, transform: 'translateY(-8px) scale(1.015)', offset: 0.7 },
           { opacity: 1, transform: 'none' },
         ], { duration: T(700), easing: 'cubic-bezier(.2,.8,.3,1)' });
       },
-      // The header drops in, then the words appear one by one (see revealDefinition).
+      // The words appear one by one (see revealDefinition); the heading is already up.
       define(ctx, opts) {
-        return revealDefinition(ctx, { head, words }, opts);
+        return revealDefinition(ctx, { words }, opts);
       },
       // The term at the end of the definition pulses.
       emphasize() {
@@ -1043,6 +1131,8 @@
     blue: ['#d9e8f6', '#6f97c2', '#2a5687'],
     red: ['#ffd0cc', '#ff6b5e', '#d32f2f'],
   };
+  // A down arrow drawn with a thick blue marker (on the full-screen panel): a slightly wobbly line and its head.
+  const MARKER_ARROW = '<svg class="cmp-arrow is-marker" viewBox="0 0 72 126" aria-hidden="true"><path d="M37 9C33 36 40 62 36 101M17 80C25 89 31 97 36 107C41 97 47 88 56 79"/></svg>';
   function downArrow(tone = 'blue') {
     const id = 'da' + (++artId);
     const [a, b, c] = ARROW_TONES[tone];
@@ -1106,9 +1196,9 @@
    *  compare      { top, bottom } price boxes ({ price, label, tone: 'yellow' | 'blue' }) with a down arrow
    *               between them.                                    open() → showBook() (or showNow()) → compare()
    */
-  function pricePanel(parent, { price, term, abbr, definition, compare }) {
+  function pricePanel(parent, { price, term, abbr, definition, compare, sheet = false }) {
     const root = el('div', 'mp', parent);
-    const panel = el('div', 'mp-panel', root);
+    const panel = el('div', 'mp-panel', root); // { sheet: true }: on the big panel that fills the screen (see game.js)
     const left = el('div', 'mp-left', panel);
     const bookBox = el('div', 'mp-book', left);
     bookBox.innerHTML = bookArt(price);
@@ -1133,7 +1223,7 @@
       };
       parts.top = side.appendChild(box(compare.top));
       const mid = el('div', 'cmp-mid', side);
-      mid.innerHTML = downArrow();
+      mid.innerHTML = sheet ? MARKER_ARROW : downArrow();
       parts.arrow = mid.firstElementChild;
       parts.bottom = side.appendChild(box(compare.bottom));
       panel.setAttribute('aria-label', `${compare.top.label} ${compare.top.price}, ${compare.bottom.label} ${compare.bottom.price}`);
@@ -1160,6 +1250,10 @@
       book,
       talk: parts.talk,
       open() {
+        if (sheet) { // nothing to spring up: the screen is the panel
+          panel.style.opacity = '';
+          return Promise.resolve();
+        }
         Sound.whoosh();
         return reveal(panel, [
           { opacity: 0, transform: 'translateY(80px) scale(.82)' },
@@ -1402,6 +1496,7 @@
     panel.setAttribute('aria-label', terms.map((t, i) => `${i ? ops[i - 1] + ' ' : ''}${t.words}`).join(' ') + '. In short: ' +
       terms.map((t, i) => `${i ? ops[i - 1] + ' ' : ''}${t.short}`).join(' '));
     [panel, strip, shortBox, ...longTerms, ...longOps, ...shortOps, ...letters.flat()].forEach(n => { n.style.opacity = '0'; });
+    const showStrip = sheetFirst(strip);
     const local = node => panelBox(panel, node);
     const popIn = node => reveal(node, [
       { opacity: 0, transform: 'scale(.5)' },
@@ -1423,17 +1518,17 @@
       longOps,
       shortTerms,
       shortOps,
-      // The panel springs up with the (empty) pink strip on it.
+      // The panel springs up (its pink strip comes in with the first word: see term).
       open() {
         Sound.whoosh();
-        strip.style.opacity = '';
         return reveal(panel, [
           { opacity: 0, transform: 'translateY(80px) scale(.82)' },
           { opacity: 1, transform: 'translateY(-8px) scale(1.015)', offset: 0.7 },
           { opacity: 1, transform: 'none' },
         ], { duration: T(680), easing: 'cubic-bezier(.2,.8,.3,1)' });
       },
-      term(i) {
+      async term(i) {
+        await showStrip();
         Sound.bloop();
         return popIn(longTerms[i]);
       },
@@ -1441,7 +1536,7 @@
         Sound.pop();
         return popIn(longOps[i]);
       },
-      // The (empty) blue box for the short form.
+      // The blue box for the short form (shown just as the first letters fly down into it).
       showShort() {
         Sound.bloop();
         return springUp(shortBox);
@@ -1498,18 +1593,20 @@
   /**
    * A recap: a title, cards ({ term, tone, value, desc }) joined by arrows, and the formula under them
    * (segments: [{ t, tone }], tone optional). Reveal it with open() → title() → card(ctx, i) / arrow(i) → formula().
-   * The panel sits left of centre, leaving room on its right for a character (see the CSS).
+   * The panel sits left of centre, leaving room on its right for a character (see the CSS). With { note: true }
+   * there is no panel: the recap looks made by hand on the big panel behind it (a sheet, see game.js):
+   * a taped-on title, index cards, pencil arrows and a sticky note.
    */
-  function summaryPanel(parent, { title, cards, formula }) {
+  function summaryPanel(parent, { title, cards, formula, note = false }) {
     const root = el('div', 'mp', parent); // the same centring wrapper as the price panels
-    const panel = el('div', 'sm-panel', root);
+    const panel = el('div', note ? 'sm-panel sm-panel--note' : 'sm-panel', root);
     const head = el('div', 'sm-title', panel);
     head.textContent = title;
     const row = el('div', 'sm-row', panel);
     const arrows = [];
     const parts = cards.map((c, i) => {
       if (i) {
-        row.insertAdjacentHTML('beforeend', ARROW);
+        row.insertAdjacentHTML('beforeend', note ? SKETCH_ARROW : ARROW);
         arrows.push(row.lastElementChild);
       }
       const card = el('div', `sm-card sm-card--${c.tone}`, row);
@@ -1540,6 +1637,10 @@
       sum,
       cards: parts.map(p => p.card),
       open() {
+        if (note) { // nothing to spring up: the page is already there
+          panel.style.opacity = '';
+          return Promise.resolve();
+        }
         Sound.whoosh();
         return reveal(panel, [
           { opacity: 0, transform: 'translateY(80px) scale(.82)' },
@@ -1821,7 +1922,8 @@
         ? `${n.firstChild.textContent} over ${n.lastChild.textContent}`
         : n.classList.contains('ws-slot') ? n.lastChild.textContent : n.textContent)).join(' ')}`),
     ].join('. '));
-    [panel, ...boxEls, ...arrows, ...lines.flatMap(l => [l.label, l.eq, ...l.parts])].forEach(n => { n.style.opacity = '0'; });
+    [panel, sheet, ...boxEls, ...arrows, ...lines.flatMap(l => [l.label, l.eq, ...l.parts])].forEach(n => { n.style.opacity = '0'; });
+    const showSheet = sheetFirst(sheet); // the white sheet appears with its first line (never empty)
 
     const EASE = 'cubic-bezier(.2,.8,.3,1)';
     const pop = node => reveal(node, [
@@ -1859,6 +1961,7 @@
       },
       // Line r's label is written in (left to right), then its = pops.
       async write(r) {
+        await showSheet();
         const { label, eq } = lines[r];
         if (label.textContent) {
           Sound.scribble();
@@ -1871,7 +1974,8 @@
       },
       // Part j of line r appears: a fraction or a word is written in, a number or an operator pops in. A split
       // fraction only draws its bar (its halves come in with show).
-      part(r, j) {
+      async part(r, j) {
+        await showSheet();
         const node = lines[r].parts[j];
         if (lines[r].spec[j].split) {
           Sound.swish();
@@ -1892,7 +1996,8 @@
         return pop(node);
       },
       // Line r's answer lands like a stamp.
-      answer(r) {
+      async answer(r) {
+        await showSheet();
         const node = lines[r].parts.find(n => n.classList.contains('pf-answer'));
         Sound.stamp();
         return reveal(node, [
@@ -2119,6 +2224,45 @@
       });
       wait(700);
     });
+  }
+
+  // ---------- words flying across the screen ----------
+
+  /**
+   * A copy of `from`'s words flies from it to `to`, across the screen (e.g. a price from a speech bubble on the
+   * picture to a card): it lifts off, a little bigger, glides along an arc (turning from `from`'s colour to
+   * `to`'s) and lands the size of `to`. `layer`: a full-stage element (its px are stage px) to fly in, on top.
+   * `to` is measured as it is laid out now (so call this before animating what holds it). Resolves as it lands;
+   * the copy is then removed, and showing `to` is up to the caller.
+   */
+  async function flyAcross(layer, from, to, { text = from.textContent, ms = 900, lift = 140 } = {}) {
+    const L = layer.getBoundingClientRect();
+    const k = L.width / layer.offsetWidth || 1; // the stage's scale on the screen
+    const at = node => {
+      const r = node.getBoundingClientRect();
+      return { x: (r.left + r.width / 2 - L.left) / k, y: (r.top + r.height / 2 - L.top) / k, s: r.height / k / (node.offsetHeight || 1) };
+    };
+    const a = at(from);
+    const b = at(to);
+    const fromStyle = getComputedStyle(from);
+    const toStyle = getComputedStyle(to);
+    const chip = el('div', 'fly-chip fly-chip--across', layer);
+    chip.textContent = text;
+    Object.assign(chip.style, { fontSize: toStyle.fontSize, color: toStyle.color });
+    const w = chip.offsetWidth;
+    const h = chip.offsetHeight;
+    const k0 = (parseFloat(fromStyle.fontSize) * a.s) / parseFloat(toStyle.fontSize); // its size in the bubble
+    const k1 = b.s;
+    const pos = (x, y, s, deg) => `translate(${num(x - w / 2)}px, ${num(y - h / 2)}px) scale(${num(s)}) rotate(${deg}deg)`;
+    const top = Math.min(a.y, b.y) - lift;
+    Sound.swish();
+    await settle(chip.animate([
+      { transform: pos(a.x, a.y, k0, 0), color: fromStyle.color },
+      { transform: pos(a.x, a.y - 30, k0 * 1.3, -6), color: fromStyle.color, offset: 0.16 }, // lifts off
+      { transform: pos((a.x + b.x) / 2, top, ((k0 * 1.3 + k1) / 2) * 1.1, 4), offset: 0.55 },
+      { transform: pos(b.x, b.y, k1, 0), color: toStyle.color },
+    ], { duration: reducedMotion ? 1 : T(ms), easing: 'cubic-bezier(.45,0,.3,1)', fill: 'forwards' }));
+    chip.remove();
   }
 
   // ---------- answer buttons in a row (A, B, C …) ----------
@@ -2352,6 +2496,7 @@
       `Percentage = ${part.label} ÷ ${whole.label} × 100 = ${numbers[0]} ÷ ${numbers[1]} × 100 = ${answer}`);
     [panel, boxes.part, boxes.whole, rows[0].label, words.f, hint, sums.bar, sums.num, sums.den, ans,
       ...rows.map(r => r.eq), ...by100].forEach(n => { n.style.opacity = '0'; });
+    sheet.style.opacity = '0'; // it appears with its first line (never empty)
 
     const EASE = 'cubic-bezier(.2,.8,.3,1)';
     const pop = node => reveal(node, [
@@ -2359,6 +2504,7 @@
       { opacity: 1, transform: 'scale(1.12)', offset: 0.6 },
       { opacity: 1, transform: 'none' },
     ], { duration: T(480), easing: EASE });
+    const showSheet = sheetFirst(sheet);
     const wipe = (node, ms) => reveal(node, [{ clipPath: 'inset(0 100% 0 0)' }, { clipPath: 'inset(0 0 0 0)' }], {
       duration: T(ms), easing: 'cubic-bezier(.3,.1,.3,1)',
     });
@@ -2392,13 +2538,15 @@
           { opacity: 1, transform: 'none' },
         ], { duration: T(560), easing: EASE });
       },
-      // "Percentage" is written in, left to right.
-      label() {
+      // "Percentage" is written in, left to right (the sheet appears with it).
+      async label() {
+        await showSheet();
         Sound.scribble();
         return wipe(rows[0].label, 520);
       },
       // "= Part / Whole": the = pops, then the fraction is written in.
       async fraction() {
+        await showSheet();
         Sound.pop();
         await pop(rows[0].eq);
         Sound.scribble();
@@ -2411,6 +2559,7 @@
       },
       // Row r's = pops in; on the second row the fraction bar draws itself too, ready for the numbers.
       async start(r) {
+        await showSheet();
         Sound.pop();
         await pop(rows[r].eq);
         if (r !== 1) return;
@@ -2484,7 +2633,8 @@
   /**
    * Card on the right of the screen: the old price, a red arrow down labelled with how much less, the new price.
    *  from, to   { price, tone: 'yellow' | 'blue' }      cut  e.g. '₹200'      note  e.g. 'reduced'
-   * Reveal it with enter() → showFrom() → showTo() → showCut().
+   * Fill it with enter() → pasteFrom() → arrowDown() → pasteTo() → pasteCut(), each price flying in first (see
+   * FX.flyAcross and `prices`), or show it complete with showNow().
    */
   function reduction(parent, { from, to, cut, note }) {
     const pos = el('div', 'red-pos', parent);
@@ -2511,9 +2661,23 @@
       { opacity: 1, transform: 'none' },
     ], { duration: T(560), easing: 'cubic-bezier(.2,.8,.3,1)' });
 
+    // A price (or the cut) is pasted in as it lands: its box (or tag) appears around it with a little squash,
+    // like a sticker pressed on.
+    const paste = node => {
+      node.style.opacity = '';
+      Sound.pop();
+      return settle(node.animate([
+        { transform: 'scale(1.1, .88)' },
+        { transform: 'scale(.97, 1.04)', offset: 0.45 },
+        { transform: 'none' },
+      ], { duration: reducedMotion ? 1 : T(380), easing: 'cubic-bezier(.3,.7,.4,1)' }));
+    };
+
     return {
       el: pos,
-      // The empty card swings in from the right.
+      // Where each price lands (see FX.flyAcross): the Marked Price, the Selling Price, and the cut.
+      prices: { from: top.querySelector('.cmp-price'), to: bottom.querySelector('.cmp-price'), cut: tag.querySelector('.red-cut') },
+      // The card swings in from the right (as the first price flies to it).
       enter() {
         Sound.whoosh();
         return reveal(card, [
@@ -2523,20 +2687,20 @@
           { opacity: 1, transform: 'none' },
         ], { duration: T(950), easing: 'cubic-bezier(.22,.9,.28,1)' });
       },
-      showFrom() {
-        Sound.bloop();
-        return pop(top);
-      },
-      // The red arrow grows down (with a falling "whoop"), then the new price appears.
-      async showTo(ctx) {
+      pasteFrom: () => paste(top),
+      // The red arrow grows down (with a falling "whoop").
+      async arrowDown() {
         arrow.style.opacity = '';
         Sound.drop();
         await settle(arrow.animate([{ clipPath: 'inset(0 0 100% 0)' }, { clipPath: 'inset(0 0 0 0)' }], {
           duration: reducedMotion ? 1 : T(800), easing: 'cubic-bezier(.45,0,.3,1)', fill: 'backwards',
         }));
-        await ctx.wait(150);
-        Sound.bloop();
-        await pop(bottom);
+      },
+      pasteTo: () => paste(bottom),
+      // How much less, beside the arrow; then it keeps pulsing gently.
+      async pasteCut() {
+        await paste(tag);
+        tag.classList.add('is-pulsing');
       },
       // Already complete (to carry the card over from the screen before, unchanged).
       showNow() {
@@ -2552,22 +2716,14 @@
           { transform: 'translateX(135%) rotate(9deg)' },
         ], { duration: reducedMotion ? 1 : T(800), easing: 'cubic-bezier(.55,0,.75,.4)', fill: 'forwards' })).then(() => pos.remove());
       },
-      // How much less: pops in beside the arrow, then keeps pulsing gently.
-      async showCut() {
-        Sound.pop();
-        await reveal(tag, [
-          { opacity: 0, transform: 'scale(0) rotate(-12deg)' },
-          { opacity: 1, transform: 'scale(1.25) rotate(4deg)', offset: 0.6 },
-          { opacity: 1, transform: 'none' },
-        ], { duration: T(650), easing: 'cubic-bezier(.2,.8,.3,1)' });
-        tag.classList.add('is-pulsing');
-      },
     };
   }
 
   // ---------- definitions panel ----------
 
   const ARROW = '<svg class="def-arrow" viewBox="0 0 64 40" aria-hidden="true"><path pathLength="1" d="M6 20h44M36 7l15 13-15 13"/></svg>';
+  // The same, drawn by hand in pencil: a slightly wavy line, and a head in one stroke (screen 19).
+  const SKETCH_ARROW = '<svg class="def-arrow is-sketch" viewBox="0 0 64 40" aria-hidden="true"><path pathLength="1" d="M5 24C16 18 30 27 47 20M36 11C41 14 45 17 49 20C44 23 40 27 37 32"/></svg>';
 
   /**
    * Big panel that explains terms side by side (shown after a wrong answer).
@@ -2638,7 +2794,7 @@
           ], { duration: T(800), easing: SOFT });
           Sound.bloop();
           if (onCard) onCard(i);
-          await ctx.wait(400);
+          await ctx.wait(150); // its title comes in with it (a card is never empty)
           rise(c.title, 650);
           if (onTitle) onTitle(i);
           await ctx.wait(500);
@@ -2980,7 +3136,7 @@
   }
 
   window.FX = {
-    CANCELLED, el, rand, settle, glow, motes, twinkles, burst, shine, exclaim, bubble, thought, badge, ring, question, definitions, pricePanel,
+    CANCELLED, el, rand, settle, inkDefs, flyAcross, glow, motes, twinkles, burst, shine, exclaim, bubble, thought, badge, ring, question, definitions, pricePanel,
     reduction, definitionCard, formulaPanel, formulaReveal, summaryPanel, productCard, productQuestion, workedSheet, summarySheet, strike, stickTag, choices, pairsPanel, percentFormula, questionPanel, Bird, Walker,
     setPace(p) { pace = p; },
   };

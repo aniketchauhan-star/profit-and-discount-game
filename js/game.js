@@ -62,17 +62,23 @@
   // "aniket give a book to shopkepper.png" (only his face differs), so it can fade in over it.
   const PUZZLED = ASSETS + 'what is discount.png';
 
+  // Sheets: the teaching screens are on one big cream panel that fills the screen (`sheet: 'panel'`, drawn by the
+  // game: see buildScenes), with no picture behind it. A sheet slides up over the story picture before it, and
+  // back down after (see slide); between two sheets only what is on them changes. Swifty's stand, a stack of
+  // books (STAND, cut out of an illustration), sits in the bottom-right corner; she stands on it (CORNER).
+  const STAND = ASSETS + 'ui/book-stack.png';
+
   // Shapes on the artwork (stage px).
   const TITLE_PLATE = [[150, 340], [860, 340], [884, 420], [862, 520], [800, 668], [200, 668], [128, 600], [108, 430]];
   const SHOP_SIGN = [[380, 148], [1885, 18], [1885, 172], [380, 292]];
-  const MONEY = [[832, 470], [985, 436], [1066, 498], [1064, 582], [915, 586], [836, 545]];
-  const PRICE_TAG = { x: 942, y: 352, text: '₹800', radius: 72 }; // small ₹800 just above the money
+  const MONEY = [[896, 534], [1011, 477], [1040, 498], [1062, 514], [1062, 612], [942, 624], [930, 600], [896, 560]];
+  const PRICE_TAG = { x: 975, y: 404, text: '₹800', radius: 72 }; // small ₹800 just above the money
   const STICKER = { look: { x: 1049, y: 842, r: 84 }, shock: { x: 1108, y: 868, r: 106 } }; // ₹1000 on the cover
 
-  // Where Swifty stands (her feet) on the teaching screens 17–19: in the bottom-right corner, with the panel
+  // Where Swifty stands (her feet) on the teaching screens: on her stand in the bottom-right corner, with the panel
   // on her left and her speech bubbles above her head (kept between CORNER.bubbles). She stays there from
   // one screen to the next.
-  const CORNER = { x: 1690, y: 1010, s: 0.8, bubbles: [1440, 1900] };
+  const CORNER = { x: 1725, y: 910, s: 0.8, bubbles: [1380, 1872] }; // both feet on the top book; her bubbles stay on the panel's paper
 
   // Camera for screens with a card on the right (the question, the reduction): both characters
   // stay in view on the left. QUIZ_DRIFT is where its slow drift goes.
@@ -109,7 +115,7 @@
       id: 'outside', num: '3', title: 'The Bookstore', sub: 'Aniket walks to the store',
       bg: ASSETS + 'book store outside view.png',
       kb: { origin: '50% 62%', from: 'scale(1.02)', to: 'scale(1.06) translate(-6px, -4px)' },
-      lamps: [[918, 382, 320], [1498, 352, 320]],
+      lamps: [[167, 321, 230], [767, 334, 170], [1313, 299, 170], [1666, 275, 170]], // the wall lamp; ceiling lights behind the glass
       dust: [420, 260, 1840, 820],
       exit: 'zoom', zoomOrigin: '52% 56%', // 3 → 4: the camera pushes into the store while fading
       play: playOutside,
@@ -180,33 +186,20 @@
     },
     {
       id: 'mp', num: '11', title: 'Marked Price', sub: '₹1000 is the price written on the book',
-      bg: ASSETS + 'shocked aniket.png',
-      kb: { origin: '55% 80%', from: 'scale(1.02)', to: 'scale(1.065)' },
-      lamps: [[1292, 128, 300]],
-      dust: [150, 60, 1500, 760],
-      shot: 'cover', // carries straight on from screen 10's picture, which then blurs behind the panel
-      backdrop: true, // a soft blurred copy behind keeps the blurred picture's edges clean
+      sheet: 'panel', still: true, kb: null, origin: '50% 50%', lamps: [], dust: null,
+      setup: setupGuide,
       play: playMarked,
     },
     {
       id: 'mpdef', num: '12', title: 'What Is Marked Price?', sub: 'The price printed on an article',
-      bg: ASSETS + 'shocked aniket.png',
-      kb: { origin: '55% 80%', from: 'scale(1.02)', to: 'scale(1.065)' },
-      lamps: [[1292, 128, 300]],
-      dust: [150, 60, 1500, 760],
-      shot: 'cover',
-      backdrop: true,
+      sheet: 'panel', still: true, kb: null, origin: '50% 50%', lamps: [], dust: null,
       setup: scene => setupPricePanel(scene, { definition: MP_DEFINITION }),
       play: playDefine,
     },
     {
       id: 'compare', num: '13', title: 'Compare MP and SP', sub: '₹1000 Marked Price, ₹800 Selling Price',
-      bg: ASSETS + 'shocked aniket.png',
-      kb: { origin: '55% 80%', from: 'scale(1.02)', to: 'scale(1.065)' },
-      lamps: [[1292, 128, 300]],
-      dust: [150, 60, 1500, 760],
-      shot: 'cover',
-      backdrop: true,
+      sheet: 'panel', still: true, kb: null, origin: '50% 50%', lamps: [], dust: null,
+      look: 'paper', // the hand-made look (paper, card, tape, ink): tried on screens 13 and 27 first
       setup: scene => setupPricePanel(scene, {
         compare: {
           top: { price: '₹1000', label: 'Marked Price', tone: 'yellow' },
@@ -241,41 +234,25 @@
     },
     {
       id: 'discount-def', num: '16', title: 'Discount Definition', sub: 'The reduction on the marked price',
-      bg: PUZZLED,
-      kb: { origin: '50% 46%', from: 'scale(1.02)', to: 'scale(1.065) translate(-6px, 0)' }, // as on screen 15
-      lamps: [[1472, 106, 330]],
-      dust: [300, 60, 1500, 700],
-      shot: 'counter-talk',
+      sheet: 'panel', still: true, kb: null, origin: '50% 50%', lamps: [], dust: null,
       setup: setupDiscountDef,
       play: playDiscountDef,
     },
     {
       id: 'formula', num: '17', title: 'The Discount Formula', sub: 'Marked Price − Selling Price = Discount',
-      bg: PUZZLED,
-      kb: { origin: '50% 46%', from: 'scale(1.02)', to: 'scale(1.065) translate(-6px, 0)' }, // as on screens 15–16
-      lamps: [[1472, 106, 330]],
-      dust: [300, 60, 1500, 700],
-      shot: 'counter-talk',
-      setup: setupGuide, // starts out blurred, so only the definition card visibly fades away
+      sheet: 'panel', still: true, kb: null, origin: '50% 50%', lamps: [], dust: null,
+      setup: setupGuide,
       play: playFormula,
     },
     {
       id: 'formula-reveal', num: '18', title: 'Formula Reveal', sub: 'D = MP − SP',
-      bg: PUZZLED,
-      kb: { origin: '50% 46%', from: 'scale(1.02)', to: 'scale(1.065) translate(-6px, 0)' }, // as on screens 15–17
-      lamps: [[1472, 106, 330]],
-      dust: [300, 60, 1500, 700],
-      shot: 'counter-talk',
+      sheet: 'panel', still: true, kb: null, origin: '50% 50%', lamps: [], dust: null,
       setup: setupGuide,
       play: playFormulaReveal,
     },
     {
       id: 'summary', num: '19', title: 'Quick Summary', sub: 'Let’s remember!',
-      bg: PUZZLED,
-      kb: { origin: '50% 46%', from: 'scale(1.02)', to: 'scale(1.065) translate(-6px, 0)' }, // as on screens 15–18
-      lamps: [[1472, 106, 330]],
-      dust: [300, 60, 1500, 700],
-      shot: 'counter-talk',
+      sheet: 'panel', still: true, kb: null, origin: '50% 50%', lamps: [], dust: null,
       setup: setupGuide,
       play: playSummary,
     },
@@ -318,81 +295,50 @@
     },
     {
       id: 'recall', num: '24', title: 'Recall Percentages', sub: '“Let’s first recall how percentages work.”',
-      bg: ASSETS + 'he is tinking to see the shoes.png',
-      kb: { origin: '63% 66%', from: 'scale(1.02)', to: 'scale(1.07)' }, // as on screens 21–23
-      lamps: [[1740, 160, 260], [1740, 370, 260], [120, 60, 180]],
-      dust: [600, 40, 1900, 720],
-      shot: 'stand', // carries straight on from screen 23's picture, which then blurs behind the card
-      setup: setupRecall,
+      sheet: 'panel', still: true, kb: null, origin: '50% 50%', lamps: [], dust: null,
+      setup: setupGuide,
       play: playRecall,
     },
     {
       id: 'idea', num: '25', title: 'General Idea of Percentage', sub: 'Part ↔ Percentage, Whole ↔ 100%',
-      bg: ASSETS + 'he is tinking to see the shoes.png',
-      kb: { origin: '63% 66%', from: 'scale(1.02)', to: 'scale(1.07)' }, // as on screens 21–24
-      lamps: [[1740, 160, 260], [1740, 370, 260], [120, 60, 180]],
-      dust: [600, 40, 1900, 720],
-      shot: 'stand',
-      setup: setupGuide, // starts out blurred, Swifty in her corner, so only the sneakers card visibly fades away
+      sheet: 'panel', still: true, kb: null, origin: '50% 50%', lamps: [], dust: null,
+      setup: setupGuide,
       play: playIdea,
     },
     {
       id: 'whatpercent', num: '26', title: 'What Percent?', sub: '₹125 is what percent of ₹500?',
-      bg: ASSETS + 'he is tinking to see the shoes.png',
-      kb: { origin: '63% 66%', from: 'scale(1.02)', to: 'scale(1.07)' }, // as on screens 21–25
-      lamps: [[1740, 160, 260], [1740, 370, 260], [120, 60, 180]],
-      dust: [600, 40, 1900, 720],
-      shot: 'stand',
-      setup: setupGuide, // starts out blurred, Swifty in her corner, so only the pairs visibly fade away
+      sheet: 'panel', still: true, kb: null, origin: '50% 50%', lamps: [], dust: null,
+      setup: setupGuide,
       play: playWhatPercent,
     },
     {
       id: 'check', num: '27', title: 'Quick CFU', sub: '₹150 is what percent of ₹600?',
-      bg: ASSETS + 'he is tinking to see the shoes.png',
-      kb: { origin: '63% 66%', from: 'scale(1.02)', to: 'scale(1.07)' }, // as on screens 21–26
-      lamps: [[1740, 160, 260], [1740, 370, 260], [120, 60, 180]],
-      dust: [600, 40, 1900, 720],
-      shot: 'stand',
-      setup: setupGuide, // starts out blurred, Swifty in her corner, so only the formula visibly fades away
+      sheet: 'panel', still: true, kb: null, origin: '50% 50%', lamps: [], dust: null,
+      look: 'paper',
+      setup: setupGuide,
       play: playCheck,
     },
     {
       id: 'sneakerq', num: '28', title: 'Back to the Sneakers', sub: '“Now, what is 30% of ₹1800?”',
-      bg: ASSETS + 'he is tinking to see the shoes.png',
-      kb: { origin: '63% 66%', from: 'scale(1.02)', to: 'scale(1.07)' }, // as on screens 21–27
-      lamps: [[1740, 160, 260], [1740, 370, 260], [120, 60, 180]],
-      dust: [600, 40, 1900, 720],
-      shot: 'stand',
-      setup: setupGuide, // starts out blurred, Swifty in her corner, so only the quick check visibly fades away
+      sheet: 'panel', still: true, kb: null, origin: '50% 50%', lamps: [], dust: null,
+      setup: setupGuide,
       play: playSneakerQuestion,
     },
     {
       id: 'thirty', num: '29', title: 'Calculate 30% of ₹1800', sub: '30/100 × 1800 = ₹540',
-      bg: ASSETS + 'he is tinking to see the shoes.png',
-      kb: { origin: '63% 66%', from: 'scale(1.02)', to: 'scale(1.07)' },
-      lamps: [[1740, 160, 260], [1740, 370, 260], [120, 60, 180]],
-      dust: [600, 40, 1900, 720],
-      shot: 'stand',
+      sheet: 'panel', still: true, kb: null, origin: '50% 50%', lamps: [], dust: null,
       setup: setupGuide,
       play: playThirty,
     },
     {
       id: 'represent', num: '30', title: 'What Does ₹540 Represent?', sub: 'Marked Price, Selling Price or Discount?',
-      bg: ASSETS + 'he is tinking to see the shoes.png',
-      kb: { origin: '63% 66%', from: 'scale(1.02)', to: 'scale(1.07)' },
-      lamps: [[1740, 160, 260], [1740, 370, 260], [120, 60, 180]],
-      dust: [600, 40, 1900, 720],
-      shot: 'stand',
+      sheet: 'panel', still: true, kb: null, origin: '50% 50%', lamps: [], dust: null,
       setup: setupGuide,
       play: playRepresent,
     },
     {
       id: 'topay', num: '31', title: 'The Amount to Pay', sub: 'SP = MP − Discount = ₹1260',
-      bg: ASSETS + 'he is tinking to see the shoes.png',
-      kb: { origin: '63% 66%', from: 'scale(1.02)', to: 'scale(1.07)' },
-      lamps: [[1740, 160, 260], [1740, 370, 260], [120, 60, 180]],
-      dust: [600, 40, 1900, 720],
-      shot: 'stand',
+      sheet: 'panel', still: true, kb: null, origin: '50% 50%', lamps: [], dust: null,
       setup: setupGuide,
       play: playToPay,
     },
@@ -403,27 +349,18 @@
       lamps: [[1740, 160, 260], [1740, 370, 260], [120, 60, 180]],
       dust: [600, 40, 1900, 720],
       shot: 'stand',
-      setup: setupGuide, // starts out blurred with Swifty in her corner, as screen 31 left them
       play: playFinal,
     },
     {
       id: 'discountpct', num: '33', title: 'Discount Percentage', sub: 'Discount % = Discount ÷ Marked Price × 100',
-      bg: ASSETS + 'he saw a shoe.png', // as on screen 32, which it carries straight on from
-      kb: { origin: '63% 66%', from: 'scale(1.02)', to: 'scale(1.07)' },
-      lamps: [[1740, 160, 260], [1740, 370, 260], [120, 60, 180]],
-      dust: [600, 40, 1900, 720],
-      shot: 'stand',
-      setup: setupDiscountPercent, // the shop as screen 32 left it
+      sheet: 'panel', still: true, kb: null, origin: '50% 50%', lamps: [], dust: null,
+      setup: setupGuide,
       play: playDiscountPercent,
     },
     {
       id: 'sneakersum', num: '34', title: 'Complete Summary', sub: 'Sneaker Example Summary',
-      bg: ASSETS + 'he saw a shoe.png', // as on screens 32–33
-      kb: { origin: '63% 66%', from: 'scale(1.02)', to: 'scale(1.07)' },
-      lamps: [[1740, 160, 260], [1740, 370, 260], [120, 60, 180]],
-      dust: [600, 40, 1900, 720],
-      shot: 'stand',
-      setup: setupSneakerSummary, // starts out blurred with Swifty in her corner, as screen 33 left them
+      sheet: 'panel', still: true, kb: null, origin: '50% 50%', lamps: [], dust: null,
+      setup: setupGuide,
       play: playSneakerSummary,
     },
   ];
@@ -542,12 +479,12 @@
 
   async function playBrowse(ctx, scene) {
     const L = scene.layer;
-    FX.glow(L, 1105, 505, 440, 440, { cls: 'glow--book', delay: 0 });
-    FX.twinkles(L, [[985, 372], [1240, 405], [1252, 600], [975, 612], [1120, 338], [1185, 664]]);
+    FX.glow(L, 1030, 510, 420, 420, { cls: 'glow--book', delay: 0 });
+    FX.twinkles(L, [[895, 420], [1190, 380], [1205, 600], [880, 640], [1100, 345], [1150, 680]]);
 
     await ctx.wait(700);
     const line = FX.bubble(L, {
-      anchor: [1005, 270], corner: 'bl', tip: [950, 318],
+      anchor: [962, 296], corner: 'bl', tip: [905, 334], // right of his face, above the book; the tail at his mouth
       text: 'This book looks\ninteresting!', voice: 'boy', rotate: -1.5,
     });
     await line.show();
@@ -648,7 +585,7 @@
 
   async function playPay(ctx, scene) {
     const L = scene.layer;
-    FX.glow(L, 950, 515, 460, 300, { cls: 'glow--money', delay: 0 });
+    FX.glow(L, 978, 551, 420, 280, { cls: 'glow--money', delay: 0 });
 
     await ctx.wait(600);
     FX.shine(L, MONEY, { duration: 900, width: 140 });
@@ -659,7 +596,7 @@
 
     await ctx.wait(500);
     Sound.kaching();
-    FX.burst(L, 950, 515, { count: 10, dist: [70, 140], size: [10, 18] });
+    FX.burst(L, 978, 551, { count: 10, dist: [70, 140], size: [10, 18] });
     ctx.advance(2600); // on to the question
   }
 
@@ -712,7 +649,7 @@
   }
 
   // Right answer: the scene blurs, the card comes to the middle and turns over to say why; Swifty flies in,
-  // stands at its lower-right corner and reads it out, pointing at it. After 3 seconds a Next button moves
+  // stands at its lower-right corner and reads it out, pointing at it, then flies off; a Next button moves
   // the story on.
   async function answerRight(ctx, scene, card, button) {
     const [x, y] = stagePoint(button);
@@ -736,7 +673,7 @@
     bird.talk(); // still leaning towards the card
     await Voice.say('correct', 'Correct! ' + why, 'bird');
     bird.point();
-    await ctx.wait(3000, { real: true });
+    await flyOff(ctx, bird); // her part is done
     nextButton(scene);
   }
 
@@ -808,15 +745,17 @@
     const spot = stageRect(defs.spot);
     await bird.takeOff(ctx);
     const flight = bird.flyTo(ctx, { x: spot.left + spot.width / 2, y: spot.bottom, s: 0.8, duration: 1100, lift: 120 });
+    const landed = flight.then(() => bird.land());
+    landed.catch(() => {}); // if the player leaves meanwhile, fill reports it
     card.hide();
     await ctx.wait(200);
+    // The panel springs up with its first card already coming in (it never waits empty); she reads each card
+    // once she has landed beside them.
     defs.open();
-    await flight;
-    await bird.land();
     await defs.fill(ctx, {
-      onCard: () => bird.wave(),
-      onTitle: i => teach(`def${i}-title`, items[i].say),
-      onText: i => teach(`def${i}-text`, items[i].text),
+      onCard: () => { landed.then(() => bird.wave(), () => {}); },
+      onTitle: i => { landed.then(() => teach(`def${i}-title`, items[i].say)).catch(() => {}); },
+      onText: i => landed.then(() => teach(`def${i}-text`, items[i].text)),
     });
 
     // Swifty ties it back to the story, from the space above her head; then the button appears.
@@ -833,8 +772,8 @@
     answer.emphasize();
     await ctx.wait(600);
 
-    // 3 seconds after everything is up, a Next button (bottom-right) moves the story on.
-    await ctx.wait(3000, { real: true });
+    // Her part is done: she flies off, and a Next button (bottom-right) moves the story on.
+    await flyOff(ctx, bird, answer);
     nextButton(scene);
   }
 
@@ -855,7 +794,7 @@
     FX.ring(scene.layer, STICKER.shock);
     await ctx.wait(650);
     const line = FX.bubble(scene.layer, {
-      anchor: [1112, 350], corner: 'bl', tip: [1068, 326], // beside the yellow surprise lines by his head
+      anchor: [1030, 350], corner: 'bl', tip: [966, 300], // right of his head, the tail at his hair (his face is turned away)
       text: [{ t: 'What is this?\n' }, { t: '₹1000', em: true }, { t: ' is written\non this book!' }],
       voice: 'boy', rotate: -1.5,
     });
@@ -871,21 +810,18 @@
   // She stays on the book for screens 12 and 13.
   async function playMarked(ctx, scene) {
     const ui = scene.ui;
-    el('div', 'fb-dim', ui);
     await ctx.wait(300);
-    hush(scene, true);
-    await ctx.wait(500);
-    const mp = FX.pricePanel(ui, { price: '₹1000', term: 'Marked Price', abbr: '(MP)' });
+    const mp = FX.pricePanel(ui, { price: '₹1000', term: 'Marked Price', abbr: '(MP)', sheet: true });
     mp.open();
-    await ctx.wait(600);
+    await ctx.wait(300);
     mp.showBook();
     await ctx.wait(1000);
-    const bird = await flyToBook(ctx, ui, mp);
+    const talk = await cornerSwifty(ctx, scene); // she flies in to her stand
+    const bird = talk.bird;
     await ctx.wait(300);
 
-    // Her line, beside her head, while the sticker glows.
+    // Her line, above her head, while the sticker glows.
     mp.highlight();
-    const talk = swiftyTalk(ctx, ui, bird, besideHead);
     await talk.show([{ t: '₹1000', em: true }, { t: ' is the price\nwritten on the book.' }]);
     const saying = speak(ctx, talk.line, 'mp-line', 'bird', bird);
     saying.catch(() => {}); // if the player leaves mid-line, the wait below reports it
@@ -901,58 +837,34 @@
     await ctx.wait(300);
     await talk.say('mp-term', [{ t: 'It is called the\n' }, { t: 'Marked Price (MP)', cls: 'key' }, { t: '.' }]);
     talk.line.emphasize();
-    ctx.advance(3000); // then the definition
-  }
-
-  // Where Swifty stands in the price panels (screens 11–13): on the top edge of the book.
-  function bookPerch(mp) {
-    const book = stageRect(mp.book);
-    const k = book.height / 540; // the book picture's own units → stage px
-    return { x: book.left + 300 * k, y: book.top + 12 * k };
-  }
-
-  // Swifty flies in from the left and lands on the book.
-  async function flyToBook(ctx, ui, mp) {
-    const perch = bookPerch(mp);
-    const bird = new FX.Bird(ui, SWIFTY, { scale: 0.5 });
-    bird.place(-220, perch.y - 240);
-    await bird.flyTo(ctx, { x: perch.x, y: perch.y, duration: 1600, lift: 100, ease: 'out' });
-    await bird.land();
-    return bird;
+    endWithSwifty(ctx, scene, talk); // then the definition
   }
 
   // Screens 12 and 13 carry on from the price panel before them. Their setup runs before the cross-fade
-  // starts, so the picture behind is already blurred and (coming from the previous panel) the panel, the
-  // book and Swifty on it are already in place: only the right side visibly changes during the fade.
+  // starts, so (coming from the screen before) the book and Swifty on her stand are already in place: only
+  // the right side visibly changes during the fade.
   const PANEL_FLOW = ['mp', 'mpdef', 'compare'];
 
   function setupPricePanel(scene, side) {
-    el('div', 'fb-dim', scene.ui);
-    hush(scene, true, { instant: true });
-    scene.mp = FX.pricePanel(scene.ui, Object.assign({ price: '₹1000', term: 'Marked Price', abbr: '(MP)' }, side));
+    scene.mp = FX.pricePanel(scene.ui, Object.assign({ price: '₹1000', term: 'Marked Price', abbr: '(MP)', sheet: true }, side));
     scene.carried = PANEL_FLOW.indexOf(scene.cameFrom) === PANEL_FLOW.indexOf(scene.id) - 1;
-    scene.bird = null;
-    if (!scene.carried) return;
-    scene.mp.showNow();
-    const perch = bookPerch(scene.mp);
-    scene.bird = new FX.Bird(scene.ui, SWIFTY, { scale: 0.5 });
-    scene.bird.place(perch.x, perch.y);
-    scene.bird.shadowOn(true);
+    if (scene.carried) scene.mp.showNow();
+    carrySwifty(scene);
   }
 
   // Lets the cross-fade finish; or (when the screen was reached some other way, e.g. from the scenes
-  // panel) brings the panel in and Swifty flies onto the book. Resolves with Swifty.
+  // panel) brings the book in, and Swifty flies to her stand. Resolves with Swifty, ready to talk.
   async function enterPricePanel(ctx, scene) {
     if (scene.carried) {
-      await ctx.wait(700);
-      return scene.bird;
+      await ctx.wait(450); // the screen before finishes fading away first
+    } else {
+      await ctx.wait(300);
+      scene.mp.open();
+      await ctx.wait(300);
+      scene.mp.showBook();
+      await ctx.wait(1000);
     }
-    await ctx.wait(300);
-    scene.mp.open();
-    await ctx.wait(600);
-    scene.mp.showBook();
-    await ctx.wait(1000);
-    return flyToBook(ctx, scene.ui, scene.mp);
+    return cornerSwifty(ctx, scene);
   }
 
   // The Marked Price definition: a card eases in beside the book and Swifty reads it out while the words
@@ -960,7 +872,8 @@
   const MP_DEFINITION = 'The price {marked} or\n{printed} on an article\nis called its\n*Marked Price.*';
 
   async function playDefine(ctx, scene) {
-    const bird = await enterPricePanel(ctx, scene);
+    const talk = await enterPricePanel(ctx, scene);
+    const { bird } = talk;
     await scene.mp.define(ctx, {
       onRead: () => {
         bird.talk();
@@ -968,14 +881,16 @@
       },
       onMarked: () => scene.mp.highlight(),
     });
-    ctx.advance(3000); // then compare it with the Selling Price
+    endWithSwifty(ctx, scene, talk); // then compare it with the Selling Price
   }
 
-  // Compare MP and SP: ₹1000 Marked Price, an arrow down, ₹800 Selling Price, with Swifty saying each
-  // step from the book.
+  // Compare MP and SP: ₹1000 Marked Price, an arrow drawn down in marker, ₹800 Selling Price (paper cut-outs held
+  // on with washi tape), with Swifty saying each step from her stand.
   async function playCompare(ctx, scene) {
-    const bird = await enterPricePanel(ctx, scene);
-    const talk = swiftyTalk(ctx, scene.ui, bird, besideHead);
+    const talk = await enterPricePanel(ctx, scene);
+    const bird = talk.bird;
+    bird.point();
+    await ctx.wait(300);
     await scene.mp.compare(ctx, {
       onTop: () => {
         scene.mp.highlight(); // the ₹1000 on the book ↔ the Marked Price
@@ -987,12 +902,13 @@
     });
     await ctx.wait(500);
     await talk.say('cmp-why', 'Why is the Selling Price\nless than the Marked Price?');
-    ctx.advance(3000); // the shopkeeper explains
+    talk.line.emphasize();
+    endWithSwifty(ctx, scene, talk); // the shopkeeper explains
   }
 
-  // Back at the counter, the shopkeeper explains, one part at a time, while the card on the right
-  // builds ₹1000 → (₹200 reduced) → ₹800 in step with what he says; his last words are the new word,
-  // "discount".
+  // Back at the counter, the shopkeeper explains, one part at a time; as he says each price, it lifts out of his
+  // speech bubble and flies to the card on the right, which builds ₹1000 → (₹200 reduced) → ₹800; his last
+  // words are the new word, "discount".
   const REDUCTION_CARD = {
     from: { price: '₹1000', tone: 'yellow' }, // the same colours as on the compare screen
     to: { price: '₹800', tone: 'blue' },
@@ -1012,21 +928,35 @@
   async function playReveal(ctx, scene) {
     const card = FX.reduction(scene.ui, REDUCTION_CARD);
     await ctx.wait(500);
-    card.enter();
-    await ctx.wait(900);
-
     const line = FX.bubble(scene.layer, REVEAL_LINE);
     await line.show();
-    const parts = [
-      ['reveal-1', 'The marked price was ₹1000,', () => card.showFrom()],
-      ['reveal-2', 'but I sold it to you for ₹800.', () => card.showTo(ctx)],
-      ['reveal-3', 'You got a ₹200 discount.', () => card.showCut()],
-    ];
-    for (const [i, [id, words, show]] of parts.entries()) {
-      await speakPart(ctx, line, i, id, words, 'man');
-      await show();
-      await ctx.wait(500);
-    }
+    const [said1000, said800, said200] = line.el.querySelectorAll('.em'); // the prices in his bubble
+    // A price lifts out of his bubble and flies to the card (FX.flyAcross).
+    const fly = async (from, to, ms) => {
+      await FX.flyAcross(scene.ui, from, to, { ms, lift: 70 }); // a low arc, out over the bubble's right side
+      await ctx.wait(0); // (stops here if the player has left meanwhile)
+    };
+
+    // "The marked price was ₹1000,": the ₹1000 flies out to the card, which swings in to catch it; it is pasted
+    // into the top box.
+    await speakPart(ctx, line, 0, 'reveal-1', 'The marked price was ₹1000,', 'man');
+    const flying = fly(said1000, card.prices.from, 1000);
+    card.enter();
+    await flying;
+    await card.pasteFrom();
+    await ctx.wait(400);
+
+    // "but I sold it to you for ₹800.": the red arrow grows down, and the ₹800 flies into the bottom box.
+    await speakPart(ctx, line, 1, 'reveal-2', 'but I sold it to you for ₹800.', 'man');
+    await card.arrowDown();
+    await fly(said800, card.prices.to, 900);
+    await card.pasteTo();
+    await ctx.wait(400);
+
+    // "You got a ₹200 discount.": the ₹200 flies beside the arrow: "₹200 reduced".
+    await speakPart(ctx, line, 2, 'reveal-3', 'You got a ₹200 discount.', 'man');
+    await fly(said200, card.prices.cut, 800);
+    await card.pasteCut();
     line.emphasize(); // "discount." pulses: the new word
     Sound.ding();
     ctx.advance(3000); // then Aniket wonders what it means
@@ -1076,46 +1006,27 @@
     text: [{ t: 'Discount?', cls: 'key' }, { t: '\nWhat does\nthat mean?' }], voice: 'boy',
   };
 
-  // The definition of a discount, the answer to Aniket's question. Coming from screen 15, his thought cloud is
-  // first still there, exactly as it was; then it melts away and the counter blurs. The definition card springs
-  // up, Swifty flies in to its corner, points at it, and reads it out while the words appear. Then she hops down
-  // to her corner (CORNER).
+  // The definition of a discount, the answer to Aniket's question, on the sheet that slides up over the counter.
+  // The definition card springs up, and Swifty flies in to her stand (as on every teaching screen), points at the
+  // card and reads it out while the words appear.
   const DISCOUNT_DEFINITION = 'The {reduction} given on the\n{marked price} of an item\nis called a *discount.*';
 
   function setupDiscountDef(scene) {
-    el('div', 'fb-dim', scene.ui);
-    scene.oldThought = null;
-    if (scene.cameFrom !== 'discount') {
-      hush(scene, true, { instant: true });
-      return;
-    }
-    scene.oldThought = FX.thought(scene.layer, DISCOUNT_THOUGHT);
-    scene.oldThought.showNow();
+    carrySwifty(scene);
   }
 
   async function playDiscountDef(ctx, scene) {
     const ui = scene.ui;
-    if (scene.oldThought) {
-      await ctx.wait(500);
-      scene.oldThought.hide();
-      await ctx.wait(300);
-      hush(scene, true);
-      await ctx.wait(600);
-    }
     const card = FX.definitionCard(ui, { term: 'Discount', text: DISCOUNT_DEFINITION });
-    const box = stageRect(card.card); // measured before it animates
-    const corner = { x: box.right + 30, y: box.bottom + 104 }; // her feet: overlapping the card's lower-right corner
-
     await ctx.wait(400);
-    card.open();
-    await ctx.wait(500);
-    const bird = new FX.Bird(ui, SWIFTY, { scale: 0.9 });
-    bird.place(2140, corner.y - 300);
-    await bird.flyTo(ctx, { x: corner.x, y: corner.y, s: 0.9, duration: 1400, lift: 100, ease: 'out' });
-    await bird.land();
-    await ctx.wait(200);
+    const arriving = cornerSwifty(ctx, scene); // she flies in to her stand
+    arriving.catch(() => {}); // if the player leaves meanwhile, the await below reports it
+    await ctx.wait(700);
+    card.open(); // the card springs up as she lands, and she reads it out straight away (it never waits empty)
+    const talk = await arriving;
+    const { bird } = talk;
     bird.point();
-    await ctx.wait(600);
+    await ctx.wait(300);
 
     // She reads it out, still leaning towards it, while the words appear.
     await card.define(ctx, {
@@ -1126,18 +1037,7 @@
     });
     card.emphasize();
     Sound.ding();
-    await ctx.wait(700);
-    bird.wave();
-    await ctx.wait(900);
-    bird.point();
-    await ctx.wait(1300);
-
-    // She hops down to her corner, leaving the definition up; then the formula.
-    bird.lean(0);
-    await bird.takeOff(ctx);
-    await bird.flyTo(ctx, { x: CORNER.x, y: CORNER.y, s: CORNER.s, duration: 1000, lift: 60 });
-    await bird.land();
-    ctx.advance(2400);
+    endWithSwifty(ctx, scene, talk); // then the formula
   }
 
   // The discount formula, built one piece at a time: the ₹1000 lifts off the book's sticker into the
@@ -1153,20 +1053,21 @@
       ],
       ops: ['−', '='],
     });
-    const talk = await cornerSwifty(ctx, scene);
-
     await ctx.wait(450); // the definition card finishes fading away first
     fp.open();
     await ctx.wait(700);
     fp.showBook();
     await ctx.wait(1000);
 
-    // Marked Price: the price printed on the book flies into the first box.
+    // Marked Price: the price printed on the book flies into the first box; Swifty flies in meanwhile.
     fp.highlight();
     await ctx.wait(600);
     await fp.box(0, { empty: true });
     await ctx.wait(200);
+    const arriving = cornerSwifty(ctx, scene);
+    arriving.catch(() => {}); // if the player leaves meanwhile, the await below reports it
     await fp.fly();
+    const talk = await arriving;
     await talk.say('f-mp', [{ t: 'The Marked Price\nis ' }, { t: '₹1000', em: true }, { t: '.' }], 700);
 
     // − Selling Price
@@ -1197,32 +1098,43 @@
     await ctx.wait(400);
     fp.glow(2); // the Discount keeps glowing
     Sound.ding();
-    ctx.advance(3000); // then the formula itself
+    endWithSwifty(ctx, scene, talk); // then the formula itself
   }
 
   // A screen over the blurred counter that starts out already blurred: during a dissolve from the screen
   // before (also blurred), only what was on top of it visibly changes.
   function blurredFromStart(scene) {
+    if (scene.sheet) return; // nothing behind a sheet to blur
     el('div', 'fb-dim', scene.ui);
     hush(scene, true, { instant: true });
   }
 
-  // Screens where Swifty teaches from her corner (17–19, 24–31, 32 as she leaves, and 34) start out blurred; coming from the screen
-  // before in the same run, she is already in her corner.
-  const GUIDE_FLOWS = [['discount-def', 'formula', 'formula-reveal', 'summary'], ['recall', 'idea', 'whatpercent', 'check', 'sneakerq', 'thirty',
-    'represent', 'topay', 'final', 'discountpct', 'sneakersum']];
-
   function setupGuide(scene) {
     blurredFromStart(scene);
+    carrySwifty(scene);
+  }
+
+  // Runs of screens where Swifty keeps talking, one after another. She flies in to her stand for the first line
+  // of a run, stays there through the run (carried across each dissolve without moving), and flies off after
+  // its last line; so she is only on the screen while she has something to say.
+  const RUNS = [['mp', 'mpdef', 'compare'], ['discount-def', 'formula', 'formula-reveal', 'summary'],
+    ['recall', 'idea', 'whatpercent', 'check', 'sneakerq', 'thirty', 'represent', 'topay'], ['discountpct', 'sneakersum']];
+  const lastOfRun = scene => {
+    const run = RUNS.find(r => r.includes(scene.id));
+    return !run || run[run.length - 1] === scene.id;
+  };
+
+  // Coming from the screen before in the same run, Swifty is already on her stand.
+  function carrySwifty(scene) {
     scene.bird = null;
-    const carried = GUIDE_FLOWS.some(run => run.indexOf(scene.cameFrom) >= 0 && run.indexOf(scene.id) === run.indexOf(scene.cameFrom) + 1);
+    const carried = RUNS.some(run => run.indexOf(scene.cameFrom) >= 0 && run.indexOf(scene.id) === run.indexOf(scene.cameFrom) + 1);
     if (!carried) return;
     scene.bird = new FX.Bird(scene.ui, SWIFTY, { scale: CORNER.s });
     scene.bird.place(CORNER.x, CORNER.y);
     scene.bird.shadowOn(true);
   }
 
-  // Swifty in her corner, ready to talk (her bubbles go above her head): already there, or flying in now.
+  // Swifty on her stand (CORNER), ready to talk (her bubbles go above her head): already there, or flying in now.
   async function cornerSwifty(ctx, scene) {
     let bird = scene.bird;
     if (!bird) {
@@ -1232,6 +1144,39 @@
       await bird.land();
     }
     return swiftyTalk(ctx, scene.ui, bird, b => overHead(b, CORNER.bubbles));
+  }
+
+  // Swifty's part is over: her bubble (if any) goes with her, and she waves and flies off.
+  async function flyOff(ctx, bird, bubble) {
+    await ctx.wait(600); // her last words sink in first
+    if (bubble) await bubble.hide();
+    bird.lean(0);
+    bird.wave();
+    Sound.chirp();
+    await ctx.wait(300);
+    await bird.takeOff(ctx);
+    await bird.flyTo(ctx, { x: 2160, y: bird.y - 420, duration: 900, lift: 40, ease: 'in' });
+    bird.remove();
+  }
+
+  // Swifty's lines on this screen are done. If she talks on the next screen too (the same run), she stays on her
+  // stand, upright again as she is when that screen starts, and her last bubble stays up; at the end of a run she
+  // flies off, her bubbles (and any `extra` ones, e.g. a note) going with her.
+  async function swiftyDone(ctx, scene, talk, extra = []) {
+    if (lastOfRun(scene)) {
+      extra.forEach(b => b.hide());
+      await flyOff(ctx, talk.bird, talk.line);
+      return;
+    }
+    await ctx.wait(1000);
+    talk.bird.lean(0);
+    talk.bird.idle();
+  }
+
+  // The end of a screen where Swifty talks: see swiftyDone; the screen holds `ms`, then on to the next.
+  function endWithSwifty(ctx, scene, talk, ms = 3000, extra = []) {
+    swiftyDone(ctx, scene, talk, extra).catch(err => { if (err !== CANCELLED) console.error(err); });
+    ctx.advance(ms);
   }
 
   // The formula: first in words on a pink strip, then in short. Swifty says it from her corner, part by
@@ -1247,12 +1192,13 @@
       ],
       ops: ['=', '−'],
     });
-    const talk = await cornerSwifty(ctx, scene);
-    const bird = talk.bird;
-
     await ctx.wait(450); // the formula panel finishes fading away first
+    const arriving = cornerSwifty(ctx, scene); // she flies in as the panel opens
+    arriving.catch(() => {});
     fr.open();
     await ctx.wait(800);
+    const talk = await arriving;
+    const bird = talk.bird;
 
     // In words, one part at a time.
     await talk.show([{ t: 'Discount', end: true }, { t: '\nequals Marked Price,', end: true }, { t: '\nminus Selling Price.' }]);
@@ -1268,8 +1214,7 @@
     await talk.part('fr-3', 2, 900);
     await ctx.wait(600);
 
-    // In short: each term's first letters fly down into the blue box.
-    fr.showShort();
+    // In short: each term's first letters fly down into the blue box (which springs up as the first ones go).
     await talk.say('fr-4', 'We can write it\nin short.', 900);
     await talk.show([{ t: 'D for Discount,', end: true }, { t: '\nMP for Marked Price,', end: true }, { t: '\nSP for Selling Price.' }]);
     for (let i = 0; i < 3; i++) {
@@ -1281,6 +1226,7 @@
       const saying = talk.part(`fr-${5 + i}`, i, 800);
       saying.catch(() => {}); // if the player leaves mid-line, the waits below report it
       await ctx.wait(450);
+      if (!i) fr.showShort(); // as the first letters fly down to it
       await fr.fly(i);
       await saying;
     }
@@ -1308,17 +1254,17 @@
     await note.show();
     await Promise.all([speak(ctx, note, 'fr-use', 'bird', bird), ctx.wait(900)]);
     bird.point();
-    await ctx.wait(1500);
-    bird.lean(0);
-    bird.idle();
-    ctx.advance(2400); // then a quick summary
+    await ctx.wait(600);
+    endWithSwifty(ctx, scene, talk, 2400, [note]); // then a quick summary
   }
 
-  // A quick summary. Swifty, in her corner, goes over the three terms one card at a time
-  // (Marked Price → Selling Price → Discount), then the formula, each line in her speech bubble.
+  // A quick summary, made by hand on the sheet: a taped-on title, index cards, pencil arrows and a sticky note.
+  // Swifty, on her stand, goes over the three terms one card at a time (Marked Price → Selling Price →
+  // Discount), then the formula, each line in her speech bubble.
   async function playSummary(ctx, scene) {
     const ui = scene.ui;
     const sp = FX.summaryPanel(ui, {
+      note: true,
       title: 'Let’s remember!',
       cards: [ // the colours used since screen 13
         { term: 'Marked Price', tone: 'mp', value: '₹1000', desc: 'Price written\non an item.' },
@@ -1327,12 +1273,13 @@
       ],
       formula: [{ t: 'Discount', tone: 'd' }, { t: '=' }, { t: 'MP', tone: 'mp' }, { t: '−' }, { t: 'SP', tone: 'sp' }],
     });
-    const talk = await cornerSwifty(ctx, scene);
-    const bird = talk.bird;
-
-    await ctx.wait(450); // the formula finishes fading away first
+    await ctx.wait(450); // the screen before finishes fading away first
+    const arriving = cornerSwifty(ctx, scene); // she flies in as the recap opens
+    arriving.catch(() => {});
     sp.open();
     await ctx.wait(500);
+    const talk = await arriving;
+    const bird = talk.bird;
     bird.wave();
     sp.title();
     await ctx.wait(300);
@@ -1363,9 +1310,7 @@
       { t: 'And remember\nthe formula:\n' }, { t: 'Discount', cls: 'tone-d' }, { t: ' = ' },
       { t: 'MP', cls: 'tone-mp' }, { t: ' − ' }, { t: 'SP', cls: 'tone-sp' }, { t: '!' },
     ], 1400);
-    bird.wave();
-    await ctx.wait(800);
-    ctx.advance(3000); // then Aniket's next find, at the shoe shop
+    endWithSwifty(ctx, scene, talk); // then Aniket's next find, at the shoe shop
   }
 
   // The blue sneakers on the stand in the shoe shop (stage px), for the light sweeping across them.
@@ -1448,41 +1393,18 @@
     ctx.advance(3000); // Swifty comes to help
   }
 
-  // Swifty comes to help. Coming from screen 23 the picture, the lit tag and Aniket's question are first
-  // exactly as they were; then his bubble goes, the shop blurs, and a card with the sneakers, their ₹1800
+  // Swifty comes to help, on the sheet that slides up over the shop: a card with the sneakers, their ₹1800
   // price tag and their 30% OFF tag springs up. Swifty flies in to her corner, points at it and says
   // what comes next.
   const SNEAKER_CARD = { photo: ASSETS + 'ui/sneakers.png', price: '₹1800', off: ['30%', 'OFF'] };
 
-  function setupRecall(scene) {
-    el('div', 'fb-dim', scene.ui);
-    scene.bird = null; // she flies in (see cornerSwifty)
-    scene.oldAsk = null;
-    scene.oldRing = null;
-    if (scene.cameFrom !== 'confused') return;
-    scene.oldRing = FX.ring(scene.layer, Object.assign({ instant: true }, THINKING_OFF_TAG));
-    scene.oldAsk = FX.bubble(scene.layer, SHOE_ASK);
-    scene.oldAsk.showNow();
-  }
-
   async function playRecall(ctx, scene) {
-    if (scene.oldAsk) {
-      await ctx.wait(500);
-      scene.oldAsk.hide();
-    }
     await ctx.wait(300);
-    hush(scene, true);
-    if (scene.oldRing) { // only the tag on the card glows from now on
-      const ring = scene.oldRing;
-      FX.settle(ring.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 700, fill: 'forwards' })).then(() => ring.remove());
-    }
-    await ctx.wait(600);
 
     // The card: the sneakers, then their price tag, then the discount tag lands like a stamp and glows.
     const card = FX.productCard(scene.ui, SNEAKER_CARD);
     card.open();
-    await ctx.wait(600);
-    await card.showPhoto();
+    await card.showPhoto(); // with the card, so it is never empty
     await ctx.wait(300);
     await card.showPrice();
     await ctx.wait(350);
@@ -1493,9 +1415,9 @@
     const talk = await cornerSwifty(ctx, scene);
     const bird = talk.bird;
     bird.wave();
-    await ctx.wait(700);
+    await ctx.wait(400);
     bird.point();
-    await ctx.wait(500);
+    await ctx.wait(200);
     await talk.show([
       { t: 'To find the\n' }, { t: 'discount amount', cls: 'key' }, { t: ',', end: true },
       { t: '\nlet’s first recall\nhow ' }, { t: 'percentages', cls: 'key' }, { t: ' work.' },
@@ -1506,10 +1428,7 @@
     await talk.part('recall-2', 1, 600);
     talk.line.emphasize();
     bird.point();
-    await ctx.wait(1500);
-    bird.lean(0); // upright again, as she is when the next screen starts
-    bird.idle();
-    ctx.advance(3000); // then the general idea of percentage
+    endWithSwifty(ctx, scene, talk); // then the general idea of percentage
   }
 
   // Swifty says one part of her bubble; `at` (after `ms` of it) shows what she is talking about.
@@ -1524,8 +1443,8 @@
   // The answers to a percentage question: they slide in under it (in a row, or { stack: true } in a column),
   // and Swifty points at them while the player picks one. Then she explains: right() after a right pick (with
   // sparkles), wrong(answers) after a wrong one (no second try: the player learns it and carries on), and
-  // so(answers) either way. 3 seconds later the Next button appears level with the last answer, left of Swifty
-  // in her corner. `t.below` is where the answers go.
+  // so(answers) either way. 3 seconds later (or once Swifty has flown off, at the end of her run) the Next
+  // button appears level with the last answer. `t.below` is where the answers go.
   async function percentQuestion(ctx, scene, t, talk, { options, right, wrong, so, stack = false }) {
     const answers = FX.choices(t.below, {
       options,
@@ -1548,9 +1467,13 @@
       await so(answers);
       talk.line.emphasize();
       talk.bird.point();
-      await ctx.wait(3000, { real: true });
-      talk.bird.lean(0);
-      talk.bird.idle();
+      if (lastOfRun(scene)) {
+        await swiftyDone(ctx, scene, talk); // she flies off
+      } else {
+        await ctx.wait(3000, { real: true });
+        talk.bird.lean(0);
+        talk.bird.idle();
+      }
       const last = stageRect(answers.buttons[answers.buttons.length - 1]);
       nextButton(scene, { right: 410, bottom: STAGE_H - (last.top + last.bottom) / 2 - 48 });
     }
@@ -1569,18 +1492,18 @@
 
   async function playIdea(ctx, scene) {
     const pairs = FX.pairsPanel(scene.ui, { rows: IDEA_PAIRS });
-    const talk = await cornerSwifty(ctx, scene); // already there, coming from screen 24
-    const bird = talk.bird;
     await ctx.wait(450); // the sneakers card finishes fading away first
     pairs.open();
     await ctx.wait(600);
     await pairs.row(0);
     await ctx.wait(300);
+    const arriving = cornerSwifty(ctx, scene); // she flies in as the second pair builds
+    arriving.catch(() => {});
     await pairs.row(1);
-    await ctx.wait(600);
-
+    const talk = await arriving;
+    const bird = talk.bird;
     bird.point();
-    await ctx.wait(500);
+    await ctx.wait(300);
     await talk.show([
       { t: 'Percentage', cls: 'key' }, { t: ' tells us\nhow much of the whole', end: true },
       { t: '\nwe are considering.' },
@@ -1594,10 +1517,7 @@
     await partWith(ctx, talk, 'idea-2', 1, 300, () => pairs.pingRow(0)); // "we are considering": the part, and its percentage
     talk.line.emphasize();
     bird.point();
-    await ctx.wait(1500);
-    bird.lean(0);
-    bird.idle();
-    ctx.advance(3000); // then a question about it
+    endWithSwifty(ctx, scene, talk); // then a question about it
   }
 
   // "₹125 is what percent of ₹500?" Over the same blurred shop, with Swifty in her corner, the pairs dissolve
@@ -1614,12 +1534,14 @@
 
   async function playWhatPercent(ctx, scene) {
     const f = FX.percentFormula(scene.ui, WHAT_PERCENT);
-    const talk = await cornerSwifty(ctx, scene); // already there, coming from screen 25
-    const bird = talk.bird;
     await ctx.wait(450); // the pairs finish fading away first
+    const arriving = cornerSwifty(ctx, scene); // she flies in as the panel opens
+    arriving.catch(() => {});
     f.open();
     await ctx.wait(600);
     await f.showQuestion();
+    const talk = await arriving;
+    const bird = talk.bird;
     await ctx.wait(300);
     bird.talk(); // she reads the question out (its words are on the strip)
     await Promise.all([Voice.say('wp-ask', '₹125 is what percent of ₹500?', 'bird'), ctx.wait(1400)]);
@@ -1687,10 +1609,7 @@
     });
     talk.line.emphasize();
     bird.point();
-    await ctx.wait(1500);
-    bird.lean(0);
-    bird.idle();
-    ctx.advance(3000); // then a quick check
+    endWithSwifty(ctx, scene, talk); // then a quick check
   }
 
   // A quick check: "₹150 is what percent of ₹600?" Over the same blurred shop, with Swifty in her corner, the
@@ -1704,12 +1623,14 @@
 
   async function playCheck(ctx, scene) {
     const q = FX.questionPanel(scene.ui, CHECK);
-    const talk = await cornerSwifty(ctx, scene); // already there, coming from screen 26
-    const bird = talk.bird;
     await ctx.wait(450); // the formula finishes fading away first
+    const arriving = cornerSwifty(ctx, scene); // she flies in as the panel opens
+    arriving.catch(() => {});
     q.open();
     await ctx.wait(600);
     await q.showQuestion();
+    const talk = await arriving;
+    const bird = talk.bird;
     await ctx.wait(300);
     bird.talk(); // she reads the question out (its words are on the strip)
     await Promise.all([Voice.say('cfu-ask', '₹150 is what percent of ₹600?', 'bird'), ctx.wait(1400)]);
@@ -1766,11 +1687,13 @@
   // gives the answer; the next three screens work it out (29), name it (30) and use it (31).
   async function playSneakerQuestion(ctx, scene) {
     const pq = FX.productQuestion(scene.ui, Object.assign({ question: 'Now, what is\n30% of ₹1800?' }, SNEAKER_CARD));
-    const talk = await cornerSwifty(ctx, scene); // already there, coming from screen 27
-    const bird = talk.bird;
     await ctx.wait(450); // the quick check finishes fading away first
+    const arriving = cornerSwifty(ctx, scene); // she flies in as the panel opens
+    arriving.catch(() => {});
     pq.open();
     await ctx.wait(600);
+    const talk = await arriving;
+    const bird = talk.bird;
     const showing = pq.showItem(ctx); // the sneakers, as she says it
     showing.catch(() => {}); // if the player leaves meanwhile, the waits below report it
     await talk.say('mq-back', 'Now, back to\nAniket’s sneakers!', 600);
@@ -1838,11 +1761,13 @@
 
   async function playThirty(ctx, scene) {
     const w = FX.workedSheet(scene.ui, THIRTY_SHEET);
-    const talk = await cornerSwifty(ctx, scene); // already there, coming from screen 28
-    const bird = talk.bird;
     await ctx.wait(450); // the question finishes fading away first
+    const arriving = cornerSwifty(ctx, scene); // she flies in as the sheet opens
+    arriving.catch(() => {});
     w.open();
     await ctx.wait(700);
+    const talk = await arriving;
+    const bird = talk.bird;
     bird.point();
     await ctx.wait(400);
 
@@ -1883,10 +1808,7 @@
     Sound.sparkle();
     talk.line.emphasize();
     bird.point();
-    await ctx.wait(1500);
-    bird.lean(0);
-    bird.idle();
-    ctx.advance(3000); // then what ₹540 is
+    endWithSwifty(ctx, scene, talk); // then what ₹540 is
   }
 
   // What does ₹540 represent? The working dissolves away and the sneakers panel springs up again, with the
@@ -1894,14 +1816,16 @@
   // taken off ₹1800, the Discount.
   async function playRepresent(ctx, scene) {
     const pq = FX.productQuestion(scene.ui, Object.assign({ question: 'What does ₹540\nrepresent here?' }, SNEAKER_CARD));
-    const talk = await cornerSwifty(ctx, scene); // already there, coming from screen 29
-    const bird = talk.bird;
     await ctx.wait(450); // the working finishes fading away first
     pq.open();
     await ctx.wait(600);
     await pq.showItem(ctx);
     await ctx.wait(400);
+    const arriving = cornerSwifty(ctx, scene); // she flies in as the question appears
+    arriving.catch(() => {});
     await pq.showQuestion();
+    const talk = await arriving;
+    const bird = talk.bird;
     await ctx.wait(300);
     bird.talk(); // she reads the question out (its words are on the strip)
     await Promise.all([Voice.say('rp-ask', 'What does ₹540 represent here?', 'bird'), ctx.wait(1400)]);
@@ -1946,7 +1870,7 @@
     ],
     rows: [
       { label: [{ t: 'SP', cls: 'tone-sp' }], band: true, parts: [{ t: 'MP', cls: 'tone-mp' }, { op: '−' }, { t: 'Discount', cls: 'tone-d' }] },
-      { parts: [{ slot: 'MP', t: '1800', cls: 'tone-mp' }, { op: '−' }, { slot: 'Discount', t: '540', cls: 'tone-d' }] }, // the player fills these
+      { parts: [{ slot: 'MP', t: '₹1800', cls: 'tone-mp' }, { op: '−' }, { slot: 'Discount', t: '₹540', cls: 'tone-d' }] }, // the player fills these
       { parts: [{ answer: '₹1260' }] },
     ],
   };
@@ -1960,15 +1884,16 @@
 
   async function playToPay(ctx, scene) {
     const w = FX.workedSheet(scene.ui, PAY_SHEET);
-    const talk = await cornerSwifty(ctx, scene); // already there, coming from screen 30
-    const bird = talk.bird;
     await ctx.wait(450); // the question finishes fading away first
     w.open();
     await ctx.wait(600);
     await w.box(0);
     await ctx.wait(300);
+    const arriving = cornerSwifty(ctx, scene); // she flies in as the second amount appears
+    arriving.catch(() => {});
     await w.box(1);
-    await ctx.wait(500);
+    const talk = await arriving;
+    const bird = talk.bird;
     bird.point();
     await ctx.wait(400);
 
@@ -2024,9 +1949,9 @@
     if (hinting) await hinting;
     await ctx.wait(500);
 
-    // 1800 − 540 = ₹1260.
+    // ₹1800 − ₹540 = ₹1260.
     await talk.show([
-      { t: '1800', cls: 'tone-mp' }, { t: ' − ' }, { t: '540', cls: 'tone-d', end: true },
+      { t: '₹1800', cls: 'tone-mp' }, { t: ' − ' }, { t: '₹540', cls: 'tone-d', end: true },
       { t: '\n= ' }, { t: '₹1260', em: true }, { t: '.' },
     ]);
     await partWith(ctx, talk, 'pay-3', 0, 200, () => {
@@ -2047,16 +1972,14 @@
     });
     talk.line.emphasize();
     bird.point();
-    // As after a question: 3 seconds later the Next button appears, under the panel.
-    await ctx.wait(3000, { real: true });
-    bird.lean(0);
-    bird.idle();
+    // As after a question: her run ends here, so she flies off; then the Next button appears under the panel.
+    await swiftyDone(ctx, scene, talk);
     const p = stageRect(w.panel);
     nextButton(scene, { right: STAGE_W - p.right, bottom: STAGE_H - p.bottom - 140 });
   }
 
-  // The final answer, in Aniket's words. Coming from screen 31, the worked solution dissolves away and Swifty,
-  // her part done, waves and flies off; the blur lifts, and Aniket is at the stand, pointing at the tags. As he
+  // The final answer, in Aniket's words. Coming from screen 31, the sheet slides down (Swifty's part is done) and
+  // Aniket is at the stand, pointing at the tags. As he
   // says "So, after a 30% discount, I will pay ₹1260.", the 30% OFF tag lights up and a red line crosses out
   // the ₹1800, then a green ₹1260 tag stamps onto the stand.
   const STRIKE_1800 = { from: [1244, 630], to: [1380, 580] }; // across the "₹1800" on the tag hanging from the sneakers (stage px)
@@ -2071,20 +1994,7 @@
   };
 
   async function playFinal(ctx, scene) {
-    if (scene.bird) { // coming from screen 31: Swifty's part is done
-      const bird = scene.bird;
-      await ctx.wait(450); // the worked solution finishes fading away first
-      bird.wave();
-      Sound.chirp();
-      await ctx.wait(800);
-      await bird.takeOff(ctx);
-      bird.flyTo(ctx, { x: 2160, y: -90, duration: 1100, lift: 40, ease: 'in' }).then(() => bird.remove(), () => {});
-      await ctx.wait(500);
-    } else {
-      await ctx.wait(400);
-    }
-    hush(scene, false); // the shop comes back into focus: Aniket, pointing at the tags
-    await ctx.wait(1300);
+    await ctx.wait(600); // the sheet finishes sliding away: Aniket, pointing at the tags
 
     const crossOut = FX.strike(scene.layer, STRIKE_1800);
     const paid = FX.stickTag(scene.layer, PAID_TAG);
@@ -2134,38 +2044,19 @@
     ],
   };
 
-  // The shop as screen 32 left it: the ₹1800 crossed out, the 30% OFF tag framed, the green ₹1260 tag, and
-  // (coming from 32) Aniket's line.
-  function setupDiscountPercent(scene) {
-    scene.bird = null; // Swifty flies back in
-    FX.strike(scene.layer, STRIKE_1800).showNow();
-    FX.ring(scene.layer, Object.assign({ instant: true }, OFF_TAG));
-    FX.stickTag(scene.layer, PAID_TAG).showNow();
-    scene.oldLine = null;
-    if (scene.cameFrom !== 'final') return;
-    FX.twinkles(scene.layer, PAID_TWINKLES);
-    scene.oldLine = FX.bubble(scene.layer, FINAL_LINE);
-    scene.oldLine.showNow();
-  }
-
   async function playDiscountPercent(ctx, scene) {
-    if (scene.oldLine) {
-      await ctx.wait(500);
-      scene.oldLine.hide();
-    }
-    await ctx.wait(400);
-    el('div', 'fb-dim', scene.ui);
-    hush(scene, true); // the shop blurs again
-    await ctx.wait(700);
-    const talk = await cornerSwifty(ctx, scene); // she flies back in
-    const bird = talk.bird;
-    bird.wave();
+    await ctx.wait(300);
     const w = FX.workedSheet(scene.ui, DISCOUNT_PERCENT_SHEET);
+    const arriving = cornerSwifty(ctx, scene); // she flies back in, to her stand, as the sheet opens
+    arriving.catch(() => {});
     await ctx.wait(400);
     w.open();
-    await ctx.wait(700);
+    const talk = await arriving;
+    const bird = talk.bird;
+    bird.wave();
+    await ctx.wait(500);
     bird.point();
-    await ctx.wait(400);
+    await ctx.wait(200);
 
     // What discount percentage tells us (her line from the storyboard): the rule is written in as she says it.
     await talk.show([
@@ -2215,10 +2106,7 @@
     });
     talk.line.emphasize();
     bird.point();
-    await ctx.wait(1500);
-    bird.lean(0);
-    bird.idle();
-    ctx.advance(3000); // then the whole example, summed up
+    endWithSwifty(ctx, scene, talk); // then the whole example, summed up
   }
 
   // The sneakers, summed up. Over the same blurred shop (its tags still updated), with Swifty in her corner, the
@@ -2240,21 +2128,15 @@
     ],
   };
 
-  // Blurred, Swifty in her corner (coming from screen 33), and the shop's tags as screens 32–33 left them.
-  function setupSneakerSummary(scene) {
-    setupGuide(scene);
-    FX.strike(scene.layer, STRIKE_1800).showNow();
-    FX.ring(scene.layer, Object.assign({ instant: true }, OFF_TAG));
-    FX.stickTag(scene.layer, PAID_TAG).showNow();
-  }
-
   async function playSneakerSummary(ctx, scene) {
     const sum = FX.summarySheet(scene.ui, SNEAKER_SUMMARY);
-    const talk = await cornerSwifty(ctx, scene); // already there, coming from screen 33
-    const bird = talk.bird;
     await ctx.wait(450); // the worked sheet finishes fading away first
+    const arriving = cornerSwifty(ctx, scene); // she flies in as the summary opens
+    arriving.catch(() => {});
     sum.open();
     await ctx.wait(500);
+    const talk = await arriving;
+    const bird = talk.bird;
     bird.wave();
     sum.showTitle();
     await ctx.wait(300);
@@ -2263,7 +2145,6 @@
 
     // The four amounts, row by row as she says them.
     bird.point();
-    await sum.showTable();
     await talk.show([
       { t: 'Marked price', cls: 'tone-mp' }, { t: ': ' }, { t: '₹1800', em: true }, { t: '.', end: true },
       { t: '\n' }, { t: 'Discount', cls: 'tone-d' }, { t: ': ' }, { t: '30%', em: true }, { t: ',', end: true },
@@ -2277,7 +2158,6 @@
     await ctx.wait(400);
 
     // The three rules, written in as she reads them.
-    await sum.showRules();
     await talk.show([
       { t: 'Discount', cls: 'tone-d' }, { t: ' = ' }, { t: 'MP', cls: 'tone-mp' }, { t: ' − ' }, { t: 'SP', cls: 'tone-sp' }, { t: ',', end: true },
       { t: '\n' }, { t: 'SP', cls: 'tone-sp' }, { t: ' = ' }, { t: 'MP', cls: 'tone-mp' }, { t: ' − ' }, { t: 'Discount', cls: 'tone-d' }, { t: ',', end: true },
@@ -2295,11 +2175,9 @@
     FX.twinkles(scene.ui, [[r.left + 20, r.top + 30], [r.right - 20, r.top + 40], [r.left + 30, r.bottom - 20], [r.right - 30, r.bottom - 30]]);
     Sound.sparkle();
     await talk.say('ss-end', 'Now you can work out\nany discount!', 900);
-    bird.point();
-    await ctx.wait(1500);
-    bird.lean(0);
-    bird.idle();
-    ctx.advance(3000);
+    bird.wave();
+    await ctx.wait(600);
+    endWithSwifty(ctx, scene, talk); // the last screen: then Replay waits for the player
   }
 
   // A comic jolt of the whole picture, for a surprise.
@@ -2327,6 +2205,7 @@
   // Blurs and dims the scene behind the feedback, and pauses its slow camera drift meanwhile.
   // { instant: true } skips the fade, for a screen that should start out already blurred.
   function hush(scene, on, { instant = false } = {}) {
+    if (scene.sheet) return; // nothing behind a sheet to blur
     const apply = () => scene.el.classList.toggle('is-hushed', on);
     if (instant) instantly(scene, apply);
     else apply();
@@ -2535,9 +2414,10 @@
   // worked out → what ₹540 is → the amount to pay → the final answer; and the discount percentage → the summary.
   // Every other change is a straight cut.
   const FADES = [['morning', 'mall'], ['outside', 'see'], ['see', 'browse'], ['browse', 'ask'], ['quiz', 'look'], ['sneakers', 'shoe'], ['shoe', 'tag'], ['tag', 'confused']];
-  const FORWARD_FADES = [['mp', 'mpdef'], ['mpdef', 'compare'], ['compare', 'reveal'], ['discount-def', 'formula'], ['formula', 'formula-reveal'], ['formula-reveal', 'summary'], ['recall', 'idea'], ['idea', 'whatpercent'],
+  const FORWARD_FADES = [['mp', 'mpdef'], ['mpdef', 'compare'], ['discount-def', 'formula'], ['formula', 'formula-reveal'], ['formula-reveal', 'summary'], ['recall', 'idea'], ['idea', 'whatpercent'],
     ['whatpercent', 'check'], ['check', 'sneakerq'], ['sneakerq', 'thirty'], ['thirty', 'represent'], ['represent', 'topay'], ['topay', 'final'], ['discountpct', 'sneakersum']];
   const FADE_MS = 1200; // not stretched by PACE: changing screens stays brisk
+  const SLIDE_MS = 950;  // a sheet sliding up over a story picture (see slide)
   const fadesBetween = (a, b) =>
     FADES.some(([x, y]) => (a.id === x && b.id === y) || (a.id === y && b.id === x)) ||
     FORWARD_FADES.some(([x, y]) => a.id === x && b.id === y);
@@ -2553,7 +2433,10 @@
       deactivate(Game.leaving);
       Game.leaving = null;
     }
-    SCENES.forEach(s => { s.el.style.zIndex = ''; });
+    SCENES.forEach(s => {
+      s.el.style.zIndex = '';
+      s.el.classList.remove('is-sliding');
+    });
   }
 
   function go(i) {
@@ -2566,16 +2449,24 @@
     const to = SCENES[i];
     const forward = i === Game.index + 1;
     const changing = from && from !== to;
-    const fade = changing && fadesBetween(from, to);
+    // Into a sheet (see SHEETS) from a screen next to it, the sheet slides up over the picture; out of it, it
+    // slides back down (jumps further away are cuts).
+    const sheet = changing && !reducedMotion && Math.abs(i - Game.index) === 1 && !!from.sheet !== !!to.sheet;
+    const fade = changing && !sheet && fadesBetween(from, to);
     // Same camera shot (4 ↔ 5, 7 → 8): carry the camera over so nothing jumps.
     const sameFraming = from && to && from.kb && to.kb && ['origin', 'from', 'to'].every(k => from.kb[k] === to.kb[k]);
     const carry = changing && from.shot && from.shot === to.shot && (forward || sameFraming);
     const camera = carry ? cameraOf(from) : null;
     to.cameFrom = from ? from.id : null; // lets a screen carry on from the one before it
-    if (from && !fade) deactivate(from);
+    if (from && !fade && !sheet) deactivate(from);
     Game.index = i;
+    $('#stage').classList.toggle('look-paper', to.look === 'paper'); // the buttons on top take the screen's look
     UI.update();
 
+    if (sheet) {
+      slide(from, to);
+      return;
+    }
     if (!fade) {
       activate(to, carry ? 'continue' : 'cut', camera);
       run(to);
@@ -2604,6 +2495,30 @@
     Game.leaving = from;
     Game.startTimer = setTimeout(() => run(to), FADE_MS * 0.45); // first beats land as the fade ends
     Game.fadeTimer = setTimeout(settleTransition, FADE_MS);
+  }
+
+  // A sheet (the big panel) comes up from the bottom over the picture and settles with a little
+  // bounce (only the sheet itself moves: the screen's own things, e.g. Swifty carried over from the screen
+  // before, stay where they are); leaving, the whole sheet slides back down. The picture underneath doesn't
+  // move or blur.
+  function slide(from, to) {
+    const up = !!to.sheet;
+    Sound.whoosh();
+    activate(to, 'continue', null);
+    const sheet = up ? to : from;
+    sheet.el.style.zIndex = 2;
+    sheet.el.classList.add('is-sliding');
+    const node = up ? to.parallax : from.el;
+    Game.fadeAnim = node.animate(up
+      ? [{ transform: 'translateY(100%)' }, { transform: 'translateY(-1.2%)', offset: 0.78 }, { transform: 'none' }]
+      : [{ transform: 'none' }, { transform: 'translateY(100%)' }], {
+      duration: up ? SLIDE_MS : SLIDE_MS * 0.8,
+      easing: up ? 'cubic-bezier(.2,.7,.3,1)' : 'cubic-bezier(.5,0,.75,.45)',
+      fill: 'forwards',
+    });
+    Game.leaving = from;
+    Game.startTimer = setTimeout(() => run(to), (up ? SLIDE_MS : SLIDE_MS * 0.8) * 0.6);
+    Game.fadeTimer = setTimeout(settleTransition, up ? SLIDE_MS : SLIDE_MS * 0.8);
   }
 
   function next() {
@@ -2722,6 +2637,15 @@
       scene.parallax = el('div', 'scene-parallax', scene.el);
       scene.world = el('div', 'scene-world', scene.parallax);
       scene.world.style.setProperty('--kb-origin', scene.kb ? scene.kb.origin : scene.origin);
+      if (scene.sheet) scene.el.classList.add('is-sheet');
+      if (scene.look) scene.el.classList.add('look-' + scene.look);
+      if (scene.sheet === 'panel') { // one big panel filling the screen, and Swifty's stand on it
+        el('div', 'sheet-panel', scene.world);
+        const stand = el('img', 'sheet-stand', scene.world);
+        stand.src = STAND;
+        stand.alt = '';
+        stand.draggable = false;
+      }
       [scene.bg, scene.react].filter(Boolean).forEach((src, i) => { // the picture, and a reaction to fade in over it
         const img = el('img', (scene.backdrop ? 'scene-bg scene-bg--feather' : 'scene-bg') + (i ? ' scene-react' : ''), scene.world);
         img.src = src;
@@ -2745,7 +2669,9 @@
       el('span', 'si-num', item).textContent = scene.num;
       const thumb = el('span', 'si-thumb', item);
       const img = el('img', '', thumb);
-      img.src = scene.react || scene.bg; // a screen's reaction picture shows best what it is about
+      const picture = scene.react || scene.bg; // a screen's reaction picture shows best what it is about
+      if (!picture) thumb.classList.add('si-thumb--sheet'); // on the big panel: a little cream panel, with Swifty's stand
+      img.src = picture || STAND;
       img.alt = '';
       el('span', 'si-now', thumb).textContent = 'NOW';
       const text = el('span', 'si-text', item);
@@ -2870,6 +2796,7 @@
   async function boot() {
     fit();
     window.addEventListener('resize', fit);
+    FX.inkDefs();
     buildScenes();
     buildPanel();
     wireUI();
@@ -2879,10 +2806,14 @@
     const label = $('#loader-text');
     const images = SCENES.flatMap(s => [s.bg, s.react]).filter(Boolean).concat(
       ASSETS + 'start button.png', WALK_SHEET.src, SWIFTY.fly.src, SWIFTY.stand.src, ART.money, ART.book,
-      ASSETS + 'ui/sneakers.png'
+      ASSETS + 'ui/sneakers.png', STAND
     );
     const fonts = document.fonts
-      ? Promise.race([document.fonts.load('800 40px "Baloo 2"', 'Ab₹'), sleep(2500)]).catch(() => {})
+      ? Promise.race([Promise.all([ // the fonts, before the first words appear (no swapping in later)
+        document.fonts.load('800 40px "Baloo 2"', 'Ab₹'),
+        document.fonts.load('700 40px Kalam', 'Ab'),
+        document.fonts.load('400 28px Kalam', 'Ab'),
+      ]), sleep(2500)]).catch(() => {})
       : Promise.resolve();
     await Promise.all([
       preload(images, p => {

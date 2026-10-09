@@ -28,8 +28,26 @@
   size-adjust: 88%; /* as tall as Baloo 2's figures, and as wide as its own ₹ */
   unicode-range: U+20B9;
 }
+@font-face { /* handwriting, for the hand-made recap on screen 19 (Kalam by the Indian Type Foundry, SIL OFL) */
+  font-family: 'Kalam';
+  src: url('../fonts/kalam-400.woff2') format('woff2');
+  font-weight: 400;
+  font-display: swap;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329,
+    U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Kalam';
+  src: url('../fonts/kalam-700.woff2') format('woff2');
+  font-weight: 700;
+  font-display: swap;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329,
+    U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
 
 :root {
+  --hand: 'Kalam', 'Baloo 2', 'Trebuchet MS', sans-serif;
+  --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='260'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .36 0 0 0 0 .27 0 0 0 0 .14 0 0 0 .07 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); /* a soft paper grain */
   --ink: #1b2a33;
   --paper: #fffdf7;
   --teal: #1e5d69;
@@ -99,6 +117,7 @@ button:focus-visible, .switch input:focus-visible + .switch-track {
   transform-origin: var(--zoom-origin, 50% 50%);
 }
 .scene.is-active { display: block; }
+.scene.is-sliding .scene-parallax { box-shadow: 0 -18px 40px rgba(4, 18, 22, .3); } /* a sheet sliding over the picture */
 .scene.is-entering { animation: scene-settle 1.1s cubic-bezier(.2, .7, .2, 1) both; } /* after a cut */
 /* Cross-fade (e.g. 3 ↔ 4, 4 ↔ 5): the old scene drifts forward underneath while the new one fades in on top. */
 .scene.is-leaving {
@@ -244,14 +263,9 @@ button:focus-visible, .switch input:focus-visible + .switch-track {
   position: absolute;
   opacity: 0;
 }
-.bubble-float {
+.bubble-float { /* holds still, so the words never move while they are read */
   position: absolute;
   inset: 0;
-  animation: bubble-float 3.4s ease-in-out infinite;
-}
-@keyframes bubble-float {
-  0%, 100% { transform: translateY(0); }
-  50%      { transform: translateY(-6px); }
 }
 .bubble svg {
   position: absolute;
@@ -259,9 +273,17 @@ button:focus-visible, .switch input:focus-visible + .switch-track {
   top: 0;
   overflow: visible;
 }
-.b-shadow path { fill: #0d2630; stroke: #0d2630; stroke-width: 10px; stroke-linejoin: round; }
-.b-line path   { fill: var(--ink); stroke: var(--ink); stroke-width: 10px; stroke-linejoin: round; }
-.b-fill path   { fill: var(--paper); }
+/* Speech bubbles and thought clouds: clean vector shapes. A crisp 6 px ink outline (the stroke is drawn
+   behind the fill, so half of it shows), a fill turning from white to a warm cream at the bottom (a gradient in
+   each balloon: js/fx.js paintShapes), and a soft flat shadow just under it. */
+.b-shadow { opacity: .16; }
+.b-shadow path { fill: #0d2630; stroke: #0d2630; stroke-width: 12px; stroke-linejoin: round; }
+.b-line path   { fill: var(--ink); stroke: var(--ink); stroke-width: 12px; stroke-linejoin: round; }
+.b-fill path   { fill: var(--b-fill, var(--paper)); }
+.b-stop-top    { stop-color: #ffffff; }
+.b-stop-mid    { stop-color: #fffdf8; }
+.b-stop-bottom { stop-color: #f3e7cf; }
+.thought-puff :is(.b-line, .b-shadow) path { stroke-width: 9px; } /* a finer line on the small puffs */
 .b-text { /* sized to its text; js/fx.js fits the balloon around it */
   position: absolute;
   left: 0;
@@ -346,7 +368,7 @@ button:focus-visible, .switch input:focus-visible + .switch-track {
   animation: spin 16s linear infinite;
 }
 .badge.is-lit .badge-rays { opacity: 1; }
-.badge-inner { position: absolute; animation: badge-wobble 2.8s ease-in-out infinite; }
+.badge-inner { position: absolute; } /* holds still: its rays turn behind it */
 .badge svg { position: absolute; overflow: visible; }
 .burst-shadow { fill: rgba(13, 38, 48, .28); }
 .burst-line { fill: var(--ink); stroke: var(--ink); stroke-linejoin: round; }
@@ -360,10 +382,6 @@ button:focus-visible, .switch input:focus-visible + .switch-track {
   text-anchor: middle;
 }
 @keyframes spin { to { transform: rotate(360deg); } }
-@keyframes badge-wobble {
-  0%, 100% { transform: rotate(-3deg) scale(1); }
-  50%      { transform: rotate(3deg) scale(1.035); }
-}
 
 /* ---------- Question card (screen 8) ---------- */
 
@@ -850,6 +868,68 @@ button:focus-visible, .switch input:focus-visible + .switch-track {
 }
 .cmp-arrow path { stroke: var(--ink); stroke-width: 6; stroke-linejoin: round; }
 
+/* Sheets: the teaching screens are on one big panel that fills the screen, with no picture behind it (game.js:
+   sheet: 'panel'). Cream paper with a soft grain and a faint dot grid, an inked edge, a thin deep-teal border round
+   it; Swifty's stand, a stack of books, in the bottom-right corner (her feet at CORNER, on its top book). */
+.sheet-panel { position: absolute; inset: 0; background: #0f3b45; }
+.sheet-panel::before {
+  content: '';
+  position: absolute;
+  inset: 16px;
+  border: 5px solid var(--ink);
+  border-radius: 40px;
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='260'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .36 0 0 0 0 .27 0 0 0 0 .14 0 0 0 .07 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"),
+    radial-gradient(circle, rgba(27, 42, 51, .07) 1.6px, transparent 2.2px) 0 0 / 28px 28px,
+    linear-gradient(180deg, #fffdf6 0%, #fff3da 100%);
+  box-shadow: inset 0 0 0 7px rgba(255, 255, 255, .45);
+}
+.sheet-stand {
+  position: absolute;
+  left: 1542px;
+  top: 866px;
+  width: 301px;
+  filter: drop-shadow(0 10px 8px rgba(60, 40, 10, .22));
+  pointer-events: none;
+}
+/* On a sheet, the panels have no frame of their own: what is on them sits right on the big panel (cards and
+   sheets keep theirs). The price panel (screens 11–13) moves left, clear of Swifty's stand. */
+.scene.is-sheet :is(.mp-panel, .fm-panel, .fr-panel, .pp-panel, .pf-panel, .qp-panel, .pqp-panel, .ws-panel, .ss-panel) {
+  border-color: transparent;
+  background: none;
+  box-shadow: none;
+}
+.scene.is-sheet .mp-panel { margin-right: 300px; }
+.is-sheet .mp-side--compare .cmp-box { /* screen 13: a thick paper cut-out, inked round the edge, held on with washi tape */
+  position: relative;
+  border-width: 4px;
+  border-radius: 14px;
+  box-shadow: 0 1px 0 rgba(60, 40, 10, .08), 0 14px 24px rgba(60, 40, 10, .2);
+}
+.is-sheet .mp-side--compare .cmp-box--yellow { background: #fff0c2; rotate: -1.2deg; }
+.is-sheet .mp-side--compare .cmp-box--blue { background: #dcecff; rotate: 1deg; }
+.is-sheet .mp-side--compare .cmp-box::before {
+  content: '';
+  position: absolute;
+  top: -18px;
+  left: 50%;
+  width: 124px;
+  height: 36px;
+  margin-left: -62px;
+  background: rgba(255, 210, 90, .8);
+  clip-path: polygon(0 0, 100% 0, 97% 25%, 100% 50%, 97% 75%, 100% 100%, 0 100%, 3% 75%, 0 50%, 3% 25%); /* torn ends */
+  rotate: 2deg;
+}
+.is-sheet .mp-side--compare .cmp-box--blue::before { background: rgba(120, 180, 240, .75); rotate: -3deg; }
+.cmp-arrow.is-marker path { /* drawn with a thick blue marker */
+  fill: none;
+  stroke: #2f6fd6;
+  stroke-width: 11;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: .92;
+}
+
 /* A red price box (the discount) */
 .cmp-box--red { background: linear-gradient(180deg, #fff3f1 0%, #ffcfc9 100%); }
 .cmp-box--red .cmp-price,
@@ -857,30 +937,29 @@ button:focus-visible, .switch input:focus-visible + .switch-track {
 .dc-arrow { position: relative; flex: none; width: 100%; height: 88px; } /* an arrow going down between two boxes */
 .dc-arrow .cmp-arrow { left: 50%; top: 18px; width: 44px; height: 62px; margin-left: -22px; }
 .cmp-box.is-key { animation: cut-glow 1.8s ease-out infinite; } /* keeps glowing: the answer */
-@keyframes cut-glow {
-  0%   { transform: scale(1);    box-shadow: 0 10px 0 var(--ink), 0 0 0 0 rgba(229, 57, 53, .55); }
-  45%  { transform: scale(1.05); }
-  100% { transform: scale(1);    box-shadow: 0 10px 0 var(--ink), 0 0 0 26px rgba(229, 57, 53, 0); }
+@keyframes cut-glow { /* a red ring spreading out from the box (the box itself, and its words, hold still) */
+  0%   { box-shadow: 0 10px 0 var(--ink), 0 0 0 0 rgba(229, 57, 53, .55); }
+  100% { box-shadow: 0 10px 0 var(--ink), 0 0 0 26px rgba(229, 57, 53, 0); }
 }
 
-/* Screen 16: a definition on a card of its own (Swifty stands at its lower-right corner) */
+/* Screen 16: a definition on a card of its own (Swifty reads it from her stand) */
 .dd {
   position: absolute;
   inset: 0;
   display: grid;
   place-items: center;
-  padding: 116px 70px 120px; /* clear of the top buttons; room below for Swifty's feet */
+  padding: 116px 70px 120px; /* clear of the top buttons */
 }
 .mp-def.dd-card {
   width: 900px;
   height: auto;
-  margin-right: 230px; /* shifts the card left, so the card and Swifty (on its right) are centred together */
+  margin-right: 230px; /* left of centre, clear of Swifty on her stand */
   pointer-events: auto;
 }
 .dd-card .mp-def-head { padding: 34px 28px 24px; font-size: 64px; }
 .mp-def-text.dd-text {
   margin: 0;
-  padding: 52px 110px 60px 70px; /* the lines end before Swifty, who overlaps the card's lower-right corner */
+  padding: 52px 110px 60px 70px;
   font-size: 54px;
   line-height: 1.38;
 }
@@ -934,6 +1013,7 @@ button:focus-visible, .switch input:focus-visible + .switch-track {
   transform-origin: 50% 50%;
   pointer-events: none;
 }
+.fly-chip--across { filter: drop-shadow(0 8px 6px rgba(4, 18, 22, .28)); } /* flying across the screen (FX.flyAcross), lifted off the page */
 .fly-chip--card { /* lifting off a sticker: starts as a white sticker card */
   padding: 8px 16px 0;
   border: 4px solid var(--ink);
@@ -1041,7 +1121,9 @@ button:focus-visible, .switch input:focus-visible + .switch-track {
 .fr-term.is-ping, .fr-op.is-ping { animation: fm-pop .8s cubic-bezier(.3, 1.6, .5, 1); }
 
 /* A yellow note (a speech bubble with tone: 'yellow') */
-.bubble--yellow .b-fill path { fill: #fff2bf; }
+.bubble--yellow .b-stop-top { stop-color: #fffbe3; }
+.bubble--yellow .b-stop-mid { stop-color: #fff3c2; }
+.bubble--yellow .b-stop-bottom { stop-color: #ffe49a; }
 .bubble--yellow .b-text { color: #b3261e; }
 
 /* Screen 19: Let's remember! (three cards joined by arrows, and the formula) */
@@ -1123,6 +1205,86 @@ button:focus-visible, .switch input:focus-visible + .switch-track {
   line-height: 1;
 }
 .sm-op { color: var(--ink); }
+/* Screen 19 on the sheet: no panel; the recap looks made by hand (a taped-on title, index cards, pencil arrows,
+   a sticky note), left of Swifty's stand. Little tilts use the `rotate` property, so they add to the pop-in
+   animations. */
+.sm-panel.sm-panel--note {
+  position: absolute;
+  left: 150px;
+  top: 140px;
+  width: 1250px;
+  height: 820px;
+  justify-content: center;
+  gap: 36px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  box-shadow: none;
+}
+.sm-panel--note .sm-title { /* written in blue marker on a strip of paper, taped on */
+  position: relative;
+  padding: 16px 48px 6px;
+  border: 0;
+  border-radius: 3px;
+  background: #fffdf6;
+  box-shadow: 0 1px 0 rgba(60, 40, 10, .08), 0 10px 18px rgba(60, 40, 10, .18);
+  color: #1f4fbf;
+  font-family: var(--hand);
+  font-size: 58px;
+  font-weight: 700;
+  text-shadow: none;
+  rotate: -1.5deg;
+}
+.sm-panel--note .sm-title::before,
+.sm-panel--note .sm-card::before { /* a strip of washi tape, its ends torn */
+  content: '';
+  position: absolute;
+  top: -17px;
+  left: 50%;
+  width: 118px;
+  height: 34px;
+  margin-left: -59px;
+  background: rgba(255, 210, 90, .8);
+  clip-path: polygon(0 0, 100% 0, 97% 25%, 100% 50%, 97% 75%, 100% 100%, 0 100%, 3% 75%, 0 50%, 3% 25%);
+  rotate: 2deg;
+}
+.sm-panel--note .sm-row { gap: 8px; }
+.sm-panel--note .sm-card { /* an index card: a red line under the heading, faint blue lines below; taped on, a little askew */
+  position: relative;
+  width: 290px;
+  min-height: 300px;
+  border: 0;
+  border-radius: 4px;
+  background:
+    repeating-linear-gradient(180deg, transparent 0 40px, rgba(80, 140, 210, .2) 40px 42px) 0 84px / 100% calc(100% - 84px) no-repeat,
+    #fffefa;
+  box-shadow: 0 1px 0 rgba(60, 40, 10, .08), 0 12px 22px rgba(60, 40, 10, .2);
+  overflow: visible;
+}
+.sm-panel--note .sm-card--mp { rotate: -1.8deg; }
+.sm-panel--note .sm-card--sp { rotate: 1.2deg; }
+.sm-panel--note .sm-card--d { rotate: -.8deg; }
+.sm-panel--note .sm-card--sp::before { background: rgba(120, 180, 240, .75); rotate: -3deg; }
+.sm-panel--note .sm-card--d::before { background: rgba(240, 125, 115, .75); rotate: 1deg; }
+.sm-panel--note .sm-head {
+  padding: 26px 12px 6px;
+  border-bottom: 3px solid rgba(225, 80, 80, .55);
+  background: none;
+  font-family: var(--hand);
+  font-size: 40px;
+  font-weight: 700;
+}
+.sm-panel--note .sm-value { margin: 18px 0 4px; font-size: 70px; }
+.sm-panel--note .sm-desc { padding: 0 12px 24px; color: #34434c; font-family: var(--hand); font-size: 28px; font-weight: 400; line-height: 42px; }
+.sm-panel--note .sm-formula { /* on a sticky note */
+  border: 0;
+  border-radius: 2px;
+  background: linear-gradient(180deg, #fff6a8 0%, #ffe679 100%);
+  box-shadow: 0 1px 0 rgba(80, 60, 0, .08), 0 14px 20px rgba(80, 60, 0, .22);
+  rotate: 1.2deg;
+}
+.def-arrow.is-sketch path { stroke: #4b5056; stroke-width: 4.5; } /* drawn in pencil */
 
 /* Screen 24: the sneakers on a card, with their price tag and discount tag (Swifty in her corner) */
 .pc-panel {
@@ -1450,7 +1612,7 @@ button:focus-visible, .switch input:focus-visible + .switch-track {
 .ws-panel .is-ping { animation: tag-pop .8s cubic-bezier(.3, 1.6, .5, 1); }
 
 /* Screen 31: the player drags the amounts out of the boxes on the left into the empty boxes in the working */
-.ws-drag { /* an amount that can be picked up: it bobs gently */
+.ws-drag { /* an amount that can be picked up: a gold halo pulses round it */
   border-radius: 18px;
   cursor: grab;
   touch-action: none;
@@ -1464,9 +1626,9 @@ button:focus-visible, .switch input:focus-visible + .switch-track {
 .ws-drag.is-picked { animation: none; background-color: #fff6cf; box-shadow: 0 0 0 5px #ffc93c; } /* tapped: now tap its box */
 .ws-drag.is-used { cursor: default; animation: none; }
 .ws-drag:focus-visible, .ws-slot:focus-visible { outline: 5px solid #2f6fd6; outline-offset: 6px; }
-@keyframes drag-bob {
-  0%, 100% { transform: none; }
-  50%      { transform: translateY(-6px); }
+@keyframes drag-bob { /* a gold halo round the amount (the number holds still) */
+  0%, 100% { box-shadow: 0 0 0 0 rgba(255, 201, 60, 0); }
+  50%      { box-shadow: 0 0 0 9px rgba(255, 201, 60, .5); }
 }
 .ws-chip.is-held { filter: drop-shadow(0 12px 10px rgba(4, 18, 22, .35)); } /* lifted off the panel */
 .ws-slot { /* an empty box for an amount: a dashed outline in its colour, with its name faintly inside */
@@ -1490,9 +1652,9 @@ button:focus-visible, .switch input:focus-visible + .switch-track {
 .ws-slot.is-filled { border-color: transparent; background-color: transparent; cursor: default; }
 .ws-slot.is-filled .ws-slot-hint { opacity: 0; }
 .ws-slot.is-filled .ws-slot-value { opacity: 1; }
-@keyframes slot-call {
-  0%, 100% { transform: none; }
-  50%      { transform: scale(1.06); }
+@keyframes slot-call { /* the empty box lights up (its word holds still) */
+  0%, 100% { background-color: rgba(255, 255, 255, .9); }
+  50%      { background-color: #fff3c4; }
 }
 @keyframes slot-wrong { /* a red flash */
   0%, 45% { background-color: #ffd9d4; }
@@ -1635,9 +1797,9 @@ button:focus-visible, .switch input:focus-visible + .switch-track {
 .red-cut { font-size: 68px; letter-spacing: -1px; }
 .red-note { margin-top: 4px; font-size: 36px; }
 .red-tag.is-pulsing { animation: tag-pulse 1.8s ease-in-out infinite; transform-origin: 20% 50%; }
-@keyframes tag-pulse {
-  0%, 100% { transform: scale(1); }
-  50%      { transform: scale(1.08); }
+@keyframes tag-pulse { /* a soft red glow behind the words (they hold still) */
+  0%, 100% { filter: drop-shadow(0 0 0 rgba(229, 57, 53, 0)); }
+  50%      { filter: drop-shadow(0 0 12px rgba(229, 57, 53, .6)); }
 }
 
 .mp-link { position: absolute; left: 0; top: 0; overflow: visible; pointer-events: none; }
@@ -1681,9 +1843,9 @@ button:focus-visible, .switch input:focus-visible + .switch-track {
 .story-next:active { box-shadow: 0 3px 0 var(--ink), 0 8px 16px rgba(0, 0, 0, .25); }
 .story-next-label { padding-top: 4px; }
 .story-next svg { width: 40px; height: 40px; }
-@keyframes next-nudge {
-  0%, 100% { transform: translateX(0); }
-  50%      { transform: translateX(8px); }
+@keyframes next-nudge { /* a gold glow round the button (it and its label hold still) */
+  0%, 100% { box-shadow: 0 9px 0 var(--ink), 0 18px 34px rgba(0, 0, 0, .3), 0 0 0 0 rgba(255, 200, 61, .75); }
+  50%      { box-shadow: 0 9px 0 var(--ink), 0 18px 34px rgba(0, 0, 0, .3), 0 0 0 14px rgba(255, 200, 61, 0); }
 }
 
 /* ---------- Pulsing ring around a spot (the ₹1000 sticker) ---------- */
@@ -1906,9 +2068,9 @@ button:focus-visible, .switch input:focus-visible + .switch-track {
   to   { width: 100%; }
 }
 #btn-next.is-ready { animation: ready-pulse 1.3s ease-in-out infinite; }
-@keyframes ready-pulse {
-  0%, 100% { transform: scale(1); }
-  50%      { transform: scale(1.07); }
+@keyframes ready-pulse { /* a gold glow round the button (it and its label hold still) */
+  0%, 100% { box-shadow: 0 5px 0 var(--ink), 0 10px 18px rgba(0, 0, 0, .25), 0 0 0 0 rgba(255, 200, 61, .7); }
+  50%      { box-shadow: 0 5px 0 var(--ink), 0 10px 18px rgba(0, 0, 0, .25), 0 0 0 10px rgba(255, 200, 61, 0); }
 }
 
 #nav-count {
@@ -2045,6 +2207,8 @@ button:focus-visible, .switch input:focus-visible + .switch-track {
   background: #000;
 }
 .si-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.si-thumb--sheet { background: #fff6e2; box-shadow: inset 0 0 0 3px #0f3b45; }
+.si-thumb--sheet img { object-fit: contain; padding: 16px 4px 3px 34px; }
 .si-now {
   position: absolute;
   left: 3px;
@@ -2189,11 +2353,207 @@ kbd {
   #rotate-hint.is-dismissed { display: none; }
 }
 
+/* ---------- The hand-made look (screens 13 and 27 try it first: scene.look = 'paper') ----------
+   Paper, card, tape and ink, as if made by hand: edges cut with scissors (#paper-cut), a big sheet with a
+   deckled edge (#paper-deckle), lines drawn with a brush pen (#ink-brush) — the filters are in js/fx.js
+   (inkDefs). Flat gouache colours with a paper grain, warm charcoal ink, soft shadows as if things lie on a
+   desk; no glossy gradients and no hard black offset shadows. The filters are on a layer behind each thing
+   (::before / ::after), so its words stay crisp. */
+:root {
+  --ink-warm: #2e2a26;
+  --paper-cream: #fbf3e2;
+  --paper-mustard: #efc053;
+  --paper-sky: #9ccbee;
+  --paper-tomato: #f08a78;
+  --paper-lilac: #dcc9f4;
+  --crayon-green: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='640' height='120' viewBox='0 0 640 120'%3E%3Cfilter id='c' x='0' y='0' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.01 0.45' numOctaves='3' seed='5'/%3E%3CfeColorMatrix values='0 0 0 0 0.37 0 0 0 0 0.67 0 0 0 0 0.28 0 0 0 2.4 -0.85'/%3E%3C/filter%3E%3Cg transform='rotate(-22 320 60)'%3E%3Crect x='-200' y='-300' width='1040' height='720' filter='url(%23c)'/%3E%3C/g%3E%3C/svg%3E"); /* crayon strokes */
+  --crayon-coral: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='640' height='120' viewBox='0 0 640 120'%3E%3Cfilter id='c' x='0' y='0' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.01 0.45' numOctaves='3' seed='8'/%3E%3CfeColorMatrix values='0 0 0 0 0.91 0 0 0 0 0.45 0 0 0 0 0.37 0 0 0 2.4 -0.85'/%3E%3C/filter%3E%3Cg transform='rotate(-22 320 60)'%3E%3Crect x='-200' y='-300' width='1040' height='720' filter='url(%23c)'/%3E%3C/g%3E%3C/svg%3E");
+}
+@keyframes paper-call { /* a soft gold glow round a button that is waiting to be pressed */
+  0%, 100% { box-shadow: 0 0 0 0 rgba(255, 196, 61, .65); }
+  50%      { box-shadow: 0 0 0 12px rgba(255, 196, 61, 0); }
+}
+
+/* The big sheet: cream drawing paper with a deckled edge, on a deep teal cloth-bound board */
+.scene.look-paper .sheet-panel {
+  background:
+    repeating-linear-gradient(0deg, rgba(255, 255, 255, .035) 0 2px, transparent 2px 5px),
+    repeating-linear-gradient(90deg, rgba(0, 0, 0, .05) 0 2px, transparent 2px 6px),
+    #14535c;
+}
+.scene.look-paper .sheet-panel::before {
+  inset: 22px;
+  border: 0;
+  border-radius: 6px;
+  background:
+    var(--grain),
+    radial-gradient(circle, rgba(60, 50, 40, .08) 1.5px, transparent 2.1px) 0 0 / 28px 28px,
+    var(--paper-cream);
+  box-shadow: none;
+  filter: url(#paper-deckle) drop-shadow(0 10px 16px rgba(0, 0, 0, .35));
+}
+
+/* The buttons on top (on a screen with this look): cardboard cut by hand, inked round the edge */
+#stage.look-paper :is(.hud-btn, .nav-btn) {
+  border: 0;
+  background: none;
+  box-shadow: none;
+  isolation: isolate;
+  filter: drop-shadow(0 4px 4px rgba(60, 40, 10, .3));
+}
+#stage.look-paper :is(.hud-btn, .nav-btn)::before {
+  content: '';
+  position: absolute;
+  inset: 2px;
+  z-index: -1;
+  border: 3.5px solid var(--ink-warm);
+  border-radius: inherit;
+  background: var(--grain), var(--paper-cream);
+  filter: url(#paper-cut);
+}
+#stage.look-paper .nav-btn--primary::before { background: var(--grain), var(--paper-mustard); }
+#stage.look-paper :is(.hud-btn, .nav-btn) { color: var(--ink-warm); }
+#stage.look-paper .hud-btn:active,
+#stage.look-paper .nav-btn:active:not(:disabled) { transform: translateY(3px); box-shadow: none; filter: drop-shadow(0 1px 2px rgba(60, 40, 10, .3)); }
+#stage.look-paper #btn-next.is-ready { animation: paper-call 1.3s ease-in-out infinite; }
+#stage.look-paper #nav-count { /* a little paper ticket */
+  position: relative;
+  border: 0;
+  background: none;
+  color: var(--ink-warm);
+  isolation: isolate;
+  filter: drop-shadow(0 3px 3px rgba(60, 40, 10, .25));
+}
+#stage.look-paper #nav-count::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border: 2.5px solid var(--ink-warm);
+  border-radius: 22px;
+  background: var(--grain), #f4e9d2;
+  filter: url(#paper-cut);
+}
+
+/* The big Next button: a mustard cardboard pill */
+.scene.look-paper .story-next {
+  border: 0;
+  background: none;
+  box-shadow: none;
+  color: var(--ink-warm);
+  isolation: isolate;
+  filter: drop-shadow(0 7px 6px rgba(60, 40, 10, .3));
+  animation: paper-call 1.8s ease-in-out .6s infinite;
+  transition: transform .15s ease, filter .15s ease;
+}
+.scene.look-paper .story-next::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border: 4px solid var(--ink-warm);
+  border-radius: 48px;
+  background: var(--grain), var(--paper-mustard);
+  filter: url(#paper-cut);
+}
+.scene.look-paper .story-next:hover { box-shadow: none; transform: translateY(-2px) rotate(-.6deg); }
+.scene.look-paper .story-next:active { box-shadow: none; transform: translateY(4px); filter: drop-shadow(0 2px 3px rgba(60, 40, 10, .3)); }
+
+
+/* Screen 13: the price cards, coloured paper cut by hand and held on with masking tape */
+.scene.look-paper .mp-book-art { filter: drop-shadow(0 12px 12px rgba(60, 40, 10, .3)); }
+.scene.look-paper .mp-side--compare .cmp-box {
+  border: 0;
+  border-radius: 4px;
+  background: none;
+  box-shadow: none;
+  isolation: isolate;
+  filter: drop-shadow(0 10px 10px rgba(60, 40, 10, .22));
+}
+.scene.look-paper .mp-side--compare .cmp-box::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: 3px;
+  background: var(--grain), var(--card, var(--paper-cream));
+  filter: url(#paper-cut);
+}
+.scene.look-paper .cmp-box--yellow { --card: var(--paper-mustard); }
+.scene.look-paper .cmp-box--blue { --card: var(--paper-sky); }
+.scene.look-paper .cmp-box--red { --card: var(--paper-tomato); }
+.scene.look-paper .mp-side--compare .cmp-box::before { background: rgba(250, 245, 228, .86); box-shadow: 0 0 0 1px rgba(140, 120, 80, .25), 0 1px 3px rgba(60, 40, 10, .2); }
+.scene.look-paper .cmp-arrow.is-marker path { stroke: var(--ink-warm); opacity: .85; }
+/* "Look here": a quick loop in red marker instead of a glowing ring */
+.scene.look-paper .spot-ring::before {
+  border: 5px solid #e04f3c;
+  border-radius: 46% 54% 43% 57% / 55% 45% 55% 45%;
+  box-shadow: none;
+  rotate: -10deg;
+  filter: url(#paper-cut);
+}
+.scene.look-paper .spot-ring::after { display: none; }
+
+/* Screen 27: the question on a lilac paper strip; the answers on cream paper strips with a letter sticker */
+.scene.look-paper .pf-question {
+  position: relative;
+  border: 0;
+  border-radius: 3px;
+  background: none;
+  box-shadow: none;
+  color: #2a2350;
+  isolation: isolate;
+  rotate: -.8deg;
+  filter: drop-shadow(0 8px 8px rgba(60, 40, 10, .2));
+}
+.scene.look-paper .pf-question::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--grain), var(--paper-lilac);
+  filter: url(#paper-cut);
+}
+.scene.look-paper .pq-opt,
+.scene.look-paper .pq-opt:hover:not(:disabled) {
+  border: 0;
+  border-radius: 3px;
+  background: none;
+  box-shadow: none;
+  color: var(--ink-warm);
+  isolation: isolate;
+  filter: drop-shadow(0 6px 6px rgba(60, 40, 10, .2));
+}
+.scene.look-paper .pq-opt::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--grain), var(--strip, #f7ecd6);
+  filter: url(#paper-cut);
+}
+.scene.look-paper .pq-opt:hover:not(:disabled) { --strip: #fff1c4; transform: translateY(-3px) rotate(-.4deg); }
+.scene.look-paper .pq-opt:active:not(:disabled) { transform: translateY(3px); box-shadow: none; filter: drop-shadow(0 2px 3px rgba(60, 40, 10, .2)); }
+.scene.look-paper .pq-opt .q-chip { /* a round sticker, with its white rim */
+  border: 3px solid var(--ink-warm);
+  background: var(--paper-sky);
+  color: var(--ink-warm);
+  box-shadow: 0 0 0 4px #fffaf0, 0 3px 6px 3px rgba(60, 40, 10, .2);
+}
+.scene.look-paper .q-opt.is-correct { background: none; color: #1f3b17; }
+.scene.look-paper .q-opt.is-correct::before { background: var(--crayon-green) 0 0 / 100% 100% no-repeat, var(--grain), #dcefcd; } /* filled in with green crayon */
+.scene.look-paper .q-opt.is-correct .q-chip { background: #6fbb5c; }
+.scene.look-paper .q-opt.is-correct .q-chip svg { stroke: #fff; }
+.scene.look-paper .q-opt.is-wrong { background: none; color: #5a1a12; }
+.scene.look-paper .q-opt.is-wrong::before { background: var(--crayon-coral) 0 0 / 100% 100% no-repeat, var(--grain), #fbe1da; } /* coral crayon */
+.scene.look-paper .q-opt.is-wrong .q-chip { background: #ec7b66; }
+.scene.look-paper .q-opt.is-wrong .q-chip svg { stroke: #fff; }
+
 /* ---------- Reduced motion ---------- */
 
 @media (prefers-reduced-motion: reduce) {
   .mote, .twinkle { display: none; }
-  .glow, .bubble-float, .thought-puff-bob, .start-btn, .badge-inner, .badge-rays,
+  .glow, .thought-puff-bob, .start-btn, .badge-rays,
   .exclaim-inner, .walker.is-idle .walker-body, #btn-next.is-ready, .rotate-phone,
   .story-next, .spot-ring::after, .red-tag.is-pulsing,
   .cmp-box.is-key, .fm-box.is-ping, .fm-op.is-ping, .fm-box.is-ping::after,
