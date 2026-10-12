@@ -149,7 +149,7 @@
         tone({ f: rand(1150, 1450), to: rand(1600, 1900), glide: 0.04, attack: 0.003, decay: 0.05, gain: 0.06 });
         return;
       }
-      const boy = voice !== 'man';
+      const boy = voice !== 'man' && voice !== 'dad';
       tone({ type: 'triangle', f: boy ? rand(560, 700) : rand(250, 320), attack: 0.004, decay: 0.05, gain: boy ? 0.07 : 0.1 });
     },
     whoosh() {

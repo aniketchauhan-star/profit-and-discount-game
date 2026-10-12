@@ -28,6 +28,7 @@
   const CAST = {
     boy: { gender: 'm', pitch: 1.25, rate: 0.92 },  // Aniket
     man: { gender: 'm', pitch: 0.9, rate: 0.88 },   // the shopkeeper
+    dad: { gender: 'm', pitch: 0.82, rate: 0.86 },  // Aniket's father
     bird: { gender: 'f', pitch: 1.3, rate: 0.95 },  // Swifty, who also explains every teaching screen
   };
 
@@ -189,7 +190,7 @@
     });
   }
 
-  // Speaks one line (`id` names it) as `who` ('boy' | 'man' | 'bird'): its recording, found by its text, or else
+  // Speaks one line (`id` names it) as `who` ('boy' | 'dad' | 'man' | 'bird'): its recording, found by its text, or else
   // the device's voice. Resolves when it has finished or was stopped. Silent (resolves at once) while sound
   // effects are off.
   function say(id, text, who = 'boy') {

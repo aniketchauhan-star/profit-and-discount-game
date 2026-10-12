@@ -6,6 +6,7 @@
   python3 tools/vo_build.py --xlsx vo012 vo040                   write studio sheets for these lines (one per voice)
   python3 tools/vo_build.py --log studio-log.json [more …]       record the Devanagari the studio sent to the voice
   python3 tools/vo_build.py --check                              check every clip: Devanagari, pace, the files
+  python3 tools/vo_build.py --renumber                           ids in script order (as first heard), clips renamed
 
 Clips are Ogg Opus, 32 kbps, mono, in "game assets/vo/" (one per voiced line, nothing else). With ffmpeg they are
 made by ffmpeg; without it (macOS), afconvert writes the Opus packets into a CAF file and this script copies them
@@ -29,7 +30,12 @@ SCRIPT = ROOT / 'tools' / 'vo_script.json'
 CLIPS = ROOT / 'game assets' / 'vo'
 MAP = ROOT / 'js' / 'vo_lines.js'
 DOC = ROOT / 'docs' / 'VOICEOVER.md'
-VOICES = {'Swifty': 'Female Teacher (Standard)', 'Aniket': 'Male Child (Energetic)', 'Shopkeeper': 'Male Teacher (Formal)'}
+VOICES = {
+    'Swifty': 'Female Teacher (Standard)',  # Gemini voice Kore
+    'Aniket': 'Male Child (Energetic)',     # Puck
+    'Shopkeeper': 'Male Teacher (Formal)',  # Charon
+    'Father': 'Male Senior (Pedagogical)',  # Fenrir
+}
 BITRATE = 32000
 
 
@@ -215,6 +221,26 @@ def clean(script):
     return gone
 
 
+def renumber(script):
+    """Gives every line the id of its place in the script (the order a player first hears the lines: vo001, vo002 …)
+    and renames its clip to match. Clips no line uses are deleted first; the renaming goes through temporary names,
+    so no clip is ever written over by another."""
+    clean(script)
+    moves = []
+    for k, e in enumerate(script, 1):
+        new = f'vo{k:03d}'
+        if e['id'] != new:
+            moves.append((e['id'], new))
+            e['id'] = new
+    for old, new in moves:
+        if (CLIPS / f'{old}.ogg').exists():
+            (CLIPS / f'{old}.ogg').rename(CLIPS / f'{old}.to-{new}')
+    for old, new in moves:
+        if (CLIPS / f'{old}.to-{new}').exists():
+            (CLIPS / f'{old}.to-{new}').rename(CLIPS / f'{new}.ogg')
+    return moves
+
+
 # ---------- studio sheets, logs, checks ----------
 
 def write_xlsx(path, rows):
@@ -317,6 +343,11 @@ def main(args):
         return
     if args[:1] == ['--check']:
         sys.exit(1 if check(script) else 0)
+    if args[:1] == ['--renumber']:
+        moves = renumber(script)
+        print(f'{len(moves)} line(s) given a new id' + (f': {moves[0][0]} → {moves[0][1]} …' if moves else ''))
+        save_script(script)
+        args = []
     if args[:1] == ['--log']:
         print(f'{read_logs(args[1:], script)} line(s) given their Devanagari')
         save_script(script)

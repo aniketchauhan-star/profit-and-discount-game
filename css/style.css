@@ -879,7 +879,7 @@ button:focus-visible, .switch input:focus-visible + .switch-track {
 }
 /* On a sheet, the panels have no frame of their own: what is on them sits right on the big panel (cards and
    sheets keep theirs). The price panel (screens 11–13) moves left, clear of Swifty's stand. */
-.scene.is-sheet :is(.mp-panel, .fm-panel, .fr-panel, .pp-panel, .pf-panel, .qp-panel, .pqp-panel, .ws-panel, .ss-panel) {
+.scene.is-sheet :is(.mp-panel, .fm-panel, .fr-panel, .pf-panel, .qp-panel, .pqp-panel, .ws-panel, .ss-panel) {
   border-color: transparent;
   background: none;
   box-shadow: none;
@@ -1073,9 +1073,10 @@ button:focus-visible, .switch input:focus-visible + .switch-track {
 .tone-d { color: #d32f2f; }   /* Discount */
 .tone-mp { color: #7a4600; }  /* Marked Price */
 .tone-sp { color: #17457e; }  /* Selling Price */
-.tone-part { color: #1f4fbf; }  /* the part (screens 25–26) */
+.tone-part { color: #1f4fbf; }  /* the part (screens 26–28) */
 .tone-whole { color: #12553d; } /* the whole */
-.tone-pct { color: #d6246e; }   /* a percentage as a fraction, e.g. 30/100 (screen 29) */
+.var { font-family: Georgia, 'Times New Roman', serif; font-style: italic; } /* a letter for a number (a, b), in italic as in a maths book */
+.tone-pct { color: #d6246e; }   /* a percentage as a fraction, e.g. 30/100 (screen 30) */
 .fr-op { color: var(--ink); }
 .fr-term, .fr-op { display: inline-block; }
 .fr-letter { display: inline-block; }
@@ -1257,6 +1258,8 @@ button:focus-visible, .switch input:focus-visible + .switch-track {
 }
 .sm-panel--note .sm-value { margin: 18px 0 4px; font-size: 70px; }
 .sm-panel--note .sm-desc { padding: 0 12px 24px; color: #34434c; font-family: var(--hand); font-size: 28px; font-weight: 400; line-height: 42px; }
+.sm-panel--note .sm-card--general { min-height: 0; } /* no amount (the idea in general): the card fits its words, one blank line under them */
+.sm-panel--note .sm-card--general .sm-desc { padding: 6px 12px 46px; }
 .sm-panel--note .sm-formula { /* on a sticky note */
   border: 0;
   border-radius: 2px;
@@ -1266,7 +1269,7 @@ button:focus-visible, .switch input:focus-visible + .switch-track {
 }
 .def-arrow.is-sketch path { stroke: #4b5056; stroke-width: 4.5; } /* drawn in pencil */
 
-/* Screen 24: the sneakers on a card, with their price tag and discount tag (Swifty in her corner) */
+/* Screen 25: the sneakers on a card, with their price tag and discount tag (Swifty in her corner) */
 .pc-panel {
   position: relative;
   display: flex;
@@ -1293,18 +1296,58 @@ button:focus-visible, .switch input:focus-visible + .switch-track {
   box-shadow: 0 10px 0 var(--ink), 0 24px 40px rgba(4, 18, 22, .16);
 }
 .pc-photo img { display: block; width: 100%; height: 100%; object-fit: cover; }
-.pc-tags { display: flex; align-items: center; gap: 34px; }
-.pc-price { /* like the white price card on the stand */
-  padding: 24px 48px 14px;
-  border: 5px solid var(--ink);
-  border-radius: 20px;
+.pc-shot { position: relative; }
+.pc-hang { /* the price tag on its string, tied to the laces like the white tag in the shop's pictures */
+  position: absolute; /* its top is the knot (left, top: see productParts) */
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* a column with no width: the string and the tag hang centred under the knot */
+  width: 0;
+  font-size: 60px; /* everything on the tag is sized from this */
+  rotate: -5deg; /* resting against the shoe */
+  transform-origin: 50% 0;
+}
+.pc-hang::before { /* the knot round the lace */
+  content: '';
+  position: relative;
+  z-index: 2;
+  flex: none;
+  width: .24em;
+  height: .2em;
+  margin-top: -.1em;
+  border: .05em solid var(--ink);
+  border-radius: 50%;
+  background: #fffaf0;
+}
+.pc-string { /* down into the tag's hole */
+  position: relative;
+  z-index: 1;
+  flex: none;
+  width: .1em;
+  height: .95em;
+  margin: -.04em 0 -.44em;
+  border: .025em solid var(--ink);
+  border-radius: .05em;
+  background: #fffaf0;
+}
+.pc-price { /* the white tag */
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: .07em;
+  padding: .13em .34em .1em;
+  border: .07em solid var(--ink);
+  border-radius: .18em;
   background: #fff;
-  box-shadow: 0 9px 0 var(--ink);
+  box-shadow: 0 .11em 0 var(--ink), 0 .3em .45em rgba(4, 18, 22, .35);
   color: #1c2a4f;
-  font-size: 86px;
   font-weight: 800;
   line-height: 1;
+  white-space: nowrap;
 }
+.pc-hole { width: .22em; height: .22em; border: .05em solid var(--ink); border-radius: 50%; background: #3a4d78; }
+.pc-tags { display: flex; align-items: center; gap: 34px; }
 .pc-off-pos { position: relative; transform: rotate(3deg); } /* tilted like the red tag on the stand */
 .pc-off {
   display: flex;
@@ -1329,13 +1372,13 @@ button:focus-visible, .switch input:focus-visible + .switch-track {
   40%      { transform: scale(1.1); }
 }
 
-/* A hint arrow nudging down (on screen 26) */
+/* A hint arrow nudging down (on screens 26 and 27) */
 @keyframes arrow-nudge {
   0%, 100% { transform: none; }
   40%      { transform: translateY(8px); }
 }
 
-/* Answer buttons under a question (screens 27, 28 and 30), in a row or a column */
+/* Answer buttons under a question (screens 28, 29 and 31), in a row or a column */
 .pq-choices { display: flex; justify-content: center; gap: 30px; }
 .pq-opt { /* an answer button (see .q-opt for its states: right, wrong, dimmed) */
   flex: none;
@@ -1351,54 +1394,8 @@ button:focus-visible, .switch input:focus-visible + .switch-track {
 .pq-opt .q-chip { width: 70px; height: 70px; background: linear-gradient(180deg, #5b9cf0 0%, #2f6fd6 100%); color: #fff; font-size: 38px; }
 .pq-opt .q-label { flex: none; padding: 6px 0 0; }
 
-/* Screen 25: what a percentage means, as pairs: Part ↔ Percentage, Whole ↔ 100% (Swifty in her corner) */
-.pp-panel {
-  display: grid;
-  grid-template-columns: auto auto auto;
-  align-items: center;
-  column-gap: 26px;
-  row-gap: 44px;
-  margin-right: 420px; /* as on screens 17–19: room on the right for Swifty and her speech bubbles */
-  padding: 54px 56px 62px;
-  border: 5px solid var(--ink);
-  border-radius: 48px;
-  background:
-    radial-gradient(circle, rgba(27, 42, 51, .08) 1.6px, transparent 2.2px) 0 0 / 28px 28px,
-    linear-gradient(180deg, #fffdf7 0%, #fff3d9 100%);
-  box-shadow: 0 16px 0 var(--ink), 0 44px 90px rgba(4, 18, 22, .45);
-  pointer-events: auto;
-}
-.pp-box {
-  display: grid;
-  place-items: center;
-  width: 380px;
-  height: 150px;
-  border: 5px solid var(--ink);
-  border-radius: 30px;
-  box-shadow: 0 9px 0 var(--ink);
-  font-size: 64px;
-  font-weight: 800;
-  line-height: 1;
-}
-.pp-box--part { background: linear-gradient(180deg, #eef7ff 0%, #c4e0fb 100%); color: #1f4fbf; }
-.pp-box--whole { background: linear-gradient(180deg, #e8fcf2 0%, #a9ecc8 100%); color: #12553d; }
-.pp-box--pct { background: linear-gradient(180deg, #fff8d6 0%, #ffe07a 100%); color: var(--ink); }
-.pp-text { padding-top: 8px; }
-.pp-arrow { width: 110px; height: 60px; overflow: visible; }
-.pp-arrow path {
-  fill: none;
-  stroke: var(--ink);
-  stroke-width: 7;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  stroke-dasharray: 1;
-  stroke-dashoffset: 0;
-}
-.pp-box.is-ping { animation: tag-pop .8s cubic-bezier(.3, 1.6, .5, 1); }
-.pp-arrow.is-ping { animation: tag-pop .8s cubic-bezier(.3, 1.6, .5, 1); }
-
-/* Screen 26: "₹125 is what percent of ₹500?": the question, the part and the whole, and the formula worked
-   out line by line (Swifty in her corner) */
+/* Screens 26 and 27: "a is what percent of b?", then "125 is what percent of 500?": the question, the part and
+   the whole, and the formula worked out line by line (Swifty in her corner) */
 .pf-panel {
   position: relative; /* the flying numbers are positioned inside it */
   display: grid;
@@ -1492,12 +1489,16 @@ button:focus-visible, .switch input:focus-visible + .switch-track {
   transition: opacity .45s ease, transform .55s cubic-bezier(.3, 1.6, .5, 1);
 }
 .pf-answer.is-marked::before { opacity: 1; transform: none; }
+.pf-answer--rule { display: flex; align-items: center; gap: 10px; padding-top: 0; font-size: 48px; } /* (a / b × 100)% */
+.pf-paren { align-self: stretch; flex: none; width: 18px; height: auto; overflow: visible; } /* a bracket as tall as the fraction */
+.pf-paren path { fill: none; stroke: var(--ink); stroke-width: 5; stroke-linecap: round; vector-effect: non-scaling-stroke; }
+.pf-pct { margin-left: -6px; padding-top: 8px; } /* close up to its bracket: (…)% */
 .pf-hint { position: absolute; left: 50%; bottom: 100%; width: 34px; height: 40px; margin: 0 0 -2px -17px; overflow: visible; }
 .pf-hint path { fill: none; stroke: #1f4fbf; stroke-width: 6; stroke-linecap: round; stroke-linejoin: round; }
 .pf-hint.is-ping { animation: arrow-nudge .8s cubic-bezier(.3, 1.6, .5, 1) 2; }
 .pf-q-value.is-ping { animation: tag-pop .8s cubic-bezier(.3, 1.6, .5, 1); }
 
-/* Screen 27: a quick check: the question on the purple strip, three answers stacked under it (Swifty in her corner) */
+/* Screen 28: a quick check: the question on the purple strip, three answers stacked under it (Swifty in her corner) */
 .qp-panel {
   display: flex;
   flex-direction: column;
@@ -1518,7 +1519,7 @@ button:focus-visible, .switch input:focus-visible + .switch-track {
 .pq-choices--stack .pq-opt .q-label { flex: 1; padding: 6px 70px 0 0; } /* centred, balancing the letter chip */
 .pq-opt.is-ping { animation: tag-pop .8s cubic-bezier(.3, 1.6, .5, 1); }
 
-/* Screens 28 and 30: the sneakers and a question about them. The panel sits further left than the others: the
+/* Screens 29 and 31: the sneakers and a question about them. The panel sits further left than the others: the
    Next button goes between it and Swifty, level with the last answer. */
 .pqp-panel {
   display: grid;
@@ -1537,8 +1538,7 @@ button:focus-visible, .switch input:focus-visible + .switch-track {
 }
 .pqp-item { display: flex; flex-direction: column; align-items: center; gap: 26px; }
 .pqp-item .pc-photo { width: 440px; height: 192px; }
-.pqp-item .pc-tags { gap: 22px; }
-.pqp-item .pc-price { padding: 18px 30px 10px; font-size: 58px; }
+.pqp-item .pc-hang { font-size: 34px; }
 .pqp-item .pc-off { padding: 12px 20px 6px; font-size: 40px; }
 .pqp-side { display: flex; flex-direction: column; align-items: center; gap: 30px; }
 .pqp-question { /* the question, on a pink strip */
@@ -1557,7 +1557,7 @@ button:focus-visible, .switch input:focus-visible + .switch-track {
 .pqp-answers .pq-choices--stack { gap: 22px; }
 .pqp-answers .pq-choices--stack .pq-opt { width: 500px; height: 96px; font-size: 48px; }
 
-/* Screens 29 and 31: a worked solution: value boxes on the left (31), the working written line by line */
+/* Screens 30 and 32: a worked solution: value boxes on the left (32), the working written line by line */
 .ws-panel {
   position: relative; /* the copies of the values moving about are placed inside it */
   display: flex;
@@ -1588,10 +1588,10 @@ button:focus-visible, .switch input:focus-visible + .switch-track {
   border-radius: 20px;
   background: #dcecff;
 }
-.ws-band--yellow { background: #fff0b3; } /* the rule, as on the storyboard's yellow strip (screen 33) */
+.ws-band--yellow { background: #fff0b3; } /* the rule, as on the storyboard's yellow strip (screen 34) */
 .ws-panel .is-ping { animation: tag-pop .8s cubic-bezier(.3, 1.6, .5, 1); }
 
-/* Screen 31: the player drags the amounts out of the boxes on the left into the empty boxes in the working */
+/* Screen 32: the player drags the amounts out of the boxes on the left into the empty boxes in the working */
 .ws-drag { /* an amount that can be picked up: a gold halo pulses round it */
   border-radius: 18px;
   cursor: grab;
@@ -1640,7 +1640,7 @@ button:focus-visible, .switch input:focus-visible + .switch-track {
   0%, 45% { background-color: #ffd9d4; }
 }
 
-/* Screen 32: the shop's tags updated: the old price crossed out in red, and the new price stuck on in green */
+/* Screen 33: the shop's tags updated: the old price crossed out in red, and the new price stuck on in green */
 .strike { position: absolute; overflow: visible; pointer-events: none; }
 .strike path {
   fill: none;
@@ -1667,7 +1667,7 @@ button:focus-visible, .switch input:focus-visible + .switch-track {
 .stick-tag--green { background: linear-gradient(180deg, #4fd27f 0%, #1f9a55 100%); text-shadow: 0 3px 0 rgba(10, 60, 30, .35); }
 .tone-pay { color: #1f9a55; } /* the new price (screen 32) */
 
-/* Screen 34: the sneakers, summed up: a table of the four amounts, and the three rules (Swifty in her corner) */
+/* Screen 35: the sneakers, summed up: a table of the four amounts, and the three rules (Swifty in her corner) */
 .ss-panel {
   display: flex;
   flex-direction: column;
@@ -2333,7 +2333,7 @@ kbd {
   #rotate-hint.is-dismissed { display: none; }
 }
 
-/* ---------- The hand-made look (screens 13 and 27 try it first: scene.look = 'paper') ----------
+/* ---------- The hand-made look (screens 13 and 28 try it first: scene.look = 'paper') ----------
    Paper, card, tape and ink, as if made by hand: edges cut with scissors (#paper-cut), a big sheet with a
    deckled edge (#paper-deckle), lines drawn with a brush pen (#ink-brush) — the filters are in js/fx.js
    (inkDefs). Flat gouache colours with a paper grain, warm charcoal ink, soft shadows as if things lie on a
@@ -2474,7 +2474,7 @@ kbd {
 }
 .scene.look-paper .spot-ring::after { display: none; }
 
-/* Screen 27: the question on a lilac paper strip; the answers on cream paper strips with a letter sticker */
+/* Screen 28: the question on a lilac paper strip; the answers on cream paper strips with a letter sticker */
 .scene.look-paper .pf-question {
   position: relative;
   border: 0;
@@ -2531,6 +2531,888 @@ kbd {
 
 /* ---------- Reduced motion ---------- */
 
+/* ---------- The shopping challenge's opening panel ("Game Begins", screen 42) ----------
+   As in the design: the panel on the right of the picture, its pieces cut from the design's panel sheet
+   (game assets/ui/begin/), the shopping list drawn in the sheet's colours. Positions are stage px within the
+   panel's box (the panel itself from y 90, under the banner). */
+.cp { position: absolute; left: 1000px; top: 105px; width: 848px; height: 863px; pointer-events: none; }
+.cp-panel { /* the cream panel (made at this size from the sheet's: panel.png) */
+  position: absolute;
+  left: 0;
+  top: 90px;
+  width: 848px;
+  height: 773px;
+  filter: drop-shadow(0 14px 18px rgba(40, 25, 10, .24));
+}
+.cp img { display: block; user-select: none; -webkit-user-drag: none; }
+.cp-banner { position: absolute; left: 44px; top: 0; width: 760px; }
+.cp-ribbon { position: absolute; left: 141px; top: 111px; width: 566px; }
+.cp-wallet { position: absolute; left: 186px; top: 199px; width: 476px; }
+.cp-wallet img { width: 100%; }
+.cp-glint { /* a band of light that runs once across the wallet's navy pill (its rounded shape) */
+  position: absolute;
+  left: 27%;
+  right: 1.5%;
+  top: 12%;
+  bottom: 13%;
+  border-radius: 999px;
+  background: linear-gradient(105deg, transparent 38%, rgba(255, 255, 255, .5) 50%, transparent 62%) 160% 0 / 250% 100% no-repeat;
+  opacity: 0;
+}
+.cp-glint.is-on { animation: cp-glint 1.1s ease-in-out forwards; }
+@keyframes cp-glint {
+  0%   { opacity: 1; background-position: 160% 0; }
+  100% { opacity: 1; background-position: -60% 0; }
+}
+.cp-list { /* the shopping list's box: the sheet's cream, with a soft tan edge */
+  position: absolute;
+  left: 125px;
+  top: 357px;
+  width: 598px;
+  height: 346px;
+  box-sizing: border-box;
+  padding-top: 14px;
+  border: 3px solid #e2c29d;
+  border-radius: 26px;
+  background: #fbeacf;
+  box-shadow: inset 0 2px 0 rgba(255, 255, 255, .65), 0 2px 8px rgba(150, 100, 60, .12);
+  color: #13204a;
+}
+.cp-list-title { height: 50px; font-size: 34px; font-weight: 800; line-height: 50px; text-align: center; }
+.cp-row { position: relative; height: 66px; }
+.cp-check { /* an empty checkbox, as on the sheet */
+  position: absolute;
+  left: 51px;
+  top: 15px;
+  width: 36px;
+  height: 36px;
+  box-sizing: border-box;
+  border: 4px solid #0f1c48;
+  border-radius: 8px;
+  background: #fcf9f4;
+}
+.cp-icon { position: absolute; left: 131px; top: 3px; width: 60px; height: 60px; object-fit: contain; }
+.cp-label { position: absolute; left: 215px; top: 0; font-size: 30px; font-weight: 800; line-height: 66px; white-space: nowrap; }
+.cp-start {
+  position: absolute;
+  left: 148px;
+  top: 717px;
+  width: 552px;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  pointer-events: auto;
+}
+.cp-start img { width: 100%; transition: transform .12s ease; }
+.cp-start:hover img { transform: translateY(-2px); }
+.cp-start:active img { transform: translateY(4px); }
+.cp-start.is-calling { animation: cp-call 1.8s ease-in-out .3s infinite; }
+@keyframes cp-call { /* a soft gold glow round the button, following its shape (the button holds still) */
+  0%, 100% { filter: drop-shadow(0 0 0 rgba(255, 200, 61, 0)); }
+  50%      { filter: drop-shadow(0 0 16px rgba(255, 200, 61, .95)); }
+}
+
+/* ---------- Choosing a shop (screen 43) ----------
+   As in the design: on its light blue, the four shops' cards (2×2) on the left, and the wallet and the shopping
+   list on a white panel on the right, all moved down a little to clear Back / Next (the hint to tap a shop sits
+   between them). The pictures are cut from the design's sheet (game assets/ui/shop/); the cards, their pills and
+   sparks, the panel and the tags are drawn in its colours. Positions are stage px. */
+.scene:is(.look-shops, .look-street, .look-party) .scene-world::before { /* soft circles on a light sky blue, lavender towards two corners; a little
+  bigger than the screen, as it drifts with the mouse like the pictures do (the cards and the panel hold still) */
+  content: '';
+  position: absolute;
+  inset: -30px;
+  background:
+    radial-gradient(circle at 1% 3%, rgba(255, 255, 255, .26) 0 104px, rgba(255, 255, 255, 0) 107px),
+    radial-gradient(circle at -1% 36%, rgba(200, 194, 250, .32) 0 84px, rgba(200, 194, 250, 0) 87px),
+    radial-gradient(circle at 3% 93%, rgba(200, 194, 250, .32) 0 190px, rgba(200, 194, 250, 0) 193px),
+    radial-gradient(circle at 79% -5%, rgba(255, 255, 255, .24) 0 124px, rgba(255, 255, 255, 0) 127px),
+    radial-gradient(circle at 93% 104%, rgba(255, 255, 255, .28) 0 172px, rgba(255, 255, 255, 0) 175px),
+    radial-gradient(circle at 57% 101%, rgba(255, 255, 255, .2) 0 128px, rgba(255, 255, 255, 0) 131px),
+    radial-gradient(90% 70% at 0% 100%, #dad9fd, rgba(218, 217, 253, 0) 70%),
+    radial-gradient(60% 55% at 100% 0%, #d8e2fd, rgba(216, 226, 253, 0) 75%),
+    radial-gradient(55% 60% at 0% 0%, #c4e5fd, rgba(196, 229, 253, 0) 80%),
+    #d3ecfd;
+}
+.sp { position: absolute; inset: 0; }
+.sp img { display: block; user-select: none; -webkit-user-drag: none; }
+.sp-hint-pos { position: absolute; left: 120px; top: 30px; width: 1107px; display: flex; justify-content: center; }
+.sp-hint { /* "Tap to Select", as on the sheet: pale blue, a blue edge, navy words */
+  height: 58px;
+  padding: 0 32px;
+  border: 3px solid #5a9fd6;
+  border-radius: 29px;
+  background: linear-gradient(180deg, #fbfdff 0 12%, #ddf0fe 30%, #daeffe 82%, #e4f4fd);
+  box-shadow: 0 6px 16px rgba(60, 120, 200, .22);
+  color: #12305e;
+  font-size: 30px;
+  font-weight: 800;
+  line-height: 56px;
+  white-space: nowrap;
+}
+.sp-hint.is-bobbing { animation: sp-bob 1.6s ease-in-out infinite; }
+.sp-hint.is-done { opacity: 0; transform: translateY(-14px); transition: opacity .35s ease, transform .35s ease; }
+@keyframes sp-bob {
+  0%, 100% { transform: none; }
+  50%      { transform: translateY(-7px); }
+}
+.sp-grid {
+  position: absolute;
+  left: 120px;
+  top: 135px;
+  display: grid;
+  grid-template-columns: 526px 526px;
+  grid-auto-rows: 423px;
+  gap: 39px 55px;
+}
+/* Each shop's colours: its card (edge, fill from top to bottom), its sparks, its pill, its glow when picked,
+   and its line on the list when picked. */
+.sp-card--yellow, .sp-row--yellow {
+  --edge: #f7bd47; --edge-low: #f0ad38; --top: #fff5c8; --mid: #feecb5; --low: #fde9a9; --spark: #fdb629;
+  --pill: #fdbb33; --pill-ink: #10295a; --glow: rgba(253, 187, 51, .75); --shade: rgba(190, 140, 40, .2); --tint: #fff1c4;
+}
+.sp-card--pink, .sp-row--pink {
+  --edge: #ef88a9; --edge-low: #e97b9f; --top: #fed9e7; --mid: #fdcfe0; --low: #fdc4d9; --spark: #fc7098;
+  --pill: #f76391; --pill-ink: #fff; --glow: rgba(247, 99, 145, .6); --shade: rgba(200, 80, 120, .18); --tint: #fde1eb;
+}
+.sp-card--green, .sp-row--green {
+  --edge: #7ccba4; --edge-low: #6fc196; --top: #d9fbe4; --mid: #c7f5d4; --low: #bdf2cb; --spark: #45b160;
+  --pill: #389f56; --pill-ink: #fff; --glow: rgba(69, 177, 96, .55); --shade: rgba(60, 150, 90, .18); --tint: #d8f6e0;
+}
+.sp-card--purple, .sp-row--purple {
+  --edge: #b6a2f5; --edge-low: #a88cf0; --top: #ece0fe; --mid: #e1d2fd; --low: #d9c7fd; --spark: #a475f1;
+  --pill: #965fe3; --pill-ink: #fff; --glow: rgba(150, 95, 227, .55); --shade: rgba(120, 80, 200, .18); --tint: #ebe1fe;
+}
+.sp-card {
+  position: relative;
+  overflow: visible;
+  width: 526px;
+  height: 423px;
+  padding: 0;
+  border: 3px solid var(--edge);
+  border-bottom-color: var(--edge-low);
+  border-radius: 46px;
+  background: linear-gradient(180deg, var(--top), var(--mid) 46%, var(--low));
+  box-shadow: inset 0 3px 0 rgba(255, 255, 255, .85), inset 0 0 0 3px rgba(255, 255, 255, .3), 0 12px 26px var(--shade);
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+  pointer-events: auto;
+  -webkit-tap-highlight-color: transparent;
+  transition: translate .25s ease, box-shadow .25s ease;
+}
+.sp-card::before { /* the glossy little arc in the top-left corner */
+  content: '';
+  position: absolute;
+  left: 13px;
+  top: 12px;
+  width: 58px;
+  height: 58px;
+  border: 6px solid transparent;
+  border-top-color: rgba(255, 255, 255, .85);
+  border-radius: 50%;
+  transform: rotate(-45deg);
+  pointer-events: none;
+}
+.sp-card:hover:not(.is-picked) {
+  translate: 0 -4px;
+  box-shadow: inset 0 3px 0 rgba(255, 255, 255, .85), inset 0 0 0 3px rgba(255, 255, 255, .3), 0 0 22px 4px var(--glow), 0 14px 28px var(--shade);
+}
+.sp-card:focus-visible { outline: 5px solid #12305e; outline-offset: 6px; }
+.sp-card.is-picked { /* as on the sheet: the card glows in its colour */
+  translate: 0 -8px;
+  box-shadow: inset 0 3px 0 rgba(255, 255, 255, .85), inset 0 0 0 3px rgba(255, 255, 255, .3), 0 0 0 4px var(--edge), 0 0 38px 12px var(--glow), 0 20px 30px var(--shade);
+}
+.sp-sparks { position: absolute; inset: 0; pointer-events: none; }
+.sp-spark { position: absolute; width: 38px; height: 13px; border-radius: 7px; background: var(--spark); }
+.sp-icon { /* stands on the pill */
+  position: absolute;
+  left: 50%;
+  bottom: 119px;
+  translate: -50% 0;
+  filter: drop-shadow(0 6px 6px rgba(20, 40, 90, .14));
+  pointer-events: none;
+}
+.sp-card--uniform .sp-icon { height: 266px; }
+.sp-card--shoes .sp-icon { height: 240px; }
+.sp-card--bag .sp-icon { height: 278px; }
+.sp-card--bottle .sp-icon { height: 276px; }
+.sp-name {
+  position: absolute;
+  left: 50%;
+  bottom: 23px;
+  width: 355px;
+  height: 88px;
+  translate: -50% 0;
+  border-radius: 44px;
+  background: var(--pill);
+  color: var(--pill-ink);
+  font-size: 58px;
+  font-weight: 800;
+  line-height: 96px;
+  text-align: center;
+  pointer-events: none;
+}
+.sp-tag { /* "Selected", as on the sheet: yellow, an orange edge, on the card's top edge */
+  position: absolute;
+  left: 50%;
+  top: -31px;
+  height: 56px;
+  padding: 0 28px;
+  translate: -50% 0;
+  border: 3px solid #f99c05;
+  border-radius: 28px;
+  background: linear-gradient(180deg, #fef3a0 0 20%, #fed84c 44%, #fed84c 80%, #fee77a);
+  box-shadow: 0 0 16px rgba(254, 190, 40, .6), 0 4px 8px rgba(120, 80, 10, .2);
+  color: #10295a;
+  font-size: 28px;
+  font-weight: 800;
+  line-height: 54px;
+  white-space: nowrap;
+  opacity: 0;
+  transform: scale(.4);
+  transition: opacity .2s ease, transform .4s cubic-bezier(.2, .8, .3, 1.5);
+  pointer-events: none;
+}
+.sp-card.is-picked .sp-tag { opacity: 1; transform: none; }
+.sp-panel {
+  position: absolute;
+  left: 1293px;
+  top: 112px;
+  width: 598px;
+  height: 928px;
+  border-radius: 44px;
+  background: #f5f9fe;
+  box-shadow: inset 0 0 0 3px rgba(255, 255, 255, .95), 0 0 0 1px rgba(170, 205, 245, .55), 0 18px 40px rgba(70, 130, 210, .22);
+  color: #10284f;
+}
+.sp-wallet { position: absolute; left: 27px; top: 32px; width: 544px; height: 210px; border-radius: 34px; background: #d1eafd; }
+.sp-wallet-icon { position: absolute; left: 31px; top: 50%; width: 164px; translate: 0 -50%; filter: drop-shadow(0 6px 6px rgba(70, 40, 20, .18)); }
+.sp-amount { /* the money: ₹5,000 */
+  position: absolute;
+  left: 210px;
+  top: 52px;
+  width: 316px;
+  height: 106px;
+  border-radius: 53px;
+  background: #f2f8fe;
+  color: #11315c;
+  font-size: 72px;
+  font-weight: 800;
+  line-height: 116px;
+  text-align: center;
+  white-space: nowrap;
+}
+.sp-rule { position: absolute; left: 45px; top: 265px; width: 508px; height: 4px; border-radius: 2px; background: #d9e3f4; }
+.sp-title { position: absolute; left: 49px; top: 286px; font-size: 58px; font-weight: 800; line-height: 80px; white-space: nowrap; }
+.sp-row {
+  position: absolute;
+  left: 37px;
+  width: 526px;
+  height: 111px;
+  border-radius: 24px;
+  background: #edf3fa;
+  transition: background .3s ease, box-shadow .3s ease;
+}
+.sp-row--uniform { top: 379px; }
+.sp-row--shoes { top: 508px; }
+.sp-row--bag { top: 637px; }
+.sp-row--bottle { top: 766px; }
+.sp-row.is-picked { background: var(--tint); box-shadow: inset 0 0 0 3px var(--edge); }
+.sp-check { position: absolute; left: 25px; top: 50%; width: 60px; translate: 0 -50%; }
+.sp-row-icon { position: absolute; left: 158px; top: 50%; translate: -50% -50%; }
+.sp-row--uniform .sp-row-icon { height: 88px; }
+.sp-row--shoes .sp-row-icon { width: 98px; }
+.sp-row--bag .sp-row-icon { height: 90px; }
+.sp-row--bottle .sp-row-icon { height: 100px; }
+.sp-row-label { position: absolute; left: 243px; top: 0; font-size: 41px; font-weight: 800; line-height: 117px; white-space: nowrap; }
+.si-thumb--shops { /* the scene list's tiny copy: four coloured cards and the white panel, on the light blue */
+  background:
+    linear-gradient(#fde7a6, #fde7a6) 5px 5px / 19px 13px no-repeat,
+    linear-gradient(#fdc6da, #fdc6da) 26px 5px / 19px 13px no-repeat,
+    linear-gradient(#c3f3cf, #c3f3cf) 5px 20px / 19px 13px no-repeat,
+    linear-gradient(#dccafd, #dccafd) 26px 20px / 19px 13px no-repeat,
+    linear-gradient(#f7fbff, #f7fbff) 49px 4px / 16px 30px no-repeat,
+    #cfe9fd;
+}
+
+/* A shop whose item is bought (screen 43): faded back, a green tick on its corner, and it can't be picked again. */
+.sp-card.is-bought { cursor: default; }
+.sp-card.is-bought::after { content: ''; position: absolute; inset: -3px; border-radius: inherit; background: rgba(240, 247, 255, .5); pointer-events: none; }
+.sp-card.is-bought:hover { translate: none; box-shadow: inset 0 3px 0 rgba(255, 255, 255, .85), inset 0 0 0 3px rgba(255, 255, 255, .3), 0 12px 26px var(--shade); }
+.sp-done { position: absolute; z-index: 1; right: -20px; top: -24px; width: 100px; filter: drop-shadow(0 6px 8px rgba(20, 90, 50, .3)); pointer-events: none; }
+.sp-row.is-ticked { background: #e4f6e9; }
+.sp-row.is-ticked .sp-row-label { color: #1f7a45; }
+/* The same wallet and list on the shop screens: smaller, in the top-right corner. */
+.sp-panel--mini { transform: scale(.6); transform-origin: 100% 0; }
+.si-thumb--street { /* the scene list's tiny copy of a street: three shops on the pavement */
+  background:
+    linear-gradient(#f26457, #f26457) 5px 8px / 17px 7px no-repeat,
+    linear-gradient(#fffaf1, #fffaf1) 6px 15px / 15px 14px no-repeat,
+    linear-gradient(#3b8ee0, #3b8ee0) 26px 8px / 17px 7px no-repeat,
+    linear-gradient(#fffaf1, #fffaf1) 27px 15px / 15px 14px no-repeat,
+    linear-gradient(#9b5de5, #9b5de5) 47px 8px / 17px 7px no-repeat,
+    linear-gradient(#fffaf1, #fffaf1) 48px 15px / 15px 14px no-repeat,
+    linear-gradient(#e6ecf3, #e6ecf3) 0 29px / 100% 11px no-repeat,
+    #d3ecfd;
+}
+
+/* ---------- The shopping game's streets (screens 44–47) ----------
+   On the Shopping Area's light blue: the street's sign at the top, three shop fronts on the pavement (x 60–1460), the
+   wallet and the list in the top-right corner (the Shopping Area's panel, smaller), and Swifty on her stack of books
+   under it. Cards come up over the street (x 120–1400): an offer to check, the three offers compared, a purchase. */
+.st { position: absolute; inset: 0; isolation: isolate; } /* what is layered inside the street stays under the cards over it */
+.st-ground { /* the pavement, its kerb along the top */
+  position: absolute;
+  left: -30px;
+  right: -30px;
+  top: 612px;
+  bottom: -30px;
+  background:
+    repeating-linear-gradient(90deg, transparent 0 158px, rgba(150, 170, 200, .22) 158px 161px) 0 18px / 100% 100% no-repeat,
+    linear-gradient(180deg, #c3d1e3 0 12px, #dfe7f1 12px 18px, #edf2f8 18px);
+}
+/* The pieces cut from the streets' asset sheet ("sheet .png", in game assets/ui/street/), with the game's words on them */
+.art-label { position: relative; display: block; flex: none; }
+.art-pic { display: block; width: 100%; height: auto; user-select: none; -webkit-user-drag: none; pointer-events: none; }
+.art-words { position: absolute; left: 50%; top: 50%; display: flex; flex-direction: column; align-items: center; translate: -50% -50%; text-align: center; white-space: nowrap; pointer-events: none; }
+.tg-price { width: 4.8em; } /* the white tag: "Marked Price" and the amount, under its string hole (its size follows its font size) */
+.tg-price .art-words { top: 63.5%; color: #1c2a4f; }
+.tg-label { color: #5a6b8c; font-size: .44em; font-weight: 800; line-height: 1.15; }
+.tg-value { font-size: 1em; font-weight: 800; line-height: 1; }
+.tg-offer { width: 5.3em; } /* the red tag: the offer, right of its eyelet, tilted with it */
+.tg-offer .art-words { left: 57.5%; top: 49%; rotate: 3.5deg; color: #fff; text-shadow: 0 2px 0 rgba(90, 10, 10, .35); }
+.tg-line { font-size: .9em; font-weight: 800; line-height: 1; }
+.tg-price.is-ping, .tg-offer.is-ping { animation: tag-pop .8s cubic-bezier(.3, 1.6, .5, 1); }
+.st-sign { position: absolute; left: 760px; top: 10px; width: 460px; translate: -50% 0; } /* the green street sign */
+.st-sign .art-words { color: #fff; text-shadow: 0 2px 0 rgba(0, 60, 30, .35); }
+.st-sign-name { font-size: 38px; font-weight: 800; line-height: 1.05; }
+.st-sign-item { font-size: 21px; font-weight: 700; line-height: 1.15; opacity: .92; }
+.st-shop--coral, .oc-card--coral, .cb-row--coral { --shop: #f26457; --shop-deep: #d9473b; --shop-soft: #ffb3a9; }
+.st-shop--blue, .oc-card--blue, .cb-row--blue { --shop: #3b8ee0; --shop-deep: #2a72c2; --shop-soft: #a9cff5; }
+.st-shop--purple, .oc-card--purple, .cb-row--purple { --shop: #9b5de5; --shop-deep: #7d42c9; --shop-soft: #d4b8f6; }
+.st-shop { /* a shop front from the sheet (440 × 476, its step on the kerb) */
+  position: absolute;
+  top: 136px;
+  width: 440px;
+  height: 476px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+  pointer-events: auto;
+  -webkit-tap-highlight-color: transparent;
+  transition: translate .25s ease, opacity .4s ease, filter .4s ease;
+}
+.st-shop--0 { left: 60px; }
+.st-shop--1 { left: 540px; }
+.st-shop--2 { left: 1020px; }
+.st-shop:disabled { cursor: default; }
+.st-shop.is-open:hover { translate: 0 -6px; }
+.st-shop:focus-visible { outline: 5px solid #12305e; outline-offset: 8px; border-radius: 24px; }
+.st-glow { /* a soft gold glow behind it: pulsing while it is still to check, steady on the best deal */
+  position: absolute;
+  left: 30px;
+  right: 30px;
+  top: 24px;
+  bottom: 30px;
+  border-radius: 40px;
+  background: #ffc83d;
+  filter: blur(26px);
+  opacity: 0;
+  transition: opacity .4s ease;
+}
+.st-shop.is-open .st-glow { animation: st-call 2.4s ease-in-out infinite; }
+@keyframes st-call {
+  0%, 100% { opacity: 0; }
+  50%      { opacity: .5; }
+}
+.st-shop.is-best .st-glow { opacity: .75; animation: none; }
+.st-shop.is-faded { opacity: .6; filter: saturate(.6); }
+.st-art { position: absolute; left: 0; top: 0; width: 440px; filter: drop-shadow(0 12px 12px rgba(40, 60, 100, .18)); }
+.st-board { /* its name, on its board */
+  position: absolute;
+  left: 62px;
+  top: 19px;
+  width: 328px;
+  height: 64px;
+  color: #fff;
+  font-size: 42px;
+  font-weight: 800;
+  line-height: 70px;
+  text-align: center;
+  text-shadow: 0 3px 0 rgba(0, 0, 0, .18);
+}
+.st-display { /* the window: the items stand on its shelf */
+  position: absolute;
+  left: 69px;
+  top: 213px;
+  width: 306px;
+  height: 98px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-evenly;
+}
+.st-item { width: auto; height: 86px; max-width: 132px; object-fit: contain; filter: drop-shadow(0 4px 4px rgba(20, 40, 90, .2)); }
+.st--shoes .st-item { height: 60px; }
+.st--bottle .st-item { height: 88px; }
+.st-tags { position: absolute; left: 42px; top: 350px; width: 359px; display: flex; align-items: flex-start; justify-content: center; gap: 12px; font-size: 32px; }
+.st-pay { position: absolute; left: 50%; top: 488px; width: 262px; translate: -50% 0; } /* what you pay there, on the green badge */
+.st-pay .art-words { color: #fff; font-size: 28px; font-weight: 800; text-shadow: 0 2px 0 rgba(10, 60, 30, .35); }
+.st-best { position: absolute; z-index: 3; left: 50%; top: -78px; width: 290px; translate: -50% 0; } /* "Best deal!", on the yellow ribbon */
+:is(.st-best, .cb-stamp, .tk-stamp) .art-words { top: 37%; color: #7a3d00; font-weight: 800; }
+.st-best .art-words { font-size: 30px; }
+.st-buy { /* "Buy for ₹1,300", on the yellow button */
+  position: absolute;
+  left: 50%;
+  top: 482px;
+  width: 300px;
+  padding: 0;
+  border: 0;
+  background: none;
+  translate: -50% 0;
+  font: inherit;
+  cursor: pointer;
+  pointer-events: auto;
+  animation: cp-call 1.6s ease-in-out .4s infinite;
+}
+.st-buy .art-words { top: 46%; color: #1c2a4f; font-size: 34px; font-weight: 800; }
+.st-buy:active { translate: -50% 3px; }
+.st-buy:disabled { animation: none; cursor: default; }
+.st-sold { /* SOLD, stamped on the window */
+  position: absolute;
+  z-index: 2;
+  left: 50%;
+  top: 46%;
+  translate: -50% -50%;
+  rotate: -10deg;
+  padding: 8px 22px 0;
+  border: 6px solid #d42a2a;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, .82);
+  color: #d42a2a;
+  font-size: 54px;
+  font-weight: 800;
+  letter-spacing: 4px;
+  line-height: 1;
+}
+.st-stand { position: absolute; left: 1574px; top: 900px; width: 301px; filter: drop-shadow(0 10px 8px rgba(60, 40, 10, .22)); pointer-events: none; }
+.st-veil { position: absolute; left: 0; top: 0; width: 1518px; height: 1080px; background: rgba(214, 232, 250, .62); pointer-events: none; }
+
+/* A card over the street: one shop's offer, checked */
+.oc { position: absolute; inset: 0; pointer-events: none; }
+.oc-card {
+  position: absolute;
+  left: 120px;
+  top: 124px;
+  width: 1280px;
+  height: 560px;
+  overflow: hidden;
+  border: 5px solid var(--ink);
+  border-radius: 40px;
+  background: #fbfdff;
+  box-shadow: 0 12px 0 var(--ink), 0 30px 60px rgba(30, 50, 90, .3);
+  pointer-events: auto;
+}
+.oc-band { /* the shop's name, on its colour */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 86px;
+  padding: 6px 40px 0;
+  border-bottom: 5px solid var(--ink);
+  background: linear-gradient(180deg, var(--shop), var(--shop-deep));
+  color: #fff;
+  text-shadow: 0 3px 0 rgba(0, 0, 0, .15);
+}
+.oc-shop { font-size: 48px; font-weight: 800; }
+.oc-item { font-size: 32px; font-weight: 700; opacity: .95; }
+.oc-body { display: grid; grid-template-columns: 430px 1fr; height: calc(100% - 86px); }
+.oc-side {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 26px;
+  border-right: 4px dashed #e6d5b8;
+  background: radial-gradient(circle, rgba(27, 42, 51, .07) 1.6px, transparent 2.2px) 0 0 / 28px 28px, #fff8ea;
+}
+.oc-frame { display: grid; place-items: center; width: 300px; height: 210px; border: 5px solid #fff; border-radius: 22px; background: linear-gradient(160deg, #eaf6ff, #cfe7fb); box-shadow: inset 0 0 0 2px #b9d6f0, 0 6px 10px rgba(40, 60, 100, .12); }
+.oc-pic { max-width: 250px; max-height: 180px; filter: drop-shadow(0 6px 6px rgba(20, 40, 90, .18)); }
+.oc-tags { display: flex; align-items: center; gap: 16px; font-size: 36px; }
+.oc-main { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 24px; padding: 20px 40px; }
+.oc-question, .cb-question { /* on a purple strip, as the questions on screens 26–28 */
+  padding: 14px 40px 8px;
+  border: 5px solid var(--ink);
+  border-radius: 26px;
+  background: linear-gradient(180deg, #f4eaff 0%, #d8bbf7 100%);
+  box-shadow: 0 7px 0 var(--ink);
+  color: #23205f;
+  font-size: 46px;
+  font-weight: 800;
+  line-height: 1;
+  white-space: nowrap;
+}
+.oc-answers { display: flex; flex-direction: column; gap: 18px; }
+.gm-opt { position: relative; justify-content: center; width: 460px; height: 92px; padding: 0 24px; font-size: 50px; }
+.gm-opt .q-label { flex: none; padding: 6px 0 0; }
+.gm-mark { /* ✓ or ✗ on a white disc, once picked */
+  position: absolute;
+  right: 18px;
+  top: 50%;
+  display: none;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  translate: 0 -50%;
+  border: 4px solid var(--ink);
+  border-radius: 50%;
+  background: #fff;
+}
+.gm-mark svg { width: 32px; height: 32px; fill: none; stroke-width: 7; stroke-linecap: round; stroke-linejoin: round; }
+.gm-opt:is(.is-correct, .is-wrong, .is-out) .gm-mark { display: grid; }
+.gm-opt.is-correct .gm-mark svg { stroke: #1f9a5a; }
+.gm-opt:is(.is-wrong, .is-out) .gm-mark svg { stroke: #e0483b; }
+.gm-opt.is-out { opacity: .42; }
+.gm-opt.is-out .q-label { text-decoration: line-through; text-decoration-thickness: 5px; }
+.gm-opt.is-guide { animation: buy-call 1.4s ease-in-out infinite; } /* the one left to pick glows */
+.gm-opt.is-guide:not(:disabled) { background: linear-gradient(180deg, #fffbe6 0%, #ffe9a3 100%); }
+.oc-work { /* the working, line by line, = signs lined up */
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 18px 34px;
+  border: 4px solid #d8e3f2;
+  border-radius: 22px;
+  background: #fff;
+}
+.oc-line { display: grid; grid-template-columns: 350px 46px 220px; align-items: baseline; color: #1c2a4f; font-size: 44px; font-weight: 800; line-height: 1.15; white-space: nowrap; }
+.oc-left { text-align: right; }
+.oc-eq { text-align: center; color: #5a6b8c; }
+.oc-right { text-align: left; color: #1f6fd6; }
+.oc-line--text { grid-template-columns: 1fr; text-align: center; color: #8a5a00; }
+.oc-result { width: 400px; rotate: -2deg; } /* what you pay, stamped, on the green badge */
+.oc-result .art-words { flex-direction: row; align-items: baseline; gap: 14px; color: #fff; text-shadow: 0 3px 0 rgba(10, 60, 30, .3); }
+.oc-result-label { font-size: 32px; font-weight: 800; }
+.oc-result-value { font-size: 56px; font-weight: 800; line-height: 1; }
+
+/* The three offers compared */
+.cb-panel {
+  position: absolute;
+  left: 120px;
+  top: 128px;
+  width: 1280px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 30px;
+  padding: 30px 60px 40px 90px;
+  border: 5px solid var(--ink);
+  border-radius: 40px;
+  background:
+    radial-gradient(circle, rgba(27, 42, 51, .07) 1.6px, transparent 2.2px) 0 0 / 28px 28px,
+    linear-gradient(180deg, #fffdf7 0%, #fff3d9 100%);
+  box-shadow: 0 12px 0 var(--ink), 0 30px 60px rgba(30, 50, 90, .3);
+  pointer-events: auto;
+}
+.cb-rows { display: flex; flex-direction: column; gap: 20px; width: 100%; }
+.gm-opt.cb-row { justify-content: flex-start; gap: 26px; width: 100%; height: 108px; padding: 0 26px; font-size: 40px; }
+.cb-name { flex: none; width: 176px; padding: 10px 0 6px; border-radius: 18px; background: var(--shop); color: #fff; font-size: 36px; text-align: center; text-shadow: 0 2px 0 rgba(0, 0, 0, .15); }
+.cb-offer { display: flex; flex: none; flex-direction: column; gap: 4px; width: 250px; text-align: left; }
+.cb-mp { color: #5a6b8c; font-size: 26px; }
+.cb-off { color: #d42a2a; font-size: 30px; }
+.cb-track { flex: 1; height: 28px; overflow: hidden; border-radius: 14px; background: #e3ebf6; }
+.cb-bar { display: block; height: 100%; border-radius: 14px; background: linear-gradient(90deg, var(--shop-soft), var(--shop)); transform-origin: 0 50%; }
+.cb-pay { flex: none; width: 190px; color: #1c2a4f; font-size: 54px; text-align: right; }
+.cb-row .gm-mark { right: auto; left: -74px; }
+.cb-row:is(.is-correct) :is(.cb-pay, .cb-mp, .cb-off) { color: #fff; }
+.cb-row.is-correct .cb-track { background: rgba(255, 255, 255, .35); }
+.cb-stamp { position: absolute; right: 236px; top: 50%; width: 214px; margin-top: -34px; rotate: -5deg; } /* "Best deal!", on the yellow ribbon */
+.cb-stamp .art-words { font-size: 26px; }
+
+/* A picture flying across (the money to the shop, the item to the list) */
+.fly-pic { position: absolute; z-index: 20; object-fit: contain; filter: drop-shadow(0 10px 10px rgba(20, 40, 90, .25)); pointer-events: none; }
+
+/* "Uniform purchased!" and the wallet's sum */
+.ps-slip {
+  position: absolute;
+  left: 760px;
+  top: 236px;
+  translate: -50% 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 26px 60px 32px;
+  border: 5px solid var(--ink);
+  border-radius: 36px;
+  background: #fff;
+  box-shadow: 0 10px 0 var(--ink), 0 30px 60px rgba(30, 50, 90, .3);
+}
+.ps-pic { height: 130px; filter: drop-shadow(0 6px 6px rgba(20, 40, 90, .18)); }
+.ps-title { color: #1f9a55; font-size: 56px; font-weight: 800; line-height: 1.1; }
+.ps-sum { display: flex; align-items: baseline; gap: 14px; color: #1c2a4f; font-size: 48px; font-weight: 800; white-space: nowrap; }
+.ps-op { color: #5a6b8c; }
+.ps-cost { color: #d42a2a; }
+.ps-left { padding: 2px 14px 0; border-radius: 14px; background: #fff1a8; color: #1f7a45; }
+.ps-word { color: #1f7a45; font-size: 38px; text-transform: uppercase; }
+
+/* Confetti, for a celebration */
+.confetti { position: absolute; z-index: 30; inset: 0; overflow: hidden; pointer-events: none; }
+.confetti i { position: absolute; border-radius: 3px; }
+
+/* ---------- The end of the shopping game (screens 48–55) ---------- */
+.si-thumb--party { /* the scene list's tiny copy: a banner and confetti on the light blue */
+  background:
+    linear-gradient(#2f7fdc, #2f7fdc) 12px 7px / 44px 10px no-repeat,
+    linear-gradient(#fff, #fff) 16px 21px / 36px 11px no-repeat,
+    radial-gradient(circle, #ffb238 2px, transparent 2.6px) 3px 3px / 13px 11px,
+    #d3ecfd;
+}
+.cl { position: absolute; inset: 0; pointer-events: none; }
+.cl-banner { /* a big banner: gold words on blue (or green) */
+  position: absolute;
+  left: 780px;
+  top: 140px;
+  translate: -50% 0;
+  padding: 14px 66px 2px;
+  border: 6px solid #fff;
+  border-radius: 40px;
+  background: linear-gradient(180deg, #4b9cf1 0%, #1f63c4 100%);
+  box-shadow: 0 0 0 4px #17488f, 0 18px 30px rgba(20, 50, 110, .35);
+  white-space: nowrap;
+}
+.cl-banner--green { background: linear-gradient(180deg, #47c983 0%, #1f8f52 100%); box-shadow: 0 0 0 4px #16683b, 0 18px 30px rgba(20, 90, 50, .35); }
+.cl--wide .cl-banner { left: 960px; top: 108px; }
+.cl-title { color: #ffd84d; font-size: 84px; font-weight: 800; line-height: 1.12; letter-spacing: 1px; text-shadow: 0 5px 0 #9a5200, 0 0 2px #9a5200; }
+.cl-text {
+  position: absolute;
+  left: 780px;
+  top: 300px;
+  translate: -50% 0;
+  padding: 10px 44px 4px;
+  border-radius: 999px;
+  background: #fff;
+  box-shadow: 0 8px 18px rgba(40, 80, 140, .18);
+  color: #1c2a4f;
+  font-size: 44px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+.cl-items { position: absolute; left: 780px; top: 408px; display: flex; gap: 36px; translate: -50% 0; }
+.cl-item {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 230px;
+  height: 250px;
+  border: 5px solid var(--ink);
+  border-radius: 30px;
+  background: linear-gradient(180deg, #ffffff 0%, #eef6ff 100%);
+  box-shadow: 0 9px 0 var(--ink);
+}
+.cl-pic { max-width: 190px; height: 150px; object-fit: contain; filter: drop-shadow(0 6px 6px rgba(20, 40, 90, .18)); }
+.cl-name { color: #1c2a4f; font-size: 34px; font-weight: 800; }
+.cl-tick { position: absolute; right: -24px; top: -24px; width: 76px; filter: drop-shadow(0 4px 6px rgba(20, 90, 50, .3)); }
+.cl-purse {
+  position: absolute;
+  left: 780px;
+  top: 730px;
+  translate: -50% 0;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 8px 44px 8px 20px;
+  border: 5px solid var(--ink);
+  border-radius: 999px;
+  background: #fff;
+  box-shadow: 0 8px 0 var(--ink);
+  white-space: nowrap;
+}
+.cl-wallet { height: 88px; }
+.cl-money { padding-top: 6px; color: #1f7a45; font-size: 66px; font-weight: 800; line-height: 1; }
+.cl-left { padding-top: 10px; color: #1f7a45; font-size: 40px; font-weight: 800; text-transform: uppercase; }
+
+/* The receipt: white paper, its bottom edge perforated, printed row by row */
+.rc { position: absolute; inset: 0; filter: drop-shadow(0 18px 22px rgba(30, 50, 90, .25)); pointer-events: none; }
+.rc-paper {
+  position: absolute;
+  left: 170px;
+  top: 112px;
+  width: 1000px;
+  padding: 34px 56px 64px;
+  background: #fffefb;
+  -webkit-mask: radial-gradient(circle 10px at 50% 100%, transparent 96%, #000) 0 0 / 24px 100% repeat-x;
+  mask: radial-gradient(circle 10px at 50% 100%, transparent 96%, #000) 0 0 / 24px 100% repeat-x;
+  color: #1c2a4f;
+}
+.rc-kind { color: #8a96ab; font-size: 24px; font-weight: 800; letter-spacing: 8px; text-align: center; }
+.rc-title { padding-bottom: 16px; border-bottom: 4px dashed #c9d3e2; font-size: 50px; font-weight: 800; text-align: center; }
+.rc-table { display: grid; grid-template-columns: 1.25fr 1fr 1fr 1fr; align-items: center; margin-top: 18px; }
+.rc-head { padding: 6px 0 12px; border-bottom: 3px dashed #c9d3e2; color: #5a6b8c; font-size: 26px; font-weight: 800; text-align: right; }
+.rc-cell { padding: 14px 0 10px; border-bottom: 2px dotted #d9e1ec; font-size: 38px; font-weight: 800; text-align: right; white-space: nowrap; }
+.rc-col0 { text-align: left; }
+.rc-cell.rc-col0 { display: flex; align-items: center; gap: 16px; }
+.rc-cell.rc-col2 { color: #d32f2f; }
+.rc-cell.rc-col3 { color: #1f7a45; }
+.rc-pic { width: 62px; height: 54px; object-fit: contain; }
+.rc-cell.rc-total { padding-top: 20px; border-top: 6px double #1c2a4f; border-bottom: 0; font-size: 44px; }
+.rc-cell.is-ping { animation: tag-pop .8s cubic-bezier(.3, 1.6, .5, 1); }
+
+/* Two different amounts, on two cards (on the big panel, Swifty in her corner) */
+.ta-panel { display: flex; flex-direction: column; align-items: center; gap: 34px; margin-right: 420px; pointer-events: auto; }
+.ta-title, .rk-title { /* on a purple strip, as the questions */
+  padding: 14px 50px 6px;
+  border: 5px solid var(--ink);
+  border-radius: 26px;
+  background: linear-gradient(180deg, #f4eaff 0%, #d8bbf7 100%);
+  box-shadow: 0 7px 0 var(--ink);
+  color: #23205f;
+  font-size: 52px;
+  font-weight: 800;
+  line-height: 1.05;
+  white-space: nowrap;
+}
+.ta-row { display: flex; align-items: center; gap: 28px; }
+.ta-not { color: #5a6b8c; font-size: 96px; font-weight: 800; line-height: 1; }
+.ta-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  width: 520px;
+  min-height: 480px;
+  padding: 30px 32px 34px;
+  border: 5px solid var(--ink);
+  border-radius: 36px;
+  box-shadow: 0 10px 0 var(--ink);
+  text-align: center;
+}
+.ta-card--off { background: linear-gradient(180deg, #fff6f4 0%, #ffd6cf 100%); }
+.ta-card--left { background: linear-gradient(180deg, #f2fcf5 0%, #c9f0d6 100%); }
+.ta-term { color: #1c2a4f; font-size: 40px; font-weight: 800; line-height: 1.1; }
+.ta-value { font-size: 108px; font-weight: 800; line-height: 1; }
+.ta-card--off .ta-value { color: #d32f2f; }
+.ta-card--left .ta-value { color: #1f7a45; }
+.ta-value.is-ping { animation: tag-pop .8s cubic-bezier(.3, 1.6, .5, 1); }
+.ta-text { color: #34434c; font-size: 31px; font-weight: 700; line-height: 1.25; }
+.ta-sum { margin-top: auto; padding: 8px 22px 2px; border-radius: 14px; background: rgba(255, 255, 255, .8); color: #1c2a4f; font-size: 32px; font-weight: 800; white-space: nowrap; }
+
+/* Back home: the four new things on the table */
+.home-item { position: absolute; transform: translateX(-50%); filter: drop-shadow(0 12px 8px rgba(70, 40, 15, .35)); }
+
+/* The mission's result */
+.ms-card {
+  position: absolute;
+  left: 960px;
+  top: 276px;
+  translate: -50% 0;
+  display: grid;
+  grid-template-columns: 540px 700px;
+  gap: 50px;
+  padding: 40px 50px 44px;
+  border: 5px solid var(--ink);
+  border-radius: 44px;
+  background: #fff;
+  box-shadow: 0 12px 0 var(--ink), 0 30px 60px rgba(30, 50, 90, .25);
+}
+.ms-list { display: flex; flex-direction: column; justify-content: center; gap: 18px; }
+.ms-item { display: flex; align-items: center; gap: 22px; padding: 10px 24px; border-radius: 22px; background: #e4f6e9; }
+.ms-tick { width: 62px; }
+.ms-pic { width: 84px; height: 76px; object-fit: contain; }
+.ms-name { color: #1c2a4f; font-size: 40px; font-weight: 800; white-space: nowrap; }
+.ms-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+.ms-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 20px 14px;
+  border: 5px solid var(--ink);
+  border-radius: 28px;
+  box-shadow: 0 8px 0 var(--ink);
+  text-align: center;
+}
+.ms-stat--blue { background: linear-gradient(180deg, #f1f8ff 0%, #c9e3fb 100%); }
+.ms-stat--orange { background: linear-gradient(180deg, #fff8ee 0%, #ffd9a8 100%); }
+.ms-stat--green { background: linear-gradient(180deg, #f2fcf5 0%, #c9f0d6 100%); }
+.ms-stat--pink { background: linear-gradient(180deg, #fff4f6 0%, #ffd0dc 100%); }
+.ms-label { color: #34434c; font-size: 30px; font-weight: 800; line-height: 1.1; }
+.ms-value { color: #1c2a4f; font-size: 66px; font-weight: 800; line-height: 1; }
+
+/* What we learnt: four cards (on the big panel, Swifty in her corner) */
+.rk-panel { display: flex; flex-direction: column; align-items: center; gap: 28px; margin-right: 420px; pointer-events: auto; }
+.rk-grid { display: grid; grid-template-columns: 620px 620px; gap: 28px 30px; }
+.rk-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 12px;
+  min-height: 236px;
+  padding: 22px 32px 26px;
+  border: 5px solid var(--ink);
+  border-radius: 32px;
+  box-shadow: 0 9px 0 var(--ink);
+}
+.rk-card--mp { background: linear-gradient(180deg, #fffaf0 0%, #ffe9a8 100%); }
+.rk-card--d { background: linear-gradient(180deg, #fff6f4 0%, #ffd6cf 100%); }
+.rk-card--pct { background: linear-gradient(180deg, #fff4fa 0%, #f6cfe6 100%); }
+.rk-card--sp { background: linear-gradient(180deg, #f3f9ff 0%, #c9e3fb 100%); }
+.rk-term { font-size: 46px; font-weight: 800; line-height: 1.05; }
+.rk-card--mp .rk-term { color: #7a4600; }
+.rk-card--d .rk-term { color: #d32f2f; }
+.rk-card--pct .rk-term { color: #b0185f; }
+.rk-card--sp .rk-term { color: #17457e; }
+.rk-text { color: #34434c; font-size: 31px; font-weight: 700; line-height: 1.25; }
+.rk-formula { align-self: flex-start; padding: 8px 18px 4px; white-space: pre-line; border: 3px solid rgba(27, 42, 51, .18); border-radius: 14px; background: rgba(255, 255, 255, .85); color: #1c2a4f; font-size: 30px; font-weight: 800; line-height: 1.25; }
+.rk-card.is-ping { animation: tag-pop .8s cubic-bezier(.3, 1.6, .5, 1); }
+
+/* The takeaway: two offers compared, and the banner (on the big panel, Swifty in her corner) */
+.tk-panel { display: flex; flex-direction: column; align-items: center; gap: 46px; margin-right: 420px; pointer-events: auto; }
+.tk-row { display: flex; align-items: center; gap: 40px; }
+.tk-vs { color: #5a6b8c; font-size: 64px; font-weight: 800; }
+.tk-offer {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  width: 430px;
+  padding: 36px 30px 32px;
+  border: 5px solid var(--ink);
+  border-radius: 36px;
+  background: #fff;
+  box-shadow: 0 10px 0 var(--ink);
+  transition: box-shadow .4s ease;
+}
+.tk-offer.is-best { box-shadow: 0 10px 0 var(--ink), 0 0 0 8px #ffc83d, 0 0 50px 16px rgba(255, 200, 61, .6); }
+.tg-offer.tk-off { font-size: 54px; }
+.tk-mp { color: #5a6b8c; font-size: 30px; font-weight: 800; }
+.tk-pay { display: flex; align-items: baseline; gap: 12px; padding: 10px 26px 4px; border-radius: 18px; background: #e4f6e9; color: #1f7a45; }
+.tk-pay-label { font-size: 30px; font-weight: 800; }
+.tk-pay-value { font-size: 62px; font-weight: 800; line-height: 1; }
+.tk-stamp { position: absolute; top: -44px; right: -56px; width: 236px; rotate: -7deg; } /* "Best deal!", on the yellow ribbon */
+.tk-stamp .art-words { font-size: 28px; }
+.tk-banner {
+  padding: 22px 60px 14px;
+  border: 6px solid #fff;
+  border-radius: 36px;
+  background: linear-gradient(180deg, #47c983 0%, #1f8f52 100%);
+  box-shadow: 0 0 0 4px #16683b, 0 16px 30px rgba(20, 90, 50, .35);
+  color: #fff;
+  font-size: 54px;
+  font-weight: 800;
+  text-shadow: 0 3px 0 rgba(10, 60, 30, .35);
+  white-space: nowrap;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .mote, .twinkle { display: none; }
   .glow, .thought-puff-bob, .start-btn, .badge-rays,
@@ -2538,9 +3420,10 @@ kbd {
   .story-next, .spot-ring::after, .red-tag.is-pulsing,
   .cmp-box.is-key, .fm-box.is-ping, .fm-op.is-ping, .fm-box.is-ping::after,
   .fr-term.is-ping, .fr-op.is-ping, .pc-price.is-ping, .pc-off.is-ping, .pc-off-line.is-ping,
-  .pp-box.is-ping, .pp-arrow.is-ping, .pf-hint.is-ping, .pf-q-value.is-ping, .pq-opt.is-ping, .ws-panel .is-ping, .ss-panel .is-ping,
+  .pf-hint.is-ping, .pf-q-value.is-ping, .pq-opt.is-ping, .ws-panel .is-ping, .ss-panel .is-ping,
   .ws-drag, .ws-slot.is-waiting, .ws-slot.is-wrong {
     animation: none !important;
   }
   .qcard-pos { transition: none; }
+  .cp-glint, .cp-start.is-calling, .sp-hint.is-bobbing, .st-shop.is-open .st-glow, .st-buy, .gm-opt.is-guide { animation: none !important; }
 }
