@@ -2700,8 +2700,9 @@
 
     $('#rotate-hint').addEventListener('click', e => e.currentTarget.classList.add('is-dismissed'));
 
-    // Browsers only allow sound after a user gesture.
+    // Browsers only allow sound after a user gesture (a tap counts once the finger lifts).
     window.addEventListener('pointerdown', Sound.unlock, true);
+    window.addEventListener('pointerup', Sound.unlock, true);
     window.addEventListener('keydown', Sound.unlock, true);
 
     document.addEventListener('keydown', e => {

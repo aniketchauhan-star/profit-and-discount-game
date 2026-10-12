@@ -1,15 +1,16 @@
 /* ==========================================================================
    Bookstore Journey — sound
-   Every sound is synthesised with the Web Audio API, so there are no audio
-   files to load and it works offline. Browsers only allow sound after the
+   Every sound effect is synthesised with the Web Audio API, so there are no
+   effect files to load and it works offline. The background music is a file,
+   sfx/bg music.mp3, played on a loop. Browsers only allow sound after the
    player clicks/taps, so game.js calls Sound.unlock() on the first input.
    ========================================================================== */
 (function () {
   'use strict';
 
   const AudioCtx = window.AudioContext || window.webkitAudioContext;
-  const MUSIC_LEVEL = 0.32;
-  const DUCKED_LEVEL = 0.1;
+  const MUSIC_LEVEL = 0.15;  // the background music is kept low…
+  const DUCKED_LEVEL = 0.05; // …and lower still while someone speaks (or Aniket walks)
 
   const readPref = (key, fallback) => {
     try {
@@ -25,6 +26,7 @@
 
   const state = { sfx: readPref('bj.sfx', true), music: readPref('bj.music', true), ducked: false };
   const ducks = new Set(); // reasons the music is lowered right now
+  let release = 0;         // brings the music back up once no reason is left
   let ctx = null;
   let sfxBus, musicBus, noiseBuf;
 
@@ -62,6 +64,7 @@
     document.addEventListener('visibilitychange', () => {
       if (document.hidden) ctx.suspend();
       else ctx.resume();
+      music.setHidden(document.hidden);
     });
     return true;
   }
@@ -247,89 +250,78 @@
     },
   };
 
-  // ---------- background music: a soft marimba loop (C – G – Am – F …) ----------
+  // ---------- background music: sfx/bg music.mp3, on a loop ----------
 
+  // Served over http(s), it plays through the Web Audio graph like every other sound, so its level can be set
+  // everywhere (on iPhones and iPads an <audio>'s own volume is fixed). Opened as a file (index.html
+  // double-clicked), browsers keep the graph from hearing a file, so the <audio>'s own volume is faded instead.
   const music = (() => {
-    const EIGHTH = 60 / 92 / 2; // 92 BPM
-    const mtof = m => 440 * Math.pow(2, (m - 69) / 12);
-    // [bass note, chord tones] per bar (MIDI numbers)
-    const BARS = [
-      [48, [60, 64, 67]], [43, [59, 62, 67]], [45, [60, 64, 69]], [41, [60, 65, 69]],
-      [48, [60, 64, 67]], [41, [60, 65, 69]], [43, [59, 62, 67]], [48, [60, 64, 67]],
-    ];
-    const ARP = [0, 1, 2, 3, 2, 1, 2, 1]; // 3 = root an octave up
-    let timer = null;
-    let step = 0;
-    let next = 0;
+    const SRC = 'sfx/bg music.mp3';
+    const END = 143; // where the tune ends (4 s of silence follow it in the file): it starts again from the top
+    const viaGraph = /^https?:$/.test(location.protocol);
+    let el = null;
+    let on = false;
+    let volume = 0; // the <audio>'s own volume (opened as a file)
+    let fader = 0;
 
-    function mallet(f, t, gain) {
-      const o = ctx.createOscillator();
-      const o2 = ctx.createOscillator();
-      o.frequency.value = f;
-      o2.frequency.value = f * 4; // bright "knock" of the mallet
-      const g = envelope(t, 0.004, 0.55, gain);
-      const g2 = envelope(t, 0.002, 0.07, gain * 0.35);
-      o.connect(g);
-      o2.connect(g2);
-      g.connect(musicBus);
-      g2.connect(musicBus);
-      o.start(t);
-      o2.start(t);
-      o.stop(t + 0.62);
-      o2.stop(t + 0.1);
+    function setup() {
+      el = new Audio(SRC);
+      el.loop = true; // in case the jump back to the top is missed
+      el.addEventListener('timeupdate', () => { if (el.currentTime >= END) el.currentTime = 0; });
+      if (viaGraph) ctx.createMediaElementSource(el).connect(musicBus);
+      else el.volume = 0;
     }
 
-    function bass(f, t) {
-      const o = ctx.createOscillator();
-      o.type = 'triangle';
-      o.frequency.value = f;
-      const lp = ctx.createBiquadFilter();
-      lp.type = 'lowpass';
-      lp.frequency.value = 500;
-      const g = envelope(t, 0.01, 0.5, 0.22);
-      o.connect(lp);
-      lp.connect(g);
-      g.connect(musicBus);
-      o.start(t);
-      o.stop(t + 0.56);
-    }
-
-    function schedule() {
-      if (next < ctx.currentTime) next = ctx.currentTime + 0.05; // skip ahead after the tab was hidden
-      while (next < ctx.currentTime + 0.15) {
-        const [root, chord] = BARS[Math.floor(step / 8) % BARS.length];
-        const i = step % 8;
-        const tones = chord.concat(chord[0] + 12);
-        mallet(mtof(tones[ARP[i]] + 12), next, i === 0 ? 0.1 : 0.075);
-        if (i === 0 || i === 4) bass(mtof(root), next);
-        if (i % 2 === 1) noise({ t: next, filter: 'highpass', f: 7000, attack: 0.003, decay: 0.035, gain: 0.03, dest: musicBus });
-        next += EIGHTH;
-        step++;
+    // Glides the music's level to `to`, taking about 3 × `tau` seconds.
+    function fade(to, tau) {
+      if (viaGraph) {
+        musicBus.gain.setTargetAtTime(to, ctx.currentTime, tau);
+        return;
       }
+      clearInterval(fader);
+      let last = performance.now();
+      fader = setInterval(() => {
+        const t = performance.now();
+        volume += (to - volume) * (1 - Math.exp((last - t) / 1000 / tau));
+        last = t;
+        if (Math.abs(to - volume) < 0.001) {
+          volume = to;
+          clearInterval(fader);
+        }
+        el.volume = volume;
+      }, 30);
     }
 
     return {
-      get playing() { return timer !== null; },
+      get playing() { return on; },
+      get level() { return viaGraph ? musicBus.gain.value : volume; },
+      fade,
       start() {
-        if (timer !== null) { setLevel(); return; }
-        step = 0;
-        next = ctx.currentTime + 0.1;
-        schedule();
-        timer = setInterval(schedule, 40);
+        if (!el) setup();
+        on = true;
+        if (el.paused && !document.hidden) el.play().catch(() => {}); // if the browser says no, the next click tries again
         setLevel();
       },
       stop() {
-        setLevel(0);
-        clearInterval(timer);
-        timer = null;
+        on = false;
+        if (!el) return;
+        fade(0, 0.1);
+        setTimeout(() => { if (!on) el.pause(); }, 600);
+      },
+      // While the page is hidden the music waits; then it carries on from where it was.
+      setHidden(hidden) {
+        if (!el || !on) return;
+        if (hidden) el.pause();
+        else el.play().catch(() => {});
       },
     };
   })();
 
-  function setLevel(level) {
-    if (!ctx) return;
-    const target = level !== undefined ? level : (state.music ? (state.ducked ? DUCKED_LEVEL : MUSIC_LEVEL) : 0);
-    musicBus.gain.setTargetAtTime(target, ctx.currentTime, 0.25);
+  // The music's level: low, and lower still while someone speaks. It dips quickly and comes back up gently.
+  function setLevel() {
+    if (!music.playing) return;
+    const target = state.ducked ? DUCKED_LEVEL : MUSIC_LEVEL;
+    music.fade(target, target < music.level ? 0.12 : 0.6);
   }
 
   // ---------- public API ----------
@@ -355,12 +347,21 @@
       }
     },
     // Lower the music (e.g. while Aniket walks, or while someone speaks). Each reason has its own
-    // key, so one reason ending doesn't bring the music back while another is still active.
+    // key, so one reason ending doesn't bring the music back while another is still active. It comes
+    // back only after a short pause, so it stays down between two lines.
     duck(on, key = 'scene') {
       if (on) ducks.add(key);
       else ducks.delete(key);
-      state.ducked = ducks.size > 0;
-      if (music.playing) setLevel();
+      clearTimeout(release);
+      if (ducks.size) {
+        state.ducked = true;
+        setLevel();
+      } else if (state.ducked) {
+        release = setTimeout(() => {
+          state.ducked = false;
+          setLevel();
+        }, 1200);
+      }
     },
   };
 

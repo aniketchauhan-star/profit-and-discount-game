@@ -433,7 +433,9 @@ Cut both bird sheets the same way. Line up the flying frames on her body centre 
 
 ## 6. Sounds and voices
 All sound effects are made in the browser, so no audio files are needed:
-footsteps · pop · speech-bubble "bloop" ✨ · whoosh during cross-fades and when the question card arrives ✨ · start chime ✨ · "ding" for the "!" ✨ · sparkle ✨ · cash register ✨ · right-answer chime and wrong-answer buzz ✨ · Swifty's wing flaps and landing chirp ✨ · card-flip swish ✨ · comic surprise for the ₹1000 shock ✨ · a curious "hmm?" and soft rising "plip"s as a thought cloud's puffs pop up ✨ · button clicks ✨ · soft looping background music ✨ (quieter while he walks and while anyone speaks).
+footsteps · pop · speech-bubble "bloop" ✨ · whoosh during cross-fades and when the question card arrives ✨ · start chime ✨ · "ding" for the "!" ✨ · sparkle ✨ · cash register ✨ · right-answer chime and wrong-answer buzz ✨ · Swifty's wing flaps and landing chirp ✨ · card-flip swish ✨ · comic surprise for the ₹1000 shock ✨ · a curious "hmm?" and soft rising "plip"s as a thought cloud's puffs pop up ✨ · button clicks ✨.
+
+**Background music ✨:** `sfx/bg music.mp3`, on a loop and kept **low**. It dips lower still while anyone speaks (and while Aniket walks): quickly as a line starts, and back up gently once no one has spoken for a moment, so it stays down between two lines. The tune ends at 143 s (4 s of silence follow it in the file), so it starts again from the top there. It starts with the first click, tap or key press (browsers allow no sound before that); **M** turns it off and on.
 
 **Voices (Indian English):** every speech bubble is spoken as it types out. Prices are read naturally, so "₹800" is said "800 rupees"; "MP", "SP" and "CP" are spelled out, "=", "−", "÷" and "×" are said "equals", "minus", "divided by" and "times", and a fraction like "30/100" is said "30 over 100".
 - **Aniket:** a young male voice. **Shopkeeper:** a deeper male voice. **Swifty:** a female voice, or a raised-pitch voice if the device has no female Indian voice.
