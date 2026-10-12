@@ -1,29 +1,30 @@
 /* ==========================================================================
    Bookstore Journey — voices
-   The characters speak their lines in Indian English. By default the game uses
-   the text-to-speech voices already on the player's device (Web Speech API):
-   Rishi on a Mac, Heera / Ravi or Neerja / Prabhat on Windows, the Indian
-   English voices on Android and Chromebooks. A recorded line (for example one
-   made with an AI voice service) is played instead when it is listed in
-   RECORDINGS below.
+   The characters speak their lines in Indian English, recorded with the TTS
+   studio "Ai Wala Human By Aamir": Swifty as Female Teacher (Standard), Aniket
+   as Male Child (Energetic), the shopkeeper as Male Teacher (Formal). Each clip
+   is found by the exact text its line shows (js/vo_lines.js; see
+   docs/VOICEOVER.md). A line without a clip, a browser that can't play Ogg
+   Opus, or ?vo=0 in the address uses the text-to-speech voices already on the
+   player's device instead (Web Speech API): Rishi on a Mac, Heera / Ravi or
+   Neerja / Prabhat on Windows, the Indian English voices on Android and
+   Chromebooks.
    ========================================================================== */
 (function () {
   'use strict';
 
-  // Recorded lines, by line id: { shock: 'shock.mp3', ... } (files in "game assets/voice/").
-  // Line ids: wake, browse, ask, price, hint, def0-title, def0-text, def1-title, def1-text, here, correct, shock,
-  // mp-line, mp-term, mp-def, cmp-mp, cmp-sp, cmp-why, reveal-1, reveal-2, reveal-3, disc-2, ddef,
-  // f-mp, f-sp, f-d, rule-1, rule-2, rule-3, fr-1 … fr-10, sum-0 … sum-4, sneakers, shoe-think, shoe-ask, recall-1, recall-2,
-  // idea-1, idea-2, wp-ask, wp-part, wp-whole, wp-rule-1 … wp-rule-3, wp-put-1, wp-put-2,
-  // wp-work, wp-equals, wp-so, cfu-ask, cfu-right-1, cfu-right-2, cfu-wrong-1 … cfu-wrong-4, cfu-so,
-  // mq-back, mq-ask, mq-right-1, mq-right-2, mq-wrong-1, mq-wrong-2, mq-so, th-1 … th-7,
-  // rp-ask, rp-right-1, rp-right-2, rp-wrong-1, rp-wrong-2, rp-so, pay-1, pay-2, pay-try, pay-wrong-mp, pay-wrong-d, pay-3 … pay-5, final-1, final-2,
-  // dp-1 … dp-7, ss-0 … ss-4, ss-rule-1 … ss-rule-3, ss-end.
-  const RECORDINGS = {};
-  const DIR = 'game assets/voice/';
+  // The recorded lines: { "line as shown": [clip, seconds] } (js/vo_lines.js, made by tools/vo_build.py).
+  const LINES = typeof VO_LINES === 'object' ? VO_LINES : {};
+  const DIR = 'game assets/vo/';
+  const player = new Audio(); // one audio element for every line (tablets only play from one they have unlocked)
+  player.preload = 'auto';
+  const recorded = !/[?&]vo=0\b/.test(location.search) && !!player.canPlayType('audio/ogg; codecs="opus"');
+  // A line's key: its text as shown, without highlight marks ({…}, *…*), line breaks as spaces.
+  const key = text => String(text).replace(/[{}*]/g, '').replace(/\s+/g, ' ').trim();
+  const clipOf = text => (recorded && LINES[key(text)]) || null;
 
-  // How each character sounds: `gender` picks the voice, pitch and rate shape it. A female part played
-  // by a male voice is pitched up (pitch + 0.45).
+  // How each character sounds in the device's voice (for a line with no clip): `gender` picks the voice, pitch
+  // and rate shape it. A female part played by a male voice is pitched up (pitch + 0.45).
   const CAST = {
     boy: { gender: 'm', pitch: 1.25, rate: 0.92 },  // Aniket
     man: { gender: 'm', pitch: 0.9, rate: 0.88 },   // the shopkeeper
@@ -78,14 +79,84 @@
   let token = 0;
   let playing = null; // { stop } for the line being spoken
 
-  function playFile(src) {
+  // Plays a recorded line on the one player. Resolves when it has ended or was stopped, and at the latest its
+  // remaining length + 0.6 s after it starts playing (so a stalled clip never holds the game up). If it can't be
+  // played (the file is missing, or play() is refused), `fallback` says the line instead.
+  function playClip([id, seconds], fallback) {
     return new Promise(resolve => {
-      const audio = new Audio(src);
-      playing = { stop() { audio.pause(); resolve(); } };
-      audio.addEventListener('ended', resolve, { once: true });
-      audio.addEventListener('error', resolve, { once: true });
-      audio.play().catch(resolve);
+      let over = false;
+      let guard = 0;
+      const off = () => {
+        clearTimeout(guard);
+        player.removeEventListener('ended', end);
+        player.removeEventListener('error', fail);
+        player.removeEventListener('playing', started);
+      };
+      const end = () => {
+        if (over) return;
+        over = true;
+        off();
+        resolve();
+      };
+      const fail = () => {
+        if (over) return;
+        over = true;
+        off();
+        if (playing === line) playing = null;
+        fallback().then(resolve);
+      };
+      const started = () => {
+        clearTimeout(guard);
+        guard = setTimeout(end, (seconds - player.currentTime) * 1000 + 600);
+      };
+      const line = { stop() { player.pause(); end(); } };
+      playing = line;
+      player.addEventListener('ended', end);
+      player.addEventListener('error', fail);
+      player.addEventListener('playing', started);
+      guard = setTimeout(end, seconds * 1000 + 4000); // in case it never starts
+      player.muted = false;
+      player.src = DIR + id + '.ogg';
+      const p = player.play();
+      if (p) p.catch(err => { if (err.name !== 'AbortError') fail(); }); // AbortError: stopped before it began
     });
+  }
+
+  // Tablets only let a page play audio from an element it started during a tap: on the first tap (or key press)
+  // the player plays a clip muted, then stops, which unlocks it for every line after. Then every clip is fetched.
+  let unlocked = false;
+  function unlock() {
+    if (unlocked || !recorded || playing) return;
+    const first = Object.values(LINES)[0];
+    if (!first) return;
+    unlocked = true;
+    player.muted = true;
+    player.src = DIR + first[0] + '.ogg';
+    const p = player.play();
+    if (p) {
+      p.then(() => {
+        if (playing) return; // a line has started meanwhile
+        player.pause();
+        player.muted = false;
+      }, err => {
+        if (err.name !== 'AbortError') unlocked = false; // not allowed yet: the next tap tries again
+        player.muted = false;
+      });
+    }
+    prefetch();
+  }
+
+  // Every clip, fetched quietly one at a time, so each is ready when its line comes (served over http(s);
+  // opened as a file, the clips are read straight from the disk).
+  let fetched = false;
+  async function prefetch() {
+    if (fetched || !/^https?:$/.test(location.protocol)) return;
+    fetched = true;
+    for (const id of new Set(Object.values(LINES).map(([clip]) => clip))) {
+      try {
+        await (await fetch(DIR + id + '.ogg')).blob();
+      } catch (e) { /* that clip loads when its line comes */ }
+    }
   }
 
   function speakText(text, cast) {
@@ -118,14 +189,17 @@
     });
   }
 
-  // Speaks one line as `who` ('boy' | 'man' | 'bird'); resolves when it has finished or was stopped.
-  // Silent (resolves at once) while sound effects are off.
+  // Speaks one line (`id` names it) as `who` ('boy' | 'man' | 'bird'): its recording, found by its text, or else
+  // the device's voice. Resolves when it has finished or was stopped. Silent (resolves at once) while sound
+  // effects are off.
   function say(id, text, who = 'boy') {
     stop();
     if (!window.Sound || !Sound.sfxOn || document.hidden) return Promise.resolve();
     const mine = ++token;
     Sound.duck(true, 'voice');
-    const run = RECORDINGS[id] ? playFile(DIR + RECORDINGS[id]) : speakText(spoken(text), CAST[who] || CAST.boy);
+    const device = () => (mine === token ? speakText(spoken(text), CAST[who] || CAST.boy) : Promise.resolve());
+    const clip = clipOf(text);
+    const run = clip ? playClip(clip, device) : device();
     return run.then(() => { if (mine === token) Sound.duck(false, 'voice'); });
   }
 
@@ -144,7 +218,13 @@
   window.Voice = {
     say,
     stop,
-    // Whether anything can be heard: a speech engine with voices, or recorded lines.
-    get available() { return (!!synth && voices.length > 0) || Object.keys(RECORDINGS).length > 0; },
+    unlock,
+    // How long a line's recording lasts (seconds) when it is the one that will play; otherwise null.
+    seconds(text) {
+      const clip = clipOf(text);
+      return clip && window.Sound && Sound.sfxOn && !document.hidden ? clip[1] : null;
+    },
+    // Whether anything can be heard: recorded lines, or a speech engine with voices.
+    get available() { return (recorded && Object.keys(LINES).length > 0) || (!!synth && voices.length > 0); },
   };
 })();

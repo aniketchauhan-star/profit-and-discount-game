@@ -520,18 +520,18 @@
     ctx.advance(3000); // the shopkeeper holds the moment, then on to paying
   }
 
-  // One part of a bubble split into parts (see FX.bubble), typed while it is spoken.
+  // One part of a bubble split into parts (see FX.bubble), typed while it is spoken (in step with its recording).
   async function speakPart(ctx, line, part, id, words, who, speaker) {
     if (speaker) speaker.talk();
-    await Promise.all([line.type(ctx, { part, blips: !Voice.available }), Voice.say(id, words, who)]);
+    await Promise.all([line.type(ctx, { part, blips: !Voice.available, seconds: Voice.seconds(words) }), Voice.say(id, words, who)]);
     if (speaker) speaker.idle();
   }
 
-  // A speech bubble's line, typed out while the character's voice says it (no typing blips then).
-  // `speaker` (Swifty) moves her beak while she talks.
+  // A speech bubble's line, typed out while the character's voice says it, in step with its recording (no
+  // typing blips then). `speaker` (Swifty) moves her beak while she talks.
   async function speak(ctx, line, id, who, speaker) {
     if (speaker) speaker.talk();
-    await Promise.all([line.type(ctx, { blips: !Voice.available }), Voice.say(id, line.words, who)]);
+    await Promise.all([line.type(ctx, { blips: !Voice.available, seconds: Voice.seconds(line.words) }), Voice.say(id, line.words, who)]);
     if (speaker) speaker.idle();
   }
 
@@ -873,10 +873,18 @@
   // appear one by one; "marked" and "printed" light up the sticker on the book.
   const MP_DEFINITION = 'The price {marked} or\n{printed} on an article\nis called its\n*Marked Price.*';
 
+  // A definition read out from its recording, "Term. Definition": its words appear in step with the voice, after
+  // the term (see FX's revealDefinition). Null when the device's voice reads it instead.
+  function readAlong(term, definition) {
+    const seconds = Voice.seconds(term + definition);
+    return seconds ? { seconds, lead: term.length + (/[.,]\s*$/.test(term) ? 3 : 0) } : null;
+  }
+
   async function playDefine(ctx, scene) {
     const talk = await enterPricePanel(ctx, scene);
     const { bird } = talk;
     await scene.mp.define(ctx, {
+      voice: readAlong('Marked Price. ', MP_DEFINITION),
       onRead: () => {
         bird.talk();
         return Voice.say('mp-def', 'Marked Price. ' + MP_DEFINITION, 'bird').then(() => bird.idle());
@@ -1032,6 +1040,7 @@
 
     // She reads it out, still leaning towards it, while the words appear.
     await card.define(ctx, {
+      voice: readAlong('Discount. ', DISCOUNT_DEFINITION),
       onRead: () => {
         bird.talk();
         return Voice.say('ddef', 'Discount. ' + DISCOUNT_DEFINITION, 'bird').then(() => bird.point());
@@ -2700,10 +2709,12 @@
 
     $('#rotate-hint').addEventListener('click', e => e.currentTarget.classList.add('is-dismissed'));
 
-    // Browsers only allow sound after a user gesture (a tap counts once the finger lifts).
-    window.addEventListener('pointerdown', Sound.unlock, true);
-    window.addEventListener('pointerup', Sound.unlock, true);
-    window.addEventListener('keydown', Sound.unlock, true);
+    // Browsers only allow sound after a user gesture (a tap counts once the finger lifts); the voices' player
+    // is unlocked then too.
+    ['pointerdown', 'pointerup', 'keydown'].forEach(type => {
+      window.addEventListener(type, Sound.unlock, true);
+      window.addEventListener(type, Voice.unlock, true);
+    });
 
     document.addEventListener('keydown', e => {
       if (e.altKey || e.ctrlKey || e.metaKey) return;

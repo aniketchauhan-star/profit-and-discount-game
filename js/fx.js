@@ -336,7 +336,23 @@
       // Types the text letter by letter; `ctx.wait` throws if the player leaves the scene.
       // The little voice blips are left out while a real voice reads the line.
       // { part } types only up to the end of that part (see buildLetters), continuing from where it stopped.
-      async type(ctx, { speed = 46, blips = true, part } = {}) {
+      // { seconds }: its recording lasts this long, so the letters come in step with it, the last one as the voice
+      // ends (0.35 s before the clip does): each takes max(16 ms, (seconds − 0.35) / letters), and the one after a
+      // comma or full stop three letters' time more (the voice pauses there).
+      async type(ctx, { speed = 46, blips = true, part, seconds } = {}) {
+        if (seconds) {
+          const todo = letters.filter(l => !l.classList.contains('on') && (part === undefined || +l.dataset.part <= part));
+          const before = i => 1 + (i > 0 && /[!?.,]/.test(todo[i - 1].textContent) ? 3 : 0);
+          const unit = Math.max(16, ((seconds - 0.35) * 1000) / todo.reduce((sum, l, i) => sum + before(i), 0));
+          const start = performance.now();
+          let at = 0;
+          for (const [i, letter] of todo.entries()) {
+            at += before(i) * unit;
+            await ctx.wait(Math.max(0, start + at - performance.now()), { real: true });
+            letter.classList.add('on');
+          }
+          return;
+        }
         let n = 0;
         for (const letter of letters) {
           if (letter.classList.contains('on')) continue;
@@ -1027,9 +1043,11 @@
   /**
    * Reveals a definition card: the card eases in (unless it is already up: card = null), its header drops in,
    * then the words appear one by one. onRead is called as the header lands (e.g. to start the voice; what it
-   * returns is waited for); onMarked as each highlighted phrase is complete.
+   * returns is waited for); onMarked as each highlighted phrase is complete. voice: { seconds, lead } when it is
+   * read from a recording: the words come in step with it, after its first `lead` characters (the term said
+   * first), each in its share of the rest (as typing does, a comma or full stop three letters more).
    */
-  async function revealDefinition(ctx, { card, head, words }, { onRead, onMarked } = {}) {
+  async function revealDefinition(ctx, { card, head, words }, { onRead, onMarked, voice } = {}) {
     Sound.bloop();
     if (card) {
       reveal(card, [
@@ -1044,7 +1062,15 @@
       ], { duration: T(620), easing: 'cubic-bezier(.2,.8,.3,1)' });
     }
     const reading = onRead ? onRead() : null;
-    await ctx.wait(800);
+    const share = w => w.textContent.length + 1 + (/[.,]$/.test(w.textContent) ? 3 : 0); // a word, its space and pause
+    const last = words[words.length - 1];
+    // The whole reading, in letters: the term, every word but the last with its share, then the last word itself
+    // (so the last word ends as the voice does).
+    const said = words.slice(0, -1).reduce((sum, w) => sum + share(w), voice ? voice.lead : 0) + (last ? last.textContent.length : 1);
+    const unit = voice ? Math.max(16, ((voice.seconds - 0.35) * 1000) / said) : 0;
+    const start = performance.now();
+    let at = voice ? voice.lead * unit : 0;
+    await (voice ? ctx.wait(Math.max(0, start + at - performance.now()), { real: true }) : ctx.wait(800));
     for (const word of words) {
       word.classList.add('on');
       const hl = word.closest('.hl');
@@ -1055,7 +1081,12 @@
           if (onMarked) onMarked();
         }
       }
-      await ctx.wait(/[.,]$/.test(word.textContent) ? 420 : 230);
+      if (voice) {
+        at += share(word) * unit;
+        await ctx.wait(Math.max(0, start + at - performance.now()), { real: true });
+      } else {
+        await ctx.wait(/[.,]$/.test(word.textContent) ? 420 : 230);
+      }
     }
     await Promise.all([ctx.wait(600), reading]);
   }
