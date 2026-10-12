@@ -2757,9 +2757,8 @@
   const SKETCH_ARROW = '<svg class="def-arrow is-sketch" viewBox="0 0 64 40" aria-hidden="true"><path pathLength="1" d="M5 24C16 18 30 27 47 20M36 11C41 14 45 17 49 20C44 23 40 27 37 32"/></svg>';
 
   /**
-   * Big panel that explains terms side by side (shown after a wrong answer).
+   * Terms explained side by side, on the big panel left of Swifty's stand (shown after a wrong answer).
    *  items   [{ title, tone: 'blue' | 'yellow', pictures: [src, src], text }]   ({word} gets highlighted)
-   * `spot` is the empty space on the right where a character can stand.
    * Reveal it with open() → fill().
    */
   function definitions(parent, { items }) {
@@ -2768,7 +2767,6 @@
     panel.setAttribute('role', 'group');
     panel.setAttribute('aria-label', items.map(item => `${item.title}: ${plain(item.text)}`).join(' '));
     const row = el('div', 'defs-row', panel);
-    const spot = el('div', 'defs-spot', panel);
     const cards = items.map(item => {
       const card = el('div', `def def--${item.tone}`, row);
       const title = el('div', 'def-title', card);
@@ -2797,8 +2795,7 @@
     return {
       el: root,
       panel,
-      spot,
-      // The empty panel springs up first.
+      // The panel springs up (its first card comes in with it: see fill).
       open() {
         Sound.whoosh();
         return reveal(panel, [

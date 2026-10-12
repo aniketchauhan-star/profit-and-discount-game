@@ -633,9 +633,8 @@
       { transform: 'scale(.2)', opacity: 0 },
     ], { duration: 320, delay: 250, easing: 'cubic-bezier(.5,0,.75,0)', fill: 'forwards' })).then(() => price.el.remove());
 
-    // The right side darkens softly so the card stands out (`fb-dim` is the full dim used during feedback).
+    // The right side darkens softly so the card stands out.
     el('div', 'q-scrim', scene.ui);
-    el('div', 'fb-dim', scene.ui);
     Game.timers.add(setTimeout(() => ctx.alive() && scene.el.classList.add('is-asking'), 400));
 
     await ctx.wait(650);
@@ -650,14 +649,35 @@
     await card.enter(ctx);
   }
 
-  // Right answer: the scene blurs, the card comes to the middle and turns over to say why; Swifty flies in,
-  // stands at its lower-right corner and reads it out, pointing at it, then flies off; a Next button moves
-  // the story on.
+  // An answer to the question is explained on the big panel, as on the teaching screens: it slides up over the
+  // picture (under the card, `under`), with Swifty's stand on it. Leaving the screen, it slides back down (see go).
+  function sheetUp(scene, under) {
+    const sheet = el('div', 'scene-sheet');
+    scene.ui.insertBefore(sheet, under);
+    el('div', 'sheet-panel', sheet);
+    const stand = el('img', 'sheet-stand', sheet);
+    stand.src = STAND;
+    stand.alt = '';
+    stand.draggable = false;
+    scene.el.classList.remove('is-asking');
+    scene.el.classList.add('has-sheet');
+    Sound.whoosh();
+    if (reducedMotion) return;
+    sheet.animate([{ transform: 'translateY(100%)' }, { transform: 'translateY(-1.2%)', offset: 0.78 }, { transform: 'none' }], {
+      duration: SLIDE_MS, easing: 'cubic-bezier(.2,.7,.3,1)',
+    });
+  }
+
+  // Under the answer on the big panel, clear of Swifty's stand.
+  const NEXT_ON_SHEET = { right: 410, bottom: 52 };
+
+  // Right answer: the big panel slides up and the card comes to its middle and turns over to say why; Swifty
+  // flies in to her stand and reads it out, pointing at it, then flies off; a Next button moves the story on.
   async function answerRight(ctx, scene, card, button) {
     const [x, y] = stagePoint(button);
     FX.burst(scene.ui, x, y, { count: 18, dist: [110, 230], size: [14, 28] });
     await ctx.wait(700);
-    hush(scene, true);
+    sheetUp(scene, card.el);
     card.el.classList.add('is-center');
     await ctx.wait(reducedMotion ? 60 : 850);
     const why = 'The shopkeeper sold the book for {₹800}, so {₹800} is the *Selling Price*.';
@@ -665,18 +685,14 @@
     const r = stageRect(card.card);
     FX.twinkles(scene.ui, [[r.left + 6, r.top + 40], [r.right - 4, r.top + 150], [r.right - 30, r.bottom - 10], [r.left + 24, r.bottom - 60]]);
 
-    const feet = { x: r.right + 60, y: r.bottom + 80 };
-    const bird = new FX.Bird(scene.ui, SWIFTY, { scale: 0.8 });
-    bird.place(2140, feet.y - 300);
-    await bird.flyTo(ctx, { x: feet.x, y: feet.y, s: 0.8, duration: 1300, lift: 100, ease: 'out' });
-    await bird.land();
+    const { bird } = await cornerSwifty(ctx, scene);
     bird.point();
     await ctx.wait(400);
     bird.talk(); // still leaning towards the card
     await Voice.say('correct', 'Correct! ' + why, 'bird');
     bird.point();
     await flyOff(ctx, bird); // her part is done
-    nextButton(scene);
+    nextButton(scene, NEXT_ON_SHEET);
   }
 
   // Big "Next" button in the bottom-right corner that moves the story on after the question ("Replay" on the
@@ -702,38 +718,28 @@
     return btn;
   }
 
-  // Wrong answer: the card comes to the middle and the scene blurs; Swifty flies in, lands on the card
-  // and gives a hint; then she explains Cost Price and Selling Price, and a Next button moves the story on.
+  // Wrong answer: the big panel slides up and the card comes to its middle; Swifty flies in to her stand and
+  // gives a hint; then the card makes way for the Cost Price and Selling Price cards, which she reads out, and
+  // she ties them back to the story. Then she flies off, and a Next button moves the story on.
   async function answerWrong(ctx, scene, card) {
     const ui = scene.ui;
     card.lock();
     await ctx.wait(700); // let the shake and buzz land first
     Sound.duck(true);
-    hush(scene, true);
+    sheetUp(scene, card.el);
     card.el.classList.add('is-center');
-    await ctx.wait(reducedMotion ? 60 : 850);
-
-    // Swifty flies in from the left and lands on the top edge of the card.
-    const r = stageRect(card.card);
-    const perch = { x: r.right - 118, y: r.top + 4 };
-    const bird = new FX.Bird(ui, SWIFTY, { scale: 0.5 });
-    bird.place(-220, perch.y - 260);
-    await bird.flyTo(ctx, { x: perch.x, y: perch.y, duration: 1700, lift: 90, ease: 'out' });
-    await bird.land();
+    const talk = await cornerSwifty(ctx, scene); // she flies in as the panel comes up
+    const bird = talk.bird;
+    bird.point();
     await ctx.wait(250);
-
-    const hint = FX.bubble(ui, {
-      anchor: [perch.x - 86, perch.y - 102], corner: 'br', tip: [perch.x - 70, perch.y - 88],
-      text: [{ t: 'Think again.\nThe shopkeeper sold\nthe book for ' }, { t: '₹800', em: true }, { t: '.' }],
-      voice: 'bird', rotate: -1.5,
-    });
-    await hint.show();
-    await speak(ctx, hint, 'hint', 'bird', bird);
-    hint.emphasize();
+    await talk.say('hint', [{ t: 'Think again.\nThe shopkeeper sold\nthe book for ' }, { t: '₹800', em: true }, { t: '.' }]);
+    talk.line.emphasize();
     await ctx.wait(2600);
 
-    // The definitions fill the screen; Swifty flies over, stands on the right and reads them out.
-    hint.hide();
+    // The card makes way for the definitions; her bubble goes, and she reads each card out (its words are on it).
+    await talk.clear();
+    bird.lean(0);
+    bird.idle();
     const items = [
       { title: 'Cost Price (CP)', tone: 'blue', pictures: [ART.money, ART.book], text: 'Price at which an item is {bought}.', say: 'Cost Price. C P.' },
       { title: 'Selling Price (SP)', tone: 'yellow', pictures: [ART.book, ART.money], text: 'Price at which an item is {sold}.', say: 'Selling Price. S P.' },
@@ -743,40 +749,29 @@
       bird.talk();
       return Voice.say(id, text, 'bird').then(() => bird.idle());
     };
-    ui.appendChild(bird.root); // in front of the panel
-    const spot = stageRect(defs.spot);
-    await bird.takeOff(ctx);
-    const flight = bird.flyTo(ctx, { x: spot.left + spot.width / 2, y: spot.bottom, s: 0.8, duration: 1100, lift: 120 });
-    const landed = flight.then(() => bird.land());
-    landed.catch(() => {}); // if the player leaves meanwhile, fill reports it
+    const titles = [];
     card.hide();
     await ctx.wait(200);
-    // The panel springs up with its first card already coming in (it never waits empty); she reads each card
-    // once she has landed beside them.
+    // The panel's first card comes in straight away (it never waits empty). Each card's name is read as its title
+    // appears, and its definition once both the definition is up and the name has been said.
     defs.open();
     await defs.fill(ctx, {
-      onCard: () => { landed.then(() => bird.wave(), () => {}); },
-      onTitle: i => { landed.then(() => teach(`def${i}-title`, items[i].say)).catch(() => {}); },
-      onText: i => landed.then(() => teach(`def${i}-text`, items[i].text)),
+      onCard: () => bird.wave(),
+      onTitle: i => { titles[i] = teach(`def${i}-title`, items[i].say); },
+      onText: i => titles[i].then(() => teach(`def${i}-text`, items[i].text)),
     });
 
-    // Swifty ties it back to the story, from the space above her head; then the button appears.
-    const panel = stageRect(defs.panel);
-    const answer = FX.bubble(ui, Object.assign(overHead(bird, [panel.left + 30, panel.right - 24]), {
-      text: [
-        { t: 'Here, ' }, { t: '₹800', em: true }, { t: ' is the\nshopkeeper’s\n' },
-        { t: 'Selling Price', cls: 'stress' }, { t: '.' },
-      ],
-      voice: 'bird', rotate: 1.5,
-    }));
-    await answer.show();
-    await speak(ctx, answer, 'here', 'bird', bird);
-    answer.emphasize();
+    // Swifty ties it back to the story, in her bubble.
+    await talk.say('here', [
+      { t: 'Here, ' }, { t: '₹800', em: true }, { t: ' is the\nshopkeeper’s\n' },
+      { t: 'Selling Price', cls: 'stress' }, { t: '.' },
+    ]);
+    talk.line.emphasize();
     await ctx.wait(600);
 
-    // Her part is done: she flies off, and a Next button (bottom-right) moves the story on.
-    await flyOff(ctx, bird, answer);
-    nextButton(scene);
+    // Her part is done: she flies off, and a Next button moves the story on.
+    await flyOff(ctx, bird, talk.line);
+    nextButton(scene, NEXT_ON_SHEET);
   }
 
   // A closer look at the cover: the ₹1000 sticker starts to glow.
@@ -2327,7 +2322,7 @@
   function activate(scene, mode, camera) {
     scene.layer.replaceChildren();
     scene.ui.replaceChildren();
-    scene.el.classList.remove('is-leaving', 'is-entering', 'is-feathered', 'is-asking', 'is-hushed', 'is-instant', 'is-reacting');
+    scene.el.classList.remove('is-leaving', 'is-entering', 'is-feathered', 'is-asking', 'is-hushed', 'is-instant', 'is-reacting', 'has-sheet');
     scene.el.classList.add('is-active');
     if (mode === 'cut' && !reducedMotion && !scene.still) {
       void scene.el.offsetWidth; // restart the settle-in animation
@@ -2378,7 +2373,7 @@
   }
 
   function deactivate(scene) {
-    scene.el.classList.remove('is-active', 'is-entering', 'is-leaving', 'is-feathered', 'is-asking', 'is-hushed', 'is-instant', 'is-reacting');
+    scene.el.classList.remove('is-active', 'is-entering', 'is-leaving', 'is-feathered', 'is-asking', 'is-hushed', 'is-instant', 'is-reacting', 'has-sheet');
     scene.el.style.zIndex = '';
     scene.el.style.transitionDuration = '';
     if (scene.kbAnim) {
@@ -2449,8 +2444,9 @@
     const forward = i === Game.index + 1;
     const changing = from && from !== to;
     // Into a sheet (see SHEETS) from a screen next to it, the sheet slides up over the picture; out of it, it
-    // slides back down (jumps further away are cuts).
-    const sheet = changing && !reducedMotion && Math.abs(i - Game.index) === 1 && !!from.sheet !== !!to.sheet;
+    // slides back down (jumps further away are cuts). Screen 8 ends on one (see sheetUp).
+    const onSheet = s => !!s.sheet || s.el.classList.contains('has-sheet');
+    const sheet = changing && !reducedMotion && Math.abs(i - Game.index) === 1 && onSheet(from) !== onSheet(to);
     const fade = changing && !sheet && fadesBetween(from, to);
     // Same camera shot (4 ↔ 5, 7 → 8): carry the camera over so nothing jumps.
     const sameFraming = from && to && from.kb && to.kb && ['origin', 'from', 'to'].every(k => from.kb[k] === to.kb[k]);

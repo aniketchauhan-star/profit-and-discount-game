@@ -15,7 +15,7 @@ A short animated **story game** for kids that runs in a web browser. It asks a f
 - **Look:** bright, friendly, comic-book style. Rounded bold font (**Baloo 2**); in Screen 19's hand-made recap, headings and notes are in a handwriting font (**Kalam**, bundled in `fonts/`). The **₹** sign is drawn in its everyday shape (taken from Nunito Black and sized to match Baloo 2's figures), not Baloo 2's own Devanagari-style one. Both fonts are bundled in `fonts/`, so no internet is needed.
 - **Speech bubbles:** clean **vector** bubbles, sized to fit their text (**34 px**), sitting straight so the words are crisp: a rounded body with round corners, a crisp 6 px dark ink outline, a fill that turns from white at the top to a warm cream at the bottom (the yellow notes from pale to warm yellow), and a soft flat shadow just under it. The tail is a smooth horn: it leaves the edge that faces the speaker (the bottom or top edge; a side only when the speaker is beside the bubble and the side is tall enough), flares into the body so the outline runs on without a hard corner, sweeps out and tapers to a point at the speaker's mouth (or head). **Swifty's bubbles** sit above her head, well inside the panel (about 45 px in from its right edge), with a short, neat tail that hangs almost straight down at her head and ends a little above her head feathers: a clear gap, never touching them. Thought clouds and their puffs are drawn the same way (a finer line on the small puffs).
 - **Never an empty box:** a card, sheet, table, strip or box appears only with its first words: e.g. a worked solution's white sheet comes in with its first line, the summary's table with its first row, the Discount card with its heading, the sneakers card with their photo, the price card on Screen 14 with ₹1000 on it.
-- **Panel screens:** every teaching screen (11–13, 16–19, 24–31, 33–34) is on **one big cream panel that fills the screen**, drawn by the game (paper grain, a faint dot grid, an inked edge with rounded corners, a thin deep-teal border), with **no picture or blur behind it**. Swifty always stands on **her stand**, a small stack of three books (red, blue, yellow) in the bottom-right corner, **in the same place and at the same size on every panel screen**, standing with **both feet flat on the top (red) book**, with her speech bubbles above her head. **Swifty is only on the screen while she has something to say.** Her talk comes in **runs of screens, one after another: 11–13, 16–19, 24–31 and 33–34** (and Screen 8 on its own). She flies in to her stand just before the first line of a run (while the last piece of content builds, so she lands as she starts talking), **stays on her stand through the whole run** (carried across each dissolve without moving, her last bubble staying up until the screen changes), and after the last line of the run her bubble goes and she waves and flies off (her stand waits empty until her next run). On question screens she stays while the player answers (she has just asked the question) and explains; at the end of a run she flies off before the Next button appears. The things on these screens sit right on the big panel (they have no frames of their own; cards and sheets keep theirs).
+- **Panel screens:** every teaching screen (11–13, 16–19, 24–31, 33–34) is on **one big cream panel that fills the screen**, drawn by the game (paper grain, a faint dot grid, an inked edge with rounded corners, a thin deep-teal border), with **no picture or blur behind it**. Swifty always stands on **her stand**, a small stack of three books (red, blue, yellow) in the bottom-right corner, **in the same place and at the same size on every panel screen**, standing with **both feet flat on the top (red) book**, with her speech bubbles above her head. **Swifty is only on the screen while she has something to say.** Her talk comes in **runs of screens, one after another: 11–13, 16–19, 24–31 and 33–34** (and Screen 8 on its own, whose answer is explained on the big panel too: it slides up over the picture once the player answers). She flies in to her stand just before the first line of a run (while the last piece of content builds, so she lands as she starts talking), **stays on her stand through the whole run** (carried across each dissolve without moving, her last bubble staying up until the screen changes), and after the last line of the run her bubble goes and she waves and flies off (her stand waits empty until her next run). On question screens she stays while the player answers (she has just asked the question) and explains; at the end of a run she flies off before the Next button appears. The things on these screens sit right on the big panel (they have no frames of their own; cards and sheets keep theirs).
   - From a story picture, the big panel **slides up** from the bottom over it and settles with a little bounce (its top edge casts a soft shadow); going back to a story picture, it **slides back down**. Between two panel screens only what is on the panel changes (a dissolve).
 - **Hand-made look (on Screens 13 and 27 first, to be used everywhere once approved):** everything looks made by hand from paper, card, tape and ink, like the design board made from the design prompt (`design/hand-made design board.png`; no glossy gradients, no hard black offset shadows, no identical perfect shapes):
   - the big panel is **cream drawing paper with a deckled edge**, with a soft grain and a faint dot grid, lying on a **deep teal cloth-bound board**;
@@ -130,34 +130,34 @@ Cut both bird sheets the same way. Line up the flying frames on her body centre 
 
 #### Wrong answer (Cost Price) — Swifty helps
 1. The button shakes, turns red with a ✗ and plays a soft "buzz".
-2. The whole scene **blurs and dims**, and the question card **glides to the middle** of the screen.
-3. **Swifty flies in** from the left, flapping, using `bird fly .png`. She **lands on the top edge of the card** with a little squash, a chirp and a soft shadow, and switches to `bird talk .png`.
-4. She **talks**, with her beak moving while her voice reads the line. A comic bubble (34 px text) says:
+2. The **big panel slides up** over the picture, as on the teaching screens (no picture or blur behind it), with Swifty's stand of books in its bottom-right corner, and the question card **glides to the middle** of the panel, left of the stand.
+3. **Swifty flies in** to her stand, flapping, using `bird fly .png`, lands on the top book with a little squash, a chirp and a soft shadow, and switches to `bird talk .png`.
+4. She **talks**, with her beak moving while her voice reads the line. Her bubble above her head (34 px text) says:
    **"Think again. The shopkeeper sold the book for ₹800."**
-5. Then the **definitions panel** fills the screen, with the background still blurred, and **Swifty flies to its right side** and stands there.
-   The panel appears **empty first**. Then the cards are taught **one at a time**, **Cost Price first**, and **Selling Price only after CP is complete**:
+5. Then her bubble goes, the card makes way for the **two definition cards**, which sit right on the big panel left of her stand, and she reads them out from her stand.
+   The cards are taught **one at a time**, **Cost Price first**, and **Selling Price only after CP is complete**:
    - **Cost Price (CP)** (blue card): picture of money → picture of the book. "Price at which an item is **bought**."
    - **Selling Price (SP)** (yellow card): picture of the book → picture of money. "Price at which an item is **sold**."
    Each card **eases in** piece by piece: card → title → first picture → the arrow drawing itself → second picture → definition → a highlighter swipe on the key word.
-   There's a short pause to read before the next card. Swifty waves her wings at each card as it arrives and **reads it out**: its name ("Cost Price. C P.") as the title appears, then the definition as it appears.
+   There's a short pause to read before the next card. Swifty waves her wings at each card as it arrives and **reads it out**: its name ("Cost Price. C P.") as the title appears, then the definition once it is up and she has finished the name.
    The pictures are cut from the game's own artwork.
    Then Swifty talks again, from a bubble above her head (34 px text):
    **"Here, ₹800 is the shopkeeper's Selling Price."** (₹800 in orange, *Selling Price* in green)
-6. **Exactly 3 seconds after everything is up**, a big **Next ▶** button appears in the **bottom-right corner** of the screen, and the story moves on to Screen 9.
+6. She flies off, and about **3 seconds after everything is up** a big **Next ▶** button appears at the bottom, just left of her empty stand; it moves the story on to Screen 9 (the big panel slides back down).
    There is **no Try again** button: after a wrong answer the player learns the two terms and carries on.
 
 #### Right answer (Selling Price) — "Correct!"
 - The button turns green with a ✓, a happy chime and a sparkle burst.
-- The scene **blurs and dims behind**, and the card **glides to the middle** of the screen.
+- The **big panel slides up** over the picture (with Swifty's stand in its corner), and the card **glides to the middle** of the panel, left of the stand.
 - There the card **flips over** to show:
   - a green header with a ✓ badge: **Correct!**
   - **"The shopkeeper sold the book for ₹800, so ₹800 is the Selling Price."** (₹800 highlighted, *Selling Price* in green)
-- **Swifty flies in** from the right and lands overlapping the card's **lower-right corner**. She points at the card and reads it out in her voice ("Correct! The shopkeeper sold the book…"), her beak moving, still leaning towards it.
-- **3 seconds later**, the same big **Next ▶** button appears in the **bottom-right corner** and moves the story on to Screen 9.
+- **Swifty flies in** to her stand. She points at the card and reads it out in her voice ("Correct! The shopkeeper sold the book…"), her beak moving, still leaning towards it, then flies off.
+- **3 seconds later**, the same big **Next ▶** button appears just left of her stand and moves the story on to Screen 9 (the big panel slides back down).
 
 ### Screen 9 — A Closer Look
 - Background: `boy see the book .png`: seen from behind Aniket, he looks at the book in his hands.
-- Reached by a smooth **cross-fade** from the question screen (there is no "Aniket holds his new book" screen in between).
+- Reached from the question screen as its **big panel slides back down** (there is no "Aniket holds his new book" screen in between).
 - A **glowing gold ring pulses around the ₹1000 sticker** ✨ to draw the eye to it. No words.
 - After about 3 seconds, a quick **cut** to Screen 10. It's the same view, so only Aniket's reaction changes.
 
@@ -449,8 +449,8 @@ footsteps · pop · speech-bubble "bloop" ✨ · whoosh during cross-fades and w
 - The walk looks smooth, with no jitter and no bits of the neighbouring frames.
 - Speech-bubble tails point at whoever is talking, only one person talks at a time, and a small ₹800 sits clearly above the money.
 - Screen 8's card slides in from the right and shows only the question and its two buttons.
-- A wrong answer leads to blur → card in the middle → Swifty lands on it and says "Think again…" → definitions with Swifty on the right → Next exactly 3 s later (no Try again).
-- A right answer, first time or after trying again, blurs the scene, brings the card to the middle, flips it to "Correct!" with the explanation, and Swifty flies in and reads it out; Next shows 3 s later.
+- A wrong answer leads to the big panel sliding up → card in its middle → Swifty on her stand says "Think again…" → the definition cards on the panel, read out from her stand → Next about 3 s later (no Try again).
+- A right answer slides the big panel up, brings the card to its middle, flips it to "Correct!" with the explanation, and Swifty reads it out from her stand; Next shows 3 s later.
 - Next leads to Screens 9 → 10 ("What is this? ₹1000 is written on this book!") → 11.
   On Screen 11, the big panel slides up over the picture, Swifty lands on her stand, explains the ₹1000 and the zoom lens shows it, and the "Marked Price (MP)" label appears with her second bubble.
 - Screens 11 → 12 → 13 dissolve into each other on the big panel, with the book and Swifty (on her stand) never moving; she flies in on Screen 11 and flies off after her question on Screen 13; then the panel slides back down into Screen 14.

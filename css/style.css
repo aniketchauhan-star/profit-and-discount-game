@@ -394,7 +394,7 @@ button:focus-visible, .switch input:focus-visible + .switch-track {
 }
 .scene.is-asking .q-scrim { opacity: 1; }
 
-/* Feedback after an answer: the whole scene blurs and dims behind the card, Swifty and the definitions. */
+/* A screen's picture blurred and dimmed behind what is on it (game.js: hush). */
 .fb-dim {
   position: absolute;
   inset: 0;
@@ -424,7 +424,7 @@ button:focus-visible, .switch input:focus-visible + .switch-track {
   transition: transform 1.1s cubic-bezier(.65, 0, .35, 1);
   pointer-events: auto;
 }
-.qcard-pos.is-center { transform: translate(-624px, -50%) translate(0, 90px); } /* middle of the stage, a little low */
+.qcard-pos.is-center { transform: translate(-834px, -50%) translate(0, 26px); } /* after an answer: the middle of the big panel, left of Swifty's stand */
 .qcard {
   position: relative;
   padding: 70px 44px 50px;
@@ -623,31 +623,17 @@ button:focus-visible, .switch input:focus-visible + .switch-track {
 }
 .qback-text .hl { color: var(--teal); font-weight: 800; }
 
-/* ---------- Definitions panel (after a wrong answer) ---------- */
+/* ---------- Definitions (after a wrong answer, on the big panel) ---------- */
 
 .defs {
   position: absolute;
   inset: 0;
   display: grid;
   place-items: center;
-  padding: 116px 70px 64px; /* keeps clear of the top buttons */
+  padding: 116px 490px 64px 70px; /* keeps clear of the top buttons, and of Swifty's stand on the right */
 }
-.defs-panel {
-  position: relative;
-  display: grid;
-  grid-template-columns: auto 340px; /* Swifty and her speech bubble live in the right column */
-  column-gap: 30px;
-  padding: 56px 40px 50px 56px;
-  border: 5px solid var(--ink);
-  border-radius: 48px;
-  background:
-    radial-gradient(circle, rgba(27, 42, 51, .08) 1.6px, transparent 2.2px) 0 0 / 28px 28px,
-    linear-gradient(180deg, #fffdf7 0%, #fff3d9 100%);
-  box-shadow: 0 16px 0 var(--ink), 0 44px 90px rgba(4, 18, 22, .45);
-  pointer-events: auto;
-}
-.defs-row { display: flex; gap: 40px; align-self: center; } /* the cards sit in the middle, beside Swifty */
-.defs-spot { grid-column: 2; grid-row: 1; min-height: 560px; } /* Swifty stands here, with room for her bubble */
+.defs-panel { position: relative; pointer-events: auto; } /* no frame of its own: the cards sit right on the big panel */
+.defs-row { display: flex; gap: 40px; }
 
 .def {
   width: 520px;
@@ -883,6 +869,12 @@ button:focus-visible, .switch input:focus-visible + .switch-track {
     radial-gradient(circle, rgba(27, 42, 51, .07) 1.6px, transparent 2.2px) 0 0 / 28px 28px,
     linear-gradient(180deg, #fffdf6 0%, #fff3da 100%);
   box-shadow: inset 0 0 0 7px rgba(255, 255, 255, .45);
+}
+.scene-sheet { /* screen 8: after an answer, the big panel slides up over the picture, under the card (game.js: sheetUp) */
+  position: absolute;
+  inset: 0;
+  box-shadow: 0 -18px 40px rgba(4, 18, 22, .3);
+  pointer-events: none;
 }
 .sheet-stand {
   position: absolute;
