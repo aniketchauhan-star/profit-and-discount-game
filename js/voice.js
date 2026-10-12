@@ -13,7 +13,7 @@
   // Recorded lines, by line id: { shock: 'shock.mp3', ... } (files in "game assets/voice/").
   // Line ids: wake, browse, ask, price, hint, def0-title, def0-text, def1-title, def1-text, here, correct, shock,
   // mp-line, mp-term, mp-def, cmp-mp, cmp-sp, cmp-why, reveal-1, reveal-2, reveal-3, disc-2, ddef,
-  // f-mp, f-sp, f-d, rule-1, rule-2, rule-3, fr-1 … fr-10, fr-use, sum-0 … sum-4, sneakers, shoe-think, shoe-ask, recall-1, recall-2,
+  // f-mp, f-sp, f-d, rule-1, rule-2, rule-3, fr-1 … fr-10, sum-0 … sum-4, sneakers, shoe-think, shoe-ask, recall-1, recall-2,
   // idea-1, idea-2, wp-ask, wp-part, wp-whole, wp-rule-1 … wp-rule-3, wp-put-1, wp-put-2,
   // wp-work, wp-equals, wp-so, cfu-ask, cfu-right-1, cfu-right-2, cfu-wrong-1 … cfu-wrong-4, cfu-so,
   // mq-back, mq-ask, mq-right-1, mq-right-2, mq-wrong-1, mq-wrong-2, mq-so, th-1 … th-7,

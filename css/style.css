@@ -1084,7 +1084,7 @@ button:focus-visible, .switch input:focus-visible + .switch-track {
   font-weight: 800;
   line-height: 1;
 }
-.fr-foot { height: 140px; } /* room for the yellow note */
+.fr-foot { height: 140px; } /* keeps the formula a little above the middle of the panel */
 .tone-d { color: #d32f2f; }   /* Discount */
 .tone-mp { color: #7a4600; }  /* Marked Price */
 .tone-sp { color: #17457e; }  /* Selling Price */

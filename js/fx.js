@@ -1460,7 +1460,7 @@
    * A formula in words on a pink strip, and under it the same formula in short, made from the words'
    * first letters. terms: [{ words, short, tone: 'd' | 'mp' | 'sp' }], ops: e.g. ['=', '−'].
    * Reveal it with open() → term(i) / op(i) (the strip) → showShort() → lightUp(i) → fly(i) / shortOp(i).
-   * ping(node) makes a part pop. `foot` is the empty space at the bottom (for a note and a character).
+   * ping(node) makes a part pop. `foot` is the empty space at the bottom (it keeps the formula a little above the middle).
    */
   function formulaReveal(parent, { terms, ops }) {
     const root = el('div', 'mp', parent); // the same centring wrapper as the price panels

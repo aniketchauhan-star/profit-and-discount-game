@@ -1183,7 +1183,7 @@
 
   // The formula: first in words on a pink strip, then in short. Swifty says it from her corner, part by
   // part as each part appears; the first letters of each term light up and fly down to make the short
-  // form D = MP − SP; then she points at it, and a yellow note on it says "Use MP and SP."
+  // form D = MP − SP; then she reads it out and points at it.
   async function playFormulaReveal(ctx, scene) {
     const ui = scene.ui;
     const fr = FX.formulaReveal(ui, {
@@ -1243,21 +1243,9 @@
     }
     await ctx.wait(500);
 
-    // She points at it; her bubble goes and the note on it says the last line.
+    // She points at it, her bubble staying up.
     bird.point();
-    talk.line.hide();
-    await ctx.wait(500);
-    const box = stageRect(fr.shortBox);
-    const noteX = box.left + box.width * 0.62;
-    const note = FX.bubble(ui, {
-      anchor: [noteX, box.bottom + 50], corner: 'tc', tip: [noteX, box.bottom + 10], lean: 0,
-      text: 'Use MP and SP.', voice: 'bird', tone: 'yellow', rotate: -1.5,
-    });
-    await note.show();
-    await Promise.all([speak(ctx, note, 'fr-use', 'bird', bird), ctx.wait(900)]);
-    bird.point();
-    await ctx.wait(600);
-    endWithSwifty(ctx, scene, talk, 2400, [note]); // then a quick summary
+    endWithSwifty(ctx, scene, talk); // then a quick summary
   }
 
   // A quick summary, made by hand on the sheet: a taped-on title, index cards, pencil arrows and a sticky note.
