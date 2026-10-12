@@ -43,6 +43,7 @@
       src: ASSETS + 'sprites/swifty-talk.png', frameW: 425, frameH: 408, gutter: 16,
       anchorX: 205, anchorY: 406,           // between her feet
       bodyY: 209, bodyR: 134,               // body centre above her feet, body radius
+      crestY: 400,                          // the tip of her head feathers above her feet (the tallest frame)
       idle: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5], // stands still, with a happy blink now and then
       talk: [1, 0, 2, 0, 4, 6, 0, 3, 1, 0], // beak opens and closes, wings gesture
       land: [3, 2, 1, 0],                   // wings settle after touching down
@@ -78,7 +79,7 @@
   // Where Swifty stands (her feet) on the teaching screens: on her stand in the bottom-right corner, with the panel
   // on her left and her speech bubbles above her head (kept between CORNER.bubbles). She stays there from
   // one screen to the next.
-  const CORNER = { x: 1725, y: 910, s: 0.8, bubbles: [1380, 1872] }; // both feet on the top book; her bubbles stay on the panel's paper
+  const CORNER = { x: 1725, y: 910, s: 0.8, bubbles: [1380, 1848] }; // both feet on the top book; her bubbles stay on the panel's paper, clear of its edge
 
   // Camera for screens with a card on the right (the question, the reduction): both characters
   // stay in view on the left. QUIZ_DRIFT is where its slow drift goes.
@@ -534,11 +535,12 @@
     if (speaker) speaker.idle();
   }
 
-  // Where Swifty's speech bubble goes: centred above her head (kept between `within`), or beside her head
-  // on the right.
+  // Where Swifty's speech bubble goes: centred above her head (kept between `within`), its tail hanging
+  // almost straight down at her head and ending a little above her head feathers (never touching them); or
+  // beside her head on the right.
   function overHead(bird, within) {
-    const crest = bird.y - bird.s * (SWIFTY.stand.anchorY - 20);
-    return { anchor: [bird.x, crest - 26], corner: 'bc', within, tip: [bird.x - 14, crest - 2], lean: 26 };
+    const crest = bird.y - bird.s * SWIFTY.stand.crestY;
+    return { anchor: [bird.x, crest - 54], corner: 'bc', within, tip: [bird.x - 12, crest - 14], lean: 6 };
   }
 
   function besideHead(bird) {
