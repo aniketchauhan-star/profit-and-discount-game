@@ -101,7 +101,8 @@
     "id": "vo015",
     "line": "Marked Price. The price marked or printed on an article is called its Marked Price.",
     "spoken": "Marked Price. The price marked, or printed, on an article is called its Marked Price.",
-    "speaker": "Swifty"
+    "speaker": "Swifty",
+    "devanagari": "मार्क्ड प्राइस। द प्राइस मार्क्ड, ऑर प्रिंटेड, ऑन एन आर्टिकल इज कॉल्ड इट्स मार्क्ड प्राइस।"
   },
   {
     "id": "vo016",
@@ -584,7 +585,7 @@
     "line": "subtract the discount from the marked price.",
     "spoken": "subtract the discount from the marked price.",
     "speaker": "Swifty",
-    "devanagari": "सबट्रैक्ट द डिस्काउंट फ्रॉम द मार्क्ड प्राइस."
+    "devanagari": "सबट्रैक्ट द डिस्काउंट फ्रॉम द मार्क्ड प्राइस।"
   },
   {
     "id": "vo085",

@@ -197,11 +197,9 @@
     return root;
   }
 
-  // ---------- comic speech bubble ----------
+  // ---------- speech bubble ----------
 
-  // Rounded rectangle whose straight edges bulge outward by `b` px: a soft comic balloon.
-  // A speech balloon's body: a rounded rectangle, w × h, with round corners of radius r that run on smoothly
-  // into its straight sides.
+  // A speech bubble's body: a rounded rectangle, w × h, with round corners of radius r.
   function balloonPath(w, h, r) {
     return [
       `M ${r} 0`, `H ${w - r}`, `A ${r} ${r} 0 0 1 ${w} ${r}`, `V ${h - r}`, `A ${r} ${r} 0 0 1 ${w - r} ${h}`,
@@ -209,65 +207,28 @@
     ].join(' ');
   }
 
-  // A smooth line through points (Catmull-Rom, as cubic curves), continuing a path.
-  function smoothThrough(pts) {
-    const f = p => `${num(p[0])} ${num(p[1])}`;
-    let d = '';
-    for (let i = 0; i < pts.length - 1; i++) {
-      const p0 = pts[i - 1] || pts[i], p1 = pts[i], p2 = pts[i + 1], p3 = pts[i + 2] || p2;
-      d += ` C ${f([p1[0] + (p2[0] - p0[0]) / 6, p1[1] + (p2[1] - p0[1]) / 6])} ${f([p2[0] - (p3[0] - p1[0]) / 6, p2[1] - (p3[1] - p1[1]) / 6])} ${f(p2)}`;
-    }
-    return d;
-  }
+  // A speech bubble's tail: half its base, how far it always stops short of the speaker, its shortest and longest.
+  const POINTER = { half: 20, gap: 26, min: 24, max: 58 };
 
-  // A speech balloon's tail, to the tip `tip` (in the balloon's own px), from whichever edge faces it best (the
-  // bottom or top edge are preferred): a smooth horn whose middle leaves the edge straight out and curves on to
-  // the tip, widest where it flares into the body (so the outline runs on without a hard corner), tapering to a
-  // point. `lean`: how far along the edge, back towards the middle, it starts; `bend` curves it sideways.
-  function tailPath(w, h, r, [tx, ty], { half = 17, lean = 40, bend = 0 } = {}) {
-    const flare = half * 0.75;
-    const room = half + flare + 4; // how far from a corner it can start
+  // A speech bubble's tail: a small straight-sided point, the same on every bubble. It leaves the edge that faces
+  // the speaker at `tip` (in the bubble's own px): the bottom or the top, or a side when the speaker is beside the
+  // bubble; it is aimed at the speaker (at most 38° off straight out), and stops POINTER.gap short of them, so a
+  // bubble never touches anyone.
+  function pointerPath(w, h, r, [tx, ty]) {
+    const { half, gap, min, max } = POINTER;
     const clamp = (v, lo, hi) => Math.max(lo, Math.min(Math.max(lo, hi), v));
-    const toward = (v, mid) => (v < mid ? 1 : -1);
-    const edges = [];
-    if (ty > h - r) edges.push({ B: [clamp(tx + lean * toward(tx, w / 2), r + room, w - r - room), h], n: [0, 1], k: 1 });
-    if (ty < r) edges.push({ B: [clamp(tx + lean * toward(tx, w / 2), r + room, w - r - room), 0], n: [0, -1], k: 1 });
-    // a side, only for a speaker beside the balloon (not below or above it), and with a straight stretch long
-    // enough for a tail
-    const beside = h - 2 * (r + room) >= 0 && ty > -30 && ty < h + 30;
-    if (tx < 0 && beside) edges.push({ B: [0, clamp(ty + lean * 0.5 * toward(ty, h / 2), r + room, h - r - room)], n: [-1, 0], k: 0.85 });
-    if (tx > w && beside) edges.push({ B: [w, clamp(ty + lean * 0.5 * toward(ty, h / 2), r + room, h - r - room)], n: [1, 0], k: 0.85 });
-    if (!edges.length) edges.push({ B: [clamp(tx, r + room, w - r - room), h], n: [0, 1], k: 1 });
-    const facing = e => {
-      const dx = tx - e.B[0], dy = ty - e.B[1];
-      return ((dx * e.n[0] + dy * e.n[1]) / (Math.hypot(dx, dy) || 1)) * e.k;
-    };
-    const { B, n } = edges.reduce((best, e) => (facing(e) > facing(best) ? e : best));
-    const L = Math.hypot(tx - B[0], ty - B[1]) || 1;
-    const side = [-(ty - B[1]) / L, (tx - B[0]) / L];
-    // the middle line: a quadratic curve from B (leaving the edge straight out) to the tip
-    const C = [0, 1].map(i => B[i] + n[i] * L * 0.42 + ([tx, ty][i] - B[i]) * 0.18 + side[i] * bend);
-    const at = s => [0, 1].map(i => (1 - s) * (1 - s) * B[i] + 2 * (1 - s) * s * C[i] + s * s * [tx, ty][i]);
-    const dir = s => {
-      const d = [0, 1].map(i => 2 * (1 - s) * (C[i] - B[i]) + 2 * s * ([tx, ty][i] - C[i]));
-      const l = Math.hypot(d[0], d[1]) || 1;
-      return [d[0] / l, d[1] / l];
-    };
-    const width = s => half * Math.pow(1 - s, 1.05) + flare * Math.pow(1 - s, 7);
-    const left = [];
-    const right = [];
-    for (let i = 0; i <= 28; i++) {
-      const s = i / 28;
-      const m = at(s);
-      const d = dir(s);
-      const wv = width(s);
-      left.push([m[0] - d[1] * wv, m[1] + d[0] * wv]);
-      right.push([m[0] + d[1] * wv, m[1] - d[0] * wv]);
-    }
-    right.reverse();
-    const f = p => `${num(p[0])} ${num(p[1])}`;
-    const inside = p => [p[0] - n[0] * 10, p[1] - n[1] * 10]; // its base reaches into the body: no gap
-    return `M ${f(inside(left[0]))} L ${f(left[0])}${smoothThrough(left)}${smoothThrough(right)} L ${f(inside(right[right.length - 1]))} Z`;
+    const beside = (tx < 0 || tx > w) && ty > r && ty < h - r && h - 2 * r >= 2 * half + 12;
+    const n = beside ? [tx < 0 ? -1 : 1, 0] : [0, ty > h / 2 ? 1 : -1]; // the edge's outward direction
+    const s = [-n[1], n[0]];                                            // along the edge
+    const base = beside
+      ? [tx < 0 ? 0 : w, clamp(ty, r + half + 6, h - r - half - 6)]
+      : [clamp(tx, r + half + 6, w - r - half - 6), ty > h / 2 ? h : 0];
+    const d = [tx - base[0], ty - base[1]];
+    const angle = clamp(Math.atan2(d[0] * s[0] + d[1] * s[1], Math.max(1, d[0] * n[0] + d[1] * n[1])), -0.66, 0.66);
+    const length = clamp(Math.hypot(d[0], d[1]) - gap, min, max);
+    const at = (k, j) => [0, 1].map(i => num(base[i] + n[i] * k + s[i] * j)); // k out from the edge, j along it
+    const apex = [0, 1].map(i => num(base[i] + length * (Math.cos(angle) * n[i] + Math.sin(angle) * s[i])));
+    return `M ${at(-2, -half).join(' ')} L ${apex.join(' ')} L ${at(-2, half).join(' ')} Z`; // its base just inside the body
   }
 
   // Splits text into per-letter spans (kept inside per-word spans so words never break apart).
@@ -372,35 +333,23 @@
     };
   }
 
-  // Outline + fill trick: stroke every shape, then fill them all on top so the seams disappear.
-  // A soft, flat shadow under the shapes; their outline (every shape stroked, then all filled on top, so the
-  // seams where they overlap disappear); and a fill that turns from white at the top to a warm cream at the
-  // bottom (`height`: where the bottom is; the colours are set in the CSS: .b-stop-…).
-  let paintId = 0;
-  function paintShapes(art, paths, { shadow = [0, 8], height } = {}) {
-    const id = 'bfill' + (++paintId);
-    const box = art.viewBox.baseVal;
-    const grad = svg('linearGradient', { id, gradientUnits: 'userSpaceOnUse', x1: 0, y1: 0, x2: 0, y2: height || (box && box.height) || 100 }, svg('defs', {}, art));
-    [['b-stop-top', 0], ['b-stop-mid', 0.62], ['b-stop-bottom', 1]].forEach(([cls, offset]) => svg('stop', { class: cls, offset }, grad));
-    art.style.setProperty('--b-fill', `url(#${id})`);
-    [['b-shadow', { transform: `translate(${shadow[0]} ${shadow[1]})` }], ['b-line', {}], ['b-fill', {}]].forEach(([cls, extra]) => {
-      const g = svg('g', Object.assign({ class: cls }, extra), art);
-      paths.forEach(d => svg('path', { d }, g));
-    });
+  // Speech bubbles and thought clouds are flat: one off-white shape (its parts filled alike, so they read as one),
+  // with a soft shadow under it (style.css: .bubble svg, .b-fill).
+  function paintShapes(art, paths) {
+    const g = svg('g', { class: 'b-fill' }, art);
+    paths.forEach(d => svg('path', { d }, g));
   }
 
   /**
-   * Comic speech bubble, sized to fit its text.
-   *  anchor   [x, y] stage point where one corner (or edge middle) of the balloon sits
+   * Speech bubble, sized to fit its text; every bubble in the game looks the same (see pointerPath, paintShapes).
+   *  anchor   [x, y] stage point where one corner (or edge middle) of the bubble sits
    *  corner   which point that is: 'bl' (default) | 'br' | 'tl' | 'tr' | 'bc' | 'tc' (c = centred)
-   *  within   optional [minX, maxX] the balloon must stay inside
-   *  tip      [x, y] stage point the tail points at (the speaker's mouth, or what a note is about)
-   *  lean     how far along the edge the tail starts from the speaker (default 70; small = more upright)
-   *  tone     optional colour: 'yellow' (a note)
+   *  within   optional [minX, maxX] the bubble must stay inside
+   *  tip      [x, y] stage point of the speaker (their mouth or head): the tail points at it and stops short of it
    *  text     see buildLetters; size (px, default 34), voice ('boy' | 'man' | 'bird'), rotate (deg)
    */
   function bubble(parent, o) {
-    const root = el('div', o.tone ? `bubble bubble--${o.tone}` : 'bubble', parent);
+    const root = el('div', 'bubble', parent);
     const float = el('div', 'bubble-float', root);
     const { box: textBox, letters, w, h } = lineText(float, o);
     const corner = o.corner || 'bl';
@@ -413,10 +362,10 @@
       transformOrigin: `${num(tip[0])}px ${num(tip[1])}px`, // grows out of the speaker's mouth
     });
 
-    // A rounded body, and a tail that sweeps out from the edge facing the speaker to the tip.
-    const r = Math.min(40, h / 2);
+    // A rounded body, and a small point from the edge facing the speaker, aimed at them.
+    const r = Math.min(18, h / 2);
     const body = balloonPath(w, h, r);
-    const tail = tailPath(w, h, r, tip, { half: o.tailWidth || 17, lean: o.lean ?? 40, bend: o.bend || 0 });
+    const tail = pointerPath(w, h, r, tip);
     const art = svg('svg', { width: w, height: h, viewBox: `0 0 ${w} ${h}` });
     float.insertBefore(art, textBox);
     paintShapes(art, [body, tail]);
@@ -521,7 +470,7 @@
       along += pr + gap;
       const puff = el('div', 'thought-puff', root, { left: px(pcx - pr), top: px(pcy - pr), width: px(2 * pr), height: px(2 * pr), opacity: '0' });
       const bob = el('div', 'thought-puff-bob', puff, { animationDelay: `${-i * 0.45}s` });
-      paintShapes(svg('svg', { width: 2 * pr, height: 2 * pr, viewBox: `0 0 ${2 * pr} ${2 * pr}` }, bob), [ellipsePath(pr, pr, pr, pr)], { shadow: [0, 4] });
+      paintShapes(svg('svg', { width: 2 * pr, height: 2 * pr, viewBox: `0 0 ${2 * pr} ${2 * pr}` }, bob), [ellipsePath(pr, pr, pr, pr)]);
       return puff;
     });
     // The cloud billows out from where the trail meets it.
@@ -2941,22 +2890,9 @@
       this.play('stand', this.sheets.stand.talk, 9, true);
     }
 
-    // Leans her whole body (degrees, about her feet; negative = towards the left), until told otherwise.
-    lean(deg) {
-      const from = this.leanDeg || 0;
-      this.leanDeg = deg;
-      if (this.leaning) this.leaning.cancel();
-      this.leaning = null;
-      if (reducedMotion || from === deg) return;
-      this.leaning = this.body.animate([{ transform: `rotate(${from}deg)` }, { transform: `rotate(${deg}deg)` }], {
-        duration: 340, easing: 'cubic-bezier(.3,.7,.4,1)', fill: 'forwards',
-      });
-    }
-
-    // Points to her left with her wing out, leaning that way, until she does something else.
+    // Points with her wings out, standing straight, until she does something else.
     point() {
       this.play('stand', this.sheets.stand.point, 4, true);
-      this.lean(-7);
     }
 
     // A quick wings-up gesture while standing, then back to idle.

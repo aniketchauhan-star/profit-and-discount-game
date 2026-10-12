@@ -535,17 +535,11 @@
     if (speaker) speaker.idle();
   }
 
-  // Where Swifty's speech bubble goes: centred above her head (kept between `within`), its tail hanging
-  // almost straight down at her head and ending a little above her head feathers (never touching them); or
-  // beside her head on the right.
+  // Where Swifty's speech bubble goes: centred above her head (kept between `within`), its tail pointing straight
+  // down at her and stopping well short of her head feathers (see FX's pointerPath).
   function overHead(bird, within) {
     const crest = bird.y - bird.s * SWIFTY.stand.crestY;
-    return { anchor: [bird.x, crest - 54], corner: 'bc', within, tip: [bird.x - 12, crest - 14], lean: 6 };
-  }
-
-  function besideHead(bird) {
-    const head = { x: bird.x, y: bird.y - bird.s * SWIFTY.stand.bodyY };
-    return { anchor: [head.x + 92, head.y + 46], corner: 'bl', tip: [head.x + 62, head.y + 22] };
+    return { anchor: [bird.x, crest - 76], corner: 'bc', within, tip: [bird.x, crest] };
   }
 
   // Swifty's lines on a teaching screen. Each one comes in a speech bubble (placed by `place(bird)`) that is
@@ -688,7 +682,7 @@
     const { bird } = await cornerSwifty(ctx, scene);
     bird.point();
     await ctx.wait(400);
-    bird.talk(); // still leaning towards the card
+    bird.talk();
     await Voice.say('correct', 'Correct! ' + why, 'bird');
     bird.point();
     await flyOff(ctx, bird); // her part is done
@@ -738,7 +732,6 @@
 
     // The card makes way for the definitions; her bubble goes, and she reads each card out (its words are on it).
     await talk.clear();
-    bird.lean(0);
     bird.idle();
     const items = [
       { title: 'Cost Price (CP)', tone: 'blue', pictures: [ART.money, ART.book], text: 'Price at which an item is {bought}.', say: 'Cost Price. C P.' },
@@ -1033,7 +1026,7 @@
     bird.point();
     await ctx.wait(300);
 
-    // She reads it out, still leaning towards it, while the words appear.
+    // She reads it out while the words appear.
     await card.define(ctx, {
       voice: readAlong('Discount. ', DISCOUNT_DEFINITION),
       onRead: () => {
@@ -1156,7 +1149,6 @@
   async function flyOff(ctx, bird, bubble) {
     await ctx.wait(600); // her last words sink in first
     if (bubble) await bubble.hide();
-    bird.lean(0);
     bird.wave();
     Sound.chirp();
     await ctx.wait(300);
@@ -1175,7 +1167,6 @@
       return;
     }
     await ctx.wait(1000);
-    talk.bird.lean(0);
     talk.bird.idle();
   }
 
@@ -1465,7 +1456,6 @@
         await swiftyDone(ctx, scene, talk); // she flies off
       } else {
         await ctx.wait(3000, { real: true });
-        talk.bird.lean(0);
         talk.bird.idle();
       }
       const last = stageRect(answers.buttons[answers.buttons.length - 1]);

@@ -257,7 +257,7 @@ button:focus-visible, .switch input:focus-visible + .switch-track {
 }
 .shine-band { position: absolute; left: 0; }
 
-/* ---------- Comic speech bubbles ---------- */
+/* ---------- Speech bubbles ---------- */
 
 .bubble {
   position: absolute;
@@ -267,29 +267,22 @@ button:focus-visible, .switch input:focus-visible + .switch-track {
   position: absolute;
   inset: 0;
 }
+/* Speech bubbles and thought clouds: one flat design everywhere, an off-white shape with rounded corners, no
+   outline, and a soft shadow under it (js/fx.js paintShapes; a speech bubble's tail: pointerPath). */
 .bubble svg {
   position: absolute;
   left: 0;
   top: 0;
   overflow: visible;
+  filter: drop-shadow(0 5px 7px rgba(9, 32, 38, .26));
 }
-/* Speech bubbles and thought clouds: clean vector shapes. A crisp 6 px ink outline (the stroke is drawn
-   behind the fill, so half of it shows), a fill turning from white to a warm cream at the bottom (a gradient in
-   each balloon: js/fx.js paintShapes), and a soft flat shadow just under it. */
-.b-shadow { opacity: .16; }
-.b-shadow path { fill: #0d2630; stroke: #0d2630; stroke-width: 12px; stroke-linejoin: round; }
-.b-line path   { fill: var(--ink); stroke: var(--ink); stroke-width: 12px; stroke-linejoin: round; }
-.b-fill path   { fill: var(--b-fill, var(--paper)); }
-.b-stop-top    { stop-color: #ffffff; }
-.b-stop-mid    { stop-color: #fffdf8; }
-.b-stop-bottom { stop-color: #f3e7cf; }
-.thought-puff :is(.b-line, .b-shadow) path { stroke-width: 9px; } /* a finer line on the small puffs */
+.b-fill path { fill: #fdfcf8; }
 .b-text { /* sized to its text; js/fx.js fits the balloon around it */
   position: absolute;
   left: 0;
   top: 0;
   width: max-content;
-  padding: 13px 26px 9px;
+  padding: 17px 32px 13px; /* room round the words, as in the design */
   font-weight: 800;
   line-height: 1.12;
   white-space: nowrap;
@@ -316,7 +309,7 @@ button:focus-visible, .switch input:focus-visible + .switch-track {
 .bubble.is-static .ch { transition: none; } /* a bubble carried over, already typed */
 
 /* Thought cloud (FX.thought): a puffy cloud, and a trail of little puffs that gently bob, down to the
-   thinker's head. It shares the speech bubble's outline, fill, shadow and text styles. */
+   thinker's head. It shares the speech bubble's fill, shadow and text styles. */
 .thought-cloud { position: absolute; inset: 0; }
 .thought-puff { position: absolute; }
 .thought-puff-bob {
@@ -1112,11 +1105,6 @@ button:focus-visible, .switch input:focus-visible + .switch-track {
 }
 .fr-term.is-ping, .fr-op.is-ping { animation: fm-pop .8s cubic-bezier(.3, 1.6, .5, 1); }
 
-/* A yellow note (a speech bubble with tone: 'yellow') */
-.bubble--yellow .b-stop-top { stop-color: #fffbe3; }
-.bubble--yellow .b-stop-mid { stop-color: #fff3c2; }
-.bubble--yellow .b-stop-bottom { stop-color: #ffe49a; }
-.bubble--yellow .b-text { color: #b3261e; }
 
 /* Screen 19: Let's remember! (three cards joined by arrows, and the formula) */
 .sm-panel {
