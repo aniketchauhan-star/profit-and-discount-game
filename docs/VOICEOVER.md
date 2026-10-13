@@ -52,17 +52,21 @@ The rewrite the studio sends to the voice is kept for every line (`devanagari` i
 
 Also read the Devanagari by eye for names, possessives ("Aniket’s" अनिकेत्स) and ordinals, and check each clip's sound by measurement (its silences, its level, no click at its ends). A flagged line gets a corrected spoken form and is made again; repeat until the check is clean.
 
-Made again so far:
+Made again so far (the ids in bold are the clips' ids now; ids in brackets are as they were when the change was made):
 
 - **vo017** (the Marked Price definition): on the first run its "or" came out as **और** ("aur", Hindi for "and"), so the voice said "marked aur printed". Written "marked, or printed," it came out as **ऑर**.
-- **vo092** ("subtract the discount from the marked price."; vo086 when it was made): a click in its last 20 ms. The second take ends cleanly.
-- **vo070, vo072–vo074 and vo076** (the quick check on screen 28): its question became "250 is what percent of 1000?" (no ₹; the answers are now 20%, 25% and 50%), so the five lines with its numbers were made again: "250 is what percent of 1000?", "250 is the part,", "1000 is the whole.", "250 ÷ 1000 × 100 = 25%." and "So, 250 is 25% of 1000." Same ids, same voice.
-- **vo054–vo056, vo062–vo063** (Swifty on the new screen 26, the percentage rule: "a is what percent of b?", "a is the part,", "and b is the whole.", "Then put a % sign after it." and "Let’s take an example!"): five lines added. The letters are said as letters, "A" and "B" (ए, बी). **vo064–vo066 and vo069** (the example on screen 27, without ₹ now: "125 is what percent of 500?", "125 is the part,", "and 500 is the whole." and "So, 125 is 25% of 500!"): made again without "rupees". The lines of the rule that the example shares ("To find the percentage," … "and the whole below.", vo057–vo061) are now first heard on screen 26, so they moved up in the script; `--renumber` gave every line its place (vo062–vo063 → vo067–vo068, vo065 → vo070 … vo121 → vo126).
-- **vo054–vo055** (Swifty on the General Idea of Percentage screen, after screen 25: "Percentage tells us how much of the whole" / "we are considering."): the screen was taken out of the game, so its two lines and their clips went too; `--renumber` moved every line after them down by two (vo056 → vo054 … vo123 → vo121).
-- **vo050–vo051** (Aniket on screen 24): "How much money will actually be reduced?" became two lines, "The price tagged is ₹1800." and "Using 30% OFF! How much money I actually have to pay?" (vo050 made again, vo051 added; `--renumber` moved every line after them up by one).
-- **vo047–vo048** (Aniket on screen 21: "What does 30% OFF mean here?", "Is this also a discount?"): two lines added after "These sneakers look good!"; `--renumber` moved every line after them up by two (vo047 → vo049 … vo120 → vo122).
-- **vo027** ("We get ₹200. That is the Discount!", screen 17): a reviewer heard "two hundred dollars" in it, although its spoken form and Devanagari say rupees (the voice can change a word). Made again with the same spoken form.
-- **vo042–vo044** (Swifty's recap on screen 19): the recap became general, so each line lost its last sentence ("Here, ₹1000." …). Her takes were kept: each was cut in the pause before "Here,", faded out in that silence and given 0.4 s of silence at its end, then made into its clip again (no new take).
+- **vo091** ("subtract the discount from the marked price."; vo086 when it was made): a click in its last 20 ms. The second take ends cleanly.
+- **vo029** ("So, the discount is ₹200.", screen 17, spoken "So, the discount is two hundred rupees."): added after the formula in words, made with Swifty's voice (Female Teacher (Standard)); `--renumber` moved every line after it up by one (vo029 → vo030 … vo124 → vo125).
+- **Screen 17's first three lines taken out**: Swifty no longer says "The Marked Price is ₹1000.", "Subtract the Selling Price, ₹800." or "We get ₹200. That is the Discount!" there (the sum builds by itself while she points; her only line is the formula in words, "Marked Price, minus Selling Price, equals Discount."). "The Marked Price is ₹1000." is still said on screen 13, so its clip (vo018) stays; the other two were said nowhere else, so they and their clips went, and `--renumber` moved every line after them down, one at a time (vo027 → vo026 … vo126 → vo125, then vo027 → vo026 … vo125 → vo124).
+- **vo022–vo023** (the shopkeeper on screen 14): his words became "The price printed on the book is ₹1000, **but you paid only ₹800. So, you got a ₹200 discount.**", so the last two parts were made again (spoken "but you paid only eight hundred rupees." and "So, you got a two hundred rupee discount."; same ids, same voice, Male Teacher (Formal)). The first part, vo021, is unchanged.
+- **vo014** (Aniket on screen 10): "What is this? ₹1000 is written on this book!" became **"₹1000? What is this?"** (spoken "One thousand rupees? What is this?"), so it was made again (same id, same voice, Male Child (Energetic)).
+- **vo069, vo071–vo073 and vo075** (the quick check on screen 28): its question became "250 is what percent of 1000?" (no ₹; the answers are now 20%, 25% and 50%), so the five lines with its numbers were made again: "250 is what percent of 1000?", "250 is the part,", "1000 is the whole.", "250 ÷ 1000 × 100 = 25%." and "So, 250 is 25% of 1000." Same ids, same voice.
+- **vo053–vo055, vo061–vo062** (Swifty on the new screen 26, the percentage rule: "a is what percent of b?", "a is the part,", "and b is the whole.", "Then put a % sign after it." and "Let’s take an example!"): five lines added. The letters are said as letters, "A" and "B" (ए, बी). **vo063–vo065 and vo068** (the example on screen 27, without ₹ now: "125 is what percent of 500?", "125 is the part,", "and 500 is the whole." and "So, 125 is 25% of 500!"): made again without "rupees". The lines of the rule that the example shares ("To find the percentage," … "and the whole below.", now vo056–vo060) are now first heard on screen 26, so they moved up in the script; `--renumber` gave every line its place (vo062–vo063 → vo067–vo068, vo065 → vo070 … vo121 → vo126).
+- **The General Idea of Percentage screen taken out** (vo054–vo055 then; Swifty, after screen 25: "Percentage tells us how much of the whole" / "we are considering."): the screen was taken out of the game, so its two lines and their clips went too; `--renumber` moved every line after them down by two (vo056 → vo054 … vo123 → vo121).
+- **vo049–vo050** (Aniket on screen 24): "How much money will actually be reduced?" became two lines, "The price tagged is ₹1800." and "Using 30% OFF! How much money I actually have to pay?" (the first made again, the second added; `--renumber` moved every line after them up by one).
+- **vo046–vo047** (Aniket on screen 21: "What does 30% OFF mean here?", "Is this also a discount?"): two lines added after "These sneakers look good!"; `--renumber` moved every line after them up by two (vo047 → vo049 … vo120 → vo122).
+- **"We get ₹200. That is the Discount!"** (screen 17; later taken out, see above): a reviewer heard "two hundred dollars" in it, although its spoken form and Devanagari say rupees (the voice can change a word). Made again with the same spoken form.
+- **vo041–vo043** (Swifty's recap on screen 19): the recap became general, so each line lost its last sentence ("Here, ₹1000." …). Her takes were kept: each was cut in the pause before "Here,", faded out in that silence and given 0.4 s of silence at its end, then made into its clip again (no new take).
 - **vo021–vo023** (the shopkeeper on screen 14): his words were changed to "The price printed on the book is ₹1000, but I gave you at ₹800. You got ₹200 discount.", so the three parts were made again (same voice, Male Teacher (Formal)).
 
 ## The clips
@@ -110,7 +114,7 @@ Generated by `tools/vo_build.py`. "=" means the line is said as written.
 | vo011 | Swifty | Price at which an item is sold. | = | प्राइस एट विच एन आइटम इज सोल्ड। | 2.78 |
 | vo012 | Swifty | Here, ₹800 is the shopkeeper’s Selling Price. | Here, eight hundred rupees is the shopkeeper’s Selling Price. | हियर, एट हंड्रेड रुपीस इज द शॉपकीपर्स सेलिंग प्राइस। | 4.66 |
 | vo013 | Swifty | Correct! The shopkeeper sold the book for ₹800, so ₹800 is the Selling Price. | Correct! The shopkeeper sold the book for eight hundred rupees, so eight hundred rupees is the Selling Price. | करेक्ट! द शॉपकीपर सोल्ड द बुक फॉर एइट हंड्रेड रुपीस, सो एइट हंड्रेड रुपीस इज़ द सेलिंग प्राइस. | 6.7 |
-| vo014 | Aniket | What is this? ₹1000 is written on this book! | What is this? One thousand rupees is written on this book! | वाट इज दिस? वन थाउजेंड रुपीस इज रिटन ऑन दिस बुक! | 4.1 |
+| vo014 | Aniket | ₹1000? What is this? | One thousand rupees? What is this? | वन थाउज़ेंड रुपीज़? वॉट इज़ दिस? | 3.58 |
 | vo015 | Swifty | ₹1000 is the price written on the book. | One thousand rupees is the price written on the book. | वन थाउजेंड रुपीज इज द प्राइस रिटन ऑन द बुक। | 3.89 |
 | vo016 | Swifty | It is called the Marked Price (MP). | It is called the Marked Price, M P. | इट इज कॉल्ड द मार्क्ड प्राइस, एम पी। | 3.26 |
 | vo017 | Swifty | Marked Price. The price marked or printed on an article is called its Marked Price. | Marked Price. The price marked, or printed, on an article is called its Marked Price. | मार्क्ड प्राइस। द प्राइस मार्क्ड, ऑर प्रिंटेड, ऑन एन आर्टिकल इज कॉल्ड इट्स मार्क्ड प्राइस। | 8.09 |
@@ -118,109 +122,108 @@ Generated by `tools/vo_build.py`. "=" means the line is said as written.
 | vo019 | Swifty | But the book was sold for ₹800. That is the Selling Price. | But the book was sold for eight hundred rupees. That is the Selling Price. | बट द बुक वॉज़ सोल्ड फॉर एट हंड्रेड रुपीज़। दैट इज़ द सेलिंग प्राइस। | 4.73 |
 | vo020 | Swifty | Why is the Selling Price less than the Marked Price? | = | वाय इज द सेलिंग प्राइस लेस दैन द मार्क्ड प्राइस? | 3.74 |
 | vo021 | Shopkeeper | The price printed on the book is ₹1000, | The price printed on the book is one thousand rupees, | द प्राइस प्रिंटेड ऑन द बुक इज वन थाउजेंड रुपीज, | 4.01 |
-| vo022 | Shopkeeper | but I gave you at ₹800. | but I gave you at eight hundred rupees. | बट आई गेव यू एट एइट हंड्रेड रुपीस। | 3.38 |
-| vo023 | Shopkeeper | You got ₹200 discount. | You got two hundred rupees discount. | यू गॉट टू हंड्रेड रुपीस डिस्काउंट। | 2.98 |
+| vo022 | Shopkeeper | but you paid only ₹800. | but you paid only eight hundred rupees. | बट यू पेड ओनली एट हंड्रेड रुपिस। | 3.02 |
+| vo023 | Shopkeeper | So, you got a ₹200 discount. | So, you got a two hundred rupee discount. | सो, यू गॉट ए टू हंड्रेड रूपी डिस्काउंट। | 3.05 |
 | vo024 | Aniket | Discount? What does that mean? | = | डिस्काउंट? वॉट डज़ दैट मीन? | 2.98 |
 | vo025 | Swifty | Discount. The reduction given on the marked price of an item is called a discount. | = | डिस्काउंट। द रिडक्शन गिवन ऑन द मार्क्ड प्राइस ऑफ एन आइटम इज कॉल्ड ए डिस्काउंट। | 6.5 |
-| vo026 | Swifty | Subtract the Selling Price, ₹800. | Subtract the Selling Price, eight hundred rupees. | सबट्रैक्ट द सेलिंग प्राइस, एट हंड्रेड रुपीस। | 3.7 |
-| vo027 | Swifty | We get ₹200. That is the Discount! | We get two hundred rupees. That is the Discount! | वी गेट टू हंड्रेड रुपीस। दैट इज द डिस्काउंट! | 3.65 |
-| vo028 | Swifty | Marked Price, | = | मार्क्ड प्राइस, | 1.97 |
-| vo029 | Swifty | minus Selling Price, | = | माइनस सेलिंग प्राइस, | 2.38 |
-| vo030 | Swifty | equals Discount. | = | ईक्वल्स डिस्काउंट। | 2.38 |
-| vo031 | Swifty | Discount | = | डिस्काउंट | 1.37 |
-| vo032 | Swifty | equals Marked Price, | = | इक्वल्स मार्क्ड प्राइस, | 2.5 |
-| vo033 | Swifty | minus Selling Price. | = | माइनस सेलिंग प्राइस। | 2.42 |
-| vo034 | Swifty | We can write it in short. | = | वी कैन राइट इट इन शॉर्ट। | 2.06 |
-| vo035 | Swifty | D for Discount, | = | डी फॉर डिस्काउंट, | 2.45 |
-| vo036 | Swifty | MP for Marked Price, | M P for Marked Price, | एम पी फॉर मार्क्ड प्राइस, | 2.81 |
-| vo037 | Swifty | SP for Selling Price. | S P for Selling Price. | एस पी फॉर सेलिंग प्राइस। | 2.98 |
-| vo038 | Swifty | So, D | = | सो, डी | 1.42 |
-| vo039 | Swifty | = MP | equals M P | इक्वल्स एम पी | 2.66 |
-| vo040 | Swifty | − SP. | minus S P. | माइनस एस पी। | 2.14 |
-| vo041 | Swifty | Let’s remember! | = | लेट्स रिमेम्बर! | 1.9 |
-| vo042 | Swifty | Marked Price is the price written on an item. | = | मार्क्ड प्राइस इज द प्राइस रिटन ऑन एन आइटम। | 3.25 |
-| vo043 | Swifty | Selling Price is the price at which it is sold. | = | सेलिंग प्राइस इज द प्राइस एट व्हिच इट इज सोल्ड. | 3.59 |
-| vo044 | Swifty | Discount is the amount reduced from the marked price. | = | डिस्काउंट इज द अमाउंट रिड्यूस्ड फ्रॉम द मार्क्ड प्राइस। | 4.05 |
-| vo045 | Swifty | And remember the formula: Discount = MP − SP! | And remember the formula: Discount equals M P minus S P! | एंड रिमेंबर द फॉर्मूला: डिस्काउंट इक्वल्स एम पी माइनस एस पी! | 6.26 |
-| vo046 | Aniket | These sneakers look good! | = | दीज़ स्नीकर्स लुक गुड! | 2.5 |
-| vo047 | Aniket | What does 30% OFF mean here? | What does thirty percent off mean here? | वॉट डज़ थर्टी परसेंट ऑफ मीन हियर? | 2.78 |
-| vo048 | Aniket | Is this also a discount? | = | इज़ दिस ऑल्सो अ डिस्काउंट? | 2.3 |
-| vo049 | Aniket | What does 30% discount mean here? | What does thirty percent discount mean here? | वॉट डज थर्टी परसेंट डिस्काउंट मीन हियर? | 2.93 |
-| vo050 | Aniket | The price tagged is ₹1800. | The price tagged is one thousand eight hundred rupees. | द प्राइस टैग्ड इज वन थाउजेंड ऐट हंड्रेड रुपीज। | 3.29 |
-| vo051 | Aniket | Using 30% OFF! How much money I actually have to pay? | Using thirty percent off! How much money I actually have to pay? | यूज़िंग थर्टी परसेंट ऑफ़! हाउ मच मनी आई एक्चुअली हैव टू पे? | 4.61 |
-| vo052 | Swifty | To find the discount amount, | = | टू फाइंड द डिस्काउंट अमाउंट, | 2.45 |
-| vo053 | Swifty | let’s first recall how percentages work. | = | लेट्स फर्स्ट रिकॉल हाउ परसेंटेज वर्क। | 3.5 |
-| vo054 | Swifty | a is what percent of b? | A is what percent of B? | ए इज़ वॉट परसेंट ऑफ बी? | 2.98 |
-| vo055 | Swifty | a is the part, | A is the part, | ए इज़ द पार्ट, | 2.38 |
-| vo056 | Swifty | and b is the whole. | and B is the whole. | एंड बी इज द होल। | 2.54 |
-| vo057 | Swifty | To find the percentage, | = | टू फाइंड द परसेंटेज, | 2.3 |
-| vo058 | Swifty | divide the part by the whole, | = | डिवाइड द पार्ट बाय द होल, | 2.86 |
-| vo059 | Swifty | then multiply by 100. | then multiply by one hundred. | देन मल्टीप्लाइ बाय वन हंड्रेड। | 2.69 |
-| vo060 | Swifty | Put the part on top, | = | पुट द पार्ट ऑन टॉप, | 2.3 |
-| vo061 | Swifty | and the whole below. | = | एंड द होल बिलो। | 2.06 |
-| vo062 | Swifty | Then put a % sign after it. | Then put a percent sign after it. | देन पुट अ परसेंट साइन आफ्टर इट। | 2.66 |
-| vo063 | Swifty | Let’s take an example! | = | लेट्स टेक एन एग्जांपल! | 1.9 |
-| vo064 | Swifty | 125 is what percent of 500? | One hundred and twenty-five is what percent of five hundred? | वन हंड्रेड एंड ट्वेंटी-फाइव इज़ वॉट परसेंट ऑफ फाइव हंड्रेड? | 4.3 |
-| vo065 | Swifty | 125 is the part, | One hundred and twenty-five is the part, | वन हंड्रेड एंड ट्वेंटी-फाइव इज द पार्ट, | 3.34 |
-| vo066 | Swifty | and 500 is the whole. | and five hundred is the whole. | एंड फाइव हंड्रेड इज द होल। | 2.93 |
-| vo067 | Swifty | 125 ÷ 500 × 100 | One hundred and twenty-five divided by five hundred, times one hundred | वन हंड्रेड एंड ट्वेंटी फाइव डिवाइडेड बाय फाइव हंड्रेड टाइम्स वन हंड्रेड | 7.06 |
-| vo068 | Swifty | = 25%. | equals twenty-five percent. | ईक्वल्स ट्वेंटी फाइव परसेंट | 2.62 |
-| vo069 | Swifty | So, 125 is 25% of 500! | So, one hundred and twenty-five is twenty-five percent of five hundred! | सो, वन हंड्रेड एंड ट्वेंटी-फाइव इज़ ट्वेंटी-फाइव परसेंट ऑफ फाइव हंड्रेड! | 5.14 |
-| vo070 | Swifty | 250 is what percent of 1000? | Two hundred and fifty is what percent of one thousand? | टू हंड्रेड एंड फिफ्टी इज वॉट परसेंट ऑफ वन थाउजेंड? | 3.89 |
-| vo071 | Swifty | Not quite! | = | नॉट क्वाइट! | 1.61 |
-| vo072 | Swifty | 250 is the part, | Two hundred and fifty is the part, | टू हंड्रेड एंड फिफ्टी इज़ द पार्ट, | 3.05 |
-| vo073 | Swifty | 1000 is the whole. | one thousand is the whole. | वन थाउज़ेंड इज़ द होल। | 2.42 |
-| vo074 | Swifty | 250 ÷ 1000 × 100 = 25%. | Two hundred and fifty divided by one thousand, times one hundred, equals twenty-five percent. | टू हंड्रेड एंड फिफ्टी डिवाइडेड बाय वन थाउजेंड टाइम्स वन हंड्रेड इक्वल्स ट्वेंटी फाइव परसेंट | 7.7 |
-| vo075 | Swifty | Correct! | = | करेक्ट! | 1.13 |
-| vo076 | Swifty | So, 250 is 25% of 1000. | So, two hundred and fifty is twenty-five percent of one thousand. | सो, टू हंड्रेड एंड फिफ्टी इज ट्वेंटी-फाइव परसेंट ऑफ वन थाउजेंड। | 5.02 |
-| vo077 | Swifty | Now, back to Aniket’s sneakers! | = | नाउ, बैक टू अनिकेत्स स्नीकर्स! | 3.1 |
-| vo078 | Swifty | Now, what is 30% of ₹1800? | Now, what is thirty percent of one thousand eight hundred rupees? | नाउ, वट इज थर्टी परसेंट ऑफ वन थाउजेंड ऐट हंड्रेड रुपीज? | 4.78 |
-| vo079 | Swifty | 30% of ₹1800 is ₹540. | Thirty percent of one thousand eight hundred rupees is five hundred and forty rupees. | थर्टी परसेंट ऑफ वन थाउजेंड ऐट हंड्रेड रुपीस इज फाइव हंड्रेड एंड फॉर्टी रुपीस। | 5.78 |
-| vo080 | Swifty | Let’s see how to work it out! | = | लेट्स सी हाउ टू वर्क इट आउट! | 2.21 |
-| vo081 | Swifty | 30% means | Thirty percent means | थर्टी परसेंट मीन्स | 2.57 |
-| vo082 | Swifty | 30 out of 100. | thirty out of one hundred. | थर्टी आउट ऑफ वन हंड्रेड। | 2.26 |
-| vo083 | Swifty | So, 30% of ₹1800 = | So, thirty percent of one thousand eight hundred rupees equals | सो, थर्टी परसेंट ऑफ वन थाउजेंड ऐट हंड्रेड रुपीस इक्वल्स | 5.21 |
-| vo084 | Swifty | 30/100 × 1800 | thirty over one hundred, times one thousand eight hundred | थर्टी ओवर वन हंड्रेड, टाइम्स वन थाउजेंड एइट हंड्रेड | 5.69 |
-| vo085 | Swifty | 1800 ÷ 100 = 18, | One thousand eight hundred divided by one hundred equals eighteen, | वन थाउजेंड एइट हंड्रेड डिवाइडेड बाय वन हंड्रेड इक्वल्स एटीन, | 4.37 |
-| vo086 | Swifty | and 18 × 30 = 540. | and eighteen times thirty equals five hundred and forty. | एंड एटीन टाइम्स थर्टी इक्वल्स फाइव हंड्रेड एंड फोर्टि। | 4.94 |
-| vo087 | Swifty | So, it’s ₹540! | So, it’s five hundred and forty rupees! | सो इट्स फाईव हंड्रेड एंड फोर्टी रुपीज़! | 2.86 |
-| vo088 | Swifty | What does ₹540 represent here? | What does five hundred and forty rupees represent here? | वॉट डज़ फाइव हंड्रेड एंड फोर्टी रुपीज़ रिप्रेजेंट हियर? | 3.89 |
-| vo089 | Swifty | ₹540 is the money taken off ₹1800. | Five hundred and forty rupees is the money taken off one thousand eight hundred rupees. | फाइव हंड्रेड एंड फोर्टी रुपीज इज द मनी टेकन ऑफ वन थाउजेंड एट हंड्रेड रुपीज। | 4.7 |
-| vo090 | Swifty | That’s the Discount! | = | दैट्स द डिस्काउंट! | 1.73 |
-| vo091 | Swifty | To find how much you have to pay, | = | टू फाइंड हाउ मच यू हैव टू पे, | 2.66 |
-| vo092 | Swifty | subtract the discount from the marked price. | = | सबट्रैक्ट द डिस्काउंट फ्रॉम द मार्क्ड प्राइस। | 2.78 |
-| vo093 | Swifty | Your turn! Drag each amount into its box. | = | योर टर्न! ड्रैग ईच अमाउंट इंटू इट्स बॉक्स. | 3.82 |
-| vo094 | Swifty | Not quite! The MP box is for the marked price, ₹1800. | Not quite! The M P box is for the marked price, one thousand eight hundred rupees. | नॉट क्वाइट! द एम पी बॉक्स इज़ फॉर द मार्क्ड प्राइस, वन थाउज़ेंड एइट हंड्रेड रूपीज़। | 6.86 |
-| vo095 | Swifty | Not quite! The Discount box is for the discount, ₹540. | Not quite! The Discount box is for the discount, five hundred and forty rupees. | नॉट क्वाइट! द डिस्काउंट बॉक्स इज़ फॉर द डिस्काउंट, फाइव हंड्रेड एंड फोर्टी रुपीस। | 5.81 |
-| vo096 | Swifty | ₹1800 − ₹540 | One thousand eight hundred rupees minus five hundred and forty rupees | वन थाउजेंड एइट हंड्रेड रुपीज माइनस फाइव हंड्रेड एंड फोर्टी रुपीज | 5.42 |
-| vo097 | Swifty | = ₹1260. | equals one thousand two hundred and sixty rupees. | इक्वल्स वन थाउजेंड टू हंड्रेड एंड सिक्सटी रुपीज | 3.98 |
-| vo098 | Swifty | So, you pay ₹1260 for the sneakers! | So, you pay one thousand two hundred and sixty rupees for the sneakers! | सो, यू पे वन थाउजेंड टू हंड्रेड एंड सिक्सटी रुपीस फॉर द स्नीकर्स! | 4.82 |
-| vo099 | Aniket | So, after a 30% discount, | So, after a thirty percent discount, | सो, आफ्टर ए थर्टी परसेंट डिस्काउंट, | 3.34 |
-| vo100 | Aniket | I will pay ₹1260. | I will pay one thousand two hundred and sixty rupees. | आई विल पे वन थाउजेंड टू हंड्रेड एंड सिक्सटी रुपीज। | 3.65 |
-| vo101 | Swifty | Discount percentage tells us what percent | = | डिस्काउंट परसेंटेज टेल्स अस वॉट परसेंट | 3.46 |
-| vo102 | Swifty | of the marked price has been reduced. | = | ऑफ द मार्क्ड प्राइस हैज बीन रिड्यूस्ड। | 2.69 |
-| vo103 | Swifty | The discount is ₹540, | The discount is five hundred and forty rupees, | द डिस्काउंट इज फाइव हंड्रेड एंड फोर्टी रूपीस, | 3.29 |
-| vo104 | Swifty | and the marked price is ₹1800. | and the marked price is one thousand eight hundred rupees. | एंड द मार्क्ड प्राइस इज वन थाउजेंड एट हंड्रेड रुपीस। | 4.1 |
-| vo105 | Swifty | 540 ÷ 1800 × 100 | Five hundred and forty divided by one thousand eight hundred, times one hundred | फाइव हंड्रेड एंड फौर्टी डिवाइडेड बाइ वन थाउजेंड ऐट हंड्रेड, टाइम्स वन हंड्रेड | 6.82 |
-| vo106 | Swifty | = 30%. | equals thirty percent. | ईक्वल्स थर्टी परसेंट | 2.66 |
-| vo107 | Swifty | That’s the 30% off on the tag! | That’s the thirty percent off on the tag! | दैट्स द थर्टी परसेंट ऑफ ऑन द टैग! | 3.02 |
-| vo108 | Swifty | Let’s sum up the sneakers! | = | लेट्स सम अप द स्नीकर्स! | 2.45 |
-| vo109 | Swifty | Marked price: ₹1800. | Marked price: one thousand eight hundred rupees. | मार्कड प्राइस वन थाउजेंड एट हंड्रेड रुपीज | 2.81 |
-| vo110 | Swifty | Discount: 30%, | Discount: thirty percent, | डिस्काउंट थर्टी परसेंट, | 2.33 |
-| vo111 | Swifty | which is ₹540. | which is five hundred and forty rupees. | विच इज़ फाइव हंड्रेड एंड फोर्टी रुपीज़। | 3.02 |
-| vo112 | Swifty | Selling price: ₹1260. | Selling price: one thousand two hundred and sixty rupees. | सेलिंग प्राइस वन थाउजेंड टू हंड्रेड एंड सिक्सटी रुपीस | 4.37 |
-| vo113 | Swifty | Discount = MP − SP, | Discount equals M P minus S P, | डिस्काउंट इक्वल्स एम पी माइनस एस पी, | 4.46 |
-| vo114 | Swifty | SP = MP − Discount, | S P equals M P minus Discount, | एस पी इक्वल्स एम पी माइनस डिस्काउंट, | 3.46 |
-| vo115 | Swifty | and Discount % = Discount ÷ MP × 100. | and Discount percentage equals Discount divided by M P, times one hundred. | एंड डिस्काउंट परसेंटेज इक्वल्स डिस्काउंट डिवाइडेड बाय एम पी, टाइम्स वन हंड्रेड। | 7.46 |
-| vo116 | Swifty | Now you can work out any discount! | = | नाउ यू कैन वर्क आउट एनी डिस्काउंट! | 2.9 |
-| vo117 | Father | How was your shopping? | = | हाउ वॉज़ योर शॉपिंग? | 1.97 |
-| vo118 | Aniket | Great! I learnt about marked price, discount and discount percentage. | = | ग्रेट! आई लर्न्ट अबाउट मार्क्ड प्राइस, डिस्काउंट एंड डिस्काउंट परसेंटेज। | 5.57 |
-| vo119 | Father | That’s useful, because you have another shopping job. | = | दैट्स यूज़फुल, बिकॉज़ यू हैव अनदर शॉपिंग जॉब। | 3.89 |
-| vo120 | Father | Your new school session starts in a few days. | = | योर न्यू स्कूल सेशन स्टार्ट्स इन अ फ्यू डेज़। | 3.34 |
-| vo121 | Father | You still need some things for school. | = | यू स्टिल नीड सम थिंग्स फॉर स्कूल। | 2.62 |
-| vo122 | Father | Here’s ₹5,000. | Here’s five thousand rupees. | हियर्स फाइव थाउजेंड रुपीज़। | 2.3 |
-| vo123 | Father | Use what you have learnt and find the best deals. | = | यूज़ वॉट यू हैव लर्न्ट एंड फाइंड द बेस्ट डील्स। | 3.74 |
-| vo124 | Father | Whatever is left after buying everything is yours. | = | व्हाटएवर इज लेफ्ट आफ्टर बाइंग एवरीथिंग इज योर्स। | 3.5 |
-| vo125 | Aniket | Really? | = | रियली? | 1.22 |
-| vo126 | Aniket | Then I’m definitely finding the best offers! | = | देन आई एम डेफिनेटली फाइंडिंग द बेस्ट ऑफर्स! | 3.17 |
+| vo026 | Swifty | Marked Price, | = | मार्क्ड प्राइस, | 1.97 |
+| vo027 | Swifty | minus Selling Price, | = | माइनस सेलिंग प्राइस, | 2.38 |
+| vo028 | Swifty | equals Discount. | = | ईक्वल्स डिस्काउंट। | 2.38 |
+| vo029 | Swifty | So, the discount is ₹200. | So, the discount is two hundred rupees. | सो द डिस्काउंट इज टू हंड्रेड रुपीज। | 3.29 |
+| vo030 | Swifty | Discount | = | डिस्काउंट | 1.37 |
+| vo031 | Swifty | equals Marked Price, | = | इक्वल्स मार्क्ड प्राइस, | 2.5 |
+| vo032 | Swifty | minus Selling Price. | = | माइनस सेलिंग प्राइस। | 2.42 |
+| vo033 | Swifty | We can write it in short. | = | वी कैन राइट इट इन शॉर्ट। | 2.06 |
+| vo034 | Swifty | D for Discount, | = | डी फॉर डिस्काउंट, | 2.45 |
+| vo035 | Swifty | MP for Marked Price, | M P for Marked Price, | एम पी फॉर मार्क्ड प्राइस, | 2.81 |
+| vo036 | Swifty | SP for Selling Price. | S P for Selling Price. | एस पी फॉर सेलिंग प्राइस। | 2.98 |
+| vo037 | Swifty | So, D | = | सो, डी | 1.42 |
+| vo038 | Swifty | = MP | equals M P | इक्वल्स एम पी | 2.66 |
+| vo039 | Swifty | − SP. | minus S P. | माइनस एस पी। | 2.14 |
+| vo040 | Swifty | Let’s remember! | = | लेट्स रिमेम्बर! | 1.9 |
+| vo041 | Swifty | Marked Price is the price written on an item. | = | मार्क्ड प्राइस इज द प्राइस रिटन ऑन एन आइटम। | 3.25 |
+| vo042 | Swifty | Selling Price is the price at which it is sold. | = | सेलिंग प्राइस इज द प्राइस एट व्हिच इट इज सोल्ड. | 3.59 |
+| vo043 | Swifty | Discount is the amount reduced from the marked price. | = | डिस्काउंट इज द अमाउंट रिड्यूस्ड फ्रॉम द मार्क्ड प्राइस। | 4.05 |
+| vo044 | Swifty | And remember the formula: Discount = MP − SP! | And remember the formula: Discount equals M P minus S P! | एंड रिमेंबर द फॉर्मूला: डिस्काउंट इक्वल्स एम पी माइनस एस पी! | 6.26 |
+| vo045 | Aniket | These sneakers look good! | = | दीज़ स्नीकर्स लुक गुड! | 2.5 |
+| vo046 | Aniket | What does 30% OFF mean here? | What does thirty percent off mean here? | वॉट डज़ थर्टी परसेंट ऑफ मीन हियर? | 2.78 |
+| vo047 | Aniket | Is this also a discount? | = | इज़ दिस ऑल्सो अ डिस्काउंट? | 2.3 |
+| vo048 | Aniket | What does 30% discount mean here? | What does thirty percent discount mean here? | वॉट डज थर्टी परसेंट डिस्काउंट मीन हियर? | 2.93 |
+| vo049 | Aniket | The price tagged is ₹1800. | The price tagged is one thousand eight hundred rupees. | द प्राइस टैग्ड इज वन थाउजेंड ऐट हंड्रेड रुपीज। | 3.29 |
+| vo050 | Aniket | Using 30% OFF! How much money I actually have to pay? | Using thirty percent off! How much money I actually have to pay? | यूज़िंग थर्टी परसेंट ऑफ़! हाउ मच मनी आई एक्चुअली हैव टू पे? | 4.61 |
+| vo051 | Swifty | To find the discount amount, | = | टू फाइंड द डिस्काउंट अमाउंट, | 2.45 |
+| vo052 | Swifty | let’s first recall how percentages work. | = | लेट्स फर्स्ट रिकॉल हाउ परसेंटेज वर्क। | 3.5 |
+| vo053 | Swifty | a is what percent of b? | A is what percent of B? | ए इज़ वॉट परसेंट ऑफ बी? | 2.98 |
+| vo054 | Swifty | a is the part, | A is the part, | ए इज़ द पार्ट, | 2.38 |
+| vo055 | Swifty | and b is the whole. | and B is the whole. | एंड बी इज द होल। | 2.54 |
+| vo056 | Swifty | To find the percentage, | = | टू फाइंड द परसेंटेज, | 2.3 |
+| vo057 | Swifty | divide the part by the whole, | = | डिवाइड द पार्ट बाय द होल, | 2.86 |
+| vo058 | Swifty | then multiply by 100. | then multiply by one hundred. | देन मल्टीप्लाइ बाय वन हंड्रेड। | 2.69 |
+| vo059 | Swifty | Put the part on top, | = | पुट द पार्ट ऑन टॉप, | 2.3 |
+| vo060 | Swifty | and the whole below. | = | एंड द होल बिलो। | 2.06 |
+| vo061 | Swifty | Then put a % sign after it. | Then put a percent sign after it. | देन पुट अ परसेंट साइन आफ्टर इट। | 2.66 |
+| vo062 | Swifty | Let’s take an example! | = | लेट्स टेक एन एग्जांपल! | 1.9 |
+| vo063 | Swifty | 125 is what percent of 500? | One hundred and twenty-five is what percent of five hundred? | वन हंड्रेड एंड ट्वेंटी-फाइव इज़ वॉट परसेंट ऑफ फाइव हंड्रेड? | 4.3 |
+| vo064 | Swifty | 125 is the part, | One hundred and twenty-five is the part, | वन हंड्रेड एंड ट्वेंटी-फाइव इज द पार्ट, | 3.34 |
+| vo065 | Swifty | and 500 is the whole. | and five hundred is the whole. | एंड फाइव हंड्रेड इज द होल। | 2.93 |
+| vo066 | Swifty | 125 ÷ 500 × 100 | One hundred and twenty-five divided by five hundred, times one hundred | वन हंड्रेड एंड ट्वेंटी फाइव डिवाइडेड बाय फाइव हंड्रेड टाइम्स वन हंड्रेड | 7.06 |
+| vo067 | Swifty | = 25%. | equals twenty-five percent. | ईक्वल्स ट्वेंटी फाइव परसेंट | 2.62 |
+| vo068 | Swifty | So, 125 is 25% of 500! | So, one hundred and twenty-five is twenty-five percent of five hundred! | सो, वन हंड्रेड एंड ट्वेंटी-फाइव इज़ ट्वेंटी-फाइव परसेंट ऑफ फाइव हंड्रेड! | 5.14 |
+| vo069 | Swifty | 250 is what percent of 1000? | Two hundred and fifty is what percent of one thousand? | टू हंड्रेड एंड फिफ्टी इज वॉट परसेंट ऑफ वन थाउजेंड? | 3.89 |
+| vo070 | Swifty | Not quite! | = | नॉट क्वाइट! | 1.61 |
+| vo071 | Swifty | 250 is the part, | Two hundred and fifty is the part, | टू हंड्रेड एंड फिफ्टी इज़ द पार्ट, | 3.05 |
+| vo072 | Swifty | 1000 is the whole. | one thousand is the whole. | वन थाउज़ेंड इज़ द होल। | 2.42 |
+| vo073 | Swifty | 250 ÷ 1000 × 100 = 25%. | Two hundred and fifty divided by one thousand, times one hundred, equals twenty-five percent. | टू हंड्रेड एंड फिफ्टी डिवाइडेड बाय वन थाउजेंड टाइम्स वन हंड्रेड इक्वल्स ट्वेंटी फाइव परसेंट | 7.7 |
+| vo074 | Swifty | Correct! | = | करेक्ट! | 1.13 |
+| vo075 | Swifty | So, 250 is 25% of 1000. | So, two hundred and fifty is twenty-five percent of one thousand. | सो, टू हंड्रेड एंड फिफ्टी इज ट्वेंटी-फाइव परसेंट ऑफ वन थाउजेंड। | 5.02 |
+| vo076 | Swifty | Now, back to Aniket’s sneakers! | = | नाउ, बैक टू अनिकेत्स स्नीकर्स! | 3.1 |
+| vo077 | Swifty | Now, what is 30% of ₹1800? | Now, what is thirty percent of one thousand eight hundred rupees? | नाउ, वट इज थर्टी परसेंट ऑफ वन थाउजेंड ऐट हंड्रेड रुपीज? | 4.78 |
+| vo078 | Swifty | 30% of ₹1800 is ₹540. | Thirty percent of one thousand eight hundred rupees is five hundred and forty rupees. | थर्टी परसेंट ऑफ वन थाउजेंड ऐट हंड्रेड रुपीस इज फाइव हंड्रेड एंड फॉर्टी रुपीस। | 5.78 |
+| vo079 | Swifty | Let’s see how to work it out! | = | लेट्स सी हाउ टू वर्क इट आउट! | 2.21 |
+| vo080 | Swifty | 30% means | Thirty percent means | थर्टी परसेंट मीन्स | 2.57 |
+| vo081 | Swifty | 30 out of 100. | thirty out of one hundred. | थर्टी आउट ऑफ वन हंड्रेड। | 2.26 |
+| vo082 | Swifty | So, 30% of ₹1800 = | So, thirty percent of one thousand eight hundred rupees equals | सो, थर्टी परसेंट ऑफ वन थाउजेंड ऐट हंड्रेड रुपीस इक्वल्स | 5.21 |
+| vo083 | Swifty | 30/100 × 1800 | thirty over one hundred, times one thousand eight hundred | थर्टी ओवर वन हंड्रेड, टाइम्स वन थाउजेंड एइट हंड्रेड | 5.69 |
+| vo084 | Swifty | 1800 ÷ 100 = 18, | One thousand eight hundred divided by one hundred equals eighteen, | वन थाउजेंड एइट हंड्रेड डिवाइडेड बाय वन हंड्रेड इक्वल्स एटीन, | 4.37 |
+| vo085 | Swifty | and 18 × 30 = 540. | and eighteen times thirty equals five hundred and forty. | एंड एटीन टाइम्स थर्टी इक्वल्स फाइव हंड्रेड एंड फोर्टि। | 4.94 |
+| vo086 | Swifty | So, it’s ₹540! | So, it’s five hundred and forty rupees! | सो इट्स फाईव हंड्रेड एंड फोर्टी रुपीज़! | 2.86 |
+| vo087 | Swifty | What does ₹540 represent here? | What does five hundred and forty rupees represent here? | वॉट डज़ फाइव हंड्रेड एंड फोर्टी रुपीज़ रिप्रेजेंट हियर? | 3.89 |
+| vo088 | Swifty | ₹540 is the money taken off ₹1800. | Five hundred and forty rupees is the money taken off one thousand eight hundred rupees. | फाइव हंड्रेड एंड फोर्टी रुपीज इज द मनी टेकन ऑफ वन थाउजेंड एट हंड्रेड रुपीज। | 4.7 |
+| vo089 | Swifty | That’s the Discount! | = | दैट्स द डिस्काउंट! | 1.73 |
+| vo090 | Swifty | To find how much you have to pay, | = | टू फाइंड हाउ मच यू हैव टू पे, | 2.66 |
+| vo091 | Swifty | subtract the discount from the marked price. | = | सबट्रैक्ट द डिस्काउंट फ्रॉम द मार्क्ड प्राइस। | 2.78 |
+| vo092 | Swifty | Your turn! Drag each amount into its box. | = | योर टर्न! ड्रैग ईच अमाउंट इंटू इट्स बॉक्स. | 3.82 |
+| vo093 | Swifty | Not quite! The MP box is for the marked price, ₹1800. | Not quite! The M P box is for the marked price, one thousand eight hundred rupees. | नॉट क्वाइट! द एम पी बॉक्स इज़ फॉर द मार्क्ड प्राइस, वन थाउज़ेंड एइट हंड्रेड रूपीज़। | 6.86 |
+| vo094 | Swifty | Not quite! The Discount box is for the discount, ₹540. | Not quite! The Discount box is for the discount, five hundred and forty rupees. | नॉट क्वाइट! द डिस्काउंट बॉक्स इज़ फॉर द डिस्काउंट, फाइव हंड्रेड एंड फोर्टी रुपीस। | 5.81 |
+| vo095 | Swifty | ₹1800 − ₹540 | One thousand eight hundred rupees minus five hundred and forty rupees | वन थाउजेंड एइट हंड्रेड रुपीज माइनस फाइव हंड्रेड एंड फोर्टी रुपीज | 5.42 |
+| vo096 | Swifty | = ₹1260. | equals one thousand two hundred and sixty rupees. | इक्वल्स वन थाउजेंड टू हंड्रेड एंड सिक्सटी रुपीज | 3.98 |
+| vo097 | Swifty | So, you pay ₹1260 for the sneakers! | So, you pay one thousand two hundred and sixty rupees for the sneakers! | सो, यू पे वन थाउजेंड टू हंड्रेड एंड सिक्सटी रुपीस फॉर द स्नीकर्स! | 4.82 |
+| vo098 | Aniket | So, after a 30% discount, | So, after a thirty percent discount, | सो, आफ्टर ए थर्टी परसेंट डिस्काउंट, | 3.34 |
+| vo099 | Aniket | I will pay ₹1260. | I will pay one thousand two hundred and sixty rupees. | आई विल पे वन थाउजेंड टू हंड्रेड एंड सिक्सटी रुपीज। | 3.65 |
+| vo100 | Swifty | Discount percentage tells us what percent | = | डिस्काउंट परसेंटेज टेल्स अस वॉट परसेंट | 3.46 |
+| vo101 | Swifty | of the marked price has been reduced. | = | ऑफ द मार्क्ड प्राइस हैज बीन रिड्यूस्ड। | 2.69 |
+| vo102 | Swifty | The discount is ₹540, | The discount is five hundred and forty rupees, | द डिस्काउंट इज फाइव हंड्रेड एंड फोर्टी रूपीस, | 3.29 |
+| vo103 | Swifty | and the marked price is ₹1800. | and the marked price is one thousand eight hundred rupees. | एंड द मार्क्ड प्राइस इज वन थाउजेंड एट हंड्रेड रुपीस। | 4.1 |
+| vo104 | Swifty | 540 ÷ 1800 × 100 | Five hundred and forty divided by one thousand eight hundred, times one hundred | फाइव हंड्रेड एंड फौर्टी डिवाइडेड बाइ वन थाउजेंड ऐट हंड्रेड, टाइम्स वन हंड्रेड | 6.82 |
+| vo105 | Swifty | = 30%. | equals thirty percent. | ईक्वल्स थर्टी परसेंट | 2.66 |
+| vo106 | Swifty | That’s the 30% off on the tag! | That’s the thirty percent off on the tag! | दैट्स द थर्टी परसेंट ऑफ ऑन द टैग! | 3.02 |
+| vo107 | Swifty | Let’s sum up the sneakers! | = | लेट्स सम अप द स्नीकर्स! | 2.45 |
+| vo108 | Swifty | Marked price: ₹1800. | Marked price: one thousand eight hundred rupees. | मार्कड प्राइस वन थाउजेंड एट हंड्रेड रुपीज | 2.81 |
+| vo109 | Swifty | Discount: 30%, | Discount: thirty percent, | डिस्काउंट थर्टी परसेंट, | 2.33 |
+| vo110 | Swifty | which is ₹540. | which is five hundred and forty rupees. | विच इज़ फाइव हंड्रेड एंड फोर्टी रुपीज़। | 3.02 |
+| vo111 | Swifty | Selling price: ₹1260. | Selling price: one thousand two hundred and sixty rupees. | सेलिंग प्राइस वन थाउजेंड टू हंड्रेड एंड सिक्सटी रुपीस | 4.37 |
+| vo112 | Swifty | Discount = MP − SP, | Discount equals M P minus S P, | डिस्काउंट इक्वल्स एम पी माइनस एस पी, | 4.46 |
+| vo113 | Swifty | SP = MP − Discount, | S P equals M P minus Discount, | एस पी इक्वल्स एम पी माइनस डिस्काउंट, | 3.46 |
+| vo114 | Swifty | and Discount % = Discount ÷ MP × 100. | and Discount percentage equals Discount divided by M P, times one hundred. | एंड डिस्काउंट परसेंटेज इक्वल्स डिस्काउंट डिवाइडेड बाय एम पी, टाइम्स वन हंड्रेड। | 7.46 |
+| vo115 | Swifty | Now you can work out any discount! | = | नाउ यू कैन वर्क आउट एनी डिस्काउंट! | 2.9 |
+| vo116 | Father | How was your shopping? | = | हाउ वॉज़ योर शॉपिंग? | 1.97 |
+| vo117 | Aniket | Great! I learnt about marked price, discount and discount percentage. | = | ग्रेट! आई लर्न्ट अबाउट मार्क्ड प्राइस, डिस्काउंट एंड डिस्काउंट परसेंटेज। | 5.57 |
+| vo118 | Father | That’s useful, because you have another shopping job. | = | दैट्स यूज़फुल, बिकॉज़ यू हैव अनदर शॉपिंग जॉब। | 3.89 |
+| vo119 | Father | Your new school session starts in a few days. | = | योर न्यू स्कूल सेशन स्टार्ट्स इन अ फ्यू डेज़। | 3.34 |
+| vo120 | Father | You still need some things for school. | = | यू स्टिल नीड सम थिंग्स फॉर स्कूल। | 2.62 |
+| vo121 | Father | Here’s ₹5,000. | Here’s five thousand rupees. | हियर्स फाइव थाउजेंड रुपीज़। | 2.3 |
+| vo122 | Father | Use what you have learnt and find the best deals. | = | यूज़ वॉट यू हैव लर्न्ट एंड फाइंड द बेस्ट डील्स। | 3.74 |
+| vo123 | Father | Whatever is left after buying everything is yours. | = | व्हाटएवर इज लेफ्ट आफ्टर बाइंग एवरीथिंग इज योर्स। | 3.5 |
+| vo124 | Aniket | Really? | = | रियली? | 1.22 |
+| vo125 | Aniket | Then I’m definitely finding the best offers! | = | देन आई एम डेफिनेटली फाइंडिंग द बेस्ट ऑफर्स! | 3.17 |
 <!-- /vo-table -->

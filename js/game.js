@@ -187,7 +187,7 @@
       play: playLook,
     },
     {
-      id: 'shock', title: 'What Is This?', sub: '“₹1000 is written on this book!”',
+      id: 'shock', title: 'What Is This?', sub: '“₹1000? What is this?”',
       bg: ASSETS + 'shocked aniket.png',
       kb: { origin: '55% 80%', from: 'scale(1.02)', to: 'scale(1.065)' },
       lamps: [[1292, 128, 300]],
@@ -983,7 +983,7 @@
     await ctx.wait(650);
     const line = FX.bubble(scene.layer, {
       anchor: [1030, 350], corner: 'bl', tip: [966, 300], // right of his head, the tail at his hair (his face is turned away)
-      text: [{ t: 'What is this?\n' }, { t: '₹1000', em: true }, { t: ' is written\non this book!' }],
+      text: [{ t: '₹1000', em: true }, { t: '?\nWhat is this?' }],
       voice: 'boy', rotate: -1.5,
     });
     await line.show();
@@ -1113,11 +1113,11 @@
     note: 'reduced',
   };
   const REVEAL_LINE = {
-    anchor: [1232, 296], corner: 'br', tip: [1318, 370],
+    anchor: [1256, 296], corner: 'br', tip: [1318, 370], // between them, clear of both heads, the tail at his mouth
     text: [
       { t: 'The price printed on\nthe book is ' }, { t: '₹1000', em: true }, { t: ',', end: true },
-      { t: '\nbut I gave you at ' }, { t: '₹800', em: true }, { t: '.', end: true },
-      { t: '\nYou got ' }, { t: '₹200', em: true }, { t: ' ' }, { t: 'discount.', cls: 'key' },
+      { t: '\nbut you paid only ' }, { t: '₹800', em: true }, { t: '.', end: true },
+      { t: '\nSo, you got a ' }, { t: '₹200', em: true }, { t: ' ' }, { t: 'discount.', cls: 'key' },
     ],
     voice: 'man', rotate: 1.5,
   };
@@ -1143,15 +1143,15 @@
     await card.pasteFrom();
     await ctx.wait(400);
 
-    // "but I gave you at ₹800.": the red arrow grows down, and the ₹800 flies into the bottom box.
-    await speakPart(ctx, line, 1, 'reveal-2', 'but I gave you at ₹800.', 'man');
+    // "but you paid only ₹800.": the red arrow grows down, and the ₹800 flies into the bottom box.
+    await speakPart(ctx, line, 1, 'reveal-2', 'but you paid only ₹800.', 'man');
     await card.arrowDown();
     await fly(said800, card.prices.to, 900);
     await card.pasteTo();
     await ctx.wait(400);
 
-    // "You got ₹200 discount.": the ₹200 flies beside the arrow: "₹200 reduced".
-    await speakPart(ctx, line, 2, 'reveal-3', 'You got ₹200 discount.', 'man');
+    // "So, you got a ₹200 discount.": the ₹200 flies beside the arrow: "₹200 reduced".
+    await speakPart(ctx, line, 2, 'reveal-3', 'So, you got a ₹200 discount.', 'man');
     await fly(said200, card.prices.cut, 800);
     await card.pasteCut();
     line.emphasize(); // "discount." pulses: the new word
@@ -1238,9 +1238,10 @@
     endWithSwifty(ctx, scene, talk); // then the formula
   }
 
-  // The discount formula, built one piece at a time: the ₹1000 lifts off the book's sticker into the
-  // Marked Price box, then − ₹800 Selling Price, then = ₹200 Discount, with Swifty saying each step from
-  // her corner; then she says the formula in words while each part lights up.
+  // The discount formula, built one piece at a time with the amounts only: the ₹1000 lifts off the book's sticker into
+  // the first box, then − ₹800, then = ₹200, while Swifty points at each from her corner (the sum speaks for itself).
+  // Then she says the formula in words, and as she says each part its box's name is written in above its amount
+  // (Marked Price, Selling Price, Discount); then "So, the discount is ₹200." while the Discount box glows.
   async function playFormula(ctx, scene) {
     const fp = FX.formulaPanel(scene.ui, {
       price: '₹1000',
@@ -1250,6 +1251,7 @@
         { label: 'Discount', value: '₹200', tone: 'red' },
       ],
       ops: ['−', '='],
+      namesLater: true, // the amounts first: each name is written in as she says it
     });
     await ctx.wait(450); // the definition card finishes fading away first
     fp.open();
@@ -1257,7 +1259,8 @@
     fp.showBook();
     await ctx.wait(1000);
 
-    // Marked Price: the price printed on the book flies into the first box; Swifty flies in meanwhile.
+    // Marked Price: the price printed on the book flies into the first box; Swifty flies in meanwhile, and points at
+    // it once it has landed (she says nothing yet: the sum builds by itself, and her first line is the Discount's).
     fp.highlight();
     await ctx.wait(600);
     await fp.box(0, { empty: true });
@@ -1266,14 +1269,16 @@
     arriving.catch(() => {}); // if the player leaves meanwhile, the await below reports it
     await fp.fly();
     const talk = await arriving;
-    await talk.say('f-mp', [{ t: 'The Marked Price\nis ' }, { t: '₹1000', em: true }, { t: '.' }], 700);
+    talk.bird.point();
+    await ctx.wait(900);
 
-    // − Selling Price
+    // − Selling Price (no words: she points at it)
     await ctx.wait(250);
     fp.op(0);
     await ctx.wait(350);
     await fp.box(1);
-    await talk.say('f-sp', [{ t: 'Subtract the\nSelling Price, ' }, { t: '₹800', em: true }, { t: '.' }], 700);
+    talk.bird.point();
+    await ctx.wait(1100);
 
     // = Discount
     await ctx.wait(250);
@@ -1282,20 +1287,27 @@
     await fp.box(2, { stamp: true });
     const d = stageRect(fp.boxes[2]);
     FX.burst(scene.ui, d.left + d.width / 2, d.top + d.height / 2, { count: 16, dist: [120, 230], size: [12, 24] });
-    await talk.say('f-d', [{ t: 'We get ' }, { t: '₹200', em: true }, { t: '.\nThat is the ' }, { t: 'Discount!', cls: 'key' }], 900);
-    talk.line.emphasize();
-    await ctx.wait(600);
+    talk.bird.point(); // no words: the ₹200 Discount box speaks for itself
+    await ctx.wait(1300);
 
-    // The formula in words, one part at a time: each part lights up as she says it.
+    // The formula in words, one part at a time: each part lights up as she says it, and its box's name is written in
+    // above its amount (Marked Price, then Selling Price, then Discount).
     await talk.show([{ t: 'Marked Price,', end: true }, { t: '\nminus Selling Price,', end: true }, { t: '\nequals Discount.' }]);
     const lit = [[fp.boxes[0]], [fp.ops[0], fp.boxes[1]], [fp.ops[1], fp.boxes[2]]];
     for (const [i, parts] of lit.entries()) {
-      parts.forEach((part, k) => ctx.wait(k * 420).then(() => fp.ping(part), () => {}));
+      parts.forEach((part, k) => ctx.wait(k * 420).then(() => {
+        fp.ping(part);
+        if (part === fp.boxes[i]) fp.name(i);
+      }, () => {}));
       await talk.part(`rule-${i + 1}`, i, 900);
     }
-    await ctx.wait(400);
+    await ctx.wait(500);
+
+    // What it comes to here: the Discount box glows as she says it.
     fp.glow(2); // the Discount keeps glowing
     Sound.ding();
+    await talk.say('f-so', [{ t: 'So, the discount\nis ' }, { t: '₹200', em: true }, { t: '.' }], 600);
+    talk.line.emphasize();
     endWithSwifty(ctx, scene, talk); // then the formula itself
   }
 
@@ -1378,8 +1390,9 @@
   }
 
   // The formula: first in words on a pink strip, then in short. Swifty says it from her corner, part by
-  // part as each part appears; the first letters of each term light up and fly down to make the short
-  // form D = MP − SP; then she reads it out and points at it.
+  // part as each part appears (no bubble for the words on the strip: she only says them); the first letters of
+  // each term light up and fly down to make the short form D = MP − SP; then she reads it out (no bubble either: it
+  // is written in the blue box) and points at it.
   async function playFormulaReveal(ctx, scene) {
     const ui = scene.ui;
     const fr = FX.formulaReveal(ui, {
@@ -1398,18 +1411,17 @@
     const talk = await arriving;
     const bird = talk.bird;
 
-    // In words, one part at a time.
-    await talk.show([{ t: 'Discount', end: true }, { t: '\nequals Marked Price,', end: true }, { t: '\nminus Selling Price.' }]);
+    // In words, one part at a time: she says each part as it is written on the strip (no bubble: its words are there).
     fr.term(0);
-    await talk.part('fr-1', 0, 700);
+    await readOut(ctx, bird, 'fr-1', 'Discount', ctx.wait(700));
     fr.op(0);
     await ctx.wait(300);
     fr.term(1);
-    await talk.part('fr-2', 1, 900);
+    await readOut(ctx, bird, 'fr-2', 'equals Marked Price,', ctx.wait(900));
     fr.op(1);
     await ctx.wait(300);
     fr.term(2);
-    await talk.part('fr-3', 2, 900);
+    await readOut(ctx, bird, 'fr-3', 'minus Selling Price.', ctx.wait(900));
     await ctx.wait(600);
 
     // In short: each term's first letters fly down into the blue box (which springs up as the first ones go).
@@ -1430,16 +1442,17 @@
     }
     await ctx.wait(400);
 
-    // The short form, read out: each part pops as she says it.
-    await talk.show([{ t: 'So, D', end: true }, { t: ' = MP', end: true }, { t: ' − SP.' }]);
+    // The short form, read out (no bubble: it is written in the blue box): each part pops as she says it.
+    await talk.clear(); // her last bubble goes
     const read = [[fr.shortTerms[0]], [fr.shortOps[0], fr.shortTerms[1]], [fr.shortOps[1], fr.shortTerms[2]]];
+    const said = ['So, D', '= MP', '− SP.']; // as recorded
     for (const [i, pieces] of read.entries()) {
-      pieces.forEach((piece, k) => ctx.wait(k * 420).then(() => fr.ping(piece), () => {}));
-      await talk.part(`fr-${8 + i}`, i, 900);
+      const popping = Promise.all(pieces.map((piece, k) => ctx.wait(k * 420).then(() => fr.ping(piece))));
+      await readOut(ctx, bird, `fr-${8 + i}`, said[i], popping.then(() => ctx.wait(480)));
     }
     await ctx.wait(500);
 
-    // She points at it, her bubble staying up.
+    // She points at it.
     bird.point();
     endWithSwifty(ctx, scene, talk); // then a quick summary
   }
@@ -2538,7 +2551,7 @@
     { icon: ASSETS + 'ui/shop/icon-uniform.png', label: 'School Uniform' }, // the same pictures as everywhere in the game
     { icon: ASSETS + 'ui/shop/icon-shoes.png', label: 'School Shoes' },
     { icon: ASSETS + 'ui/shop/icon-bag.png', label: 'School Bag' },
-    { icon: BEGIN + 'bottle.png', label: 'Water Bottle' },
+    { icon: ASSETS + 'ui/shop/icon-bottle.png', label: 'Water Bottle' },
   ];
 
   async function playBegin(ctx, scene) {
@@ -2620,17 +2633,41 @@
   }
 
   // Swifty's lines on the question bar, for a screen's script: each one takes the place of the one before, typed while
-  // her voice says it (as swiftyTalk does with bubbles). `task`: what to do, shown while she isn't saying anything.
+  // her voice says it (as swiftyTalk does with bubbles). `task`: the question, or what to do, shown while she isn't
+  // saying anything. Nothing on the bar repeats what a panel shows: the panels carry no question of their own.
   function barTalk(ctx, task = '') {
     const bar = questionBar;
     bar.task(task);
     let line = null;
+    let away = false; // stepped away while a question panel is up (see away)
     const live = () => { if (!ctx.alive()) throw CANCELLED; }; // the player has left this screen: hands off the bar
+    // Whenever she speaks, she is on screen: the bar slides back in first if it had stepped away.
+    const back = async () => {
+      if (!away) return;
+      away = false;
+      bar.toggle(true);
+      await ctx.wait(450, { real: true });
+    };
     const talk = {
       bird: bar.speaker,
       get line() { return line; },
+      // While a question panel is up (an offer to check, the three offers compared), the bar isn't needed: the question
+      // is on the panel, above its answers. It slides away, empty, and comes back when she next speaks.
+      away() {
+        live();
+        if (away) return;
+        away = true;
+        if (line) {
+          line.el.remove();
+          line = null;
+        }
+        bar.task('');
+        bar.toggle(false);
+      },
+      back,
       async show(text) {
         live();
+        await back();
         if (line) {
           const old = line;
           line = null;
@@ -2655,17 +2692,32 @@
         }
         bar.showTask();
       },
-      // A whole line, typed while she says it; never quicker than `ms`.
+      // A whole line, typed while she says it; never quicker than `ms`. An array of strings is a line too long for one
+      // line of the bar: its parts are said one after the other, each on its own line of the bar.
       async say(id, text, ms = 0) {
+        if (Array.isArray(text) && typeof text[0] === 'string') {
+          for (const [k, part] of text.entries()) await talk.say(`${id}-${k + 1}`, part, ms);
+          return;
+        }
         await talk.show(text);
         await Promise.all([speak(ctx, line, id, 'bird', bar.speaker), ctx.wait(ms)]);
       },
       task(text) {
         if (ctx.alive()) bar.task(text);
       },
-      // She reads out something written on the screen as it is written (`show`); it goes on the bar too.
-      readOut(id, text, show) {
-        return Promise.all([talk.say(id, text), show]);
+      // She reads out something written on the screen as it is written (`show`). Its words are there, so the bar doesn't
+      // repeat them: it keeps what it shows (her last line, or what to do) while she talks.
+      async readOut(id, text, show) {
+        live();
+        await back();
+        bar.speaker.talk();
+        const saying = Voice.say(id, text, 'bird');
+        try {
+          await show;
+          await Promise.all([saying, ctx.wait(500)]);
+        } finally {
+          bar.speaker.idle();
+        }
       },
     };
     return talk;
@@ -2742,7 +2794,7 @@
           work: [{ left: '₹1,400 − ₹250', right: '₹1,150' }] },
       ],
       best: 2,
-      lesson: 'Even though Shop A\noffers 25% OFF,\nShop C has the\nlowest final price.',
+      lesson: ['Even though Shop A offers 25% OFF,', 'Shop C has the lowest final price.'], // said in two parts: one line of the bar each
       bought: 'Bag purchased!',
     },
     bottle: {
@@ -2766,7 +2818,7 @@
   // kind of offer, or for the comparison), while the one answer left glows.
   const HINTS = {
     again: 'Check how much\nyou will actually pay.',
-    percent: 'Find the discount first,\nthen subtract it from\nthe marked price.',
+    percent: ['Find the discount first,', 'then subtract it from the marked price.'], // in two parts: one line of the bar each
     flat: 'Subtract the discount\nfrom the marked price.',
     getat: '“Get at” tells you\nthe price you pay.',
     compare: 'Compare the final prices,\nnot just the discount\npercentages.',
@@ -2832,7 +2884,7 @@
       await checkOffer(ctx, scene, talk, round, shops, st, k, SHOPS[n].icon);
       checked.add(k);
       await st.paid(k);
-      talk.task(checked.size < shops.length ? 'Tap another shop to check its offer.' : '');
+      talk.task(checked.size < shops.length ? 'Tap another shop to check its offer.' : 'Now compare the three offers.');
       await talk.clear();
       await ctx.wait(300);
     }
@@ -2842,9 +2894,10 @@
     ctx.advance(2500); // back to the Shopping Area (or on to the end)
   }
 
-  // One shop's offer: its card comes up out of the shop with "How much will you pay?" and three answers. A wrong answer
-  // is crossed out and Swifty helps (see HINTS); the right one is worked out on the card, line by line, as she reads
-  // it out, and what you pay is stamped under it. Then the card goes back into the shop.
+  // One shop's offer: its card comes up out of the shop with "How much will you pay?" above three answers, and the
+  // question bar steps away. A wrong answer is crossed out and Swifty helps from the bar, which comes back (see HINTS);
+  // the right one is worked out on the card, line by line, as she reads it out, and what you pay is stamped under it.
+  // Then the card goes back into the shop.
   async function checkOffer(ctx, scene, talk, round, shops, st, k, icon) {
     const shop = round.shops[k];
     const right = shop.options.indexOf(shop.pay);
@@ -2854,8 +2907,7 @@
       price: shops[k].price, off: shop.off, options: shop.options.map(rupees), right, work: shop.work, pay: shops[k].pay, art: STREET_ART,
     });
     const at = stagePoint(st.shops[k]);
-    talk.task(`How much will you pay at ${shops[k].name}?`);
-    await talk.clear();
+    talk.away(); // the question is on the card, above its answers: the bar comes back when Swifty speaks
     await card.open(ctx, at);
     let wrong = 0;
     while ((await card.pick()) !== right) {
@@ -2869,6 +2921,8 @@
     FX.burst(scene.ui, x, y, { count: 16, dist: [100, 200], size: [12, 24] });
     await talk.say('right', 'Correct!');
     await card.toWork(ctx);
+    talk.task('Here is how to work it out.');
+    await talk.clear();
     for (const [i, line] of shop.work.entries()) {
       await talk.readOut(`${scene.id}-${k}-work-${i}`, line.text || `${line.left} = ${line.right}`, card.line(i));
     }
@@ -2876,10 +2930,12 @@
     talk.bird.point();
     await ctx.wait(1300);
     await Promise.all([card.close(at), veil.hide()]);
+    await talk.back();
   }
 
-  // The three offers compared: what you pay at each shop, side by side, and "Which shop gives the best deal?". Wrong
-  // picks are crossed out, with Swifty's help; the right one gets a "Best deal!" stamp and she says why.
+  // The three offers compared: what you pay at each shop, side by side, with the question ("Which shop gives the best
+  // deal?") above them on the board; the question bar steps away. Wrong picks are crossed out, with Swifty's help from
+  // the bar, which comes back; the right one gets a "Best deal!" stamp and she says why.
   async function compareOffers(ctx, scene, talk, round, shops, st) {
     const right = round.best;
     const veil = st.veil();
@@ -2891,11 +2947,8 @@
         name: shop.name, tone: shop.tone, price: shop.price, off: round.shops[k].off.join(' '), pay: shop.pay, amount: round.shops[k].pay,
       })),
     });
-    talk.task(round.question);
-    await talk.clear();
+    talk.away(); // the question is on the board, above the rows: the bar comes back when Swifty speaks
     await cb.open(ctx);
-    await talk.readOut(scene.id + '-ask', round.question, null); // she reads the question out (it is on the strip too)
-    talk.bird.point();
     let wrong = 0;
     while ((await cb.pick()) !== right) {
       wrong++;
@@ -2907,8 +2960,8 @@
     const [x, y] = stagePoint(cb.rows[right]);
     FX.burst(scene.ui, x, y, { count: 18, dist: [110, 230], size: [14, 28] });
     await cb.win(right);
-    await talk.say(scene.id + '-best', `${shops[right].name}: ${shops[right].pay}.\nThe best deal!`);
-    if (round.lesson) await talk.say(scene.id + '-lesson', round.lesson);
+    // Why it is the best deal (the board already shows which shop, what you pay there and the ribbon).
+    await talk.say(scene.id + '-best', round.lesson || `${shops[right].name} has the lowest\nfinal price.`);
     await ctx.wait(700);
     await Promise.all([cb.close(), veil.hide()]);
   }
@@ -2916,7 +2969,7 @@
   // Buying at the best shop: it glows with a "Best deal!" ribbon, the Buy button pops in under it and Swifty says to tap
   // it. Pressed, the money flies from the wallet to the shop
   // (SOLD), the item flies from the shop onto the shopping list (ticked), and a slip shows the wallet's sum (₹5,000 −
-  // ₹1,300 = ₹3,700 left) while the wallet counts down.
+  // ₹1,300 = ₹3,700 left) while the wallet counts down, and the bar says what comes next.
   async function buyItem(ctx, scene, talk, round, st, board, n, money) {
     const k = round.best;
     const cost = round.shops[k].pay;
@@ -2941,9 +2994,10 @@
     Shopping.bought.push(scene.id);
     const slip = FX.purchaseSlip(scene.ui, { icon: SHOPS[n].icon, title: round.bought, from: money, cost, left: money - cost });
     const counting = board.countTo(money - cost, 1000);
+    talk.task(allBought() ? 'That was the last thing on the list!' : 'Next: back to the Shopping Area.');
     await slip.show(ctx);
     await counting;
-    await talk.say(scene.id + '-bought', round.bought);
+    await talk.readOut(scene.id + '-bought', round.bought, null); // she reads the slip out (its words aren't repeated on the bar)
     await ctx.wait(1400);
     slip.hide();
   }
@@ -2963,17 +3017,18 @@
   const FULL_NAMES = { uniform: 'Uniform', shoes: 'School Shoes', bag: 'School Bag', bottle: 'Water Bottle' };
 
   // Everything on the list is bought: a banner and confetti; the wallet (the money left) and the list on the left, its
-  // lines ticked one by one as the four things bought pop up on the right. Swifty reads it out on the question bar.
+  // lines ticked one by one as the four things bought pop up on the right. Swifty, on the question bar, says how well
+  // it went (the banner already says it is complete).
   async function playComplete(ctx, scene) {
     const party = FX.celebration(scene.ui, {
       title: 'SHOPPING COMPLETE!', text: 'You bought everything on the list!', items: SHOPS, art: SHOP_ART, money: BUDGET - TOTAL.pay,
     });
-    const talk = barTalk(ctx, scene.title);
+    const talk = barTalk(ctx); // the banner says it is complete: her line adds how well it went
     await ctx.wait(300);
     const building = party.enter(ctx);
     building.catch(() => {}); // if the player leaves meanwhile, the wait below reports it
-    await ctx.wait(1300); // the banner has landed
-    await talk.readOut('complete', 'Shopping complete! You bought everything on the list!', null);
+    await ctx.wait(200);
+    await talk.say('complete-well', 'Well done! You found the best\nprice for every item.');
     await building;
     talk.bird.wave();
     ctx.advance(3000);
@@ -2989,10 +3044,10 @@
 
   async function playReceipt(ctx, scene) {
     const rc = FX.receipt(scene.ui, RECEIPT);
-    const talk = barTalk(ctx, scene.title); // its title on the bar until Swifty's first line
+    const talk = barTalk(ctx); // the receipt has its own heading: her lines say how to read it
     await ctx.wait(300);
     await rc.open();
-    await talk.say('receipt-here', 'Here is Aniket’s\nreceipt!');
+    await talk.say('receipt-colours', [{ t: 'The discounts are in ' }, { t: 'red', cls: 'tone-d' }, { t: ',\nwhat he paid in ' }, { t: 'green', cls: 'tone-pay' }, { t: '.' }]);
     for (let i = 0; i < RECEIPT.rows.length; i++) {
       await rc.row(i);
       await ctx.wait(150);

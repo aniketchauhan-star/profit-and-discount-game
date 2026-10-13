@@ -1338,11 +1338,12 @@
 
   /**
    * The book on the left, then a sum built one piece at a time: three boxes ({ label, value, tone }) with
-   * the operators between them (ops, e.g. ['−', '=']).
+   * the operators between them (ops, e.g. ['−', '=']). { namesLater: true }: the boxes show their amounts only, and
+   * name(i) writes box i's name in above its amount (its place is kept, so nothing moves).
    * Reveal it with open() → showBook() → highlight() → box(0, { empty: true }) → fly() → op(0) → box(1) → …
    * ping(node) makes a box or operator pop with a ring (for reading the formula out); glow(i) keeps a box glowing.
    */
-  function formulaPanel(parent, { price, terms, ops }) {
+  function formulaPanel(parent, { price, terms, ops, namesLater = false }) {
     const root = el('div', 'mp', parent); // the same centring wrapper as the price panels
     const panel = el('div', 'fm-panel', root);
     const bookBox = el('div', 'fm-book', panel);
@@ -1351,6 +1352,7 @@
     const row = el('div', 'fm-row', panel);
     const boxes = [];
     const values = [];
+    const names = [];
     const opEls = [];
     terms.forEach((term, i) => {
       if (i) {
@@ -1359,11 +1361,14 @@
         opEls.push(op);
       }
       const box = el('div', `cmp-box cmp-box--${term.tone} fm-box`, row);
-      el('div', 'cmp-label', box).textContent = term.label;
+      const name = el('div', 'cmp-label', box);
+      name.textContent = term.label;
+      if (namesLater) name.style.opacity = '0'; // written in later (name(i))
       const value = el('div', 'cmp-price', box);
       value.textContent = term.value;
       boxes.push(box);
       values.push(value);
+      names.push(name);
     });
     panel.setAttribute('role', 'group');
     panel.setAttribute('aria-label', terms.map((t, i) => `${i ? ops[i - 1] + ' ' : ''}${t.label} ${t.value}`).join(' '));
@@ -1421,6 +1426,13 @@
         Sound.pop();
         await reveal(values[0], [{ transform: 'scale(1.18)' }, { transform: 'none' }], {
           duration: T(320), easing: 'cubic-bezier(.3,1.6,.5,1)',
+        });
+      },
+      // Box i's name is written in above its amount, left to right.
+      name(i) {
+        Sound.scribble();
+        return reveal(names[i], [{ clipPath: 'inset(0 100% 0 0)' }, { clipPath: 'inset(0 0 0 0)' }], {
+          duration: T(560), easing: 'cubic-bezier(.3,.1,.3,1)',
         });
       },
       // A box or operator pops, with a ring in its colour.
@@ -3329,10 +3341,11 @@
 
   /**
    * The shopping game's question bar, at the top of the screen and always fully on it (in the top row, between the
-   * wallet and the Back / Next buttons): a slim white bar with Swifty in a small round frame inside its left end (her
-   * real, talking self, her face filling the frame), and beside her what she says, typed in step with her voice, one
-   * line at a time (a long one wraps, and a very long one is set smaller so it always fits). While she isn't saying
-   * anything, it says what to do (the task), in a softer blue. One bar serves every screen that has it (see game.js).
+   * wallet and the Back / Next buttons): a big white bar with Swifty in a round frame inside its left end (her real,
+   * talking self, her face filling the frame), and beside her what she says, typed in step with her voice, one line at
+   * a time, each on one line at 34 px (a line too long for that is said in two parts). While she isn't saying anything,
+   * it says the question or what to do (the task), in a softer blue. One bar serves every screen that has it (see
+   * game.js).
    *  sheets  Swifty's sprite sheets (see Bird)
    * toggle(on) slides it up or down; reset() takes its line down and empties the task. line(text) makes a line on it
    * (see buildLetters; its line breaks become spaces), to show(), type (as a bubble's) and hide(); task(text) sets what
@@ -3344,8 +3357,8 @@
     root.setAttribute('aria-live', 'polite');
     const frame = el('div', 'qb-face', root);
     frame.setAttribute('aria-label', 'Swifty');
-    const bird = new Bird(frame, sheets, { scale: 0.215 });
-    bird.place(33, 86); // her face in the middle of the frame (her feet below it, out of sight)
+    const bird = new Bird(frame, sheets, { scale: 0.341 });
+    bird.place(52, 137); // her face in the middle of the frame (her feet below it, out of sight)
     const box = el('div', 'qb-box', root);
     const taskEl = el('div', 'qb-task', box);
     const talking = on => root.classList.toggle('is-talking', on);
@@ -3355,11 +3368,12 @@
       point() { bird.point(); talking(false); },
       wave() { bird.wave(); talking(false); },
     };
-    // Sets a line (or the task) smaller until it fits on the bar.
+    // Every line (and the task) is one line, at 34 px; one that would overflow the bar is set a little smaller (a safety
+    // net: the game's lines are written to fit, a long one said in two parts).
     const fit = node => {
       let size = parseFloat(getComputedStyle(node).fontSize);
-      while (size > 24 && node.offsetHeight > box.offsetHeight - 12) {
-        size -= 2;
+      while (size > 24 && node.scrollWidth > node.clientWidth + 1) {
+        size -= 1;
         node.style.fontSize = px(size);
       }
     };
@@ -3449,10 +3463,11 @@
   }
 
   /**
-   * One shop's offer, checked: a card over the street with the shop's name on its coloured band; on the left the item
-   * in a frame with its marked price and the offer; on the right "How much will you pay?" and three answers
-   * (answerButtons: pick() resolves with the next one picked, guide(i)). Once the right one is picked, the answers make
-   * way for the working, written line by line (line(i)), and what you pay is stamped under it (result()).
+   * One shop's offer, checked: a big card over the street with the shop's name on its coloured band; on the left the
+   * item in a frame with its marked price and the offer; on the right "How much will you pay?" on a purple strip, and
+   * under it three answers (answerButtons: pick() resolves with the next one picked, guide(i)). The question is only
+   * here (the question bar steps away meanwhile). Once the right one is picked, the answers make way for the working,
+   * written line by line under the question (line(i)), and what you pay is stamped under it (result()).
    *  name, tone   as the shop's;  item, icon  the item;  price  '₹1,600';  off  ['10%', 'OFF']
    *  options  ['₹1,590', '₹1,440', '₹160'];  right  the right one's index;  pay  '₹1,440'
    *  work     the working, a line each: { left, right } (written left = right) or { text } (a plain line)
@@ -3465,7 +3480,6 @@
     card.setAttribute('aria-label', `${name}: ${item}, marked price ${price}, offer ${off.join(' ')}. How much will you pay?`);
     const band = el('div', 'oc-band', card);
     el('span', 'oc-shop', band).textContent = name;
-    el('span', 'oc-item', band).textContent = item;
     const body = el('div', 'oc-body', card);
     const side = el('div', 'oc-side', body);
     const frame = el('div', 'oc-frame', side);
@@ -3507,7 +3521,7 @@
       buttons: buttons.buttons,
       pick: buttons.pick,
       guide: buttons.guide,
-      // The card springs up out of the shop at `from` (a stage point), then the question and the answers come in.
+      // The card springs up out of the shop at `from` (a stage point), then the question drops in and the answers come in.
       async open(ctx, from) {
         if (from) card.style.transformOrigin = `${num(from[0] - card.offsetLeft)}px ${num(from[1] - card.offsetTop)}px`;
         Sound.whoosh();
@@ -3537,7 +3551,6 @@
         await ctx.wait(500);
         await settle(answers.animate([{ opacity: 1 }, { opacity: 0, transform: 'translateY(10px)' }], { duration: 260, fill: 'forwards' }));
         answers.style.display = 'none';
-        question.textContent = 'Work it out:';
         sheet.style.display = '';
       },
       // Line i of the working is written in.
@@ -3569,9 +3582,10 @@
   }
 
   /**
-   * The three offers side by side (after each was checked): a panel with the question on a strip, and a row for each
-   * shop: its name, its marked price and offer, a bar as long as what you pay there, and that amount. The rows are the
-   * answers (answerButtons): pick() resolves with the next one picked; guide(i); win(i) marks the best deal.
+   * The three offers side by side (after each was checked): a big panel with the question on a purple strip, and under
+   * it a row for each shop: its name, its marked price and offer, a bar as long as what you pay there, and that amount.
+   * The rows are the answers (answerButtons): pick() resolves with the next one picked; guide(i); win(i) marks the best
+   * deal. The question is only here (the question bar steps away meanwhile).
    *  question  e.g. 'Which shop gives the best deal?'
    *  rows      [{ name, tone, price, off: 'GET AT ₹1,300', pay: '₹1,300', amount: 1300 }];  right  the best deal's index
    *  art       the street's sheet (its yellow ribbon says "Best deal!")
