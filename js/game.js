@@ -477,9 +477,9 @@
     },
     {
       id: 'homeagain', title: 'Back Home', sub: '“Did you get everything?”',
-      bg: ASSETS + 'boy stand and talk .png',
-      kb: { origin: '52% 30%', from: 'scale(1.02)', to: 'scale(1.05) translate(4px, 3px)' }, // as on screen 41
-      lamps: [[1520, 300, 300]],   // the sunny window behind Aniket
+      bg: ASSETS + 'return home shopping list .png', // Aniket home with his shopping bag, his father at the table
+      kb: { origin: '52% 30%', from: 'scale(1.02)', to: 'scale(1.05) translate(4px, 3px)' },
+      lamps: [[1020, 270, 240]],   // the sunny window in the room behind them
       dust: [700, 80, 1500, 640],
       play: playHomeAgain,
     },
@@ -3089,13 +3089,13 @@
     endWithSwifty(ctx, scene, talk); // she flies off; the panel slides down
   }
 
-  // Back home: Aniket shows his father the four things he bought (they pop up on the table) and they talk, one bubble
-  // at a time, in the same places as on screen 41.
-  const HOME_ITEMS = [['uniform', 470, 1012, 176], ['shoes', 700, 1022, 120], ['bag', 925, 1016, 180], ['bottle', 1112, 1010, 176]]; // id, centre x, bottom, height
+  // Back home: Aniket comes in with his shopping bag and talks with his father, who sits at the table with his tea and
+  // the newspaper, one bubble at a time between them; when Aniket says "Yes!", the four things he bought pop up on the
+  // table, in front of the runner.
+  const HOME_ITEMS = [['uniform', 1425, 985, 140], ['shoes', 1560, 990, 96], ['bag', 1695, 995, 140], ['bottle', 1810, 1000, 138]]; // id, centre x, bottom, height
   async function playHomeAgain(ctx, scene) {
-    const DAD = { anchor: [790, 330], corner: 'bl', tip: [742, 380] };          // up-right of his head, the tail at his mouth
-    const BOY = { anchor: [1176, 184], corner: 'br', tip: [1234, 282] };        // up-left of his face
-    const BOY_LONG = { anchor: [1160, 352], corner: 'br', tip: [1236, 282] };   // left of his face, the tail at his mouth
+    const DAD = { anchor: [1300, 330], corner: 'br', tip: [1348, 398] };        // up-left of his head, the tail at his mouth
+    const BOY = { anchor: [700, 255], corner: 'bl', tip: [620, 292] };          // up-right of his face, the tail at his mouth
     const say = async (bubble, id, who) => {
       const line = await sayOnPicture(ctx, scene, bubble, id, who);
       await ctx.wait(900);
@@ -3121,7 +3121,7 @@
       ], { duration: 520, easing: 'cubic-bezier(.2,.8,.3,1)' });
     }
     Sound.sparkle();
-    FX.twinkles(scene.layer, [[430, 860], [780, 880], [1000, 850], [1180, 870]]);
+    FX.twinkles(scene.layer, [[1370, 860], [1500, 900], [1630, 850], [1860, 860]]);
     const line = await yes;
     await ctx.wait(900);
     await line.hide();
@@ -3129,7 +3129,7 @@
     await say(Object.assign({ text: 'How much did\nyou spend?' }, DAD), 'end-spend', 'dad');
     await say(Object.assign({ text: rupees(TOTAL.pay) + '.' }, BOY), 'end-spent', 'boy');
     await say(Object.assign({ text: 'So you still have\n' + rupees(BUDGET - TOTAL.pay) + ' left!' }, DAD), 'end-left', 'dad');
-    await say(Object.assign({ text: 'And I got the\nbest deal for\nevery item!' }, BOY_LONG), 'end-best', 'boy');
+    await say(Object.assign({ text: 'And I got the\nbest deal for\nevery item!' }, BOY), 'end-best', 'boy');
     await sayOnPicture(ctx, scene, Object.assign({ text: 'Well done! You\nreally did shop\nwisely.' }, DAD), 'end-welldone', 'dad');
     ctx.advance(3000);
   }

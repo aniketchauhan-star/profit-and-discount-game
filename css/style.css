@@ -1205,13 +1205,13 @@ button:focus-visible, .switch input:focus-visible + .switch-track {
 }
 .sm-op { color: var(--ink); }
 /* Screen 19 on the sheet: no panel; the recap looks made by hand (a taped-on title, index cards, pencil arrows,
-   a sticky note), left of Swifty's stand. Little tilts use the `rotate` property, so they add to the pop-in
-   animations. */
+   a sticky note), left of Swifty's stand, big and easy to read (it fills the panel left of her bubbles, which start at
+   x 1445). Little tilts use the `rotate` property, so they add to the pop-in animations. */
 .sm-panel.sm-panel--note {
   position: absolute;
-  left: 150px;
+  left: 55px;
   top: 140px;
-  width: 1250px;
+  width: 1380px; /* centred on x 745 */
   height: 820px;
   justify-content: center;
   gap: 36px;
@@ -1230,7 +1230,7 @@ button:focus-visible, .switch input:focus-visible + .switch-track {
   box-shadow: 0 1px 0 rgba(60, 40, 10, .08), 0 10px 18px rgba(60, 40, 10, .18);
   color: #1f4fbf;
   font-family: var(--hand);
-  font-size: 58px;
+  font-size: 64px;
   font-weight: 700;
   text-shadow: none;
   rotate: -1.5deg;
@@ -1249,14 +1249,16 @@ button:focus-visible, .switch input:focus-visible + .switch-track {
   rotate: 2deg;
 }
 .sm-panel--note .sm-row { gap: 8px; }
-.sm-panel--note .sm-card { /* an index card: a red line under the heading, faint blue lines below; taped on, a little askew */
+.sm-panel--note .sm-row .def-arrow { width: 64px; height: 41px; } /* sized with the cards */
+.sm-panel--note .sm-card { /* an index card: a red line under the heading, faint blue lines below (one under each line of
+  writing: every 52 px from 100 px down); taped on, a little askew */
   position: relative;
-  width: 290px;
+  width: 384px;
   min-height: 300px;
   border: 0;
   border-radius: 4px;
   background:
-    repeating-linear-gradient(180deg, transparent 0 40px, rgba(80, 140, 210, .2) 40px 42px) 0 84px / 100% calc(100% - 84px) no-repeat,
+    repeating-linear-gradient(180deg, transparent 0 50px, rgba(80, 140, 210, .2) 50px 52px) 0 100px / 100% calc(100% - 100px) no-repeat,
     #fffefa;
   box-shadow: 0 1px 0 rgba(60, 40, 10, .08), 0 12px 22px rgba(60, 40, 10, .2);
   overflow: visible;
@@ -1267,18 +1269,19 @@ button:focus-visible, .switch input:focus-visible + .switch-track {
 .sm-panel--note .sm-card--sp::before { background: rgba(120, 180, 240, .75); rotate: -3deg; }
 .sm-panel--note .sm-card--d::before { background: rgba(240, 125, 115, .75); rotate: 1deg; }
 .sm-panel--note .sm-head {
-  padding: 26px 12px 6px;
+  padding: 28px 14px 8px;
   border-bottom: 3px solid rgba(225, 80, 80, .55);
   background: none;
   font-family: var(--hand);
-  font-size: 40px;
+  font-size: 50px;
   font-weight: 700;
 }
 .sm-panel--note .sm-value { margin: 18px 0 4px; font-size: 70px; }
-.sm-panel--note .sm-desc { padding: 0 12px 24px; color: #34434c; font-family: var(--hand); font-size: 28px; font-weight: 400; line-height: 42px; }
+.sm-panel--note .sm-desc { padding: 0 14px 24px; color: #34434c; font-family: var(--hand); font-size: 37px; font-weight: 400; line-height: 52px; }
 .sm-panel--note .sm-card--general { min-height: 0; } /* no amount (the idea in general): the card fits its words, one blank line under them */
-.sm-panel--note .sm-card--general .sm-desc { padding: 6px 12px 46px; }
+.sm-panel--note .sm-card--general .sm-desc { padding: 8px 14px 56px; }
 .sm-panel--note .sm-formula { /* on a sticky note */
+  font-size: 66px;
   border: 0;
   border-radius: 2px;
   background: linear-gradient(180deg, #fff6a8 0%, #ffe679 100%);

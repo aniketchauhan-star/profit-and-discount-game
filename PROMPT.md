@@ -60,7 +60,8 @@ A short animated **story game** for kids that runs in a web browser. It asks a f
 | `father gave him list.png` | Screen 38: his father hands Aniket the list (School Uniform, School Shoes, School Bag, Water Bottle) |
 | `father gave him money.png` | Screen 39: the same view; his father holds out a fan of ₹500 notes |
 | `boy take money in his pocket.png` | Screen 40: the same view; Aniket tucks the money into his pocket |
-| `boy stand and talk .png` | Screen 41: his father, seated, gives advice; Aniket stands by the table with his backpack. Screen 52 too (back home at the end), with the four things he bought on the table |
+| `boy stand and talk .png` | Screen 41: his father, seated, gives advice; Aniket stands by the table with his backpack |
+| `return home shopping list .png` | Screen 52 (back home at the end): Aniket, on the left, comes home with his backpack and a blue shopping bag; his father, on the right, sits at the table with his tea and the newspaper (a runner on the table, a fruit basket at its far end) |
 | `game begins.png` | Screen 42: Aniket outside his house (No. 27), ready to go shopping |
 | `game begin panel sheet .png` | The design's sheet for Screen 42's panel: the pieces are cut from it into `ui/begin/` |
 | `ui/begin/` | Screen 42's panel: `panel.png` (made at the design's size from the sheet's panel), `banner.png`, `ribbon.png`, `wallet.png`, `button.png`, and the bottle's icon `bottle.png` (the list's uniform, shoes and bag are the game's own pictures, from `ui/shop/`; the sheet's shirt, shoe and bag icons were removed) |
@@ -281,7 +282,7 @@ Cut both bird sheets the same way. Line up the flying frames on her body centre 
 ### Screen 19 — Quick summary
 - On the same big panel (a dissolve from Screen 18; Swifty stays on her stand).
 - The recap looks **made by hand** on the big panel, left of her stand. The title **"Let's remember!"** is written in blue marker (handwriting) on a strip of paper held on with yellow washi tape, a little tilted. Swifty waves, and the title drops in as she says it.
-- **Three index cards** (white, a red line under the heading, faint blue lines, each taped on with washi tape in its term's colour and a little askew; headings and notes in handwriting) appear **one at a time**, joined by **pencil arrows that draw themselves**. The recap is **general**: the cards and Swifty give each idea with **no amounts** (no ₹1000, ₹800 or ₹200), and each card fits its words, with one blank line under them. Each card pops in, then its description. Swifty says each one in her bubble:
+- **Three index cards** (white, a red line under the heading, faint blue lines, each taped on with washi tape in its term's colour and a little askew; headings and notes in handwriting) appear **one at a time**, joined by **pencil arrows that draw themselves**. The recap is **general**: the cards and Swifty give each idea with **no amounts** (no ₹1000, ₹800 or ₹200), and each card fits its words, with one blank line under them. Everything is **big and easy to read**, filling the panel left of Swifty's bubbles: the taped-on **"Let's remember!"** at 64 px, cards 384 px wide with their headings at **50 px** and their notes at **37 px** (the faint blue lines spaced to sit under each line of writing), and **Discount = MP − SP** on the sticky note at 66 px. Each card pops in, then its description. Swifty says each one in her bubble:
   1. **Marked Price** (yellow band), "Price written on an item." "Marked Price is the price written on an item."
   2. **Selling Price** (blue band), "Price at which it is sold." "Selling Price is the price at which it is sold."
   3. **Discount** (red band), "Amount reduced from the marked price." "Discount is the amount reduced from the marked price."
@@ -570,7 +571,7 @@ The four streets (what each shop's card asks, and the answers it offers, the rig
 - A dissolve: **"Two Different Amounts"** on a purple strip, and two cards with a **≠** between them: **Total Discount Received ₹1,060** (red) — "The difference between the marked prices and the prices Aniket paid." (₹5,400 − ₹4,340 = ₹1,060), and **Money Left From the ₹5,000 Budget ₹660** (green) — "The amount Aniket gets to keep." (₹5,000 − ₹4,340 = ₹660). Swifty: "These are two different amounts.", then she reads each card out as it comes in. Neither is called "savings". Then she flies off and the panel slides down.
 
 ### Screen 52 — Back Home
-- Background: `boy stand and talk .png` (as Screen 41), the same slow drift. When Aniket says "Yes!", **the four things he bought pop up on the table** (uniform, shoes, bag, bottle), with twinkles. One bubble at a time, in the same places as on Screen 41:
+- Background: `return home shopping list .png`: Aniket, on the left, has come home with his backpack and a blue shopping bag; his father sits at the table on the right with his tea and the newspaper. A slow drift, the sunny window in the room behind them softly glowing. When Aniket says "Yes!", **the four things he bought pop up on the table** (uniform, shoes, bag, bottle, side by side in front of the runner), with twinkles. One bubble at a time, between the two of them: his father's up-left of his head, Aniket's up-right of his face, each with its tail at the speaker's mouth:
   1. **Father:** "Did you get everything?"
   2. **Aniket:** "Yes!"
   3. **Father:** "How much did you spend?"
