@@ -2903,14 +2903,15 @@
   /**
    * The shopping game's wallet and shopping list on a white panel, as in the design of screen 43: the wallet with its
    * money in a pale pill, a thin line, "Shopping List" and a line for each item (its checkbox, its picture, its name).
-   * The shop screens show the same panel, smaller, in the top-right corner ({ mini: true }).
+   * On the streets it is two small white cards in the top-left corner, the wallet and the list, as in the street's
+   * design ({ street: true }).
    *  items   [{ id, name, icon, tone }]      art  { wallet, check, done }: the wallet, an empty and a ticked checkbox
    *  money   the rupees in the wallet        bought  the ids of the items bought so far (their boxes are ticked)
    *  shown   false: its parts start hidden, to come in one by one (see shopPicker's enter)
    * countTo(n) counts the money to n; tick(i) ticks item i's box; light(i) lights up item i's line.
    */
-  function walletPanel(parent, { items, art, money, bought = [], mini = false, shown = true }) {
-    const panel = el('div', mini ? 'sp-panel sp-panel--mini' : 'sp-panel', parent);
+  function walletPanel(parent, { items, art, money, bought = [], street = false, shown = true }) {
+    const panel = el('div', street ? 'sp-panel sp-panel--street' : 'sp-panel', parent);
     const wallet = el('div', 'sp-wallet', panel);
     picture('sp-wallet-icon', art.wallet, wallet);
     const amount = el('div', 'sp-amount', wallet);
@@ -2952,9 +2953,9 @@
         row.classList.add('is-ticked');
         Sound.correct();
         check.animate([
-          { transform: 'translateY(-50%) scale(.3) rotate(-20deg)' },
-          { transform: 'translateY(-50%) scale(1.3) rotate(6deg)', offset: 0.6 },
-          { transform: 'translateY(-50%)' },
+          { transform: 'scale(.3) rotate(-20deg)' },
+          { transform: 'scale(1.3) rotate(6deg)', offset: 0.6 },
+          { transform: 'none' },
         ], { duration: 520, easing: 'cubic-bezier(.2,.8,.3,1)' });
       },
       // Item i's line lights up in its colour (-1: none).
@@ -2971,7 +2972,7 @@
    * little sparks and its name on a pill, and on the right the wallet and the shopping list (walletPanel). The
    * pictures are cut from the design's sheet; the rest is drawn. A card is a button: tapping it picks that shop (the
    * card glows and a "Selected" tag pops up on it, and its line on the list lights up). A shop whose item is bought
-   * has a green tick on its corner and can't be picked again.
+   * is light grey with a big green tick on it, and its button is disabled: it can't be picked again.
    *  shops   [{ id, name, icon, tone, sparks: [[x %, y %, angle], …] }]   tone: yellow | pink | green | purple
    *  art     { wallet, check, done }   money  the rupees in the wallet   bought  the ids of the items bought so far
    *  onPick  (i) => void, once a shop is picked
@@ -2988,6 +2989,7 @@
       const done = bought.includes(shop.id);
       const card = el('button', classes('sp-card', `sp-card--${shop.tone}`, `sp-card--${shop.id}`, done && 'is-bought'), grid);
       card.type = 'button';
+      card.disabled = done; // bought: it can't be picked again
       card.setAttribute('aria-label', done ? `${shop.name}: bought` : `${shop.name} shop`);
       const sparks = el('span', 'sp-sparks', card);
       shop.sparks.forEach(([x, y, angle]) => el('i', 'sp-spark', sparks, {
@@ -2996,7 +2998,7 @@
       picture('sp-icon', shop.icon, card);
       el('span', 'sp-name', card).textContent = shop.name;
       el('span', 'sp-tag', card).textContent = 'Selected';
-      if (done) picture('sp-done', art.done, card); // a green tick on its corner
+      if (done) picture('sp-done', art.done, card); // a big green tick, over its greyed picture
       return { el: card, sparks, done };
     });
     const board = walletPanel(root, { items: shops, art, money, bought, shown: false });
@@ -3010,7 +3012,7 @@
     function pick(i) {
       if (!ready) return;
       const card = cards[i];
-      if (card.done || picked === i) { // bought already, or picked already: it just wiggles
+      if (card.done || picked === i) { // bought already (its button is disabled anyway), or picked already: it just wiggles
         Sound.click();
         card.el.animate([{ transform: 'none' }, { transform: 'rotate(-1.6deg)' }, { transform: 'rotate(1.6deg)' }, { transform: 'none' }], { duration: 380, easing: 'ease-in-out' });
         return;
@@ -3155,45 +3157,53 @@
     return tag;
   }
 
+  // A clothes hanger: its hook, and its sloping arms under the uniform's shoulders (the uniform hides the rest).
+  const HANGER = '<svg class="st-hanger" viewBox="0 0 120 60" aria-hidden="true"><path d="M60 31 V 24 C 60 20 67 19 67 12 C 67 6 62 3 57 4 C 54 5 52 8 52 10"/><path d="M60 31 L 16 54 H 104 Z"/></svg>';
+
   /**
-   * A street with three shops (Uniform Street, Shoe Street, …), drawn with the pieces of the street's asset sheet: its
-   * name on the green street sign at the top, and the three shop fronts side by side on the pavement, each in its
-   * colour, with its name on its board, the item in its window (`copies` of it on the shelf), and under the window the
-   * item's marked price on the white tag and the shop's offer on the red one. A shop is a button: tap(skip) waits for
-   * the player to tap one (not in `skip`). Once its offer is checked, the green badge under it says what you pay there
-   * (paid(i)); best(i) marks the best deal with the yellow ribbon, and buy(i, text) puts the Buy button under it.
+   * A street with three shops (Uniform Street, Shoe Street, …), as in the street's design: the street's picture behind
+   * (the sky, the town, the pavement and the road), two clouds drifting across the sky, and the three shop fronts side
+   * by side on the pavement (the street's name and its item are only for screen readers: the question bar tells). Each is
+   * the shop front from "new shops for game .png" in its colour (a sign with a bump on top, a striped awning with a
+   * scalloped edge, a cream front with a big window and its lamps), with the game's words and things on it: the shop's
+   * name on its sign, and in the window the item on the left, its marked price on a tag hanging on the right, and the
+   * shop's offer on a red tag under it. A shop is a button: tap(skip) waits for the player to tap one (not in
+   * `skip`). Once its offer is checked, the green badge under it says what you pay there (paid(i)); best(i) marks the
+   * best deal with the yellow ribbon, and buy(i, text) puts the Buy button under it.
    *  id     the item's id (its size in the windows: see the CSS);  name  e.g. 'Uniform Street';  item  e.g. 'School Uniform'
-   *  icon   the item's picture;  copies  how many stand in each window
+   *  icon   the item's picture
    *  shops  [{ name: 'Shop A', tone: 'coral' | 'blue' | 'purple', price: '₹1,600', off: ['10%', 'OFF'], pay: '₹1,440' }]
-   *  art    the sheet's pieces: { shops: { coral, blue, purple }, sign, price, offer, pill, ribbon, button }
+   *  art    { backdrop } the street's picture, { fronts: { coral, blue, purple } } the shop fronts, and the sheet's
+   *         pieces { pill, ribbon, button } (badge, ribbon, Buy)
+   * veil() puts a calm backdrop over the whole street, the wallet, the list and Aniket while a card is up.
    */
-  function street(parent, { id, name, item, icon, copies = 2, shops, art }) {
+  function street(parent, { id, name, item, icon, shops, art }) {
     const root = el('div', `st st--${id}`, parent);
-    el('div', 'st-ground', root);
-    const { el: sign, words: signWords } = artLabel(root, 'st-sign', art.sign);
-    el('span', 'st-sign-name', signWords).textContent = name;
-    el('span', 'st-sign-item', signWords).textContent = item;
+    el('div', 'st-backdrop', root).style.backgroundImage = `url("${art.backdrop}")`;
+    el('div', 'st-cloud st-cloud--1', root);
+    el('div', 'st-cloud st-cloud--2', root);
     const fronts = shops.map((shop, i) => {
       const b = el('button', `st-shop st-shop--${shop.tone} st-shop--${i}`, root);
       b.type = 'button';
       b.disabled = true;
       b.setAttribute('aria-label', `${shop.name}: ${item}. Marked price ${shop.price}, offer ${shop.off.join(' ')}`);
       el('div', 'st-glow', b);
-      picture('st-art', art.shops[shop.tone], b);
-      el('div', 'st-board', b).textContent = shop.name;
-      const display = el('div', 'st-display', b);
-      const pics = Array.from({ length: copies }, () => picture('st-item', icon, display));
-      const tags = el('div', 'st-tags', b);
-      priceTag(tags, art, shop.price);
-      offerTag(tags, art, shop.off);
+      picture('st-art', art.fronts[shop.tone], b); // the shop front: its sign, its awning, its window
+      el('span', 'st-board-name', b).textContent = shop.name; // on the sign
+      const display = el('div', 'st-display', b); // what is in the window
+      if (id === 'uniform') display.insertAdjacentHTML('beforeend', HANGER); // under the uniform, which hangs on it
+      const pic = picture('st-item', icon, display);
+      el('div', 'st-price', display).textContent = shop.price;
+      const offer = el('div', 'st-offer', display);
+      shop.off.forEach(t => { el('span', /\d/.test(t) ? 'st-offer-big' : 'st-offer-small', offer).textContent = t; }); // the amount big, the word small
       const pay = artLabel(b, 'st-pay', art.pill, `You pay ${shop.pay}`).el;
       pay.style.opacity = '0';
       const ribbon = artLabel(b, 'st-best', art.ribbon, 'Best deal!').el;
       ribbon.style.opacity = '0';
       b.style.opacity = '0';
-      return { el: b, pic: pics[0], display, pay, ribbon, done: false };
+      return { el: b, pic, display, pay, ribbon, done: false };
     });
-    sign.style.opacity = '0';
+    root.setAttribute('aria-label', `${name}: ${item}`);
     const SPRING = 'cubic-bezier(.2,.8,.3,1)';
     const popIn = node => reveal(node, [
       { opacity: 0, transform: 'translateY(-20px) scale(.6)' },
@@ -3215,15 +3225,11 @@
       el: root,
       shops: fronts.map(f => f.el),
       pictures: fronts.map(f => f.pic),
-      // The sign drops in, then the shops pop up one after another.
+      // While a card is up: a calm backdrop over everything on the screen so far (the street, the wallet and the list,
+      // Aniket), so all eyes are on the card that comes up over it (the question bar stays: Swifty helps from there).
+      veil: () => streetVeil(parent),
+      // The shops pop up one after another.
       async enter(ctx) {
-        Sound.swish();
-        reveal(sign, [
-          { opacity: 0, transform: 'translateY(-60px) rotate(-3deg)' },
-          { opacity: 1, transform: 'translateY(6px) rotate(1deg)', offset: 0.65 },
-          { opacity: 1, transform: 'none' },
-        ], { duration: T(600), easing: SPRING });
-        await ctx.wait(250);
         for (const f of fronts) {
           Sound.pop();
           reveal(f.el, [
@@ -3309,13 +3315,91 @@
     };
   }
 
-  // A soft veil over the street while a card is up (the wallet panel and Swifty stay clear).
-  function streetVeil(parent) {
-    const veil = el('div', 'st-veil', parent);
-    reveal(veil, [{ opacity: 0 }, { opacity: 1 }], { duration: 300, easing: 'ease-out' });
+  // A calm backdrop over the street while a card is up (see .st-veil), put in before `before` (by default on top of
+  // everything in `parent` so far: what is added after it, the card, comes over it).
+  function streetVeil(parent, before = null) {
+    const veil = el('div', 'st-veil');
+    parent.insertBefore(veil, before);
+    reveal(veil, [{ opacity: 0 }, { opacity: 1 }], { duration: 340, easing: 'ease-out' });
     return {
       el: veil,
-      hide: () => settle(veil.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 300, easing: 'ease-in', fill: 'forwards' })).then(() => veil.remove()),
+      hide: () => settle(veil.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 340, easing: 'ease-in', fill: 'forwards' })).then(() => veil.remove()),
+    };
+  }
+
+  /**
+   * The shopping game's question bar, at the top of the screen and always fully on it (in the top row, between the
+   * wallet and the Back / Next buttons): a slim white bar with Swifty in a small round frame inside its left end (her
+   * real, talking self, her face filling the frame), and beside her what she says, typed in step with her voice, one
+   * line at a time (a long one wraps, and a very long one is set smaller so it always fits). While she isn't saying
+   * anything, it says what to do (the task), in a softer blue. One bar serves every screen that has it (see game.js).
+   *  sheets  Swifty's sprite sheets (see Bird)
+   * toggle(on) slides it up or down; reset() takes its line down and empties the task. line(text) makes a line on it
+   * (see buildLetters; its line breaks become spaces), to show(), type (as a bubble's) and hide(); task(text) sets what
+   * to do and showTask() shows it. `speaker` is Swifty in the frame: talk(), idle(), point() and wave(), as for Bird
+   * (her frame glows while she talks).
+   */
+  function questionBar(parent, { sheets }) {
+    const root = el('div', 'qb', parent);
+    root.setAttribute('aria-live', 'polite');
+    const frame = el('div', 'qb-face', root);
+    frame.setAttribute('aria-label', 'Swifty');
+    const bird = new Bird(frame, sheets, { scale: 0.215 });
+    bird.place(33, 86); // her face in the middle of the frame (her feet below it, out of sight)
+    const box = el('div', 'qb-box', root);
+    const taskEl = el('div', 'qb-task', box);
+    const talking = on => root.classList.toggle('is-talking', on);
+    const speaker = {
+      talk() { bird.talk(); talking(true); },
+      idle() { bird.idle(); talking(false); },
+      point() { bird.point(); talking(false); },
+      wave() { bird.wave(); talking(false); },
+    };
+    // Sets a line (or the task) smaller until it fits on the bar.
+    const fit = node => {
+      let size = parseFloat(getComputedStyle(node).fontSize);
+      while (size > 24 && node.offsetHeight > box.offsetHeight - 12) {
+        size -= 2;
+        node.style.fontSize = px(size);
+      }
+    };
+    return {
+      el: root,
+      speaker,
+      toggle(on) {
+        root.classList.toggle('is-up', on);
+        if (!on) speaker.idle();
+      },
+      reset() {
+        box.querySelectorAll('.qb-line').forEach(n => n.remove());
+        taskEl.textContent = '';
+        taskEl.classList.remove('is-hidden');
+        speaker.idle();
+      },
+      task(text) {
+        taskEl.textContent = text;
+        taskEl.style.fontSize = '';
+        fit(taskEl);
+      },
+      showTask() {
+        taskEl.classList.remove('is-hidden');
+      },
+      line(text) {
+        const segs = (typeof text === 'string' ? [{ t: text }] : text).map(seg => Object.assign({}, seg, { t: seg.t.replace(/\s*\n\s*/g, ' ') }));
+        const node = el('div', 'qb-line', box);
+        const letters = buildLetters(node, segs);
+        fit(node);
+        node.style.opacity = '0';
+        return Object.assign(lineMethods(node, letters, { text: segs, voice: 'bird' }), {
+          show() {
+            taskEl.classList.add('is-hidden');
+            return reveal(node, [{ opacity: 0, transform: 'translateY(12px)' }, { opacity: 1, transform: 'none' }], { duration: 200, easing: 'ease-out' });
+          },
+          hide() {
+            return settle(node.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 180, easing: 'ease-in', fill: 'forwards' })).then(() => node.remove());
+          },
+        });
+      },
     };
   }
 
@@ -3425,7 +3509,7 @@
       guide: buttons.guide,
       // The card springs up out of the shop at `from` (a stage point), then the question and the answers come in.
       async open(ctx, from) {
-        if (from) card.style.transformOrigin = `${num(from[0] - 120)}px ${num(from[1] - 130)}px`;
+        if (from) card.style.transformOrigin = `${num(from[0] - card.offsetLeft)}px ${num(from[1] - card.offsetTop)}px`;
         Sound.whoosh();
         await reveal(card, [
           { opacity: 0, transform: 'scale(.2)' },
@@ -3476,7 +3560,7 @@
       },
       // The card shrinks back into the shop at `to` (a stage point) and is removed.
       close(to) {
-        if (to) card.style.transformOrigin = `${num(to[0] - 120)}px ${num(to[1] - 130)}px`;
+        if (to) card.style.transformOrigin = `${num(to[0] - card.offsetLeft)}px ${num(to[1] - card.offsetTop)}px`;
         return settle(card.animate([{ opacity: 1, transform: 'none' }, { opacity: 0, transform: 'scale(.2)' }], {
           duration: T(380), easing: 'cubic-bezier(.5,0,.75,0)', fill: 'forwards',
         })).then(() => root.remove());
@@ -3669,31 +3753,34 @@
   }
 
   /**
-   * Everything is bought: a big banner ("SHOPPING COMPLETE!"), a line under it, the items (each on a card, ticked)
-   * and what is left in the wallet. Reveal it with enter(ctx) (with confetti).
-   *  title, text  the banner and the line under it;  items  [{ name, icon }];  art  { wallet, done };  money  rupees left
+   * Everything is bought (screen 48): a big banner ("SHOPPING COMPLETE!") and a line under it; on the left the wallet
+   * and the shopping list (the Shopping Area's panel: the money left, and each item's line), and on the right the four
+   * things bought, each on its card in its shop's colour. Reveal it with enter(ctx): the panel comes in, then line by
+   * line the list is ticked as each thing pops up on its card (ticked too), and the money left pops.
+   *  title, text  the banner and the line under it;  items  [{ id, name, icon, tone }];  art  { wallet, check, done };
+   *  money  rupees left
    */
   function celebration(parent, { title, text, items, art, money }) {
-    const root = el('div', 'cl', parent);
+    const root = el('div', 'cl cl--done', parent);
     const top = banner(root, title);
     const line = el('div', 'cl-text', root);
     line.textContent = text;
-    const row = el('div', 'cl-items', root);
+    const holder = el('div', 'cl-board', root); // sizes the Shopping Area's panel down to fit beside the cards
+    const board = walletPanel(holder, { items, art, money, shown: false }); // its lines get ticked in enter
+    const left = el('span', 'cl-board-left', board.wallet);
+    left.textContent = 'left';
+    const grid = el('div', 'cl-grid', root);
     const cards = items.map(item => {
-      const card = el('div', 'cl-item', row);
+      const card = el('div', `cl-card sp-card--${item.tone} cl-card--${item.id}`, grid);
       picture('cl-pic', item.icon, card);
       el('div', 'cl-name', card).textContent = item.name;
       const tick = picture('cl-tick', art.done, card);
       tick.style.opacity = '0';
       return { card, tick };
     });
-    const purse = el('div', 'cl-purse', root);
-    picture('cl-wallet', art.wallet, purse);
-    el('span', 'cl-money', purse).textContent = rupees(money);
-    el('span', 'cl-left', purse).textContent = 'left';
     root.setAttribute('role', 'group');
     root.setAttribute('aria-label', `${title} ${text} ${items.map(i => i.name).join(', ')}. ${rupees(money)} left.`);
-    [top, line, purse, ...cards.map(c => c.card)].forEach(n => { n.style.opacity = '0'; });
+    [top, line, left, ...cards.map(c => c.card)].forEach(n => { n.style.opacity = '0'; });
     return {
       el: root,
       banner: top,
@@ -3704,18 +3791,29 @@
         Sound.chime();
         confetti(parent, { count: 110 });
         await riseIn(line);
-        await ctx.wait(200);
-        for (const c of cards) {
+        await ctx.wait(150);
+        // the wallet and the list come in from the left, all at once
+        Sound.swish();
+        [board.wallet, board.rule, board.title, ...board.rows].forEach(n => { n.style.opacity = ''; });
+        await reveal(board.el, [
+          { opacity: 0, transform: 'translateX(-70px)' },
+          { opacity: 1, transform: 'translateX(8px)', offset: 0.7 },
+          { opacity: 1, transform: 'none' },
+        ], { duration: T(560), easing: 'cubic-bezier(.2,.8,.3,1)' });
+        await ctx.wait(250);
+        // each thing on the list: its line is ticked, and it pops up on its card on the right, ticked too
+        for (const [i, c] of cards.entries()) {
+          board.tick(i);
           Sound.pop();
           popUp(c.card);
-          await ctx.wait(160);
-          Sound.correct();
+          await ctx.wait(220);
           popUp(c.tick, 420);
-          await ctx.wait(120);
+          await ctx.wait(260);
         }
-        await ctx.wait(300);
+        await ctx.wait(250);
         Sound.kaching();
-        await popUp(purse, 520);
+        board.amount.animate([{ transform: 'none' }, { transform: 'scale(1.12)', offset: 0.4 }, { transform: 'none' }], { duration: 420, easing: 'cubic-bezier(.2,.8,.3,1)' });
+        await popUp(left, 420);
       },
     };
   }
@@ -4299,7 +4397,7 @@
 
   window.FX = {
     CANCELLED, el, rand, settle, reveal, inkDefs, flyAcross, glow, motes, twinkles, burst, shine, exclaim, bubble, thought, badge, ring, question, definitions, pricePanel,
-    reduction, definitionCard, formulaPanel, formulaReveal, summaryPanel, productCard, productQuestion, workedSheet, summarySheet, strike, stickTag, choices, percentFormula, questionPanel, challengePanel, walletPanel, shopPicker, street, streetVeil, offerCard, compareBoard, flyPicture, purchaseSlip, confetti, celebration, receipt, twoAmounts, missionPanel, recapCards, takeaway, Bird, Walker,
+    reduction, definitionCard, formulaPanel, formulaReveal, summaryPanel, productCard, productQuestion, workedSheet, summarySheet, strike, stickTag, choices, percentFormula, questionPanel, challengePanel, walletPanel, shopPicker, street, streetVeil, questionBar, offerCard, compareBoard, flyPicture, purchaseSlip, confetti, celebration, receipt, twoAmounts, missionPanel, recapCards, takeaway, Bird, Walker,
     setPace(p) { pace = p; },
   };
 })();

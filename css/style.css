@@ -616,31 +616,48 @@ button:focus-visible, .switch input:focus-visible + .switch-track {
 }
 .qback-text .hl { color: var(--teal); font-weight: 800; }
 
-/* ---------- Definitions (after a wrong answer, on the big panel) ---------- */
+/* The names of the books on the display stand (screens 4 and 5), as if printed on their covers (see standTitles) */
+.cover-title {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 25px;
+  font-weight: 800;
+  line-height: 1.02;
+  letter-spacing: .3px;
+  white-space: nowrap;
+  pointer-events: none;
+}
+.cover-title--light { color: #fffdf6; text-shadow: 0 1px 2px rgba(12, 30, 40, .55), 0 0 6px rgba(12, 30, 40, .25); }
+.cover-title--dark { color: #6e2a12; text-shadow: 0 1px 1px rgba(255, 244, 220, .7); }
+
+/* ---------- Definitions (screen 8, after a wrong answer, on the big panel) ----------
+   Big and clear: the two cards fill the panel left of Swifty's stand (clear of her bubbles, which start at x 1380). */
 
 .defs {
   position: absolute;
   inset: 0;
   display: grid;
   place-items: center;
-  padding: 116px 490px 64px 70px; /* keeps clear of the top buttons, and of Swifty's stand on the right */
+  padding: 116px 530px 64px 50px; /* keeps clear of the top buttons, and of Swifty's stand and bubbles on the right */
 }
 .defs-panel { position: relative; pointer-events: auto; } /* no frame of its own: the cards sit right on the big panel */
-.defs-row { display: flex; gap: 40px; }
+.defs-row { display: flex; gap: 44px; }
 
 .def {
-  width: 520px;
-  padding: 32px 28px 34px;
-  border: 5px solid var(--ink);
-  border-radius: 34px;
-  box-shadow: 0 10px 0 var(--ink);
+  width: 610px;
+  padding: 38px 30px 42px;
+  border: 6px solid var(--ink);
+  border-radius: 40px;
+  box-shadow: 0 12px 0 var(--ink);
   text-align: center;
   color: var(--ink);
 }
 .def--blue { background: linear-gradient(180deg, #ecf6ff 0%, #cfe6ff 100%); }
 .def--yellow { background: linear-gradient(180deg, #fff8d6 0%, #ffe28a 100%); }
 .def-title {
-  font-size: 46px;
+  font-size: 60px;
   font-weight: 800;
   line-height: 1.1;
 }
@@ -650,20 +667,21 @@ button:focus-visible, .switch input:focus-visible + .switch-track {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
-  margin: 26px 0 26px;
+  gap: 12px;
+  margin: 30px 0 32px;
 }
 .def-pic {
-  width: 170px;
-  height: 136px;
-  border: 4px solid var(--ink);
-  border-radius: 22px;
+  width: 214px;
+  height: 171px;
+  border: 5px solid var(--ink);
+  border-radius: 26px;
   overflow: hidden;
   background: #fff;
-  box-shadow: 0 6px 0 var(--ink);
+  box-shadow: 0 7px 0 var(--ink);
 }
 .def-pic img { display: block; width: 100%; height: 100%; object-fit: cover; }
 .def-arrow { flex: none; width: 62px; height: 40px; overflow: visible; }
+.defs .def-arrow { width: 76px; height: 49px; }
 .def-arrow path {
   fill: none;
   stroke: var(--ink);
@@ -674,9 +692,9 @@ button:focus-visible, .switch input:focus-visible + .switch-track {
   stroke-dashoffset: 0;
 }
 .def-text {
-  font-size: 40px;
+  font-size: 54px;
   font-weight: 700;
-  line-height: 1.22;
+  line-height: 1.2;
   text-wrap: balance;
 }
 .def-text .hl { font-weight: 800; }
@@ -961,7 +979,7 @@ button:focus-visible, .switch input:focus-visible + .switch-track {
   display: flex;
   align-items: center;
   gap: 36px;
-  padding: 50px 52px 56px;
+  padding: 50px 30px 56px; /* on the big panel it has no frame of its own: the padding is just room */
   border: 5px solid var(--ink);
   border-radius: 48px;
   background:
@@ -970,7 +988,7 @@ button:focus-visible, .switch input:focus-visible + .switch-track {
   box-shadow: 0 16px 0 var(--ink), 0 44px 90px rgba(4, 18, 22, .45);
   pointer-events: auto;
 }
-.fm-book { flex: none; width: 250px; }
+.fm-book { flex: none; width: 330px; } /* big and clear, its price sticker easy to see (Swifty's bubbles stay clear on the right) */
 .fm-row { display: flex; align-items: center; gap: 12px; }
 .cmp-box.fm-box { position: relative; width: 250px; height: 236px; gap: 18px; }
 .fm-box .cmp-label { font-size: 36px; }
@@ -2189,6 +2207,17 @@ button:focus-visible, .switch input:focus-visible + .switch-track {
 .si-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .si-thumb--sheet { background: #fff6e2; box-shadow: inset 0 0 0 3px #0f3b45; }
 .si-thumb--sheet img { object-fit: contain; padding: 16px 4px 3px 34px; }
+.si-thumb--bar::after { /* the question bar along the top, Swifty's teal frame on its left */
+  content: '';
+  position: absolute;
+  left: 18px;
+  right: 14px;
+  top: 3px;
+  height: 8px;
+  border-radius: 4px;
+  background: radial-gradient(circle 5px at 3px 50%, #21b8ae 0 4px, transparent 5px), #fff;
+  box-shadow: 0 0 0 1px #9fc4ef;
+}
 .si-now {
   position: absolute;
   left: 3px;
@@ -2837,41 +2866,102 @@ kbd {
     #cfe9fd;
 }
 
-/* A shop whose item is bought (screen 43): faded back, a green tick on its corner, and it can't be picked again. */
-.sp-card.is-bought { cursor: default; }
-.sp-card.is-bought::after { content: ''; position: absolute; inset: -3px; border-radius: inherit; background: rgba(240, 247, 255, .5); pointer-events: none; }
+/* A shop whose item is bought (screen 43): light grey, its picture greyed out, a big green tick on it; its button is
+   disabled, so it can't be picked again. */
+.sp-card.is-bought {
+  --edge: #d3d8df; --edge-low: #c6ccd5; --top: #f4f6f8; --mid: #edf0f3; --low: #e6e9ed;
+  --pill: #bcc3cd; --pill-ink: #fff; --shade: rgba(90, 100, 120, .14);
+  cursor: default;
+}
 .sp-card.is-bought:hover { translate: none; box-shadow: inset 0 3px 0 rgba(255, 255, 255, .85), inset 0 0 0 3px rgba(255, 255, 255, .3), 0 12px 26px var(--shade); }
-.sp-done { position: absolute; z-index: 1; right: -20px; top: -24px; width: 100px; filter: drop-shadow(0 6px 8px rgba(20, 90, 50, .3)); pointer-events: none; }
+.sp-card.is-bought .sp-sparks { display: none; }
+.sp-card.is-bought .sp-icon { filter: grayscale(1); opacity: .42; }
+.sp-done { /* the big green tick, over its greyed picture */
+  position: absolute;
+  z-index: 1;
+  left: 50%;
+  top: 92px;
+  width: 150px;
+  translate: -50% 0;
+  filter: drop-shadow(0 8px 10px rgba(20, 90, 50, .3));
+  pointer-events: none;
+}
 .sp-row.is-ticked { background: #e4f6e9; }
 .sp-row.is-ticked .sp-row-label { color: #1f7a45; }
-/* The same wallet and list on the shop screens: smaller, in the top-right corner. */
-.sp-panel--mini { transform: scale(.6); transform-origin: 100% 0; }
-.si-thumb--street { /* the scene list's tiny copy of a street: three shops on the pavement */
+/* The wallet and the list on the streets, as in the street's design: two white cards in the top-left corner (right of
+   the screens button), the wallet above, then "Shopping List" and a line for each item. */
+.sp-panel--street { left: 108px; top: 24px; width: 256px; height: 312px; border-radius: 0; background: none; box-shadow: none; }
+.sp-panel--street::before { /* the list's card */
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 86px;
+  width: 256px;
+  height: 226px;
+  border-radius: 20px;
+  background: #fff;
+  box-shadow: 0 0 0 3px #cfe3fb, 0 10px 20px rgba(30, 80, 160, .18);
+}
+.sp-panel--street .sp-wallet { left: 0; top: 0; width: 256px; height: 76px; border-radius: 20px; background: #fff; box-shadow: 0 0 0 3px #cfe3fb, 0 10px 20px rgba(30, 80, 160, .18); }
+.sp-panel--street .sp-wallet-icon { left: 12px; width: 70px; }
+.sp-panel--street .sp-amount { left: 92px; top: 0; width: auto; height: 76px; border-radius: 0; background: none; font-size: 44px; line-height: 84px; text-align: left; }
+.sp-panel--street .sp-rule { display: none; }
+.sp-panel--street .sp-title { left: 18px; top: 96px; font-size: 28px; line-height: 38px; }
+.sp-panel--street .sp-row { left: 9px; width: 238px; height: 42px; border-radius: 12px; background: none; }
+.sp-panel--street .sp-row--uniform { top: 138px; }
+.sp-panel--street .sp-row--shoes { top: 181px; }
+.sp-panel--street .sp-row--bag { top: 224px; }
+.sp-panel--street .sp-row--bottle { top: 267px; }
+.sp-panel--street .sp-row.is-picked { background: var(--tint); box-shadow: inset 0 0 0 2px var(--edge); }
+.sp-panel--street .sp-row.is-ticked { background: #e4f6e9; }
+.sp-panel--street .sp-check { left: 9px; width: 28px; }
+.sp-panel--street .sp-row-icon { left: 64px; }
+.sp-panel--street .sp-row--uniform .sp-row-icon { height: 34px; }
+.sp-panel--street .sp-row--shoes .sp-row-icon { width: 40px; }
+.sp-panel--street .sp-row--bag .sp-row-icon { height: 34px; }
+.sp-panel--street .sp-row--bottle .sp-row-icon { height: 36px; }
+.sp-panel--street .sp-row-label { left: 96px; font-size: 25px; line-height: 44px; }
+.si-thumb--street { /* the scene list's tiny copy of a street: three shops on the pavement, the road below, under a blue sky */
   background:
     linear-gradient(#f26457, #f26457) 5px 8px / 17px 7px no-repeat,
-    linear-gradient(#fffaf1, #fffaf1) 6px 15px / 15px 14px no-repeat,
+    linear-gradient(#fdf0d2, #fdf0d2) 6px 15px / 15px 13px no-repeat,
     linear-gradient(#3b8ee0, #3b8ee0) 26px 8px / 17px 7px no-repeat,
-    linear-gradient(#fffaf1, #fffaf1) 27px 15px / 15px 14px no-repeat,
+    linear-gradient(#fdf0d2, #fdf0d2) 27px 15px / 15px 13px no-repeat,
     linear-gradient(#9b5de5, #9b5de5) 47px 8px / 17px 7px no-repeat,
-    linear-gradient(#fffaf1, #fffaf1) 48px 15px / 15px 14px no-repeat,
-    linear-gradient(#e6ecf3, #e6ecf3) 0 29px / 100% 11px no-repeat,
-    #d3ecfd;
+    linear-gradient(#fdf0d2, #fdf0d2) 48px 15px / 15px 13px no-repeat,
+    linear-gradient(#e9cbc1, #e9cbc1) 0 28px / 100% 4px no-repeat,
+    linear-gradient(#7c8fb0, #7c8fb0) 0 32px / 100% 8px no-repeat,
+    linear-gradient(180deg, #58c2f9, #b8e8fd);
 }
 
 /* ---------- The shopping game's streets (screens 44–47) ----------
-   On the Shopping Area's light blue: the street's sign at the top, three shop fronts on the pavement (x 60–1460), the
-   wallet and the list in the top-right corner (the Shopping Area's panel, smaller), and Swifty on her stack of books
-   under it. Cards come up over the street (x 120–1400): an offer to check, the three offers compared, a purchase. */
+/* ---------- The shopping game's streets (screens 44–47) ----------
+   As in the street's design: the street's picture (game background.png: the sky, the town, the pavement and the road),
+   two clouds drifting across the sky, and three shop fronts on the pavement (x 240–1692: the pictures cut from "new
+   shops for game .png", with the game's words and things on them); the wallet and the list on two white cards in the
+   top-left corner, Aniket on the road on the left, and the question bar along the top (Swifty speaks from it). Cards
+   come up over the street (x 390–1670): an offer to check, the three offers compared, a purchase. */
 .st { position: absolute; inset: 0; isolation: isolate; } /* what is layered inside the street stays under the cards over it */
-.st-ground { /* the pavement, its kerb along the top */
+.st-backdrop { position: absolute; inset: 0; background: #8fd3fb center / cover no-repeat; } /* the picture: set by FX.street */
+.st-cloud { /* a cloud: a flat base with two puffs on top, drifting slowly across the sky, behind the street */
   position: absolute;
-  left: -30px;
-  right: -30px;
-  top: 612px;
-  bottom: -30px;
-  background:
-    repeating-linear-gradient(90deg, transparent 0 158px, rgba(150, 170, 200, .22) 158px 161px) 0 18px / 100% 100% no-repeat,
-    linear-gradient(180deg, #c3d1e3 0 12px, #dfe7f1 12px 18px, #edf2f8 18px);
+  left: 0;
+  width: 250px;
+  height: 70px;
+  border-radius: 35px;
+  background: #fff;
+  box-shadow: inset 0 -12px 0 rgba(205, 231, 251, .8);
+  animation: st-drift 95s linear infinite;
+  pointer-events: none;
+}
+.st-cloud::before, .st-cloud::after { content: ''; position: absolute; border-radius: 50%; background: #fff; }
+.st-cloud::before { left: 38px; top: -50px; width: 104px; height: 104px; }
+.st-cloud::after { left: 118px; top: -34px; width: 86px; height: 86px; }
+.st-cloud--1 { top: 206px; translate: 330px 0; animation-delay: -26s; }
+.st-cloud--2 { top: 266px; translate: 1460px 0; scale: .8; animation-duration: 125s; animation-delay: -96s; }
+@keyframes st-drift {
+  from { translate: -300px 0; }
+  to   { translate: 1980px 0; }
 }
 /* The pieces cut from the streets' asset sheet ("sheet .png", in game assets/ui/street/), with the game's words on them */
 .art-label { position: relative; display: block; flex: none; }
@@ -2885,18 +2975,14 @@ kbd {
 .tg-offer .art-words { left: 57.5%; top: 49%; rotate: 3.5deg; color: #fff; text-shadow: 0 2px 0 rgba(90, 10, 10, .35); }
 .tg-line { font-size: .9em; font-weight: 800; line-height: 1; }
 .tg-price.is-ping, .tg-offer.is-ping { animation: tag-pop .8s cubic-bezier(.3, 1.6, .5, 1); }
-.st-sign { position: absolute; left: 760px; top: 10px; width: 460px; translate: -50% 0; } /* the green street sign */
-.st-sign .art-words { color: #fff; text-shadow: 0 2px 0 rgba(0, 60, 30, .35); }
-.st-sign-name { font-size: 38px; font-weight: 800; line-height: 1.05; }
-.st-sign-item { font-size: 21px; font-weight: 700; line-height: 1.15; opacity: .92; }
-.st-shop--coral, .oc-card--coral, .cb-row--coral { --shop: #f26457; --shop-deep: #d9473b; --shop-soft: #ffb3a9; }
-.st-shop--blue, .oc-card--blue, .cb-row--blue { --shop: #3b8ee0; --shop-deep: #2a72c2; --shop-soft: #a9cff5; }
-.st-shop--purple, .oc-card--purple, .cb-row--purple { --shop: #9b5de5; --shop-deep: #7d42c9; --shop-soft: #d4b8f6; }
-.st-shop { /* a shop front from the sheet (440 × 476, its step on the kerb) */
+.st-shop--coral, .oc-card--coral, .cb-row--coral { --shop: #f26457; --shop-deep: #d9473b; --shop-soft: #ffb3a9; --shop-ink: #9e2c22; }
+.st-shop--blue, .oc-card--blue, .cb-row--blue { --shop: #3b8ee0; --shop-deep: #2a72c2; --shop-soft: #a9cff5; --shop-ink: #174f97; }
+.st-shop--purple, .oc-card--purple, .cb-row--purple { --shop: #9b5de5; --shop-deep: #7d42c9; --shop-soft: #d4b8f6; --shop-ink: #55279b; }
+.st-shop { /* a shop front (the picture, 452 × 470: its base on the pavement), and the game's words and things on it */
   position: absolute;
-  top: 136px;
-  width: 440px;
-  height: 476px;
+  top: 322px;
+  width: 452px;
+  height: 470px;
   padding: 0;
   border: 0;
   background: none;
@@ -2907,68 +2993,120 @@ kbd {
   -webkit-tap-highlight-color: transparent;
   transition: translate .25s ease, opacity .4s ease, filter .4s ease;
 }
-.st-shop--0 { left: 60px; }
-.st-shop--1 { left: 540px; }
-.st-shop--2 { left: 1020px; }
+.st-shop--0 { left: 240px; }
+.st-shop--1 { left: 740px; }
+.st-shop--2 { left: 1240px; }
 .st-shop:disabled { cursor: default; }
 .st-shop.is-open:hover { translate: 0 -6px; }
 .st-shop:focus-visible { outline: 5px solid #12305e; outline-offset: 8px; border-radius: 24px; }
 .st-glow { /* a soft gold glow behind it: pulsing while it is still to check, steady on the best deal */
   position: absolute;
-  left: 30px;
-  right: 30px;
-  top: 24px;
-  bottom: 30px;
+  left: 20px;
+  right: 20px;
+  top: 10px;
+  bottom: 16px;
   border-radius: 40px;
   background: #ffc83d;
-  filter: blur(26px);
+  filter: blur(28px);
   opacity: 0;
   transition: opacity .4s ease;
 }
 .st-shop.is-open .st-glow { animation: st-call 2.4s ease-in-out infinite; }
 @keyframes st-call {
   0%, 100% { opacity: 0; }
-  50%      { opacity: .5; }
+  50%      { opacity: .55; }
 }
-.st-shop.is-best .st-glow { opacity: .75; animation: none; }
+.st-shop.is-best .st-glow { opacity: .8; animation: none; }
 .st-shop.is-faded { opacity: .6; filter: saturate(.6); }
-.st-art { position: absolute; left: 0; top: 0; width: 440px; filter: drop-shadow(0 12px 12px rgba(40, 60, 100, .18)); }
-.st-board { /* its name, on its board */
+.st-art { /* the shop front, cut from "new shops for game .png" (494 × 514) */
   position: absolute;
-  left: 62px;
-  top: 19px;
-  width: 328px;
-  height: 64px;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 12px 12px rgba(40, 60, 100, .18));
+  user-select: none;
+  -webkit-user-drag: none;
+  pointer-events: none;
+}
+.st-board-name { /* on the sign: white, outlined in the shop's ink */
+  position: absolute;
+  z-index: 1;
+  left: 64px;
+  right: 64px;
+  top: 57px;
+  height: 52px;
   color: #fff;
   font-size: 42px;
   font-weight: 800;
-  line-height: 70px;
+  line-height: 58px;
   text-align: center;
-  text-shadow: 0 3px 0 rgba(0, 0, 0, .18);
+  white-space: nowrap;
+  text-shadow: 0 4px 0 var(--shop-ink), 3px 0 0 var(--shop-ink), -3px 0 0 var(--shop-ink), 0 -3px 0 var(--shop-ink), 2px 2px 0 var(--shop-ink), -2px 2px 0 var(--shop-ink), 2px -2px 0 var(--shop-ink), -2px -2px 0 var(--shop-ink);
 }
-.st-display { /* the window: the items stand on its shelf */
+.st-display { /* the window's glass: the item on the left, its price tag hanging on the right and the offer under it */
   position: absolute;
-  left: 69px;
-  top: 213px;
-  width: 306px;
-  height: 98px;
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-evenly;
+  z-index: 1;
+  left: 75px;
+  top: 232px;
+  width: 302px;
+  height: 199px;
+  overflow: hidden;
 }
-.st-item { width: auto; height: 86px; max-width: 132px; object-fit: contain; filter: drop-shadow(0 4px 4px rgba(20, 40, 90, .2)); }
-.st--shoes .st-item { height: 60px; }
-.st--bottle .st-item { height: 88px; }
-.st-tags { position: absolute; left: 42px; top: 350px; width: 359px; display: flex; align-items: flex-start; justify-content: center; gap: 12px; font-size: 32px; }
-.st-pay { position: absolute; left: 50%; top: 488px; width: 262px; translate: -50% 0; } /* what you pay there, on the green badge */
+.st-item { position: absolute; left: 16px; bottom: 10px; width: auto; height: 138px; filter: drop-shadow(0 6px 6px rgba(20, 40, 90, .22)); }
+.st--shoes .st-item { left: 8px; bottom: 24px; height: 118px; }
+.st--bag .st-item { left: 20px; height: 136px; }
+.st--bottle .st-item { left: 48px; height: 142px; }
+.st--uniform .st-item { top: 44px; bottom: auto; height: 132px; } /* it hangs on its hanger */
+.st-hanger { position: absolute; left: 21px; top: 14px; width: 112px; height: 56px; fill: none; stroke: #7d8aa1; stroke-width: 3.5; stroke-linecap: round; stroke-linejoin: round; } /* behind the uniform: its hook shows above the collar */
+.st-price { /* the marked price, on a cream tag hanging from a string */
+  position: absolute;
+  right: 14px;
+  top: 30px;
+  rotate: -4deg;
+  padding: 18px 13px 6px;
+  border: 3px solid #c9a35e;
+  border-radius: 10px;
+  background: #fff7de;
+  box-shadow: 0 3px 0 rgba(120, 90, 30, .25);
+  color: #1c2a4f;
+  font-size: 30px;
+  font-weight: 800;
+  line-height: 1;
+  white-space: nowrap;
+}
+.st-price::before { content: ''; position: absolute; left: 50%; bottom: calc(100% - 9px); width: 2px; height: 48px; margin-left: -1px; background: #6b5130; } /* the string, down to its hole */
+.st-price::after { content: ''; position: absolute; left: 50%; top: 6px; width: 8px; height: 8px; margin-left: -4px; border-radius: 50%; background: #6b5130; }
+.st-offer { /* the shop's offer, on a red tag */
+  position: absolute;
+  right: 20px;
+  bottom: 12px;
+  rotate: -7deg;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 8px 15px 6px;
+  border-radius: 12px;
+  background: linear-gradient(180deg, #f7483b, #d7271f);
+  box-shadow: 0 4px 0 #a3170f, 0 7px 10px rgba(120, 20, 10, .3);
+  color: #fff;
+  font-weight: 800;
+  line-height: 1;
+  text-shadow: 0 2px 0 rgba(100, 10, 5, .4);
+  white-space: nowrap;
+}
+.st-offer-big { font-size: 37px; }
+.st-offer-small { font-size: 23px; }
+.st-pay { position: absolute; z-index: 5; left: 50%; top: 482px; width: 262px; translate: -50% 0; } /* what you pay there, on the green badge */
 .st-pay .art-words { color: #fff; font-size: 28px; font-weight: 800; text-shadow: 0 2px 0 rgba(10, 60, 30, .35); }
-.st-best { position: absolute; z-index: 3; left: 50%; top: -78px; width: 290px; translate: -50% 0; } /* "Best deal!", on the yellow ribbon */
+.st-best { position: absolute; z-index: 5; left: 50%; top: -84px; width: 290px; translate: -50% 0; } /* "Best deal!", on the yellow ribbon */
 :is(.st-best, .cb-stamp, .tk-stamp) .art-words { top: 37%; color: #7a3d00; font-weight: 800; }
 .st-best .art-words { font-size: 30px; }
 .st-buy { /* "Buy for ₹1,300", on the yellow button */
   position: absolute;
+  z-index: 5;
   left: 50%;
-  top: 482px;
+  top: 476px;
   width: 300px;
   padding: 0;
   border: 0;
@@ -2999,15 +3137,80 @@ kbd {
   letter-spacing: 4px;
   line-height: 1;
 }
-.st-stand { position: absolute; left: 1574px; top: 900px; width: 301px; filter: drop-shadow(0 10px 8px rgba(60, 40, 10, .22)); pointer-events: none; }
-.st-veil { position: absolute; left: 0; top: 0; width: 1518px; height: 1080px; background: rgba(214, 232, 250, .62); pointer-events: none; }
+.st-veil { /* while a card is up: a calm backdrop over the street, the wallet, the list and Aniket (all eyes on the card;
+  the question bar stays over it). The game's light blue with soft circles, as on the Shopping Area. */
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 6% 10%, rgba(255, 255, 255, .34) 0 120px, rgba(255, 255, 255, 0) 123px),
+    radial-gradient(circle at 94% 14%, rgba(255, 255, 255, .26) 0 150px, rgba(255, 255, 255, 0) 153px),
+    radial-gradient(circle at 3% 92%, rgba(200, 194, 250, .32) 0 190px, rgba(200, 194, 250, 0) 193px),
+    radial-gradient(circle at 97% 70%, rgba(200, 194, 250, .26) 0 140px, rgba(200, 194, 250, 0) 143px),
+    radial-gradient(75% 65% at 50% 42%, #e6f4ff 0%, rgba(230, 244, 255, 0) 100%),
+    #cde8fc;
+  pointer-events: auto; /* nothing behind it can be tapped */
+}
+
+/* ---------- The question bar (the shopping game's own screens: the streets, Shopping Complete and the receipt, 44–49) ----------
+   At the top of the screen and always fully on it, in the top row between the wallet and Back / Next (over the screens,
+   under the buttons and the scene list): Swifty's face in a round frame on its left corner, her name on a tab under it,
+   and what she says (or what to do) on a white bar. One bar for all those screens: it slides up with the first and stays put from one to the next. (On the
+   big panel's screens she stands on her books instead, as on every teaching screen.) */
+.qb {
+  position: absolute;
+  z-index: 20;
+  left: 386px;
+  width: 1102px; /* to x 1488, clear of Back / Next */
+  top: 22px;
+  height: 84px; /* slim: level with the wallet and the top buttons */
+  border-radius: 26px;
+  background: linear-gradient(180deg, #ffffff 0%, #f3f8ff 100%);
+  box-shadow: 0 0 0 3px #cfe3fb, 0 10px 22px rgba(30, 80, 160, .22);
+  opacity: 0;
+  transform: translateY(-140px); /* it slides down into place */
+  transition: transform .55s cubic-bezier(.2, .8, .3, 1), opacity .35s ease;
+  pointer-events: none;
+}
+.qb.is-up { opacity: 1; transform: none; }
+.qb-face { /* Swifty, her face filling a small round frame inside the bar's left end; it glows while she talks */
+  position: absolute;
+  left: 10px;
+  top: 8px;
+  width: 68px;
+  height: 68px;
+  overflow: hidden;
+  border-radius: 50%;
+  background: radial-gradient(circle at 50% 30%, #f2fbff 0%, #bfe6fb 100%);
+  box-shadow: inset 0 0 0 3px #8fd3f5;
+  transition: box-shadow .25s ease;
+}
+.qb.is-talking .qb-face { box-shadow: inset 0 0 0 3px #21b8ae, 0 0 12px 3px rgba(33, 184, 174, .45); }
+.qb-box { position: absolute; left: 94px; right: 26px; top: 0; bottom: 0; }
+.qb-line, .qb-task { /* what she says, typed as she says it (see .ch); or what to do */
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  translate: 0 -50%;
+  color: #10285a;
+  font-size: 30px;
+  font-weight: 800;
+  line-height: 1.15;
+}
+.qb-task { color: #5576a8; transition: opacity .25s ease; }
+.qb-task.is-hidden { opacity: 0; }
+@media (prefers-reduced-motion: reduce) {
+  .qb { transform: none; transition: opacity .3s ease; }
+}
+/* The receipt, on the bar's screens: centred, under the bar. */
+.scene.has-bar .rc-paper { left: 460px; top: 150px; }
 
 /* A card over the street: one shop's offer, checked */
 .oc { position: absolute; inset: 0; pointer-events: none; }
-.oc-card {
+.oc-card { /* centred in the space under the question bar */
   position: absolute;
-  left: 120px;
-  top: 124px;
+  left: 320px;
+  top: 314px;
   width: 1280px;
   height: 560px;
   overflow: hidden;
@@ -3100,10 +3303,11 @@ kbd {
 .oc-result-value { font-size: 56px; font-weight: 800; line-height: 1; }
 
 /* The three offers compared */
-.cb-panel {
+.cb-panel { /* centred in the space under the question bar */
   position: absolute;
-  left: 120px;
-  top: 128px;
+  left: 960px;
+  top: 596px;
+  translate: -50% -50%;
   width: 1280px;
   display: flex;
   flex-direction: column;
@@ -3139,7 +3343,7 @@ kbd {
 /* "Uniform purchased!" and the wallet's sum */
 .ps-slip {
   position: absolute;
-  left: 760px;
+  left: 1030px;
   top: 236px;
   translate: -50% 0;
   display: flex;
@@ -3202,42 +3406,66 @@ kbd {
   font-weight: 800;
   white-space: nowrap;
 }
-.cl-items { position: absolute; left: 780px; top: 408px; display: flex; gap: 36px; translate: -50% 0; }
-.cl-item {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  width: 230px;
-  height: 250px;
-  border: 5px solid var(--ink);
-  border-radius: 30px;
-  background: linear-gradient(180deg, #ffffff 0%, #eef6ff 100%);
-  box-shadow: 0 9px 0 var(--ink);
-}
-.cl-pic { max-width: 190px; height: 150px; object-fit: contain; filter: drop-shadow(0 6px 6px rgba(20, 40, 90, .18)); }
-.cl-name { color: #1c2a4f; font-size: 34px; font-weight: 800; }
-.cl-tick { position: absolute; right: -24px; top: -24px; width: 76px; filter: drop-shadow(0 4px 6px rgba(20, 90, 50, .3)); }
-.cl-purse {
+/* Screen 48 (Shopping Complete): the banner and its line at the top; on the left the Shopping Area's panel, smaller (the
+   wallet: what is left; the list: every line ticked), and on the right the four things bought, each on a card in its
+   shop's colour (as on the Shopping Area), ticked. All of it under the question bar. */
+.cl--done .cl-banner { left: 960px; top: 150px; padding: 8px 52px 0; }
+.cl--done .cl-title { font-size: 58px; }
+.cl--done .cl-text { left: 960px; top: 248px; padding: 6px 38px 0; font-size: 36px; }
+.cl-board { /* the panel (598 × 928) at 60% */
   position: absolute;
-  left: 780px;
-  top: 730px;
-  translate: -50% 0;
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  padding: 8px 44px 8px 20px;
-  border: 5px solid var(--ink);
-  border-radius: 999px;
-  background: #fff;
-  box-shadow: 0 8px 0 var(--ink);
-  white-space: nowrap;
+  left: 412px;
+  top: 346px;
+  width: 598px;
+  height: 928px;
+  transform: scale(.6);
+  transform-origin: 0 0;
 }
-.cl-wallet { height: 88px; }
-.cl-money { padding-top: 6px; color: #1f7a45; font-size: 66px; font-weight: 800; line-height: 1; }
-.cl-left { padding-top: 10px; color: #1f7a45; font-size: 40px; font-weight: 800; text-transform: uppercase; }
+.cl-board .sp-panel { left: 0; top: 0; }
+.cl-board .sp-amount { color: #1f7a45; }
+.cl-board-left { /* "LEFT", under the money */
+  position: absolute;
+  left: 210px;
+  top: 162px;
+  width: 316px;
+  color: #1f7a45;
+  font-size: 34px;
+  font-weight: 800;
+  line-height: 1;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+.cl-grid { position: absolute; left: 835px; top: 348px; display: grid; grid-template-columns: 320px 320px; grid-auto-rows: 262px; gap: 28px 32px; }
+.cl-card { /* a thing bought, on its card in its shop's colour (the colours: .sp-card--yellow …) */
+  position: relative;
+  border: 3px solid var(--edge);
+  border-bottom-color: var(--edge-low);
+  border-radius: 34px;
+  background: linear-gradient(180deg, var(--top), var(--mid) 46%, var(--low));
+  box-shadow: inset 0 3px 0 rgba(255, 255, 255, .85), inset 0 0 0 3px rgba(255, 255, 255, .3), 0 10px 22px var(--shade);
+}
+.cl-pic { position: absolute; left: 50%; bottom: 80px; width: auto; translate: -50% 0; filter: drop-shadow(0 6px 6px rgba(20, 40, 90, .16)); }
+.cl-card--uniform .cl-pic { height: 160px; }
+.cl-card--shoes .cl-pic { height: 134px; }
+.cl-card--bag .cl-pic { height: 162px; }
+.cl-card--bottle .cl-pic { height: 162px; }
+.cl-name { /* its name, on its pill */
+  position: absolute;
+  left: 50%;
+  bottom: 14px;
+  width: 220px;
+  height: 54px;
+  translate: -50% 0;
+  border-radius: 27px;
+  background: var(--pill);
+  color: var(--pill-ink);
+  font-size: 35px;
+  font-weight: 800;
+  line-height: 60px;
+  text-align: center;
+}
+.cl-tick { position: absolute; right: -20px; top: -22px; width: 78px; filter: drop-shadow(0 4px 6px rgba(20, 90, 50, .3)); }
 
 /* The receipt: white paper, its bottom edge perforated, printed row by row */
 .rc { position: absolute; inset: 0; filter: drop-shadow(0 18px 22px rgba(30, 50, 90, .25)); pointer-events: none; }
@@ -3425,5 +3653,5 @@ kbd {
     animation: none !important;
   }
   .qcard-pos { transition: none; }
-  .cp-glint, .cp-start.is-calling, .sp-hint.is-bobbing, .st-shop.is-open .st-glow, .st-buy, .gm-opt.is-guide { animation: none !important; }
+  .cp-glint, .cp-start.is-calling, .sp-hint.is-bobbing, .st-shop.is-open .st-glow, .st-buy, .gm-opt.is-guide, .st-cloud { animation: none !important; }
 }

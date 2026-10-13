@@ -136,6 +136,7 @@
       lamps: [[1065, 140, 300], [1570, 116, 300]],
       dust: [200, 80, 1800, 800],
       shot: 'shelf', // same camera as screen 5, so the fade looks like he picks the book up
+      setup: standTitles, // the names on the books on the stand
       play: playSee,
     },
     {
@@ -145,6 +146,7 @@
       lamps: [[1065, 140, 300], [1570, 116, 300]],
       dust: [200, 80, 1800, 800],
       shot: 'shelf',
+      setup: standTitles,
       play: playBrowse,
     },
     {
@@ -649,6 +651,25 @@
     ctx.advance(1200); // then on through the mall
   }
 
+  // The names of the three books on the display stand by the counter (screens 4 and 5 show the same stand in the
+  // same place), each written on its cover as if printed there: centred in the cover's top part and slanted with it
+  // (the books lean back on the stand). On the pictures' layer, so they move with the camera. x, y: the title's centre
+  // (stage px); slant: how far the cover leans (deg); tone: light words (on the green and the night-blue covers) or
+  // dark ones (on the pale sunset sky).
+  const STAND_BOOKS = [
+    { lines: ['Magic', 'Tree'], x: 1357, y: 679, slant: 12.8, tone: 'light' },
+    { lines: ['Golden', 'Hills'], x: 1500, y: 684, slant: 10.7, tone: 'dark' },
+    { lines: ['Starry', 'Nights'], x: 1638, y: 680, slant: 10, tone: 'light' },
+  ];
+
+  function standTitles(scene) {
+    STAND_BOOKS.forEach(book => {
+      const title = el('div', `cover-title cover-title--${book.tone}`, scene.layer);
+      book.lines.forEach(line => { el('span', '', title).textContent = line; });
+      Object.assign(title.style, { left: book.x + 'px', top: book.y + 'px', transform: `translate(-50%, -50%) skewX(${-book.slant}deg)` });
+    });
+  }
+
   // Nothing to say here: Aniket just looks at the book, then (fade) picks it up.
   async function playSee(ctx) {
     await ctx.wait(600);
@@ -899,11 +920,11 @@
     Sound.duck(true);
     sheetUp(scene, card.el);
     card.el.classList.add('is-center');
-    const talk = await cornerSwifty(ctx, scene); // she flies in as the panel comes up
+    const talk = await cornerSwifty(ctx, scene, { size: 40 }); // she flies in as the panel comes up (big, clear words here)
     const bird = talk.bird;
     bird.point();
     await ctx.wait(250);
-    await talk.say('hint', [{ t: 'Think again.\nThe shopkeeper sold\nthe book for ' }, { t: '₹800', em: true }, { t: '.' }]);
+    await talk.say('hint', [{ t: 'Think again.\nThe shopkeeper\nsold the book\nfor ' }, { t: '₹800', em: true }, { t: '.' }]);
     talk.line.emphasize();
     await ctx.wait(2600);
 
@@ -1313,7 +1334,8 @@
   }
 
   // Swifty on her stand (CORNER), ready to talk (her bubbles go above her head): already there, or flying in now.
-  async function cornerSwifty(ctx, scene) {
+  // { size }: her bubbles' text size (default 34 px).
+  async function cornerSwifty(ctx, scene, { size } = {}) {
     let bird = scene.bird;
     if (!bird) {
       bird = new FX.Bird(scene.ui, SWIFTY, { scale: CORNER.s });
@@ -1321,7 +1343,7 @@
       await bird.flyTo(ctx, { x: CORNER.x, y: CORNER.y, s: CORNER.s, duration: 1300, lift: 100, ease: 'out' });
       await bird.land();
     }
-    return swiftyTalk(ctx, scene.ui, bird, b => overHead(b, CORNER.bubbles));
+    return swiftyTalk(ctx, scene.ui, bird, b => Object.assign(overHead(b, CORNER.bubbles), size ? { size } : {}));
   }
 
   // Swifty's part is over: her bubble (if any) goes with her, and she waves and flies off.
@@ -2513,9 +2535,9 @@
     wallet: BEGIN + 'wallet.png', button: BEGIN + 'button.png',
   };
   const SHOPPING_LIST = [
-    { icon: BEGIN + 'shirt.png', label: 'School Uniform' },
-    { icon: BEGIN + 'shoe.png', label: 'School Shoes' },
-    { icon: BEGIN + 'bag.png', label: 'School Bag' },
+    { icon: ASSETS + 'ui/shop/icon-uniform.png', label: 'School Uniform' }, // the same pictures as everywhere in the game
+    { icon: ASSETS + 'ui/shop/icon-shoes.png', label: 'School Shoes' },
+    { icon: ASSETS + 'ui/shop/icon-bag.png', label: 'School Bag' },
     { icon: BEGIN + 'bottle.png', label: 'Water Bottle' },
   ];
 
@@ -2549,16 +2571,17 @@
   const SHOP = ASSETS + 'ui/shop/';
   const SHOP_ART = { wallet: SHOP + 'wallet.png', check: SHOP + 'check-empty.png', done: SHOP + 'check-done.png' };
   const MONEY_NOTES = SHOP + 'money.png';
-  // The streets' pieces, cut from "sheet .png" (made with ChatGPT from the asset prompt): the three shop fronts, the
-  // street sign, the price and offer tags, the green badge (what you pay), the yellow ribbon (best deal) and the Buy
-  // button. They have no words on them: the game writes them.
+  // The streets: their picture (the sky, the town, the pavement and the road; the sign and the clouds are drawn by the
+  // game), the three shop fronts cut from "new shops for game .png", and the pieces cut from "sheet .png" (made with
+  // ChatGPT from the asset prompt): the price and offer tags (on the offer cards), the green badge (what you pay), the
+  // yellow ribbon (best deal) and the Buy button. They have no words on them: the game writes them.
   const STREET = ASSETS + 'ui/street/';
   const STREET_ART = {
-    shops: { coral: STREET + 'shop-coral.png', blue: STREET + 'shop-blue.png', purple: STREET + 'shop-purple.png' },
-    sign: STREET + 'sign.png', price: STREET + 'tag-price.png', offer: STREET + 'tag-offer.png',
+    backdrop: ASSETS + 'game background.png',
+    fronts: { coral: STREET + 'front-coral.png', blue: STREET + 'front-blue.png', purple: STREET + 'front-purple.png' },
+    price: STREET + 'tag-price.png', offer: STREET + 'tag-offer.png',
     pill: STREET + 'pill.png', ribbon: STREET + 'ribbon.png', button: STREET + 'button.png',
   };
-  const WINDOW_COPIES = { uniform: 2, shoes: 2, bag: 2, bottle: 3 }; // how many of the item stand in each shop window
   const SHOPS = [ // sparks: [x %, y %, angle] of each little dash beside the picture, as in the design
     { id: 'uniform', name: 'Uniform', icon: SHOP + 'icon-uniform.png', tone: 'yellow', sparks: [[14.2, 33.3, 41], [13.9, 46.6, -19], [85.9, 33.2, -40], [85.9, 46.7, 21]] },
     { id: 'shoes', name: 'Shoes', icon: SHOP + 'icon-shoes.png', tone: 'pink', sparks: [[17.9, 25.6, 54], [12.7, 35.9, 17], [85.6, 22.8, -53], [89.8, 35.1, -11]] },
@@ -2574,6 +2597,79 @@
   const moneyLeft = () => BUDGET - Shopping.bought.reduce((sum, id) => sum + bestPrice(id), 0);
   const allBought = () => SHOPS.every(shop => Shopping.bought.includes(shop.id));
   const sceneIndex = id => SCENES.findIndex(s => s.id === id);
+
+  // The question bar. In the shopping game's own screens (the streets, Shopping Complete and the receipt) Swifty doesn't
+  // stand on her books: she speaks from a bar at the top of the screen (in the top row, between the wallet and Back /
+  // Next), her face in a round frame on its left corner (FX.questionBar). On the big panel's screens (the money left, the two amounts, the recap, the takeaway) she
+  // stands on her books, as on every teaching screen. It is one bar for all of its screens, on the stage over them: it
+  // slides up with the first and stays put from one to the next (so it never jumps), and slides down when the game
+  // goes to a screen without it. Every line she says is written on it as she says it; between lines it says what to
+  // do (the task).
+  const BAR_SCREENS = new Set(['uniform', 'shoes', 'bag', 'bottle', 'complete', 'receipt']);
+  let questionBar = null; // made the first time a screen with it comes up
+
+  function syncBar(scene) {
+    const on = BAR_SCREENS.has(scene.id);
+    if (!questionBar && !on) return;
+    if (!questionBar) {
+      questionBar = FX.questionBar($('#stage'), { sheets: SWIFTY });
+      $('#scenes').after(questionBar.el); // over the screens, under the buttons and the scene list
+    }
+    questionBar.reset(); // the screen before may have left a line on it
+    questionBar.toggle(on);
+  }
+
+  // Swifty's lines on the question bar, for a screen's script: each one takes the place of the one before, typed while
+  // her voice says it (as swiftyTalk does with bubbles). `task`: what to do, shown while she isn't saying anything.
+  function barTalk(ctx, task = '') {
+    const bar = questionBar;
+    bar.task(task);
+    let line = null;
+    const live = () => { if (!ctx.alive()) throw CANCELLED; }; // the player has left this screen: hands off the bar
+    const talk = {
+      bird: bar.speaker,
+      get line() { return line; },
+      async show(text) {
+        live();
+        if (line) {
+          const old = line;
+          line = null;
+          await old.hide();
+          live();
+        }
+        line = bar.line(text);
+        await line.show();
+      },
+      // Types part `i` of the line while she says it; never quicker than `ms`.
+      part(id, i, ms = 0) {
+        return Promise.all([speakPart(ctx, line, i, id, line.parts[i], 'bird', bar.speaker), ctx.wait(ms)]);
+      },
+      // Her line goes, and the task shows.
+      async clear() {
+        live();
+        if (line) {
+          const old = line;
+          line = null;
+          await old.hide();
+          live();
+        }
+        bar.showTask();
+      },
+      // A whole line, typed while she says it; never quicker than `ms`.
+      async say(id, text, ms = 0) {
+        await talk.show(text);
+        await Promise.all([speak(ctx, line, id, 'bird', bar.speaker), ctx.wait(ms)]);
+      },
+      task(text) {
+        if (ctx.alive()) bar.task(text);
+      },
+      // She reads out something written on the screen as it is written (`show`); it goes on the bar too.
+      readOut(id, text, show) {
+        return Promise.all([talk.say(id, text), show]);
+      },
+    };
+    return talk;
+  }
 
   async function playShops(ctx, scene) {
     const back = SHOPS.some(shop => shop.id === scene.cameFrom); // back from a shop: no need to build it all up again
@@ -2676,28 +2772,11 @@
     compare: 'Compare the final prices,\nnot just the discount\npercentages.',
   };
 
-  // On the shop screens Swifty stands on her stack of books in the bottom-right corner, under the wallet panel, and
-  // her bubbles go on her left, over the pavement: clear of the shops and of the cards that come up over them.
-  const STREET_STAND = { left: 1574, top: 900 };
-  const STREET_SWIFTY = { x: 1757, y: 944, s: 0.62 };
-  const beside = bird => {
-    const beak = [bird.x - 62, bird.y - bird.s * 300];
-    return { anchor: [beak[0] - 92, beak[1]], corner: 'mr', within: [60, beak[0] - 92], tip: beak };
-  };
-
-  async function streetSwifty(ctx, scene) {
-    const bird = new FX.Bird(scene.ui, SWIFTY, { scale: STREET_SWIFTY.s });
-    bird.place(2140, STREET_SWIFTY.y - 300);
-    await bird.flyTo(ctx, { x: STREET_SWIFTY.x, y: STREET_SWIFTY.y, s: STREET_SWIFTY.s, duration: 1300, lift: 100, ease: 'out' });
-    await bird.land();
-    return swiftyTalk(ctx, scene.ui, bird, beside);
-  }
-
-  // Aniket walks in from the left and stops on the pavement, in front of the shops (bottom-left).
+  // Aniket walks in from the left along the road and stops in front of the shops (bottom-left).
   async function walkOn(ctx, scene) {
     const walker = new FX.Walker(scene.ui, WALK_SHEET, { matte: true });
-    const from = { x: -170, y: 1066, s: 0.6 };
-    const to = { x: 205, y: 1066, s: 0.6 };
+    const from = { x: -170, y: 1032, s: 0.56 };
+    const to = { x: 190, y: 1032, s: 0.56 };
     walker.place(from.x, from.y, from.s);
     walker.setFrame(WALK_SHEET.loop[0]);
     const pan = x => (x / STAGE_W) * 1.6 - 0.8;
@@ -2711,18 +2790,9 @@
     walker.idle(true);
   }
 
-  // Swifty reads out a line that is written on the screen as she says it (no bubble: its words are there).
-  async function readOut(ctx, bird, id, text, show) {
-    bird.talk();
-    const saying = Voice.say(id, text, 'bird');
-    await show;
-    await Promise.all([saying, ctx.wait(500)]);
-    bird.idle();
-  }
-
-  // A street of three shops: one item's round of the game. The street builds up and Swifty flies in to tell what to
-  // do; the player checks the three offers in any order (checkOffer), compares them (compareOffers) and buys at the
-  // best shop (buyItem). Then Swifty flies off and the game goes back to the Shopping Area (or on to the end).
+  // A street of three shops: one item's round of the game. The street builds up and Swifty, on the question bar, tells
+  // what to do; the player checks the three offers in any order (checkOffer), compares them (compareOffers) and buys at
+  // the best shop (buyItem). Then the game goes back to the Shopping Area (or on to the end).
   async function playRound(ctx, scene) {
     const id = scene.id;
     const round = ROUNDS[id];
@@ -2732,18 +2802,18 @@
     const shops = round.shops.map((shop, k) => ({
       name: SHOP_NAMES[k], tone: SHOP_TONES[k], price: rupees(shop.mp), off: shop.off, pay: rupees(shop.pay),
     }));
-    const st = FX.street(scene.ui, { id, name: round.street, item: round.item, icon: SHOPS[n].icon, copies: WINDOW_COPIES[id], shops, art: STREET_ART });
-    const board = FX.walletPanel(scene.ui, { items: SHOPS, art: SHOP_ART, money, bought: Shopping.bought, mini: true });
+    const st = FX.street(scene.ui, { id, name: round.street, item: round.item, icon: SHOPS[n].icon, shops, art: STREET_ART });
+    const board = FX.walletPanel(scene.ui, { items: SHOPS, art: SHOP_ART, money, bought: Shopping.bought, street: true });
     board.light(n);
-    Object.assign(el('img', 'st-stand', scene.ui), { src: STAND, alt: '', draggable: false });
-    const walking = walkOn(ctx, scene); // Aniket walks onto the pavement while the street builds up
+    const talk = barTalk(ctx, `${round.street} · ${round.item}`); // where we are, while the street builds up
+    const walking = walkOn(ctx, scene); // Aniket walks onto the road while the street builds up
     walking.catch(() => {});
     await ctx.wait(300);
     await st.enter(ctx);
     await walking;
-    const talk = await streetSwifty(ctx, scene);
     await talk.say(id + '-intro-1', round.intro[0], 300);
     await talk.say(id + '-intro-2', round.intro[1], 300);
+    talk.task('Tap a shop to check its offer.');
     talk.bird.point();
 
     // The offers, checked one at a time, in any order. While the game waits for a tap, the shops still to check
@@ -2762,11 +2832,13 @@
       await checkOffer(ctx, scene, talk, round, shops, st, k, SHOPS[n].icon);
       checked.add(k);
       await st.paid(k);
+      talk.task(checked.size < shops.length ? 'Tap another shop to check its offer.' : '');
+      await talk.clear();
       await ctx.wait(300);
     }
-    await compareOffers(ctx, scene, talk, round, shops);
+    await compareOffers(ctx, scene, talk, round, shops, st);
     await buyItem(ctx, scene, talk, round, st, board, n, money);
-    await flyOff(ctx, talk.bird, talk.line);
+    talk.bird.wave();
     ctx.advance(2500); // back to the Shopping Area (or on to the end)
   }
 
@@ -2776,12 +2848,13 @@
   async function checkOffer(ctx, scene, talk, round, shops, st, k, icon) {
     const shop = round.shops[k];
     const right = shop.options.indexOf(shop.pay);
-    const veil = FX.streetVeil(scene.ui);
+    const veil = st.veil();
     const card = FX.offerCard(scene.ui, {
       name: shops[k].name, tone: shops[k].tone, item: round.item, icon,
       price: shops[k].price, off: shop.off, options: shop.options.map(rupees), right, work: shop.work, pay: shops[k].pay, art: STREET_ART,
     });
     const at = stagePoint(st.shops[k]);
+    talk.task(`How much will you pay at ${shops[k].name}?`);
     await talk.clear();
     await card.open(ctx, at);
     let wrong = 0;
@@ -2796,9 +2869,8 @@
     FX.burst(scene.ui, x, y, { count: 16, dist: [100, 200], size: [12, 24] });
     await talk.say('right', 'Correct!');
     await card.toWork(ctx);
-    await talk.clear();
     for (const [i, line] of shop.work.entries()) {
-      await readOut(ctx, talk.bird, `${scene.id}-${k}-work-${i}`, line.text || `${line.left} = ${line.right}`, card.line(i));
+      await talk.readOut(`${scene.id}-${k}-work-${i}`, line.text || `${line.left} = ${line.right}`, card.line(i));
     }
     await card.result();
     talk.bird.point();
@@ -2808,9 +2880,9 @@
 
   // The three offers compared: what you pay at each shop, side by side, and "Which shop gives the best deal?". Wrong
   // picks are crossed out, with Swifty's help; the right one gets a "Best deal!" stamp and she says why.
-  async function compareOffers(ctx, scene, talk, round, shops) {
+  async function compareOffers(ctx, scene, talk, round, shops, st) {
     const right = round.best;
-    const veil = FX.streetVeil(scene.ui);
+    const veil = st.veil();
     const cb = FX.compareBoard(scene.ui, {
       question: round.question,
       right,
@@ -2819,9 +2891,10 @@
         name: shop.name, tone: shop.tone, price: shop.price, off: round.shops[k].off.join(' '), pay: shop.pay, amount: round.shops[k].pay,
       })),
     });
+    talk.task(round.question);
     await talk.clear();
     await cb.open(ctx);
-    await readOut(ctx, talk.bird, scene.id + '-ask', round.question, null); // she reads the question out (it is on the strip)
+    await talk.readOut(scene.id + '-ask', round.question, null); // she reads the question out (it is on the strip too)
     talk.bird.point();
     let wrong = 0;
     while ((await cb.pick()) !== right) {
@@ -2837,19 +2910,23 @@
     await talk.say(scene.id + '-best', `${shops[right].name}: ${shops[right].pay}.\nThe best deal!`);
     if (round.lesson) await talk.say(scene.id + '-lesson', round.lesson);
     await ctx.wait(700);
-    await talk.clear();
     await Promise.all([cb.close(), veil.hide()]);
   }
 
-  // Buying at the best shop: it glows with a "Best deal!" ribbon and a Buy button. Pressed, the money flies from the
-  // wallet to the shop (SOLD), the item flies from the shop onto the shopping list (ticked), and a slip shows the
-  // wallet's sum (₹5,000 − ₹1,300 = ₹3,700 left) while the wallet counts down.
+  // Buying at the best shop: it glows with a "Best deal!" ribbon, the Buy button pops in under it and Swifty says to tap
+  // it. Pressed, the money flies from the wallet to the shop
+  // (SOLD), the item flies from the shop onto the shopping list (ticked), and a slip shows the wallet's sum (₹5,000 −
+  // ₹1,300 = ₹3,700 left) while the wallet counts down.
   async function buyItem(ctx, scene, talk, round, st, board, n, money) {
     const k = round.best;
     const cost = round.shops[k].pay;
     await st.best(k);
+    talk.task('Tap Buy!');
+    const buying = st.buy(k, 'Buy for ' + rupees(cost)); // the Buy button pops in under the best shop
     await talk.say('buy', 'Now tap Buy!');
-    await st.buy(k, 'Buy for ' + rupees(cost));
+    talk.bird.point();
+    await buying;
+    talk.task(`Paying ${rupees(cost)}…`);
     await talk.clear();
     const purse = stageRect(board.wallet.querySelector('.sp-wallet-icon'));
     const shop = stageRect(st.pictures[k]);
@@ -2885,39 +2962,19 @@
   const TOTAL = PAID.reduce((t, p) => ({ mp: t.mp + p.mp, off: t.off + p.off, pay: t.pay + p.pay }), { mp: 0, off: 0, pay: 0 });
   const FULL_NAMES = { uniform: 'Uniform', shoes: 'School Shoes', bag: 'School Bag', bottle: 'Water Bottle' };
 
-  // Swifty on her stack in the bottom-right corner, as on the streets: flying in, or already there (`carried`) when the
-  // screen before had her there too.
-  function partySwifty(ctx, scene, carried) {
-    if (!carried) return streetSwifty(ctx, scene);
-    const bird = new FX.Bird(scene.ui, SWIFTY, { scale: STREET_SWIFTY.s });
-    bird.place(STREET_SWIFTY.x, STREET_SWIFTY.y);
-    bird.shadowOn(true);
-    return Promise.resolve(swiftyTalk(ctx, scene.ui, bird, beside));
-  }
-
-  // Aniket standing on the left, as he stopped on the streets.
-  function aniketStanding(scene) {
-    const walker = new FX.Walker(scene.ui, WALK_SHEET, { matte: true });
-    walker.place(205, 1066, 0.6);
-    walker.setFrame(WALK_SHEET.idle);
-    walker.idle(true);
-    return walker;
-  }
-
-  // Everything on the list is bought: a banner, confetti, the four things ticked and the money left. Swifty flies in and
-  // reads it out.
+  // Everything on the list is bought: a banner and confetti; the wallet (the money left) and the list on the left, its
+  // lines ticked one by one as the four things bought pop up on the right. Swifty reads it out on the question bar.
   async function playComplete(ctx, scene) {
-    Object.assign(el('img', 'st-stand', scene.ui), { src: STAND, alt: '', draggable: false });
-    aniketStanding(scene);
     const party = FX.celebration(scene.ui, {
       title: 'SHOPPING COMPLETE!', text: 'You bought everything on the list!', items: SHOPS, art: SHOP_ART, money: BUDGET - TOTAL.pay,
     });
+    const talk = barTalk(ctx, scene.title);
     await ctx.wait(300);
-    const arriving = streetSwifty(ctx, scene);
-    arriving.catch(() => {});
-    await party.enter(ctx);
-    const talk = await arriving;
-    await readOut(ctx, talk.bird, 'complete', 'Shopping complete! You bought everything on the list!', null);
+    const building = party.enter(ctx);
+    building.catch(() => {}); // if the player leaves meanwhile, the wait below reports it
+    await ctx.wait(1300); // the banner has landed
+    await talk.readOut('complete', 'Shopping complete! You bought everything on the list!', null);
+    await building;
     talk.bird.wave();
     ctx.advance(3000);
   }
@@ -2931,13 +2988,10 @@
   };
 
   async function playReceipt(ctx, scene) {
-    Object.assign(el('img', 'st-stand', scene.ui), { src: STAND, alt: '', draggable: false });
     const rc = FX.receipt(scene.ui, RECEIPT);
-    const arriving = partySwifty(ctx, scene, scene.cameFrom === 'complete');
-    arriving.catch(() => {});
+    const talk = barTalk(ctx, scene.title); // its title on the bar until Swifty's first line
     await ctx.wait(300);
     await rc.open();
-    const talk = await arriving;
     await talk.say('receipt-here', 'Here is Aniket’s\nreceipt!');
     for (let i = 0; i < RECEIPT.rows.length; i++) {
       await rc.row(i);
@@ -2947,8 +3001,17 @@
     await talk.say('receipt-paid', [{ t: 'He paid ' }, { t: rupees(TOTAL.pay), em: true }, { t: '\nfor everything.' }]);
     talk.line.emphasize();
     rc.ping('total');
-    await flyOff(ctx, talk.bird, talk.line);
-    ctx.advance(2500);
+    talk.bird.point();
+    ctx.advance(3000);
+  }
+
+  // Swifty reads out a line that is written on the screen as she says it (no bubble: its words are there).
+  async function readOut(ctx, bird, id, text, show) {
+    bird.talk();
+    const saying = Voice.say(id, text, 'bird');
+    await show;
+    await Promise.all([saying, ctx.wait(500)]);
+    bird.idle();
   }
 
   // The money left, worked out on the big panel (the way screen 32 worked out the amount to pay): what his father gave,
@@ -3437,6 +3500,7 @@
     Game.index = i;
     $('#stage').classList.toggle('look-paper', to.look === 'paper'); // the buttons on top take the screen's look
     UI.update();
+    syncBar(to);
 
     if (sheet) {
       slide(from, to);
@@ -3621,12 +3685,15 @@
       scene.world.style.setProperty('--kb-origin', scene.kb ? scene.kb.origin : scene.origin);
       if (scene.sheet) scene.el.classList.add('is-sheet');
       if (scene.look) scene.el.classList.add('look-' + scene.look);
-      if (scene.sheet === 'panel') { // one big panel filling the screen, and Swifty's stand on it
+      if (BAR_SCREENS.has(scene.id)) scene.el.classList.add('has-bar'); // Swifty speaks from the question bar
+      if (scene.sheet === 'panel') { // one big panel filling the screen, and Swifty's stand on it (not under the bar)
         el('div', 'sheet-panel', scene.world);
-        const stand = el('img', 'sheet-stand', scene.world);
-        stand.src = STAND;
-        stand.alt = '';
-        stand.draggable = false;
+        if (!BAR_SCREENS.has(scene.id)) {
+          const stand = el('img', 'sheet-stand', scene.world);
+          stand.src = STAND;
+          stand.alt = '';
+          stand.draggable = false;
+        }
       }
       [scene.bg, scene.react].filter(Boolean).forEach((src, i) => { // the picture, and a reaction to fade in over it
         const img = el('img', (scene.backdrop ? 'scene-bg scene-bg--feather' : 'scene-bg') + (i ? ' scene-react' : ''), scene.world);
@@ -3652,7 +3719,8 @@
       const thumb = el('span', 'si-thumb', item);
       const picture = scene.react || scene.bg; // a screen's reaction picture shows best what it is about
       if (scene.sheet) thumb.classList.add('si-thumb--sheet'); // on the big panel: a little cream panel, with Swifty's stand
-      if (picture || scene.sheet) Object.assign(el('img', '', thumb), { src: picture || STAND, alt: '' });
+      if (BAR_SCREENS.has(scene.id)) thumb.classList.add('si-thumb--bar'); // the question bar along its bottom, not the stand
+      if (picture || (scene.sheet && !BAR_SCREENS.has(scene.id))) Object.assign(el('img', '', thumb), { src: picture || STAND, alt: '' });
       else thumb.classList.add('si-thumb--' + scene.look); // a screen the game draws (the shops): a tiny copy, in CSS
       el('span', 'si-now', thumb).textContent = 'NOW';
       const text = el('span', 'si-text', item);
@@ -3752,6 +3820,10 @@
         p.x += (p.tx - p.x) * 0.06;
         p.y += (p.ty - p.y) * 0.06;
         scene.parallax.style.transform = `translate(${p.x.toFixed(2)}px, ${p.y.toFixed(2)}px)`;
+        // a fade between two screens of the same view (e.g. 4 → 5): the picture fading out moves with the new one,
+        // so the two stay exactly on top of each other (nothing in them doubles)
+        const leaving = Game.leaving;
+        if (leaving && leaving !== scene && leaving.shot && leaving.shot === scene.shot) leaving.parallax.style.transform = scene.parallax.style.transform;
         applied = scene;
       }
       requestAnimationFrame(loop);
@@ -3792,7 +3864,7 @@
       ASSETS + 'start button.png', WALK_SHEET.src, SWIFTY.fly.src, SWIFTY.stand.src, ART.money, ART.book,
       ASSETS + 'ui/sneakers.png', STAND, ...Object.values(BEGIN_ART), ...SHOPPING_LIST.map(item => item.icon),
       ...Object.values(SHOP_ART), MONEY_NOTES, ...SHOPS.map(shop => shop.icon), ASSETS + 'boy stand and talk .png',
-      ...Object.values(STREET_ART.shops), ...Object.values(STREET_ART).filter(v => typeof v === 'string')
+      ...Object.values(STREET_ART).flatMap(v => (typeof v === 'string' ? [v] : Object.values(v)))
     );
     const fonts = document.fonts
       ? Promise.race([Promise.all([ // the fonts, before the first words appear (no swapping in later)
