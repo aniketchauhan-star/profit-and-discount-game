@@ -2926,9 +2926,10 @@
 
   /**
    * The design's "Game Begins" panel: a cream panel with the GAME BEGINS banner and its "School Shopping Challenge"
-   * ribbon, the wallet, the shopping list (a checkbox, an icon and a name for each item) and the START SHOPPING
-   * button. The pictures are cut from the design's panel sheet (art: { panel, banner, ribbon, wallet, button }; the
-   * panel made at the design's size from the sheet's, its round corners kept as they are); the list is drawn.
+   * ribbon, the wallet, the shopping list (its items side by side, each a small card with its picture and its name
+   * under it) and the START SHOPPING button, with room between them. The pictures are cut from the design's panel
+   * sheet (art: { panel, banner, ribbon, wallet, button }; the panel made at the design's size from the sheet's, its
+   * round corners kept as they are); the list is drawn.
    *  items   [{ icon, label }]      wallet  the wallet's words, for screen readers (e.g. 'Wallet: ₹5,000')
    * Reveal it with open() → ribbon() → wallet() → list() → item(ctx, i) → start(onPress).
    */
@@ -2941,21 +2942,23 @@
     const purse = el('div', 'cp-wallet', root);
     picture('', art.wallet, wallet, purse);
     const glint = el('div', 'cp-glint', purse); // a shine across the wallet's navy pill (₹5,000)
-    const list = el('div', 'cp-list', root);
-    el('div', 'cp-list-title', list).textContent = 'Shopping List';
-    const rows = items.map(item => {
-      const row = el('div', 'cp-row', list);
-      const check = el('span', 'cp-check', row);
-      const icon = picture('cp-icon', item.icon, '', row);
-      const label = el('span', 'cp-label', row);
-      label.textContent = item.label;
-      return { check, icon, label };
+    const list = el('div', 'cp-list-title', root);
+    list.textContent = 'Shopping List';
+    const row = el('div', 'cp-items', root);
+    row.setAttribute('role', 'list');
+    row.setAttribute('aria-label', 'Shopping List');
+    const cards = items.map(item => {
+      const card = el('div', 'cp-item', row);
+      card.setAttribute('role', 'listitem');
+      picture('cp-icon', item.icon, '', card);
+      el('span', 'cp-label', card).textContent = item.label.replace(' ', '\n'); // "School / Uniform", on two lines
+      return card;
     });
     const button = el('button', 'cp-start', root);
     button.type = 'button';
     button.setAttribute('aria-label', 'Start shopping');
     picture('', art.button, '', button);
-    [panel, banner, ribbon, purse, list, button, ...rows.flatMap(r => [r.check, r.icon, r.label])].forEach(n => { n.style.opacity = '0'; });
+    [panel, banner, ribbon, purse, list, button, ...cards].forEach(n => { n.style.opacity = '0'; });
 
     const SPRING = 'cubic-bezier(.2,.8,.3,1)';
     const pop = (node, ms = 420) => reveal(node, [
@@ -2998,24 +3001,18 @@
         glint.classList.add('is-on');
         Sound.kaching();
       },
-      // The list's box springs up with its title.
+      // The list's title comes in.
       list() {
         Sound.bloop();
         return reveal(list, [
-          { opacity: 0, transform: 'translateY(30px) scale(.94)' },
-          { opacity: 1, transform: 'translateY(-3px) scale(1.01)', offset: 0.7 },
+          { opacity: 0, transform: 'translateY(16px)' },
           { opacity: 1, transform: 'none' },
-        ], { duration: T(520), easing: SPRING });
+        ], { duration: T(420), easing: SPRING });
       },
-      // One item of the list: its checkbox, then its icon, then its name.
+      // One item of the list: its card pops in, with its picture and its name.
       async item(ctx, i) {
-        const { check, icon, label } = rows[i];
         Sound.pop();
-        pop(check, 360);
-        await ctx.wait(110);
-        pop(icon, 420);
-        await ctx.wait(110);
-        await reveal(label, [{ opacity: 0, transform: 'translateX(-16px)' }, { opacity: 1, transform: 'none' }], { duration: T(320), easing: 'ease-out' });
+        await pop(cards[i], 460);
       },
       // The START SHOPPING button bounces in, then glows gently while it waits to be pressed.
       async start(onPress) {
@@ -3326,8 +3323,9 @@
    * scalloped edge, a cream front with a big window and its lamps), with the game's words and things on it: the shop's
    * name on its sign, and in the window the item on the left, its marked price on a tag hanging on the right, and the
    * shop's offer on a red tag under it. A shop is a button: tap(skip) waits for the player to tap one (not in
-   * `skip`). Once its offer is checked, the green badge under it says what you pay there (paid(i)); best(i) marks the
-   * best deal with the yellow ribbon, and buy(i, text) puts the Buy button under it.
+   * `skip`). Once its offer is checked, the green badge under it gives its Selling Price, "SP = ₹1,440" (paid(i));
+   * choose(texts) turns the three badges into Buy buttons, one under each shop ("Buy for ₹1,440" …), for the
+   * player to pick where to buy; best(i) marks the best deal with the yellow ribbon.
    *  id     the item's id (its size in the windows: see the CSS);  name  e.g. 'Uniform Street';  item  e.g. 'School Uniform'
    *  icon   the item's picture
    *  shops  [{ name: 'Shop A', tone: 'coral' | 'blue' | 'purple', price: '₹1,600', off: ['10%', 'OFF'], pay: '₹1,440' }]
@@ -3354,7 +3352,7 @@
       el('div', 'st-price', display).textContent = shop.price;
       const offer = el('div', 'st-offer', display);
       shop.off.forEach(t => { el('span', /\d/.test(t) ? 'st-offer-big' : 'st-offer-small', offer).textContent = t; }); // the amount big, the word small
-      const pay = artLabel(b, 'st-pay', art.pill, `You pay ${shop.pay}`).el;
+      const pay = artLabel(b, 'st-pay', art.pill, `SP = ${shop.pay}`).el;
       pay.style.opacity = '0';
       const ribbon = artLabel(b, 'st-best', art.ribbon, 'Best deal!').el;
       ribbon.style.opacity = '0';
@@ -3422,7 +3420,7 @@
           await ctx.wait(150, { real: true });
         }
       },
-      // Shop i's green "You pay …" tag pops in under it.
+      // Shop i's green "SP = …" badge pops in under it.
       paid(i) {
         fronts[i].done = true;
         fronts[i].el.classList.add('is-checked');
@@ -3436,28 +3434,75 @@
         Sound.sparkle();
         return popIn(fronts[i].ribbon);
       },
-      // The yellow Buy button under shop i (in place of its badge); resolves when it is pressed.
-      buy(i, text) {
-        const f = fronts[i];
-        f.pay.style.visibility = 'hidden';
-        const btn = artLabel(f.el, 'st-buy', art.button, text, 'button').el;
-        btn.type = 'button';
-        btn.setAttribute('aria-label', text);
-        Sound.bloop();
-        popIn(btn);
-        return new Promise(resolve => btn.addEventListener('click', e => {
-          e.stopPropagation();
+      // Where to buy: each shop's green SP badge dissolves into a yellow Buy button with its price (texts[i], e.g.
+      // "Buy for ₹1,440"). pick() waits for one to be pressed and resolves with its shop's index: a wrong one
+      // shakes and buzzes and is crossed out (it can't be pressed again); guide(i) makes button i glow; finish(i)
+      // presses it home, and every button dissolves back into its badge.
+      async choose(texts) {
+        const SOFT = 'cubic-bezier(.45,0,.3,1)';
+        const buttons = fronts.map((f, i) => {
+          const btn = artLabel(f.el, 'st-buy', art.button, texts[i], 'button').el;
+          btn.type = 'button';
           btn.disabled = true;
-          Sound.click();
-          // pressed: it squeezes, then makes way for the badge again (what you paid)
-          settle(btn.animate([{ transform: 'scale(.92)' }, { transform: 'none', opacity: 1, offset: 0.4 }, { transform: 'scale(.8)', opacity: 0 }], { duration: 520, fill: 'forwards' }))
-            .then(() => {
-              btn.remove();
+          btn.setAttribute('aria-label', texts[i]);
+          btn.addEventListener('click', e => {
+            e.stopPropagation(); // not a tap on the shop itself
+            if (!waitingBuy || btn.disabled) return;
+            const resolve = waitingBuy;
+            waitingBuy = null;
+            buttons.forEach(b => { b.disabled = true; });
+            Sound.click();
+            resolve(i);
+          });
+          return btn;
+        });
+        let waitingBuy = null;
+        Sound.swish();
+        await Promise.all(fronts.map((f, i) => Promise.all([
+          settle(f.pay.animate([
+            { opacity: 1, filter: 'blur(0)', transform: 'none' },
+            { opacity: 0, filter: 'blur(8px)', transform: 'scale(1.08)' },
+          ], { duration: reducedMotion ? 1 : T(700), delay: T(i * 160), easing: 'ease-in', fill: 'forwards' })),
+          reveal(buttons[i], [
+            { opacity: 0, filter: 'blur(8px)', transform: 'scale(.9)' },
+            { opacity: 0, filter: 'blur(8px)', transform: 'scale(.9)', offset: 0.3 },
+            { opacity: 1, filter: 'blur(0)', transform: 'none' },
+          ], { duration: T(900), delay: T(i * 160), easing: SOFT }),
+        ])));
+        fronts.forEach(f => { f.pay.style.visibility = 'hidden'; f.pay.getAnimations().forEach(a => a.cancel()); });
+        return {
+          buttons,
+          pick() {
+            buttons.forEach(b => { if (!b.classList.contains('is-out')) b.disabled = false; });
+            return new Promise(resolve => { waitingBuy = resolve; });
+          },
+          // A wrong pick: button i shakes, buzzes and is crossed out.
+          wrong(i) {
+            const b = buttons[i];
+            Sound.wrong();
+            b.classList.add('is-out');
+            b.animate([
+              { transform: 'none' }, { transform: 'translateX(-12px)' }, { transform: 'translateX(10px)' },
+              { transform: 'translateX(-6px)' }, { transform: 'none' },
+            ], { duration: 420, easing: 'ease-in-out' });
+          },
+          guide(i) {
+            buttons[i].classList.add('is-guide');
+          },
+          // The right one: it squeezes, then every button dissolves back into its badge (the Selling Prices).
+          async finish(i) {
+            Sound.correct();
+            await settle(buttons[i].animate([{ transform: 'scale(.92)' }, { transform: 'scale(1.06)', offset: 0.5 }, { transform: 'none' }], { duration: 420 }));
+            await Promise.all(fronts.map((f, k) => {
               f.pay.style.visibility = '';
-              popIn(f.pay);
-            });
-          resolve(btn);
-        }, { once: true }));
+              return Promise.all([
+                settle(buttons[k].animate([{ opacity: 1 }, { opacity: 0 }], { duration: reducedMotion ? 1 : T(420), easing: 'ease-in', fill: 'forwards' }))
+                  .then(() => buttons[k].remove()),
+                popIn(f.pay),
+              ]);
+            }));
+          },
+        };
       },
       // Shop i's sale: a SOLD stamp lands on its window.
       sold(i) {
@@ -3613,11 +3658,11 @@
    * item in a frame with its marked price and the offer; on the right "How much will you pay?" on a purple strip, and
    * under it three answers (answerButtons: pick() resolves with the next one picked, guide(i)). The question is only
    * here (the question bar steps away meanwhile). Once the right one is picked, the answers make way for the working,
-   * written line by line under the question (line(i)), and what you pay is stamped under it (result()).
+   * written line by line under the question (line(i)), and the Selling Price is stamped under it (result(): SP = ₹1,440).
    *  name, tone   as the shop's;  item, icon  the item;  price  '₹1,600';  off  ['10%', 'OFF']
    *  options  ['₹1,590', '₹1,440', '₹160'];  right  the right one's index;  pay  '₹1,440'
    *  work     the working, a line each: { left, right } (written left = right) or { text } (a plain line)
-   *  art      the street's sheet (its tags, and the green badge that says what you pay)
+   *  art      the street's sheet (its tags, and the green badge for the Selling Price)
    */
   function offerCard(parent, { name, tone, item, icon, price, off, options, right, work, pay, art }) {
     const root = el('div', 'oc', parent);
@@ -3652,7 +3697,7 @@
       return line;
     });
     const { el: result, words: paid } = artLabel(main, 'oc-result', art.pill);
-    el('span', 'oc-result-label', paid).textContent = 'You pay';
+    el('span', 'oc-result-label', paid).textContent = 'SP =';
     el('span', 'oc-result-value', paid).textContent = pay;
     [card, question, sheet, result, ...buttons.buttons].forEach(n => { n.style.opacity = '0'; });
     sheet.style.display = 'none';
@@ -3707,7 +3752,7 @@
           duration: T(560), easing: 'cubic-bezier(.3,.1,.3,1)',
         });
       },
-      // What you pay is stamped under the working.
+      // The Selling Price is stamped under the working: SP = ₹1,440.
       result() {
         result.style.display = '';
         Sound.stamp();
@@ -3722,82 +3767,6 @@
         if (to) card.style.transformOrigin = `${num(to[0] - card.offsetLeft)}px ${num(to[1] - card.offsetTop)}px`;
         return settle(card.animate([{ opacity: 1, transform: 'none' }, { opacity: 0, transform: 'scale(.2)' }], {
           duration: T(380), easing: 'cubic-bezier(.5,0,.75,0)', fill: 'forwards',
-        })).then(() => root.remove());
-      },
-    };
-  }
-
-  /**
-   * The three offers side by side (after each was checked): a big panel with the question on a purple strip, and under
-   * it a row for each shop: its name, its marked price and offer, a bar as long as what you pay there, and that amount.
-   * The rows are the answers (answerButtons): pick() resolves with the next one picked; guide(i); win(i) marks the best
-   * deal. The question is only here (the question bar steps away meanwhile).
-   *  question  e.g. 'Which shop gives the best deal?'
-   *  rows      [{ name, tone, price, off: 'GET AT ₹1,300', pay: '₹1,300', amount: 1300 }];  right  the best deal's index
-   *  art       the street's sheet (its yellow ribbon says "Best deal!")
-   */
-  function compareBoard(parent, { question, rows, right, art }) {
-    const root = el('div', 'oc', parent);
-    const panel = el('div', 'cb-panel', root);
-    panel.setAttribute('role', 'group');
-    panel.setAttribute('aria-label', question + ' ' + rows.map(r => `${r.name}: ${r.pay}`).join(', '));
-    const strip = el('div', 'cb-question', panel);
-    strip.textContent = question;
-    const list = el('div', 'cb-rows', panel);
-    const most = Math.max(...rows.map(r => r.amount));
-    const buttons = answerButtons(list, rows.map(r => `${r.name}: ${r.pay}`), right, 'cb-row');
-    buttons.buttons.forEach((b, i) => {
-      const r = rows[i];
-      b.classList.add(`cb-row--${r.tone}`);
-      b.querySelector('.q-label').remove();
-      const name = el('span', 'cb-name', b);
-      name.textContent = r.name;
-      const offer = el('span', 'cb-offer', b);
-      el('span', 'cb-mp', offer).textContent = 'MP ' + r.price;
-      el('span', 'cb-off', offer).textContent = r.off;
-      const track = el('span', 'cb-track', b);
-      el('span', 'cb-bar', track).style.width = num((r.amount / most) * 100) + '%';
-      el('span', 'cb-pay', b).textContent = r.pay;
-      b.appendChild(b.querySelector('.gm-mark')); // the tick or cross goes last
-    });
-    [panel, strip, ...buttons.buttons].forEach(n => { n.style.opacity = '0'; });
-    const SPRING = 'cubic-bezier(.2,.8,.3,1)';
-    return {
-      el: root,
-      rows: buttons.buttons,
-      pick: buttons.pick,
-      guide: buttons.guide,
-      async open(ctx) {
-        Sound.whoosh();
-        await reveal(panel, [
-          { opacity: 0, transform: 'translateY(80px) scale(.85)' },
-          { opacity: 1, transform: 'translateY(-8px) scale(1.01)', offset: 0.7 },
-          { opacity: 1, transform: 'none' },
-        ], { duration: T(600), easing: SPRING });
-        Sound.bloop();
-        await reveal(strip, [{ opacity: 0, transform: 'translateY(-30px)' }, { opacity: 1, transform: 'none' }], { duration: T(420), easing: SPRING });
-        for (const b of buttons.buttons) {
-          Sound.swish();
-          reveal(b, [{ opacity: 0, transform: 'translateX(-60px)' }, { opacity: 1, transform: 'none' }], { duration: T(420), easing: SPRING });
-          const bar = b.querySelector('.cb-bar');
-          reveal(bar, [{ transform: 'scaleX(0)' }, { transform: 'none' }], { duration: T(700), delay: T(200), easing: 'cubic-bezier(.3,.1,.3,1)' });
-          await ctx.wait(220);
-        }
-        await ctx.wait(500);
-      },
-      // Row i is the best deal: the yellow "Best deal!" ribbon lands on it.
-      win(i) {
-        const stamp = artLabel(buttons.buttons[i], 'cb-stamp', art.ribbon, 'Best deal!', 'span').el;
-        Sound.stamp();
-        return reveal(stamp, [
-          { opacity: 0, transform: 'scale(1.8) rotate(-9deg)' },
-          { opacity: 1, transform: 'scale(.94) rotate(1deg)', offset: 0.62 },
-          { opacity: 1, transform: 'none' },
-        ], { duration: T(560), easing: SPRING });
-      },
-      close() {
-        return settle(panel.animate([{ opacity: 1, transform: 'none' }, { opacity: 0, transform: 'translateY(60px) scale(.9)' }], {
-          duration: T(360), easing: 'cubic-bezier(.5,0,.75,0)', fill: 'forwards',
         })).then(() => root.remove());
       },
     };
@@ -4212,7 +4181,7 @@
       offerTag(card, art, o.off, 'tk-off');
       el('div', 'tk-mp', card).textContent = o.price;
       const pay = el('div', 'tk-pay', card);
-      el('span', 'tk-pay-label', pay).textContent = 'You pay';
+      el('span', 'tk-pay-label', pay).textContent = 'SP =';
       el('span', 'tk-pay-value', pay).textContent = o.pay;
       return { card, pay };
     });
@@ -4220,7 +4189,7 @@
     const strip = el('div', 'tk-banner', panel);
     strip.textContent = text;
     panel.setAttribute('role', 'group');
-    panel.setAttribute('aria-label', offers.map(o => `${o.off.join(' ')}, ${o.price}: you pay ${o.pay}`).join(' versus ') + `. ${text}`);
+    panel.setAttribute('aria-label', offers.map(o => `${o.off.join(' ')}, ${o.price}: Selling Price ${o.pay}`).join(' versus ') + `. ${text}`);
     [panel, vs, strip, ...parts.flatMap(p => [p.card, p.pay])].filter(Boolean).forEach(n => { n.style.opacity = '0'; });
     let stamp = null;
     return {
@@ -4557,7 +4526,7 @@
 
   window.FX = {
     CANCELLED, el, rand, settle, reveal, flyAcross, glow, motes, twinkles, burst, shine, exclaim, bubble, thought, badge, ring, question, definitions, pricePanel,
-    reduction, definitionCard, formulaPanel, formulaReveal, summaryPanel, productCard, productQuestion, meansPanel, workedSheet, summarySheet, strike, stickTag, choices, percentFormula, questionPanel, challengePanel, walletPanel, shopPicker, street, streetVeil, questionBar, offerCard, compareBoard, flyPicture, purchaseSlip, confetti, celebration, receipt, twoAmounts, missionPanel, recapCards, takeaway, Bird, Walker,
+    reduction, definitionCard, formulaPanel, formulaReveal, summaryPanel, productCard, productQuestion, meansPanel, workedSheet, summarySheet, strike, stickTag, choices, percentFormula, questionPanel, challengePanel, walletPanel, shopPicker, street, streetVeil, questionBar, offerCard, flyPicture, purchaseSlip, confetti, celebration, receipt, twoAmounts, missionPanel, recapCards, takeaway, Bird, Walker,
     setPace(p) { pace = p; },
   };
 })();

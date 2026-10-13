@@ -2920,7 +2920,7 @@
   const MONEY_NOTES = SHOP + 'money.png';
   // The streets: their picture (the sky, the town, the pavement and the road; the sign and the clouds are drawn by the
   // game), the three shop fronts cut from "new shops for game .png", and the pieces cut from "sheet .png" (made with
-  // ChatGPT from the asset prompt): the price and offer tags (on the offer cards), the green badge (what you pay), the
+  // ChatGPT from the asset prompt): the price and offer tags (on the offer cards), the green badge (the Selling Price), the
   // yellow ribbon (best deal) and the Buy button. They have no words on them: the game writes them.
   const STREET = ASSETS + 'ui/street/';
   const STREET_ART = {
@@ -3156,6 +3156,7 @@
     flat: 'Subtract the discount\nfrom the marked price.',
     getat: '“Get at” tells you\nthe price you pay.',
     compare: 'Compare the final prices,\nnot just the discount\npercentages.',
+    lowest: 'Buy where the Selling Price\nis the lowest.',
   };
 
   // Aniket walks in from the left along the road and stops in front of the shops (bottom-left).
@@ -3177,8 +3178,9 @@
   }
 
   // A street of three shops: one item's round of the game. The street builds up and Swifty, on the question bar, tells
-  // what to do; the player checks the three offers in any order (checkOffer), compares them (compareOffers) and buys at
-  // the best shop (buyItem). Then the game goes back to the Shopping Area (or on to the end).
+  // what to do; the player checks the three offers in any order (checkOffer: each shop's Selling Price goes under
+  // it), then chooses where to buy, by pressing one of the Buy buttons the prices turn into (buyItem). Then the game
+  // goes back to the Shopping Area (or on to the end).
   async function playRound(ctx, scene) {
     const id = scene.id;
     const round = ROUNDS[id];
@@ -3218,20 +3220,19 @@
       await checkOffer(ctx, scene, talk, round, shops, st, k, SHOPS[n].icon);
       checked.add(k);
       await st.paid(k);
-      talk.task(checked.size < shops.length ? 'Tap another shop to check its offer.' : 'Now compare the three offers.');
+      talk.task(checked.size < shops.length ? 'Tap another shop to check its offer.' : 'Now compare the three prices.');
       await talk.clear();
       await ctx.wait(300);
     }
-    await compareOffers(ctx, scene, talk, round, shops, st);
-    await buyItem(ctx, scene, talk, round, st, board, n, money);
+    await buyItem(ctx, scene, talk, round, shops, st, board, n, money);
     talk.bird.wave();
     ctx.advance(2500); // back to the Shopping Area (or on to the end)
   }
 
   // One shop's offer: its card comes up out of the shop with "How much will you pay?" above three answers, and the
   // question bar steps away. A wrong answer is crossed out and Swifty helps from the bar, which comes back (see HINTS);
-  // the right one is worked out on the card, line by line, as she reads it out, and what you pay is stamped under it.
-  // Then the card goes back into the shop.
+  // the right one is worked out on the card, line by line, as she reads it out, and the Selling Price is stamped under
+  // it (SP = ₹1,440). Then the card goes back into the shop.
   async function checkOffer(ctx, scene, talk, round, shops, st, k, icon) {
     const shop = round.shops[k];
     const right = shop.options.indexOf(shop.pay);
@@ -3267,52 +3268,35 @@
     await talk.back();
   }
 
-  // The three offers compared: what you pay at each shop, side by side, with the question ("Which shop gives the best
-  // deal?") above them on the board; the question bar steps away. Wrong picks are crossed out, with Swifty's help from
-  // the bar, which comes back; the right one gets a "Best deal!" stamp and she says why.
-  async function compareOffers(ctx, scene, talk, round, shops, st) {
-    const right = round.best;
-    const veil = st.veil();
-    const cb = FX.compareBoard(scene.ui, {
-      question: round.question,
-      right,
-      art: STREET_ART,
-      rows: shops.map((shop, k) => ({
-        name: shop.name, tone: shop.tone, price: shop.price, off: round.shops[k].off.join(' '), pay: shop.pay, amount: round.shops[k].pay,
-      })),
-    });
-    talk.away(); // the question is on the board, above the rows: the bar comes back when Swifty speaks
-    await cb.open(ctx);
-    let wrong = 0;
-    while ((await cb.pick()) !== right) {
-      wrong++;
-      await ctx.wait(400);
-      if (wrong > 1) cb.guide(right);
-      await talk.say(wrong > 1 ? 'hint-compare' : 'hint-again', wrong > 1 ? HINTS.compare : HINTS.again);
-      talk.bird.point();
-    }
-    const [x, y] = stagePoint(cb.rows[right]);
-    FX.burst(scene.ui, x, y, { count: 18, dist: [110, 230], size: [14, 28] });
-    await cb.win(right);
-    // Why it is the best deal (the board already shows which shop, what you pay there and the ribbon).
-    await talk.say(scene.id + '-best', round.lesson || `${shops[right].name} has the lowest\nfinal price.`);
-    await ctx.wait(700);
-    await Promise.all([cb.close(), veil.hide()]);
-  }
-
-  // Buying at the best shop: it glows with a "Best deal!" ribbon, the Buy button pops in under it and Swifty says to tap
-  // it. Pressed, the money flies from the wallet to the shop
-  // (SOLD), the item flies from the shop onto the shopping list (ticked), and a slip shows the wallet's sum (₹5,000 −
-  // ₹1,300 = ₹3,700 left) while the wallet counts down, and the bar says what comes next.
-  async function buyItem(ctx, scene, talk, round, st, board, n, money) {
+  // Where to buy: once the three Selling Prices are under the shops, they dissolve into Buy buttons ("Buy for ₹1,440"
+  // …), and Swifty asks the round's question on the bar ("Where should Aniket buy the shoes?"). A wrong shop's button
+  // shakes and is crossed out, with Swifty's help from the bar (see HINTS; after two, the one left glows); the best
+  // one's button is pressed home, the prices come back, the best shop gets the "Best deal!" ribbon and she says why.
+  // Then the money flies from the wallet to the shop (SOLD), the item flies from the shop onto the shopping list
+  // (ticked), and a slip shows the wallet's sum (₹5,000 − ₹1,300 = ₹3,700 left) while the wallet counts down, and the
+  // bar says what comes next.
+  async function buyItem(ctx, scene, talk, round, shops, st, board, n, money) {
     const k = round.best;
     const cost = round.shops[k].pay;
-    await st.best(k);
-    talk.task('Tap Buy!');
-    const buying = st.buy(k, 'Buy for ' + rupees(cost)); // the Buy button pops in under the best shop
-    await talk.say('buy', 'Now tap Buy!');
+    talk.task('Tap Buy at the best shop.');
+    const choice = await st.choose(shops.map(shop => 'Buy for ' + shop.pay));
+    await talk.say(scene.id + '-where', round.question);
     talk.bird.point();
-    await buying;
+    let wrong = 0;
+    for (let i; (i = await choice.pick()) !== k;) {
+      wrong++;
+      choice.wrong(i);
+      await ctx.wait(500);
+      if (wrong > 1) choice.guide(k);
+      await talk.say(wrong > 1 ? 'hint-lowest' : 'hint-compare', wrong > 1 ? HINTS.lowest : HINTS.compare);
+      talk.bird.point();
+    }
+    const [x, y] = stagePoint(choice.buttons[k]);
+    FX.burst(scene.ui, x, y, { count: 18, dist: [110, 230], size: [14, 28] });
+    await choice.finish(k);
+    await st.best(k);
+    // Why it is the best deal (the street already shows each shop's Selling Price, and the ribbon).
+    await talk.say(scene.id + '-best', round.lesson || `${shops[k].name} has the lowest\nfinal price.`);
     talk.task(`Paying ${rupees(cost)}…`);
     await talk.clear();
     const purse = stageRect(board.wallet.querySelector('.sp-wallet-icon'));
@@ -3573,7 +3557,7 @@
     endWithSwifty(ctx, scene, talk); // then the takeaway
   }
 
-  // The takeaway, with the bag's two offers from Bag Corner: 25% OFF (you pay ₹1,200) against ₹250 OFF (₹1,150, the best
+  // The takeaway, with the bag's two offers from Bag Corner: 25% OFF (SP = ₹1,200) against ₹250 OFF (₹1,150, the best
   // deal). Swifty: "A bigger discount percentage does not always mean a better deal." "Calculate how much you actually
   // have to pay." Then the banner: "Compare the final price before you buy."
   const TAKEAWAY = {

@@ -2413,9 +2413,10 @@ kbd {
 /* ---------- Reduced motion ---------- */
 
 /* ---------- The shopping challenge's opening panel ("Game Begins", screen 46) ----------
-   As in the design: the panel on the right of the picture, its pieces cut from the design's panel sheet
-   (game assets/ui/begin/), the shopping list drawn in the sheet's colours. Positions are stage px within the
-   panel's box (the panel itself from y 90, under the banner). */
+   The panel on the right of the picture, its pieces cut from the design's panel sheet (game assets/ui/begin/), the
+   shopping list drawn in the sheet's colours: just the banner and its ribbon, the wallet, the four items side by side
+   and the button, with room round each. Positions are stage px within the panel's box (the panel itself from y 90,
+   under the banner). */
 .cp { position: absolute; left: 1000px; top: 105px; width: 848px; height: 863px; pointer-events: none; }
 .cp-panel { /* the cream panel (made at this size from the sheet's: panel.png) */
   position: absolute;
@@ -2428,7 +2429,7 @@ kbd {
 .cp img { display: block; user-select: none; -webkit-user-drag: none; }
 .cp-banner { position: absolute; left: 44px; top: 0; width: 760px; }
 .cp-ribbon { position: absolute; left: 141px; top: 111px; width: 566px; }
-.cp-wallet { position: absolute; left: 186px; top: 199px; width: 476px; }
+.cp-wallet { position: absolute; left: 209px; top: 240px; width: 430px; }
 .cp-wallet img { width: 100%; }
 .cp-glint { /* a band of light that runs once across the wallet's navy pill (its rounded shape) */
   position: absolute;
@@ -2445,40 +2446,38 @@ kbd {
   0%   { opacity: 1; background-position: 160% 0; }
   100% { opacity: 1; background-position: -60% 0; }
 }
-.cp-list { /* the shopping list's box: the sheet's cream, with a soft tan edge */
+.cp-list-title { /* the list's title, on the panel itself */
   position: absolute;
-  left: 125px;
-  top: 357px;
-  width: 598px;
-  height: 346px;
-  box-sizing: border-box;
-  padding-top: 14px;
+  left: 0;
+  right: 0;
+  top: 404px;
+  color: #13204a;
+  font-size: 34px;
+  font-weight: 800;
+  line-height: 44px;
+  text-align: center;
+}
+.cp-items { position: absolute; left: 62px; top: 460px; width: 724px; display: flex; gap: 20px; }
+.cp-item { /* an item: a small card in the sheet's cream, with a soft tan edge; its picture, its name under it */
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 6px 14px;
   border: 3px solid #e2c29d;
-  border-radius: 26px;
+  border-radius: 24px;
   background: #fbeacf;
   box-shadow: inset 0 2px 0 rgba(255, 255, 255, .65), 0 2px 8px rgba(150, 100, 60, .12);
   color: #13204a;
 }
-.cp-list-title { height: 50px; font-size: 34px; font-weight: 800; line-height: 50px; text-align: center; }
-.cp-row { position: relative; height: 66px; }
-.cp-check { /* an empty checkbox, as on the sheet */
-  position: absolute;
-  left: 51px;
-  top: 15px;
-  width: 36px;
-  height: 36px;
-  box-sizing: border-box;
-  border: 4px solid #0f1c48;
-  border-radius: 8px;
-  background: #fcf9f4;
-}
-.cp-icon { position: absolute; left: 131px; top: 3px; width: 60px; height: 60px; object-fit: contain; }
-.cp-label { position: absolute; left: 215px; top: 0; font-size: 30px; font-weight: 800; line-height: 66px; white-space: nowrap; }
+.cp-icon { width: 104px; height: 96px; object-fit: contain; }
+.cp-label { font-size: 27px; font-weight: 800; line-height: 1.08; text-align: center; white-space: pre-line; }
 .cp-start {
   position: absolute;
-  left: 148px;
-  top: 717px;
-  width: 552px;
+  left: 164px;
+  top: 700px;
+  width: 520px;
   padding: 0;
   border: 0;
   background: none;
@@ -2827,9 +2826,9 @@ kbd {
 .tg-offer .art-words { left: 57.5%; top: 49%; rotate: 3.5deg; color: #fff; text-shadow: 0 2px 0 rgba(90, 10, 10, .35); }
 .tg-line { font-size: .9em; font-weight: 800; line-height: 1; }
 .tg-price.is-ping, .tg-offer.is-ping { animation: tag-pop .8s cubic-bezier(.3, 1.6, .5, 1); }
-.st-shop--coral, .oc-card--coral, .cb-row--coral { --shop: #f26457; --shop-deep: #d9473b; --shop-soft: #ffb3a9; --shop-ink: #9e2c22; }
-.st-shop--blue, .oc-card--blue, .cb-row--blue { --shop: #3b8ee0; --shop-deep: #2a72c2; --shop-soft: #a9cff5; --shop-ink: #174f97; }
-.st-shop--purple, .oc-card--purple, .cb-row--purple { --shop: #9b5de5; --shop-deep: #7d42c9; --shop-soft: #d4b8f6; --shop-ink: #55279b; }
+.st-shop--coral, .oc-card--coral { --shop: #f26457; --shop-deep: #d9473b; --shop-soft: #ffb3a9; --shop-ink: #9e2c22; }
+.st-shop--blue, .oc-card--blue { --shop: #3b8ee0; --shop-deep: #2a72c2; --shop-soft: #a9cff5; --shop-ink: #174f97; }
+.st-shop--purple, .oc-card--purple { --shop: #9b5de5; --shop-deep: #7d42c9; --shop-soft: #d4b8f6; --shop-ink: #55279b; }
 .st-shop { /* a shop front (the picture, 452 × 470: its base on the pavement), and the game's words and things on it */
   position: absolute;
   top: 322px;
@@ -2952,7 +2951,7 @@ kbd {
 .st-pay { position: absolute; z-index: 5; left: 50%; top: 482px; width: 262px; translate: -50% 0; } /* what you pay there, on the green badge */
 .st-pay .art-words { color: #fff; font-size: 28px; font-weight: 800; text-shadow: 0 2px 0 rgba(10, 60, 30, .35); }
 .st-best { position: absolute; z-index: 5; left: 50%; top: -84px; width: 290px; translate: -50% 0; } /* "Best deal!", on the yellow ribbon */
-:is(.st-best, .cb-stamp, .tk-stamp) .art-words { top: 37%; color: #7a3d00; font-weight: 800; }
+:is(.st-best, .tk-stamp) .art-words { top: 37%; color: #7a3d00; font-weight: 800; }
 .st-best .art-words { font-size: 30px; }
 .st-buy { /* "Buy for ₹1,300", on the yellow button */
   position: absolute;
@@ -2972,6 +2971,9 @@ kbd {
 .st-buy .art-words { top: 46%; color: #1c2a4f; font-size: 34px; font-weight: 800; }
 .st-buy:active { translate: -50% 3px; }
 .st-buy:disabled { animation: none; cursor: default; }
+.st-buy.is-out { opacity: .45; filter: grayscale(.85); } /* a wrong pick, crossed out */
+.st-buy.is-out .art-words { text-decoration: line-through; text-decoration-thickness: 4px; }
+.st-buy.is-guide:not(:disabled) { animation: cp-call 1.1s ease-in-out infinite; } /* the one left to pick glows */
 .st-sold { /* SOLD, stamped on the window */
   position: absolute;
   z-index: 2;
@@ -3099,7 +3101,7 @@ kbd {
 .oc-pic { max-width: 370px; max-height: 270px; filter: drop-shadow(0 8px 8px rgba(20, 40, 90, .18)); }
 .oc-tags { display: flex; align-items: center; gap: 22px; font-size: 48px; }
 .oc-main { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 30px; padding: 24px 48px; }
-.oc-question, .cb-question { /* the question, above the answers, on a purple strip (as the questions on screens 28–30) */
+.oc-question { /* the question, above the answers, on a purple strip (as the questions on screens 28–30) */
   padding: 18px 54px 10px;
   border: 6px solid var(--ink);
   border-radius: 30px;
@@ -3134,6 +3136,10 @@ kbd {
 .gm-opt.is-out { opacity: .42; }
 .gm-opt.is-out .q-label { text-decoration: line-through; text-decoration-thickness: 6px; }
 .gm-opt.is-guide { animation: buy-call 1.4s ease-in-out infinite; } /* the one left to pick glows */
+@keyframes buy-call { /* a soft gold glow round the button (its dark shadow stays) */
+  0%, 100% { box-shadow: 0 8px 0 var(--ink), 0 0 0 0 rgba(255, 196, 61, .75); }
+  50%      { box-shadow: 0 8px 0 var(--ink), 0 0 0 14px rgba(255, 196, 61, 0); }
+}
 .gm-opt.is-guide:not(:disabled) { background: linear-gradient(180deg, #fffbe6 0%, #ffe9a3 100%); }
 .oc-work { /* the working, line by line, = signs lined up */
   display: flex;
@@ -3153,41 +3159,6 @@ kbd {
 .oc-result .art-words { flex-direction: row; align-items: baseline; gap: 18px; color: #fff; text-shadow: 0 3px 0 rgba(10, 60, 30, .3); }
 .oc-result-label { font-size: 42px; font-weight: 800; }
 .oc-result-value { font-size: 74px; font-weight: 800; line-height: 1; }
-
-/* The three offers compared */
-.cb-panel { /* big, centred in the space under the question bar (y 154–1080) */
-  position: absolute;
-  left: 960px;
-  top: 612px;
-  translate: -50% -50%;
-  width: 1600px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 40px;
-  padding: 44px 64px 56px 118px; /* room on the left for the ✓ or ✗ beside each row */
-  border: 6px solid var(--ink);
-  border-radius: 46px;
-  background:
-    radial-gradient(circle, rgba(27, 42, 51, .07) 1.6px, transparent 2.2px) 0 0 / 28px 28px,
-    linear-gradient(180deg, #fffdf7 0%, #fff3d9 100%);
-  box-shadow: 0 14px 0 var(--ink), 0 34px 70px rgba(30, 50, 90, .3);
-  pointer-events: auto;
-}
-.cb-rows { display: flex; flex-direction: column; gap: 30px; width: 100%; }
-.gm-opt.cb-row { justify-content: flex-start; gap: 32px; width: 100%; height: 150px; padding: 0 32px; font-size: 48px; }
-.cb-name { flex: none; width: 230px; padding: 12px 0 7px; border-radius: 22px; background: var(--shop); color: #fff; font-size: 46px; text-align: center; text-shadow: 0 2px 0 rgba(0, 0, 0, .15); }
-.cb-offer { display: flex; flex: none; flex-direction: column; gap: 6px; width: 330px; text-align: left; }
-.cb-mp { color: #5a6b8c; font-size: 34px; }
-.cb-off { color: #d42a2a; font-size: 40px; }
-.cb-track { flex: 1; height: 36px; overflow: hidden; border-radius: 18px; background: #e3ebf6; }
-.cb-bar { display: block; height: 100%; border-radius: 18px; background: linear-gradient(90deg, var(--shop-soft), var(--shop)); transform-origin: 0 50%; }
-.cb-pay { flex: none; width: 250px; color: #1c2a4f; font-size: 70px; text-align: right; }
-.cb-row .gm-mark { right: auto; left: -94px; }
-.cb-row:is(.is-correct) :is(.cb-pay, .cb-mp, .cb-off) { color: #fff; }
-.cb-row.is-correct .cb-track { background: rgba(255, 255, 255, .35); }
-.cb-stamp { position: absolute; right: 300px; top: 50%; width: 270px; margin-top: -42px; rotate: -5deg; } /* "Best deal!", on the yellow ribbon */
-.cb-stamp .art-words { font-size: 33px; }
 
 /* A picture flying across (the money to the shop, the item to the list) */
 .fly-pic { position: absolute; z-index: 20; object-fit: contain; filter: drop-shadow(0 10px 10px rgba(20, 40, 90, .25)); pointer-events: none; }
