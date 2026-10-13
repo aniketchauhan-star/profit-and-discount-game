@@ -42,36 +42,6 @@
     for (const k in vars) node.style.setProperty('--' + k, vars[k]);
   }
 
-  // The hand-made ("paper") look's filters, used from the CSS (filter: url(#…)):
-  //  #paper-cut     an edge cut by hand with scissors: a gentle wobble
-  //  #paper-deckle  a big sheet's deckled edge: a finer, rougher wobble
-  //  #ink-brush     a line drawn with a brush pen: a slight wobble, and heavier on its lower-right side
-  //                 (the dark parts are copied a little down and to the right, under the original)
-  function inkDefs() {
-    if (document.getElementById('ink-defs')) return;
-    const holder = el('div', '', document.body);
-    holder.id = 'ink-defs';
-    holder.setAttribute('aria-hidden', 'true');
-    holder.style.cssText = 'position:absolute;width:0;height:0;overflow:hidden';
-    holder.innerHTML = `<svg width="0" height="0" focusable="false"><defs>
-  <filter id="paper-cut" x="-4%" y="-8%" width="108%" height="116%" color-interpolation-filters="sRGB">
-    <feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="4" result="n"/>
-    <feDisplacementMap in="SourceGraphic" in2="n" scale="5" xChannelSelector="R" yChannelSelector="G"/>
-  </filter>
-  <filter id="paper-deckle" x="-2%" y="-2%" width="104%" height="104%" color-interpolation-filters="sRGB">
-    <feTurbulence type="fractalNoise" baseFrequency="0.09" numOctaves="3" seed="9" result="n"/>
-    <feDisplacementMap in="SourceGraphic" in2="n" scale="9" xChannelSelector="R" yChannelSelector="G"/>
-  </filter>
-  <filter id="ink-brush" x="-6%" y="-10%" width="112%" height="120%" color-interpolation-filters="sRGB">
-    <feTurbulence type="fractalNoise" baseFrequency="0.045" numOctaves="2" seed="2" result="n"/>
-    <feDisplacementMap in="SourceGraphic" in2="n" scale="3.5" xChannelSelector="R" yChannelSelector="G" result="wob"/>
-    <feColorMatrix in="wob" type="matrix" values="0 0 0 0 .18  0 0 0 0 .16  0 0 0 0 .14  -.5 -.5 -.5 1 0" result="ink"/>
-    <feOffset in="ink" dx="2" dy="2.4" result="heavy"/>
-    <feMerge><feMergeNode in="heavy"/><feMergeNode in="wob"/></feMerge>
-  </filter>
-</defs></svg>`;
-  }
-
   const classes = (...names) => names.filter(Boolean).join(' ');
   // Something that holds writing (a sheet, a table, a box of rules) is never shown empty: it starts hidden, and
   // the first thing written on it calls the function this returns, which brings it in (once) just before.
@@ -1114,8 +1084,6 @@
     blue: ['#d9e8f6', '#6f97c2', '#2a5687'],
     red: ['#ffd0cc', '#ff6b5e', '#d32f2f'],
   };
-  // A down arrow drawn with a thick blue marker (on the full-screen panel): a slightly wobbly line and its head.
-  const MARKER_ARROW = '<svg class="cmp-arrow is-marker" viewBox="0 0 72 126" aria-hidden="true"><path d="M37 9C33 36 40 62 36 101M17 80C25 89 31 97 36 107C41 97 47 88 56 79"/></svg>';
   function downArrow(tone = 'blue') {
     const id = 'da' + (++artId);
     const [a, b, c] = ARROW_TONES[tone];
@@ -1206,7 +1174,7 @@
       };
       parts.top = side.appendChild(box(compare.top));
       const mid = el('div', 'cmp-mid', side);
-      mid.innerHTML = sheet ? MARKER_ARROW : downArrow();
+      mid.innerHTML = downArrow();
       parts.arrow = mid.firstElementChild;
       parts.bottom = side.appendChild(box(compare.bottom));
       panel.setAttribute('aria-label', `${compare.top.label} ${compare.top.price}, ${compare.bottom.label} ${compare.bottom.price}`);
@@ -1801,23 +1769,33 @@
    * the product card), on the right the question on a pink strip, with room under it for answer buttons
    * (`below`, see choices).
    *  question  the question (\n starts a new line); photo, price, off, knot as for productCard
-   * Reveal it with open() → showItem(ctx) → showQuestion(); ping(node) pops a tag (priceTag, offTag, percent).
+   *  wide      bigger, across the room a Next button would take (for a question that moves on by itself)
+   *  hint      a rule to use, shown under the question on a light-blue band: [{ t, cls }] (see showHint)
+   * Reveal it with open() → showItem(ctx) → showQuestion() (→ showHint()); ping(node) pops a tag (priceTag,
+   * offTag, percent) or the hint.
    */
-  function productQuestion(parent, { photo, price, off, knot, question }) {
+  function productQuestion(parent, { photo, price, off, knot, question, wide = false, hint = null }) {
     const root = el('div', 'mp', parent); // the same centring wrapper as the other panels
-    const panel = el('div', 'pqp-panel', root);
+    const panel = el('div', classes('pqp-panel', wide && 'pqp-panel--wide'), root);
     const item = productParts(el('div', 'pqp-item', panel), { photo, price, off, knot });
     const side = el('div', 'pqp-side', panel);
     const strip = el('div', 'pqp-question', side);
     strip.textContent = question;
+    const hintEl = hint ? el('div', 'pqp-hint', side) : null;
+    if (hint) {
+      el('span', 'pqp-hint-label', hintEl).textContent = 'Hint:';
+      hint.forEach(seg => { el('span', seg.cls || '', hintEl).textContent = seg.t; });
+    }
     const below = el('div', 'pqp-answers', side);
     panel.setAttribute('role', 'group');
-    panel.setAttribute('aria-label', `${price}, ${off.join(' ')}. ${question.replace(/\n/g, ' ')}`);
-    [panel, strip].forEach(n => { n.style.opacity = '0'; });
+    panel.setAttribute('aria-label', `${price}, ${off.join(' ')}. ${question.replace(/\n/g, ' ')}` +
+      (hint ? ` Hint: ${hint.map(seg => seg.t).join(' ')}` : ''));
+    [panel, strip, hintEl].forEach(n => { if (n) n.style.opacity = '0'; });
     return {
       el: root,
       panel,
       below,
+      hint: hintEl,
       priceTag: item.priceTag,
       offTag: item.offTag,
       percent: item.percent,
@@ -1838,6 +1816,86 @@
           { opacity: 1, transform: 'translateY(4px) scale(1.02)', offset: 0.7 },
           { opacity: 1, transform: 'none' },
         ], { duration: T(620), easing: 'cubic-bezier(.2,.8,.3,1)' });
+      },
+      // The hint pops in under the question.
+      showHint() {
+        Sound.pop();
+        return reveal(hintEl, [
+          { opacity: 0, transform: 'scale(.6)' },
+          { opacity: 1, transform: 'scale(1.06)', offset: 0.62 },
+          { opacity: 1, transform: 'none' },
+        ], { duration: T(520), easing: 'cubic-bezier(.2,.8,.3,1)' });
+      },
+      ping(node) {
+        replay(node, 'is-ping');
+      },
+    };
+  }
+
+  /**
+   * What a tag means, written big: the red discount tag (as on the sneakers), "means" over an arrow, and the
+   * same thing said another way on a card, line for line: 30% / OFF → means → 30% / Discount.
+   *  tag   the tag's lines, e.g. ['30%', 'OFF'];  card  the card's lines, [{ t, cls }], e.g. [{ t: '30%' }, { t: 'Discount', cls: 'tone-d' }]
+   * Reveal it with open() → stamp() (the tag lands like a stamp, then a gold frame glows round it) → means()
+   * (the word, and the arrow drawn) → card() (it springs up); ping(node) pops a piece (tagEl, cardEl, word)
+   * while it is read out.
+   */
+  function meansPanel(parent, { tag, card, means = 'means' }) {
+    const root = el('div', 'mp', parent); // the same centring wrapper as the other panels
+    const panel = el('div', 'mn-panel', root);
+    const tagPos = el('div', 'pc-off-pos', panel); // tilted like the tag on the stand
+    const tagEl = el('div', 'pc-off mn-tag', tagPos);
+    tag.forEach(t => { el('span', 'pc-off-line', tagEl).textContent = t; });
+    const mid = el('div', 'mn-means', panel);
+    const word = el('span', 'mn-word', mid);
+    word.textContent = means;
+    mid.insertAdjacentHTML('beforeend',
+      '<svg class="mn-arrow" viewBox="0 0 200 56" aria-hidden="true"><path pathLength="1" d="M8 28h176M156 6l28 22-28 22"/></svg>');
+    const arrow = mid.lastElementChild;
+    const cardEl = el('div', 'mn-card', panel);
+    card.forEach(p => { el('span', classes('mn-card-line', p.cls), cardEl).textContent = p.t; });
+    panel.setAttribute('role', 'group');
+    panel.setAttribute('aria-label', `${tag.join(' ')} ${means} ${card.map(p => p.t).join(' ')}`);
+    [panel, tagEl, word, arrow, cardEl].forEach(n => { n.style.opacity = '0'; });
+    const EASE = 'cubic-bezier(.2,.8,.3,1)';
+    return {
+      el: root,
+      panel,
+      tagEl,
+      cardEl,
+      word,
+      open: () => springUp(panel),
+      async stamp() {
+        Sound.stamp();
+        await reveal(tagEl, [
+          { opacity: 0, transform: 'scale(1.9) rotate(-11deg)' },
+          { opacity: 1, transform: 'scale(.94) rotate(1deg)', offset: 0.62 },
+          { opacity: 1, transform: 'none' },
+        ], { duration: T(600), easing: EASE });
+        Sound.sparkle();
+        const w = tagPos.offsetWidth;
+        const h = tagPos.offsetHeight;
+        ring(tagPos, { x: w / 2, y: h / 2, w: w + 28, h: h + 28, round: 34 });
+      },
+      // "means" rises in, and the arrow draws itself towards the card.
+      async means() {
+        Sound.swish();
+        reveal(word, [
+          { opacity: 0, transform: 'translateY(24px)' },
+          { opacity: 1, transform: 'none' },
+        ], { duration: T(500), easing: EASE });
+        arrow.style.opacity = '';
+        await settle(arrow.querySelector('path').animate([{ strokeDashoffset: 1 }, { strokeDashoffset: 0 }], {
+          duration: reducedMotion ? 1 : T(620), easing: 'ease-in-out', fill: 'backwards',
+        }));
+      },
+      card() {
+        Sound.bloop();
+        return reveal(cardEl, [
+          { opacity: 0, transform: 'translateY(40px) scale(.86)' },
+          { opacity: 1, transform: 'translateY(-6px) scale(1.02)', offset: 0.7 },
+          { opacity: 1, transform: 'none' },
+        ], { duration: T(640), easing: EASE });
       },
       ping(node) {
         replay(node, 'is-ping');
@@ -2376,6 +2434,44 @@
     };
   }
 
+  // The words in `node` dissolve into `text`: the old words blur and fade away while the new ones come into focus
+  // in the same place, the node growing (or shrinking) to fit them. `from` → `to` swaps its colour class.
+  async function dissolveWords(node, text, { from = '', to = '', ms = 1100 } = {}) {
+    const old = el('span', classes('dz-old', from));
+    while (node.firstChild) old.appendChild(node.firstChild);
+    const neu = el('span', classes('dz-new', to));
+    neu.textContent = text;
+    if (from) node.classList.remove(from);
+    node.classList.add('dz');
+    node.append(old, neu);
+    const width = shown => { // the node's width with only one of them in it
+      (shown === old ? neu : old).style.display = 'none';
+      const w = node.offsetWidth;
+      (shown === old ? neu : old).style.display = '';
+      return w;
+    };
+    const w0 = width(old);
+    const w1 = width(neu);
+    const SOFT = 'cubic-bezier(.45,0,.3,1)';
+    const d = reducedMotion ? 1 : T(ms);
+    await Promise.all([
+      settle(node.animate([{ width: `${w0}px` }, { width: `${w1}px` }], { duration: d, easing: SOFT, fill: 'forwards' })),
+      settle(old.animate([
+        { opacity: 1, filter: 'blur(0)', transform: 'none' },
+        { opacity: 0, filter: 'blur(10px)', transform: 'scale(1.12)' },
+      ], { duration: d * 0.8, easing: 'ease-in', fill: 'forwards' })),
+      settle(neu.animate([
+        { opacity: 0, filter: 'blur(10px)', transform: 'scale(.88)' },
+        { opacity: 0, filter: 'blur(10px)', transform: 'scale(.88)', offset: 0.25 },
+        { opacity: 1, filter: 'blur(0)', transform: 'none' },
+      ], { duration: d, easing: 'ease-out', fill: 'backwards' })),
+    ]);
+    node.getAnimations().forEach(a => a.cancel());
+    node.classList.remove('dz');
+    if (to) node.classList.add(to);
+    node.textContent = text;
+  }
+
   // A small arrow pointing down (at the top of a fraction: "the part goes on top").
   const DOWN_HINT = '<svg class="pf-hint" viewBox="0 0 34 40" aria-hidden="true"><path d="M17 4 V 31 M 7 21 L 17 32 L 27 21"/></svg>';
 
@@ -2395,6 +2491,9 @@
    * Reveal it with open() → showQuestion() → tag(role) + box(role) … → label() → fraction() → times(0) →
    * start(1) → hint() + fly('part') → fly('whole') → times(1) → start(2) → answer() → mark().
    * tag(role) colours an amount in the question by its role (and pops it).
+   * Then the rule can be renamed for what the part and the whole are (e.g. the discount and the marked price):
+   * dropBoxes() (the boxes go and the sheet moves into the middle) → rename('part' | 'whole' | 'label', text,
+   * tone) (the words dissolve into the new ones, and the part's or the whole's amounts take the new colour).
    */
   function percentFormula(parent, { question, part, whole, numbers, answer, letters = false }) {
     const root = el('div', 'mp', parent); // the same centring wrapper as the other panels
@@ -2468,10 +2567,11 @@
       duration: T(320), easing: 'cubic-bezier(.3,1.6,.5,1)',
     });
 
+    const tags = q.tags;
     return {
       el: root,
       panel,
-      tags: q.tags,
+      tags,
       answerEl: ans,
       open() {
         Sound.whoosh();
@@ -2548,6 +2648,52 @@
       mark() {
         Sound.pop();
         ans.classList.add('is-marked');
+      },
+      // The boxes have done their job: they fade away, and their column folds up, so the sheet glides into the
+      // middle, under the question; then it grows a little (the rule is what the screen is about now).
+      async dropBoxes() {
+        await settle(column.animate([
+          { opacity: 1, transform: 'none' },
+          { opacity: 0, transform: 'translateX(-40px) scale(.94)' },
+        ], { duration: T(500), easing: 'ease-in', fill: 'forwards' }));
+        const w = column.offsetWidth;
+        const gap = getComputedStyle(panel).columnGap;
+        sheet.style.justifySelf = 'center';
+        Sound.swish();
+        const GLIDE = { duration: reducedMotion ? 1 : T(750), easing: 'cubic-bezier(.45,0,.3,1)', fill: 'forwards' };
+        const fold = [
+          column.animate([{ width: `${w}px` }, { width: '0px' }], GLIDE),
+          panel.animate([{ columnGap: gap }, { columnGap: '0px' }], GLIDE),
+        ];
+        await Promise.all(fold.map(settle));
+        panel.style.columnGap = '0px';
+        fold[1].cancel();
+        column.remove();
+        const size = getComputedStyle(sheet).fontSize;
+        const grow = sheet.animate([{ fontSize: size }, { fontSize: '58px' }], GLIDE);
+        await settle(grow);
+        sheet.style.fontSize = '58px';
+        grow.cancel();
+      },
+      // A word of the rule dissolves into another: 'part' (over the line), 'whole' (under it) or 'label'
+      // ("Percentage"), e.g. rename('part', 'Discount', 'tone-d'); the part's (or the whole's) amounts, in the
+      // question and in the working, change to the same colour.
+      async rename(which, text, tone = '') {
+        Sound.sparkle();
+        if (which === 'label') return dissolveWords(rows[0].label, text);
+        const word = which === 'part' ? words.num : words.den;
+        const amount = which === 'part' ? sums.num : sums.den;
+        if (which === 'part' && hint.isConnected) {
+          settle(hint.animate([{ opacity: 1 }, { opacity: 0 }], { duration: T(300), fill: 'forwards' })).then(() => hint.remove());
+        }
+        amount.style.transition = 'color .9s ease';
+        amount.classList.replace(`tone-${which}`, tone);
+        const q = tags[which];
+        if (q) {
+          q.classList.remove('is-' + which);
+          q.classList.add(tone);
+        }
+        return dissolveWords(word, text, { from: `tone-${which}`, to: tone });
       },
     };
   }
@@ -2913,7 +3059,7 @@
   const picture = (cls, src, host) => Object.assign(el('img', cls, host), { src, alt: '', draggable: false });
 
   /**
-   * The shopping game's wallet and shopping list on a white panel, as in the design of screen 43: the wallet with its
+   * The shopping game's wallet and shopping list on a white panel, as in the design of screen 47: the wallet with its
    * money in a pale pill, a thin line, "Shopping List" and a line for each item (its checkbox, its picture, its name).
    * On the streets it is two small white cards in the top-left corner, the wallet and the list, as in the street's
    * design ({ street: true }).
@@ -2977,7 +3123,7 @@
     };
   }
 
-  // ---------- choosing a shop (screen 43) ----------
+  // ---------- choosing a shop (screen 47) ----------
 
   /**
    * The design's shop picker: the four shops' cards in a 2×2 grid, each in its shop's colour with its picture,
@@ -3767,7 +3913,7 @@
   }
 
   /**
-   * Everything is bought (screen 48): a big banner ("SHOPPING COMPLETE!") and a line under it; on the left the wallet
+   * Everything is bought (screen 52): a big banner ("SHOPPING COMPLETE!") and a line under it; on the left the wallet
    * and the shopping list (the Shopping Area's panel: the money left, and each item's line), and on the right the four
    * things bought, each on its card in its shop's colour. Reveal it with enter(ctx): the panel comes in, then line by
    * line the list is ticked as each thing pops up on its card (ticked too), and the money left pops.
@@ -4410,8 +4556,8 @@
   }
 
   window.FX = {
-    CANCELLED, el, rand, settle, reveal, inkDefs, flyAcross, glow, motes, twinkles, burst, shine, exclaim, bubble, thought, badge, ring, question, definitions, pricePanel,
-    reduction, definitionCard, formulaPanel, formulaReveal, summaryPanel, productCard, productQuestion, workedSheet, summarySheet, strike, stickTag, choices, percentFormula, questionPanel, challengePanel, walletPanel, shopPicker, street, streetVeil, questionBar, offerCard, compareBoard, flyPicture, purchaseSlip, confetti, celebration, receipt, twoAmounts, missionPanel, recapCards, takeaway, Bird, Walker,
+    CANCELLED, el, rand, settle, reveal, flyAcross, glow, motes, twinkles, burst, shine, exclaim, bubble, thought, badge, ring, question, definitions, pricePanel,
+    reduction, definitionCard, formulaPanel, formulaReveal, summaryPanel, productCard, productQuestion, meansPanel, workedSheet, summarySheet, strike, stickTag, choices, percentFormula, questionPanel, challengePanel, walletPanel, shopPicker, street, streetVeil, questionBar, offerCard, compareBoard, flyPicture, purchaseSlip, confetti, celebration, receipt, twoAmounts, missionPanel, recapCards, takeaway, Bird, Walker,
     setPace(p) { pace = p; },
   };
 })();

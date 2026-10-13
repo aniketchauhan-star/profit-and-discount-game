@@ -47,7 +47,6 @@
 
 :root {
   --hand: 'Kalam', 'Baloo 2', 'Trebuchet MS', sans-serif;
-  --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='260'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .36 0 0 0 0 .27 0 0 0 0 .14 0 0 0 .07 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); /* a soft paper grain */
   --ink: #1b2a33;
   --paper: #fffdf7;
   --teal: #1e5d69;
@@ -616,6 +615,12 @@ button:focus-visible, .switch input:focus-visible + .switch-track {
 }
 .qback-text .hl { color: var(--teal); font-weight: 800; }
 
+/* The bookstore's doors, opening (screens 20 and 21, see bookstoreDoors): the doorway without its doors, and over it the
+   two glass leaves, drawn in perspective as they swing open into the shop on their hinges */
+.bs-doorway { position: absolute; display: block; pointer-events: none; user-select: none; -webkit-user-drag: none; }
+.bs-doors { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; pointer-events: none; }
+.bs-doors svg { display: block; overflow: visible; }
+
 /* The names of the books on the display stand (screens 4 and 5), as if printed on their covers (see standTitles) */
 .cover-title {
   position: absolute;
@@ -903,35 +908,6 @@ button:focus-visible, .switch input:focus-visible + .switch-track {
   box-shadow: none;
 }
 .scene.is-sheet .mp-panel { margin-right: 300px; }
-.is-sheet .mp-side--compare .cmp-box { /* screen 13: a thick paper cut-out, inked round the edge, held on with washi tape */
-  position: relative;
-  border-width: 4px;
-  border-radius: 14px;
-  box-shadow: 0 1px 0 rgba(60, 40, 10, .08), 0 14px 24px rgba(60, 40, 10, .2);
-}
-.is-sheet .mp-side--compare .cmp-box--yellow { background: #fff0c2; rotate: -1.2deg; }
-.is-sheet .mp-side--compare .cmp-box--blue { background: #dcecff; rotate: 1deg; }
-.is-sheet .mp-side--compare .cmp-box::before {
-  content: '';
-  position: absolute;
-  top: -18px;
-  left: 50%;
-  width: 124px;
-  height: 36px;
-  margin-left: -62px;
-  background: rgba(255, 210, 90, .8);
-  clip-path: polygon(0 0, 100% 0, 97% 25%, 100% 50%, 97% 75%, 100% 100%, 0 100%, 3% 75%, 0 50%, 3% 25%); /* torn ends */
-  rotate: 2deg;
-}
-.is-sheet .mp-side--compare .cmp-box--blue::before { background: rgba(120, 180, 240, .75); rotate: -3deg; }
-.cmp-arrow.is-marker path { /* drawn with a thick blue marker */
-  fill: none;
-  stroke: #2f6fd6;
-  stroke-width: 11;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  opacity: .92;
-}
 
 /* A red price box (the discount) */
 .cmp-box--red { background: linear-gradient(180deg, #fff3f1 0%, #ffcfc9 100%); }
@@ -1091,10 +1067,10 @@ button:focus-visible, .switch input:focus-visible + .switch-track {
 .tone-d { color: #d32f2f; }   /* Discount */
 .tone-mp { color: #7a4600; }  /* Marked Price */
 .tone-sp { color: #17457e; }  /* Selling Price */
-.tone-part { color: #1f4fbf; }  /* the part (screens 26–28) */
+.tone-part { color: #1f4fbf; }  /* the part (screens 28–30 and 37) */
 .tone-whole { color: #12553d; } /* the whole */
 .var { font-family: Georgia, 'Times New Roman', serif; font-style: italic; } /* a letter for a number (a, b), in italic as in a maths book */
-.tone-pct { color: #d6246e; }   /* a percentage as a fraction, e.g. 30/100 (screen 30) */
+.tone-pct { color: #d6246e; }   /* a percentage as a fraction, e.g. 30/100 (screen 32) */
 .fr-op { color: var(--ink); }
 .fr-term, .fr-op { display: inline-block; }
 .fr-letter { display: inline-block; }
@@ -1290,7 +1266,7 @@ button:focus-visible, .switch input:focus-visible + .switch-track {
 }
 .def-arrow.is-sketch path { stroke: #4b5056; stroke-width: 4.5; } /* drawn in pencil */
 
-/* Screen 25: the sneakers on a card, with their price tag and discount tag (Swifty in her corner) */
+/* Screen 27: the sneakers on a card, with their price tag and discount tag (Swifty in her corner) */
 .pc-panel {
   position: relative;
   display: flex;
@@ -1393,13 +1369,13 @@ button:focus-visible, .switch input:focus-visible + .switch-track {
   40%      { transform: scale(1.1); }
 }
 
-/* A hint arrow nudging down (on screens 26 and 27) */
+/* A hint arrow nudging down (on screens 28, 29 and 37) */
 @keyframes arrow-nudge {
   0%, 100% { transform: none; }
   40%      { transform: translateY(8px); }
 }
 
-/* Answer buttons under a question (screens 28, 29 and 31), in a row or a column */
+/* Answer buttons under a question (screens 30, 31 and 33), in a row or a column */
 .pq-choices { display: flex; justify-content: center; gap: 30px; }
 .pq-opt { /* an answer button (see .q-opt for its states: right, wrong, dimmed) */
   flex: none;
@@ -1415,7 +1391,7 @@ button:focus-visible, .switch input:focus-visible + .switch-track {
 .pq-opt .q-chip { width: 70px; height: 70px; background: linear-gradient(180deg, #5b9cf0 0%, #2f6fd6 100%); color: #fff; font-size: 38px; }
 .pq-opt .q-label { flex: none; padding: 6px 0 0; }
 
-/* Screens 26 and 27: "a is what percent of b?", then "125 is what percent of 500?": the question, the part and
+/* Screens 28 and 29: "a is what percent of b?", then "125 is what percent of 500?": the question, the part and
    the whole, and the formula worked out line by line (Swifty in her corner) */
 .pf-panel {
   position: relative; /* the flying numbers are positioned inside it */
@@ -1451,6 +1427,8 @@ button:focus-visible, .switch input:focus-visible + .switch-track {
 .pf-q-value { display: inline-block; transition: color .5s ease; }
 .pf-q-value.is-part { color: #1f4fbf; }
 .pf-q-value.is-whole { color: #12553d; }
+.dz { display: inline-grid; justify-items: center; align-items: center; } /* words dissolving into others (FX.dissolveWords) */
+.dz > .dz-old, .dz > .dz-new { grid-area: 1 / 1; white-space: nowrap; }
 .pf-boxes { display: flex; flex-direction: column; gap: 34px; }
 .pf-box {
   display: flex;
@@ -1519,7 +1497,7 @@ button:focus-visible, .switch input:focus-visible + .switch-track {
 .pf-hint.is-ping { animation: arrow-nudge .8s cubic-bezier(.3, 1.6, .5, 1) 2; }
 .pf-q-value.is-ping { animation: tag-pop .8s cubic-bezier(.3, 1.6, .5, 1); }
 
-/* Screen 28: a quick check: the question on the purple strip, three answers stacked under it (Swifty in her corner) */
+/* Screen 30: a quick check: the question on the purple strip, three answers stacked under it (Swifty in her corner) */
 .qp-panel {
   display: flex;
   flex-direction: column;
@@ -1540,7 +1518,46 @@ button:focus-visible, .switch input:focus-visible + .switch-track {
 .pq-choices--stack .pq-opt .q-label { flex: 1; padding: 6px 70px 0 0; } /* centred, balancing the letter chip */
 .pq-opt.is-ping { animation: tag-pop .8s cubic-bezier(.3, 1.6, .5, 1); }
 
-/* Screens 29 and 31: the sneakers and a question about them. The panel sits further left than the others: the
+/* Screen 26: 30% OFF means 30% Discount, written big: the red tag, "means" over an arrow, and a card, line for line */
+.mn-panel {
+  display: flex;
+  align-items: center;
+  gap: 64px;
+  margin-right: 330px; /* room on the right for Swifty on her stand (she has no bubble here) */
+  pointer-events: auto;
+}
+.mn-panel .pc-off-pos { rotate: -3deg; } /* with its own 3°, it stands upright, level with the card */
+.mn-tag { padding: 30px 46px 14px; border-width: 6px; border-radius: 30px; box-shadow: 0 12px 0 var(--ink); font-size: 118px; }
+.mn-means { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.mn-word { color: #1d2a6b; font-size: 66px; font-weight: 800; line-height: 1; }
+.mn-arrow { width: 200px; height: 56px; overflow: visible; }
+.mn-arrow path {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 9;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 0;
+}
+.mn-card { /* the same lines said another way: on a white card, like the price tag */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 30px 56px 14px;
+  border: 6px solid var(--ink);
+  border-radius: 30px;
+  background: linear-gradient(180deg, #ffffff 0%, #fff4d6 100%);
+  box-shadow: 0 12px 0 var(--ink), 0 26px 40px rgba(60, 40, 10, .18);
+  color: #1d2a6b;
+  font-size: 118px;
+  font-weight: 800;
+  line-height: .98;
+}
+.mn-card-line { display: block; }
+.mn-tag.is-ping, .mn-card.is-ping, .mn-word.is-ping { animation: tag-pop .8s cubic-bezier(.3, 1.6, .5, 1); }
+
+/* Screens 31 and 33: the sneakers and a question about them. The panel sits further left than the others: the
    Next button goes between it and Swifty, level with the last answer. */
 .pqp-panel {
   display: grid;
@@ -1575,10 +1592,38 @@ button:focus-visible, .switch input:focus-visible + .switch-track {
   text-align: center;
   white-space: pre-line;
 }
+.pqp-answers { min-width: 500px; min-height: 332px; } /* the answers' room, kept from the start: the question does not jump up as they come in */
 .pqp-answers .pq-choices--stack { gap: 22px; }
 .pqp-answers .pq-choices--stack .pq-opt { width: 500px; height: 96px; font-size: 48px; }
+/* Screen 31: no Next button (it moves on by itself), so the panel is bigger and reaches across that room */
+.pqp-panel--wide { column-gap: 64px; margin-right: 420px; }
+.pqp-panel--wide .pqp-item { gap: 36px; }
+.pqp-panel--wide .pc-photo { width: 690px; height: 301px; }
+.pqp-panel--wide .pc-hang { font-size: 54px; }
+.pqp-panel--wide .pc-off { padding: 16px 28px 8px; font-size: 62px; }
+.pqp-panel--wide .pqp-side { gap: 36px; }
+.pqp-panel--wide .pqp-question { padding: 24px 46px 14px; font-size: 58px; }
+.pqp-panel--wide .pqp-answers { min-width: 530px; min-height: 388px; }
+.pqp-panel--wide .pqp-answers .pq-choices--stack { gap: 26px; }
+.pqp-panel--wide .pqp-answers .pq-choices--stack .pq-opt { width: 530px; height: 112px; font-size: 56px; }
+.pqp-hint { /* screen 34: the rule to use, on the light-blue band of the worked solutions */
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin-top: -8px;
+  padding: 14px 28px 8px;
+  border-radius: 20px;
+  background: #dcecff;
+  color: var(--ink);
+  font-size: 41px;
+  font-weight: 800;
+  line-height: 1;
+  white-space: nowrap;
+}
+.pqp-hint-label { color: #5a6378; font-size: .8em; }
+.pqp-hint.is-ping { animation: tag-pop .8s cubic-bezier(.3, 1.6, .5, 1); }
 
-/* Screens 30 and 32: a worked solution: value boxes on the left (32), the working written line by line */
+/* Screens 32 and 34: a worked solution: value boxes on the left (32), the working written line by line */
 .ws-panel {
   position: relative; /* the copies of the values moving about are placed inside it */
   display: flex;
@@ -1609,10 +1654,10 @@ button:focus-visible, .switch input:focus-visible + .switch-track {
   border-radius: 20px;
   background: #dcecff;
 }
-.ws-band--yellow { background: #fff0b3; } /* the rule, as on the storyboard's yellow strip (screen 34) */
+.ws-band--yellow { background: #fff0b3; } /* the rule, as on the storyboard's yellow strip (screen 38) */
 .ws-panel .is-ping { animation: tag-pop .8s cubic-bezier(.3, 1.6, .5, 1); }
 
-/* Screen 32: the player drags the amounts out of the boxes on the left into the empty boxes in the working */
+/* Screen 34: the player drags the amounts out of the boxes on the left into the empty boxes in the working */
 .ws-drag { /* an amount that can be picked up: a gold halo pulses round it */
   border-radius: 18px;
   cursor: grab;
@@ -1661,7 +1706,7 @@ button:focus-visible, .switch input:focus-visible + .switch-track {
   0%, 45% { background-color: #ffd9d4; }
 }
 
-/* Screen 33: the shop's tags updated: the old price crossed out in red, and the new price stuck on in green */
+/* Screen 35: the shop's tags updated: the old price crossed out in red, and the new price stuck on in green */
 .strike { position: absolute; overflow: visible; pointer-events: none; }
 .strike path {
   fill: none;
@@ -1686,9 +1731,9 @@ button:focus-visible, .switch input:focus-visible + .switch-track {
   transform: rotate(-2deg);
 }
 .stick-tag--green { background: linear-gradient(180deg, #4fd27f 0%, #1f9a55 100%); text-shadow: 0 3px 0 rgba(10, 60, 30, .35); }
-.tone-pay { color: #1f9a55; } /* the new price (screen 32) */
+.tone-pay { color: #1f9a55; } /* the new price (screen 35) */
 
-/* Screen 35: the sneakers, summed up: a table of the four amounts, and the three rules (Swifty in her corner) */
+/* Screen 39: the sneakers, summed up: a table of the four amounts, and the three rules (Swifty in her corner) */
 .ss-panel {
   display: flex;
   flex-direction: column;
@@ -2365,205 +2410,9 @@ kbd {
   #rotate-hint.is-dismissed { display: none; }
 }
 
-/* ---------- The hand-made look (screens 13 and 28 try it first: scene.look = 'paper') ----------
-   Paper, card, tape and ink, as if made by hand: edges cut with scissors (#paper-cut), a big sheet with a
-   deckled edge (#paper-deckle), lines drawn with a brush pen (#ink-brush) — the filters are in js/fx.js
-   (inkDefs). Flat gouache colours with a paper grain, warm charcoal ink, soft shadows as if things lie on a
-   desk; no glossy gradients and no hard black offset shadows. The filters are on a layer behind each thing
-   (::before / ::after), so its words stay crisp. */
-:root {
-  --ink-warm: #2e2a26;
-  --paper-cream: #fbf3e2;
-  --paper-mustard: #efc053;
-  --paper-sky: #9ccbee;
-  --paper-tomato: #f08a78;
-  --paper-lilac: #dcc9f4;
-  --crayon-green: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='640' height='120' viewBox='0 0 640 120'%3E%3Cfilter id='c' x='0' y='0' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.01 0.45' numOctaves='3' seed='5'/%3E%3CfeColorMatrix values='0 0 0 0 0.37 0 0 0 0 0.67 0 0 0 0 0.28 0 0 0 2.4 -0.85'/%3E%3C/filter%3E%3Cg transform='rotate(-22 320 60)'%3E%3Crect x='-200' y='-300' width='1040' height='720' filter='url(%23c)'/%3E%3C/g%3E%3C/svg%3E"); /* crayon strokes */
-  --crayon-coral: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='640' height='120' viewBox='0 0 640 120'%3E%3Cfilter id='c' x='0' y='0' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.01 0.45' numOctaves='3' seed='8'/%3E%3CfeColorMatrix values='0 0 0 0 0.91 0 0 0 0 0.45 0 0 0 0 0.37 0 0 0 2.4 -0.85'/%3E%3C/filter%3E%3Cg transform='rotate(-22 320 60)'%3E%3Crect x='-200' y='-300' width='1040' height='720' filter='url(%23c)'/%3E%3C/g%3E%3C/svg%3E");
-}
-@keyframes paper-call { /* a soft gold glow round a button that is waiting to be pressed */
-  0%, 100% { box-shadow: 0 0 0 0 rgba(255, 196, 61, .65); }
-  50%      { box-shadow: 0 0 0 12px rgba(255, 196, 61, 0); }
-}
-
-/* The big sheet: cream drawing paper with a deckled edge, on a deep teal cloth-bound board */
-.scene.look-paper .sheet-panel {
-  background:
-    repeating-linear-gradient(0deg, rgba(255, 255, 255, .035) 0 2px, transparent 2px 5px),
-    repeating-linear-gradient(90deg, rgba(0, 0, 0, .05) 0 2px, transparent 2px 6px),
-    #14535c;
-}
-.scene.look-paper .sheet-panel::before {
-  inset: 22px;
-  border: 0;
-  border-radius: 6px;
-  background:
-    var(--grain),
-    radial-gradient(circle, rgba(60, 50, 40, .08) 1.5px, transparent 2.1px) 0 0 / 28px 28px,
-    var(--paper-cream);
-  box-shadow: none;
-  filter: url(#paper-deckle) drop-shadow(0 10px 16px rgba(0, 0, 0, .35));
-}
-
-/* The buttons on top (on a screen with this look): cardboard cut by hand, inked round the edge */
-#stage.look-paper :is(.hud-btn, .nav-btn) {
-  border: 0;
-  background: none;
-  box-shadow: none;
-  isolation: isolate;
-  filter: drop-shadow(0 4px 4px rgba(60, 40, 10, .3));
-}
-#stage.look-paper :is(.hud-btn, .nav-btn)::before {
-  content: '';
-  position: absolute;
-  inset: 2px;
-  z-index: -1;
-  border: 3.5px solid var(--ink-warm);
-  border-radius: inherit;
-  background: var(--grain), var(--paper-cream);
-  filter: url(#paper-cut);
-}
-#stage.look-paper .nav-btn--primary::before { background: var(--grain), var(--paper-mustard); }
-#stage.look-paper :is(.hud-btn, .nav-btn) { color: var(--ink-warm); }
-#stage.look-paper .hud-btn:active,
-#stage.look-paper .nav-btn:active:not(:disabled) { transform: translateY(3px); box-shadow: none; filter: drop-shadow(0 1px 2px rgba(60, 40, 10, .3)); }
-#stage.look-paper #btn-next.is-ready { animation: paper-call 1.3s ease-in-out infinite; }
-#stage.look-paper #nav-count { /* a little paper ticket */
-  position: relative;
-  border: 0;
-  background: none;
-  color: var(--ink-warm);
-  isolation: isolate;
-  filter: drop-shadow(0 3px 3px rgba(60, 40, 10, .25));
-}
-#stage.look-paper #nav-count::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  border: 2.5px solid var(--ink-warm);
-  border-radius: 22px;
-  background: var(--grain), #f4e9d2;
-  filter: url(#paper-cut);
-}
-
-/* The big Next button: a mustard cardboard pill */
-.scene.look-paper .story-next {
-  border: 0;
-  background: none;
-  box-shadow: none;
-  color: var(--ink-warm);
-  isolation: isolate;
-  filter: drop-shadow(0 7px 6px rgba(60, 40, 10, .3));
-  animation: paper-call 1.8s ease-in-out .6s infinite;
-  transition: transform .15s ease, filter .15s ease;
-}
-.scene.look-paper .story-next::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  border: 4px solid var(--ink-warm);
-  border-radius: 48px;
-  background: var(--grain), var(--paper-mustard);
-  filter: url(#paper-cut);
-}
-.scene.look-paper .story-next:hover { box-shadow: none; transform: translateY(-2px) rotate(-.6deg); }
-.scene.look-paper .story-next:active { box-shadow: none; transform: translateY(4px); filter: drop-shadow(0 2px 3px rgba(60, 40, 10, .3)); }
-
-
-/* Screen 13: the price cards, coloured paper cut by hand and held on with masking tape */
-.scene.look-paper .mp-book-art { filter: drop-shadow(0 12px 12px rgba(60, 40, 10, .3)); }
-.scene.look-paper .mp-side--compare .cmp-box {
-  border: 0;
-  border-radius: 4px;
-  background: none;
-  box-shadow: none;
-  isolation: isolate;
-  filter: drop-shadow(0 10px 10px rgba(60, 40, 10, .22));
-}
-.scene.look-paper .mp-side--compare .cmp-box::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  border-radius: 3px;
-  background: var(--grain), var(--card, var(--paper-cream));
-  filter: url(#paper-cut);
-}
-.scene.look-paper .cmp-box--yellow { --card: var(--paper-mustard); }
-.scene.look-paper .cmp-box--blue { --card: var(--paper-sky); }
-.scene.look-paper .cmp-box--red { --card: var(--paper-tomato); }
-.scene.look-paper .mp-side--compare .cmp-box::before { background: rgba(250, 245, 228, .86); box-shadow: 0 0 0 1px rgba(140, 120, 80, .25), 0 1px 3px rgba(60, 40, 10, .2); }
-.scene.look-paper .cmp-arrow.is-marker path { stroke: var(--ink-warm); opacity: .85; }
-/* "Look here": a quick loop in red marker instead of a glowing ring */
-.scene.look-paper .spot-ring::before {
-  border: 5px solid #e04f3c;
-  border-radius: 46% 54% 43% 57% / 55% 45% 55% 45%;
-  box-shadow: none;
-  rotate: -10deg;
-  filter: url(#paper-cut);
-}
-.scene.look-paper .spot-ring::after { display: none; }
-
-/* Screen 28: the question on a lilac paper strip; the answers on cream paper strips with a letter sticker */
-.scene.look-paper .pf-question {
-  position: relative;
-  border: 0;
-  border-radius: 3px;
-  background: none;
-  box-shadow: none;
-  color: #2a2350;
-  isolation: isolate;
-  rotate: -.8deg;
-  filter: drop-shadow(0 8px 8px rgba(60, 40, 10, .2));
-}
-.scene.look-paper .pf-question::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  background: var(--grain), var(--paper-lilac);
-  filter: url(#paper-cut);
-}
-.scene.look-paper .pq-opt,
-.scene.look-paper .pq-opt:hover:not(:disabled) {
-  border: 0;
-  border-radius: 3px;
-  background: none;
-  box-shadow: none;
-  color: var(--ink-warm);
-  isolation: isolate;
-  filter: drop-shadow(0 6px 6px rgba(60, 40, 10, .2));
-}
-.scene.look-paper .pq-opt::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  background: var(--grain), var(--strip, #f7ecd6);
-  filter: url(#paper-cut);
-}
-.scene.look-paper .pq-opt:hover:not(:disabled) { --strip: #fff1c4; transform: translateY(-3px) rotate(-.4deg); }
-.scene.look-paper .pq-opt:active:not(:disabled) { transform: translateY(3px); box-shadow: none; filter: drop-shadow(0 2px 3px rgba(60, 40, 10, .2)); }
-.scene.look-paper .pq-opt .q-chip { /* a round sticker, with its white rim */
-  border: 3px solid var(--ink-warm);
-  background: var(--paper-sky);
-  color: var(--ink-warm);
-  box-shadow: 0 0 0 4px #fffaf0, 0 3px 6px 3px rgba(60, 40, 10, .2);
-}
-.scene.look-paper .q-opt.is-correct { background: none; color: #1f3b17; }
-.scene.look-paper .q-opt.is-correct::before { background: var(--crayon-green) 0 0 / 100% 100% no-repeat, var(--grain), #dcefcd; } /* filled in with green crayon */
-.scene.look-paper .q-opt.is-correct .q-chip { background: #6fbb5c; }
-.scene.look-paper .q-opt.is-correct .q-chip svg { stroke: #fff; }
-.scene.look-paper .q-opt.is-wrong { background: none; color: #5a1a12; }
-.scene.look-paper .q-opt.is-wrong::before { background: var(--crayon-coral) 0 0 / 100% 100% no-repeat, var(--grain), #fbe1da; } /* coral crayon */
-.scene.look-paper .q-opt.is-wrong .q-chip { background: #ec7b66; }
-.scene.look-paper .q-opt.is-wrong .q-chip svg { stroke: #fff; }
-
 /* ---------- Reduced motion ---------- */
 
-/* ---------- The shopping challenge's opening panel ("Game Begins", screen 42) ----------
+/* ---------- The shopping challenge's opening panel ("Game Begins", screen 46) ----------
    As in the design: the panel on the right of the picture, its pieces cut from the design's panel sheet
    (game assets/ui/begin/), the shopping list drawn in the sheet's colours. Positions are stage px within the
    panel's box (the panel itself from y 90, under the banner). */
@@ -2645,7 +2494,7 @@ kbd {
   50%      { filter: drop-shadow(0 0 16px rgba(255, 200, 61, .95)); }
 }
 
-/* ---------- Choosing a shop (screen 43) ----------
+/* ---------- Choosing a shop (screen 47) ----------
    As in the design: on its light blue, the four shops' cards (2×2) on the left, and the wallet and the shopping
    list on a white panel on the right, all moved down a little to clear Back / Next (the hint to tap a shop sits
    between them). The pictures are cut from the design's sheet (game assets/ui/shop/); the cards, their pills and
@@ -2869,7 +2718,7 @@ kbd {
     #cfe9fd;
 }
 
-/* A shop whose item is bought (screen 43): light grey, its picture greyed out, a big green tick on it; its button is
+/* A shop whose item is bought (screen 47): light grey, its picture greyed out, a big green tick on it; its button is
    disabled, so it can't be picked again. */
 .sp-card.is-bought {
   --edge: #d3d8df; --edge-low: #c6ccd5; --top: #f4f6f8; --mid: #edf0f3; --low: #e6e9ed;
@@ -2937,8 +2786,8 @@ kbd {
     linear-gradient(180deg, #58c2f9, #b8e8fd);
 }
 
-/* ---------- The shopping game's streets (screens 44–47) ----------
-/* ---------- The shopping game's streets (screens 44–47) ----------
+/* ---------- The shopping game's streets (screens 48–51) ----------
+/* ---------- The shopping game's streets (screens 48–51) ----------
    As in the street's design: the street's picture (game background.png: the sky, the town, the pavement and the road),
    two clouds drifting across the sky, and three shop fronts on the pavement (x 240–1692: the pictures cut from "new
    shops for game .png", with the game's words and things on them); the wallet and the list on two white cards in the
@@ -3250,7 +3099,7 @@ kbd {
 .oc-pic { max-width: 370px; max-height: 270px; filter: drop-shadow(0 8px 8px rgba(20, 40, 90, .18)); }
 .oc-tags { display: flex; align-items: center; gap: 22px; font-size: 48px; }
 .oc-main { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 30px; padding: 24px 48px; }
-.oc-question, .cb-question { /* the question, above the answers, on a purple strip (as the questions on screens 26–28) */
+.oc-question, .cb-question { /* the question, above the answers, on a purple strip (as the questions on screens 28–30) */
   padding: 18px 54px 10px;
   border: 6px solid var(--ink);
   border-radius: 30px;
@@ -3371,7 +3220,7 @@ kbd {
 .confetti { position: absolute; z-index: 30; inset: 0; overflow: hidden; pointer-events: none; }
 .confetti i { position: absolute; border-radius: 3px; }
 
-/* ---------- The end of the shopping game (screens 48–55) ---------- */
+/* ---------- The end of the shopping game (screens 52–59) ---------- */
 .si-thumb--party { /* the scene list's tiny copy: a banner and confetti on the light blue */
   background:
     linear-gradient(#2f7fdc, #2f7fdc) 12px 7px / 44px 10px no-repeat,
@@ -3409,7 +3258,7 @@ kbd {
   font-weight: 800;
   white-space: nowrap;
 }
-/* Screen 48 (Shopping Complete): the banner and its line at the top; on the left the Shopping Area's panel, smaller (the
+/* Screen 52 (Shopping Complete): the banner and its line at the top; on the left the Shopping Area's panel, smaller (the
    wallet: what is left; the list: every line ticked), and on the right the four things bought, each on a card in its
    shop's colour (as on the Shopping Area), ticked. All of it under the question bar. */
 .cl--done .cl-banner { left: 960px; top: 182px; padding: 8px 52px 0; }
@@ -3650,7 +3499,7 @@ kbd {
   .exclaim-inner, .walker.is-idle .walker-body, #btn-next.is-ready, .rotate-phone,
   .story-next, .spot-ring::after, .red-tag.is-pulsing,
   .cmp-box.is-key, .fm-box.is-ping, .fm-op.is-ping, .fm-box.is-ping::after,
-  .fr-term.is-ping, .fr-op.is-ping, .pc-price.is-ping, .pc-off.is-ping, .pc-off-line.is-ping,
+  .fr-term.is-ping, .fr-op.is-ping, .pc-price.is-ping, .pc-off.is-ping, .pc-off-line.is-ping, .mn-panel .is-ping, .pqp-hint.is-ping,
   .pf-hint.is-ping, .pf-q-value.is-ping, .pq-opt.is-ping, .ws-panel .is-ping, .ss-panel .is-ping,
   .ws-drag, .ws-slot.is-waiting, .ws-slot.is-wrong {
     animation: none !important;

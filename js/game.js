@@ -86,11 +86,11 @@
   const QUIZ_CAMERA = 'translateX(-282px) scale(1.04)';
   const QUIZ_DRIFT = 'translateX(-290px) scale(1.055)';
 
-  // Screens 39 and 40 share one view (only Aniket's hands change), and so one slow drift: the fade between them
+  // Screens 43 and 44 share one view (only Aniket's hands change), and so one slow drift: the fade between them
   // carries the camera over.
   const KB_TABLE = { origin: '55% 40%', from: 'scale(1.02)', to: 'scale(1.05) translate(-4px, 3px)' };
 
-  // The shopping game's four streets (screens 44–47), as the scene list names them.
+  // The shopping game's four streets (screens 48–51), as the scene list names them.
   const ROUND_TITLES = [['Uniform Street', 'School Uniform: three shops'], ['Shoe Street', 'School Shoes: three shops'],
     ['Bag Corner', 'School Bag: three shops'], ['Bottle Stop', 'Water Bottle: the final challenge']];
 
@@ -210,7 +210,6 @@
     {
       id: 'compare', title: 'Compare MP and SP', sub: '₹1000 Marked Price, ₹800 Selling Price',
       sheet: 'panel', still: true, kb: null, origin: '50% 50%', lamps: [], dust: null,
-      look: 'paper', // the hand-made look (paper, card, tape, ink): tried on screens 13 and 28 first
       setup: scene => setupPricePanel(scene, {
         compare: {
           top: { price: '₹1000', label: 'Marked Price', tone: 'yellow' },
@@ -268,11 +267,23 @@
       play: playSummary,
     },
     {
-      id: 'leave', title: 'Out of the Bookstore', sub: 'Aniket walks on through the mall',
+      id: 'exit', title: 'Coming Out of the Bookstore', sub: 'The doors swing open and Aniket comes out',
       bg: ASSETS + 'book store outside view.png', // the bookstore from the mall, as on screen 3
       kb: { origin: '50% 62%', from: 'scale(1.02)', to: 'scale(1.06) translate(-6px, -4px)' },
       lamps: [[167, 321, 230], [767, 334, 170], [1313, 299, 170], [1666, 275, 170]], // the wall lamp; ceiling lights behind the glass
       dust: [420, 260, 1840, 820],
+      shot: 'storefront', // the same view as the next screen, so the fade there changes nothing but what Aniket does
+      setup: setupExit,
+      play: playExit,
+    },
+    {
+      id: 'leave', title: 'To the Shoe Shop', sub: 'Aniket walks on to the sneakers shop',
+      bg: ASSETS + 'book store outside view.png',
+      kb: { origin: '50% 62%', from: 'scale(1.02)', to: 'scale(1.06) translate(-6px, -4px)' },
+      lamps: [[167, 321, 230], [767, 334, 170], [1313, 299, 170], [1666, 275, 170]],
+      dust: [420, 260, 1840, 820],
+      shot: 'storefront',
+      setup: setupLeave,
       play: playLeave,
     },
     {
@@ -281,7 +292,7 @@
       kb: { origin: '68% 48%', from: 'scale(1.02)', to: 'scale(1.07) translate(-10px, 0)' }, // eases in towards the sneakers
       lamps: [[1700, 180, 260], [1700, 380, 260], [175, 60, 200], [765, 66, 200]], // shelf lights, the mall's ceiling lights
       dust: [600, 40, 1900, 720],
-      exit: 'zoom', zoomOrigin: '66% 56%', // 21 → 22: the camera pushes in on the sneakers while fading
+      exit: 'zoom', zoomOrigin: '66% 56%', // 22 → 23: the camera pushes in on the sneakers while fading
       play: playSneakers,
     },
     {
@@ -290,13 +301,13 @@
       kb: { origin: '63% 66%', from: 'scale(1.02)', to: 'scale(1.07)' }, // eases in towards the price tags
       lamps: [[1740, 160, 260], [1740, 370, 260], [120, 60, 180]], // shelf lights, a ceiling light
       dust: [600, 40, 1900, 720],
-      shot: 'stand', // the same view as screen 23, so the fade there only changes Aniket
+      shot: 'stand', // the same view as screen 24, so the fade there only changes Aniket
       play: playShoe,
     },
     {
       id: 'tag', title: '30% Off!', sub: 'He spots the discount',
       bg: ASSETS + 'hee see discount on shoes.png',
-      kb: { origin: '63% 66%', from: 'scale(1.02)', to: 'scale(1.07)' }, // as on screen 22
+      kb: { origin: '63% 66%', from: 'scale(1.02)', to: 'scale(1.07)' }, // as on screen 23
       lamps: [[1740, 160, 260], [1740, 370, 260], [120, 60, 180]],
       dust: [600, 40, 1900, 720],
       shot: 'stand',
@@ -305,12 +316,18 @@
     {
       id: 'confused', title: 'What Does 30% Mean?', sub: '“How much money I actually have to pay?”',
       bg: ASSETS + 'he is tinking to see the shoes.png',
-      kb: { origin: '63% 66%', from: 'scale(1.02)', to: 'scale(1.07)' }, // as on screens 22–23
+      kb: { origin: '63% 66%', from: 'scale(1.02)', to: 'scale(1.07)' }, // as on screens 23–24
       lamps: [[1740, 160, 260], [1740, 370, 260], [120, 60, 180]],
       dust: [600, 40, 1900, 720],
       shot: 'stand',
       setup: setupConfused,
       play: playConfused,
+    },
+    {
+      id: 'offmeans', title: 'What 30% OFF Means', sub: '30% OFF means 30% Discount',
+      sheet: 'panel', still: true, kb: null, origin: '50% 50%', lamps: [], dust: null,
+      setup: setupGuide,
+      play: playOffMeans,
     },
     {
       id: 'recall', title: 'Recall Percentages', sub: '“Let’s first recall how percentages work.”',
@@ -333,7 +350,6 @@
     {
       id: 'check', title: 'Quick CFU', sub: '250 is what percent of 1000?',
       sheet: 'panel', still: true, kb: null, origin: '50% 50%', lamps: [], dust: null,
-      look: 'paper',
       setup: setupGuide,
       play: playCheck,
     },
@@ -363,12 +379,26 @@
     },
     {
       id: 'final', title: 'Final Answer', sub: '“After a 30% discount, I will pay ₹1260.”',
-      bg: ASSETS + 'he saw a shoe.png', // the same view as screens 22–32: Aniket pointing at the tags
+      bg: ASSETS + 'he saw a shoe.png', // the same view as screens 23–34: Aniket pointing at the tags
       kb: { origin: '63% 66%', from: 'scale(1.02)', to: 'scale(1.07)' },
       lamps: [[1740, 160, 260], [1740, 370, 260], [120, 60, 180]],
       dust: [600, 40, 1900, 720],
       shot: 'stand',
       play: playFinal,
+    },
+    {
+      id: 'boxed', title: 'Here Are Your Sneakers', sub: 'The shopkeeper hands Aniket the sneakers in a box',
+      bg: ASSETS + 'shopkeeper gives sneakers box.png',
+      kb: { origin: '54% 56%', from: 'scale(1.02)', to: 'scale(1.07)' }, // eases in towards the box
+      lamps: [[1760, 170, 240], [1760, 360, 240], [300, 85, 170]], // shelf lights, a ceiling light in the mall
+      dust: [600, 40, 1900, 720],
+      play: playBoxed,
+    },
+    {
+      id: 'pctofmp', title: 'What Percent Is the Discount?', sub: '540 is what percent of 1800?',
+      sheet: 'panel', still: true, kb: null, origin: '50% 50%', lamps: [], dust: null,
+      setup: setupGuide,
+      play: playPercentOfMP,
     },
     {
       id: 'discountpct', title: 'Discount Percentage', sub: 'Discount % = Discount ÷ Marked Price × 100',
@@ -410,7 +440,7 @@
       id: 'money', title: '₹5,000 to Spend', sub: '“Here’s ₹5,000.”',
       bg: ASSETS + 'father gave him money.png',
       kb: KB_TABLE, lamps: [[1856, 250, 300]], dust: [1100, 60, 1900, 640],
-      shot: 'table', // the same view as screen 40, so the fade there only changes Aniket's hands
+      shot: 'table', // the same view as screen 44, so the fade there only changes Aniket's hands
       play: playMoney,
     },
     {
@@ -622,33 +652,181 @@
     ctx.advance(1800);
   }
 
-  const BOOKSTORE_DOOR = [[1040, 265], [1452, 265], [1452, 855], [1040, 855]]; // the right-hand glass door (stage px)
+  // The bookstore's glass doors, opening. The picture's doorway (stage px: x 694–1429, its top from y 289 to 225, its
+  // bottom from y 842 to 881) is covered by DOORWAY: the same picture with the doors taken out (their seam, handles
+  // and fittings painted out, and the glass's haze off, so the shop is seen clearly through the open doorway). Over it,
+  // the two door leaves, drawn in one SVG: pale glass (the haze the picture's glass has, so closed they look just as it
+  // does), a sheen, their edges, the pull handles and the fittings. They swing open into the shop on their hinges, the
+  // left one on the doorway's left side and the right one on its right, drawn in perspective by doorLeaf (the same in
+  // every browser). Anything put under them (under) is seen through the glass while they are closed.
+  const DOORWAY = { src: ASSETS + 'ui/bookstore-doorway.png', x: 694, y: 225 };
+  // Each leaf, closed: its hinge (x, and its top and bottom there), its free edge (the same), its width, and the side
+  // it swings from (+1: the hinge on the left, the leaf to its right; −1: the other way round).
+  const DOOR_LEAVES = [
+    { hinge: [694, 289, 842], free: [1044, 258.6, 860.6], dir: 1 },
+    { hinge: [1429, 225, 881], free: [1044, 258.6, 860.6], dir: -1 },
+  ];
+  const DOOR_OPEN = 68;       // how far they swing (deg)
+  const DOOR_EYE = 1800;      // how far the eye is from the doors (stage px): the depth of the perspective
+  const HANDLE = { from: 32, w: 15, top: 504, bottom: 698 };   // the pull handle: its distance from the free edge, width, top and bottom
+  let doorIds = 0;
 
-  // Out of the bookstore with his new book (the same view as screen 3): Aniket steps out of the doors (the shop's bell)
-  // and walks off along the mall to the right, coming a little closer as he goes.
-  async function playLeave(ctx, scene) {
+  // A point on a leaf turned `deg` into the shop, in stage px: u its distance from the hinge (closed), y its height
+  // (closed). The leaf turns about its hinge; seen from the front, a point further in looks smaller, towards the
+  // hinge's middle height.
+  function doorPoint(lf, deg, u, y) {
+    const a = (deg * Math.PI) / 180;
+    const k = DOOR_EYE / (DOOR_EYE + u * Math.sin(a)); // further away: smaller
+    const mid = (lf.hinge[1] + lf.hinge[2]) / 2;
+    return [lf.hinge[0] + lf.dir * u * Math.cos(a) * k, mid + (y - mid) * k];
+  }
+
+  // One leaf's shapes at `deg`, as SVG markup: the glass, its sheen, its edges, the dark free edge, the handle, the fittings.
+  function doorLeaf(lf, deg, id, i) {
+    const width = Math.abs(lf.free[0] - lf.hinge[0]);
+    const edgeY = (u, which) => lf.hinge[which] + (lf.free[which] - lf.hinge[which]) * (u / width); // the top (1) or bottom (2) at u
+    const pt = (u, y) => doorPoint(lf, deg, u, y).map(v => v.toFixed(1)).join(',');
+    const quad = (u0, u1, y0f, y1f) => [pt(u0, y0f(u0)), pt(u1, y0f(u1)), pt(u1, y1f(u1)), pt(u0, y1f(u0))].join(' ');
+    const top = u => edgeY(u, 1);
+    const bottom = u => edgeY(u, 2);
+    const glass = quad(0, width, top, bottom);
+    const free = [pt(width, top(width)), pt(width, bottom(width))];
+    const hu = width - HANDLE.from;
+    const handle = quad(hu - HANDLE.w, hu, () => HANDLE.top, () => HANDLE.bottom);
+    const fitTop = quad(width - 50, width - 2, u => top(u) + 2, u => top(u) + 16);
+    const fitBottom = quad(width - 50, width - 2, u => bottom(u) - 22, u => bottom(u) - 4);
+    return `<polygon points="${glass}" fill="rgb(242,234,226)" fill-opacity=".22"/>
+      <polygon points="${glass}" fill="url(#${id}s${i})"/>
+      <polygon points="${glass}" fill="none" stroke="rgba(40,60,80,.35)" stroke-width="2"/>
+      <line x1="${free[0].split(',')[0]}" y1="${free[0].split(',')[1]}" x2="${free[1].split(',')[0]}" y2="${free[1].split(',')[1]}" stroke="rgba(25,40,60,.7)" stroke-width="4"/>
+      <polygon points="${handle}" fill="url(#${id}h)" stroke="rgba(60,40,25,.45)" stroke-linejoin="round"/>
+      <polygon points="${fitTop}" fill="#a9a29a" stroke="rgba(60,60,60,.4)"/>
+      <polygon points="${fitBottom}" fill="#a9a29a" stroke="rgba(60,60,60,.4)"/>`;
+  }
+
+  function bookstoreDoors(layer, { open = false } = {}) {
+    // decoded before the screen is first painted: so it never shows the picture's closed doors, even for a moment
+    Object.assign(el('img', 'bs-doorway', layer), { decoding: 'sync', src: DOORWAY.src, alt: '', draggable: false })
+      .style.cssText = `left:${DOORWAY.x}px;top:${DOORWAY.y}px`;
+    const id = 'bsd' + (++doorIds);
+    const holder = el('div', 'bs-doors', layer);
+    holder.innerHTML = `<svg width="1920" height="1080" viewBox="0 0 1920 1080" aria-hidden="true">
+      <defs>
+        ${DOOR_LEAVES.map((lf, i) => `<linearGradient id="${id}s${i}" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".42" stop-color="#fff" stop-opacity="0"/>
+          <stop offset=".5" stop-color="#fff" stop-opacity=".22"/><stop offset=".58" stop-color="#fff" stop-opacity="0"/>
+          <stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>`).join('')}
+        <linearGradient id="${id}h" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0" stop-color="#6f5a45"/><stop offset=".35" stop-color="#ead9c4"/><stop offset=".62" stop-color="#b39579"/><stop offset="1" stop-color="#6a5440"/>
+        </linearGradient>
+      </defs>
+      <g class="bs-leaves"></g>
+    </svg>`;
+    const leaves = holder.querySelector('.bs-leaves');
+    const draw = deg => { leaves.innerHTML = DOOR_LEAVES.map((lf, i) => doorLeaf(lf, deg, id, i)).join(''); };
+    draw(open ? DOOR_OPEN : 0);
+    return {
+      // Puts `node` (e.g. Aniket inside the shop) between the doorway and the doors: seen through the glass.
+      under(node) {
+        layer.insertBefore(node, holder);
+      },
+      // The doors swing open into the shop (a little too far, then back), with the shop's bell.
+      open(ctx) {
+        Sound.chime();
+        Sound.swish();
+        if (reducedMotion) {
+          draw(DOOR_OPEN);
+          return ctx.wait(0);
+        }
+        const ms = 900;
+        const easeOut = t => 1 - Math.pow(1 - t, 3);
+        const easeInOut = t => (t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2);
+        return new Promise((resolve, reject) => {
+          const t0 = performance.now();
+          const step = now => {
+            if (!ctx.alive() || !holder.isConnected) return reject(CANCELLED);
+            const t = Math.min(1, (now - t0) / ms);
+            draw(t < 0.75 ? (DOOR_OPEN + 4) * easeOut(t / 0.75) : DOOR_OPEN + 4 - 4 * easeInOut((t - 0.75) / 0.25));
+            if (t < 1) requestAnimationFrame(step);
+            else resolve();
+          };
+          requestAnimationFrame(step);
+        });
+      },
+    };
+  }
+
+  // Where Aniket stands once he is out of the doors (the next screen starts him there).
+  const OUT_OF_THE_DOORS = { x: 1070, y: 958, s: 0.7 };
+
+  // Coming out of the bookstore (the same view as screen 3): Aniket walks up to the doors inside the shop, seen through
+  // the glass; the doors swing open (the shop's bell), and he walks out through them into the mall, coming closer.
+  // The doors are there from the screen's first frame (setup).
+  function setupExit(scene) {
+    scene.doors = bookstoreDoors(scene.layer);
+  }
+
+  async function playExit(ctx, scene) {
     const L = scene.layer;
+    const doors = scene.doors;
     const walker = new FX.Walker(L, WALK_SHEET);
-    const from = { x: 1070, y: 958, s: 0.7 };  // just out of the doors
-    const to = { x: 2200, y: 1012, s: 0.8 };    // off to the right
-    walker.place(from.x, from.y, from.s);
-    walker.setFrame(WALK_SHEET.idle);
+    doors.under(walker.root); // inside the shop, behind the glass
+    const inside = { x: 760, y: 822, s: 0.5 };      // inside the shop, by the left-hand door
+    const atDoors = { x: 905, y: 830, s: 0.52 };    // at the doors
+    walker.place(inside.x, inside.y, inside.s);
+    walker.setFrame(WALK_SHEET.loop[0]);
     walker.root.style.opacity = '0';
     const pan = x => (x / STAGE_W) * 1.6 - 0.8;
 
-    await ctx.wait(700);
-    Sound.chime();
-    FX.shine(L, BOOKSTORE_DOOR, { duration: 900, width: 200 }); // a glint across the glass as the door swings shut
-    walker.root.style.opacity = '';
-    FX.settle(walker.root.animate([{ opacity: 0 }, { opacity: 1 }], { duration: reducedMotion ? 1 : 450, easing: 'ease-out' }));
     await ctx.wait(500);
+    walker.root.style.opacity = '';
+    FX.settle(walker.root.animate([{ opacity: 0 }, { opacity: 1 }], { duration: reducedMotion ? 1 : 400, easing: 'ease-out' }));
+    Sound.duck(true, 'walk');
+    try {
+      await walker.walk(ctx, { from: inside, to: atDoors, speed: 170, decel: 90, onStep: x => Sound.step(pan(x), 0.5) });
+    } finally {
+      Sound.duck(false, 'walk');
+    }
+    await ctx.wait(250);
+    await doors.open(ctx);
+    await ctx.wait(200);
+    Sound.duck(true, 'walk');
+    try {
+      await walker.walk(ctx, { from: atDoors, to: OUT_OF_THE_DOORS, speed: 200, decel: 120, onStep: x => Sound.step(pan(x)) });
+    } finally {
+      Sound.duck(false, 'walk');
+    }
+    walker.idle(true);
+    ctx.advance(1600); // then on to the next shop
+  }
+
+  // On to the shoe shop (the same view): the doors stand open behind him, and Aniket walks off along the mall to the right,
+  // coming a little closer as he goes. The open doors and Aniket, just out of them, are there from the screen's first
+  // frame (setup), exactly as the screen before left them: so the dissolve between the two changes nothing.
+  function setupLeave(scene) {
+    bookstoreDoors(scene.layer, { open: true });
+    const walker = new FX.Walker(scene.layer, WALK_SHEET);
+    walker.place(OUT_OF_THE_DOORS.x, OUT_OF_THE_DOORS.y, OUT_OF_THE_DOORS.s);
+    walker.setFrame(WALK_SHEET.idle);
+    walker.idle(true);
+    scene.walker = walker;
+  }
+
+  async function playLeave(ctx, scene) {
+    const walker = scene.walker;
+    const from = OUT_OF_THE_DOORS;               // just out of the doors, as the screen before left him
+    const to = { x: 2200, y: 1012, s: 0.8 };      // off to the right
+    const pan = x => (x / STAGE_W) * 1.6 - 0.8;
+
+    await ctx.wait(700);
+    walker.idle(false);
     Sound.duck(true, 'walk');
     try {
       await walker.walk(ctx, { from, to, speed: 260, decel: 40, onStep: x => Sound.step(pan(x)) });
     } finally {
       Sound.duck(false, 'walk');
     }
-    ctx.advance(1200); // then on through the mall
+    ctx.advance(1200); // then on to the shoe shop
   }
 
   // The names of the three books on the display stand by the counter (screens 4 and 5 show the same stand in the
@@ -898,6 +1076,7 @@
     el('span', 'story-next-label', btn).textContent = last ? 'Replay' : 'Next';
     btn.insertAdjacentHTML('beforeend', icon(last ? 'replay' : 'next'));
     btn.addEventListener('click', () => {
+      if (SCENES[Game.index] !== scene) return; // its screen is already fading away: the story has moved on
       Sound.click();
       next();
     }, { once: true });
@@ -1081,8 +1260,8 @@
     endWithSwifty(ctx, scene, talk); // then compare it with the Selling Price
   }
 
-  // Compare MP and SP: ₹1000 Marked Price, an arrow drawn down in marker, ₹800 Selling Price (paper cut-outs held
-  // on with washi tape), with Swifty saying each step from her stand.
+  // Compare MP and SP: ₹1000 Marked Price, a blue arrow growing down, ₹800 Selling Price (the price boxes of the
+  // other panels), with Swifty saying each step from her stand.
   async function playCompare(ctx, scene) {
     const talk = await enterPricePanel(ctx, scene);
     const bird = talk.bird;
@@ -1328,7 +1507,7 @@
   // of a run, stays there through the run (carried across each dissolve without moving), and flies off after
   // its last line; so she is only on the screen while she has something to say.
   const RUNS = [['mp', 'mpdef', 'compare'], ['discount-def', 'formula', 'formula-reveal', 'summary'],
-    ['recall', 'percentrule', 'whatpercent', 'check', 'sneakerq', 'thirty', 'represent', 'topay'], ['discountpct', 'sneakersum'],
+    ['offmeans', 'recall', 'percentrule', 'whatpercent', 'check', 'sneakerq', 'thirty', 'represent', 'topay'], ['pctofmp', 'discountpct', 'sneakersum'],
     ['left', 'two'], ['recap', 'takeaway']];
   const lastOfRun = scene => {
     const run = RUNS.find(r => r.includes(scene.id));
@@ -1557,7 +1736,7 @@
   }
 
   // The red "30% OFF" label on the front of the sneakers' stand: a glowing frame hugging it (stage px). It sits
-  // here on screens 23 and 33–35; on 23–24 the picture shows the stand a little closer (THINKING_OFF_TAG).
+  // here on screens 24 and 35; on 25 the picture shows the stand a little closer (THINKING_OFF_TAG).
   const OFF_TAG = { x: 1253, y: 733, w: 322, h: 141, round: 24 };
   const THINKING_OFF_TAG = { x: 1284, y: 778, w: 336, h: 153, round: 26 };
 
@@ -1571,18 +1750,13 @@
     ctx.advance(2600);
   }
 
-  // Coming from screen 23, the 30% OFF tag is still lit, exactly as it was.
+  // Coming from screen 24, the 30% OFF tag is still lit, exactly as it was.
   function setupConfused(scene) {
     scene.offRing = scene.cameFrom === 'tag' ? FX.ring(scene.layer, Object.assign({ instant: true }, THINKING_OFF_TAG)) : null;
   }
 
-  // Aniket is confused by the 30% OFF tag: first he wonders about it in a thought cloud, then, once it has
-  // gone, he asks how much money will actually come off, in a speech bubble.
-  const SHOE_THOUGHT = {
-    at: [989, 228], tip: [710, 188], // the wall right of his head; the puffs rise from the side of his hair
-    text: [{ t: 'What does\n' }, { t: '30% discount', cls: 'key' }, { t: '\nmean here?' }], voice: 'boy',
-  };
-  // Then he says what he sees, and asks: one bubble at a time, right of his face, the tail at his mouth by his hand.
+  // Aniket, hand on his chin, looks at the sneakers' tags: he says what he sees, and asks how much he will actually
+  // pay, one bubble at a time, right of his face, the tail at his mouth by his hand.
   const SHOE_SAY = { anchor: [717, 332], corner: 'bl', tip: [655, 342], voice: 'boy', rotate: -1.5 };
   const SHOE_PRICE = Object.assign({ text: [{ t: 'The price tagged\nis ' }, { t: '₹1800', em: true }, { t: '.' }] }, SHOE_SAY);
   const SHOE_PAY = Object.assign({
@@ -1597,14 +1771,6 @@
       Sound.sparkle();
     }
     await ctx.wait(700);
-    const wondering = FX.thought(scene.layer, SHOE_THOUGHT);
-    await wondering.show();
-    await speak(ctx, wondering, 'shoe-think', 'boy');
-    wondering.emphasize();
-    await ctx.wait(1400);
-
-    await wondering.hide();
-    await ctx.wait(250);
     // "The price tagged is ₹1800.": the price card on the sneakers lights up.
     const price = FX.bubble(scene.layer, SHOE_PRICE);
     FX.ring(scene.layer, PRICE_CARD);
@@ -1623,13 +1789,46 @@
     ctx.advance(3000); // Swifty comes to help
   }
 
-  // Swifty comes to help, on the sheet that slides up over the shop: a card with the sneakers (their ₹1800
-  // price tag tied to the laces, as in the shop) and their 30% OFF tag springs up. Swifty flies in to her
-  // corner, points at it and says what comes next.
   const SNEAKER_CARD = { photo: ASSETS + 'ui/sneakers.png', price: '₹1800', off: ['30%', 'OFF'], knot: [60, 49] };
 
-  async function playRecall(ctx, scene) {
+  // Swifty comes to help, on the sheet that slides up over the shop: what the tag means, written big. The red
+  // 30% OFF tag stamps on; Swifty flies in to her stand and reads it out (no bubble: it is all on the panel):
+  // "30% OFF means" ("means" and its arrow come in as she says it) "30% Discount." (the card springs up).
+  async function playOffMeans(ctx, scene) {
+    const m = FX.meansPanel(scene.ui, { tag: SNEAKER_CARD.off, card: [{ t: '30%' }, { t: 'Discount', cls: 'tone-d' }] });
     await ctx.wait(300);
+    m.open();
+    await ctx.wait(500);
+    await m.stamp();
+    await ctx.wait(400);
+    const talk = await cornerSwifty(ctx, scene);
+    const bird = talk.bird;
+    bird.wave();
+    await ctx.wait(500);
+    bird.point();
+    await ctx.wait(300);
+    await readOut(ctx, bird, 'om-1', '30% OFF means', (async () => {
+      await ctx.wait(250);
+      m.ping(m.tagEl); // as she says "30% OFF"
+      await ctx.wait(800);
+      await m.means();
+    })());
+    await readOut(ctx, bird, 'om-2', '30% Discount.', m.card());
+    await ctx.wait(300);
+    m.ping(m.tagEl);
+    m.ping(m.cardEl);
+    const r = stageRect(m.cardEl);
+    FX.twinkles(scene.ui, [[r.left - 30, r.top + 10], [r.right + 26, r.top + 18], [r.left - 18, r.bottom - 6], [r.right + 18, r.bottom]]);
+    Sound.sparkle();
+    bird.point();
+    endWithSwifty(ctx, scene, talk); // then the sneakers again, and how to work it out
+  }
+
+  // Then a card with the sneakers (their ₹1800 price tag tied to the laces, as in the shop) and their 30% OFF
+  // tag springs up, and Swifty (on her stand already, or flying in to it) points at it and says what comes next.
+  async function playRecall(ctx, scene) {
+    const carried = !!scene.bird; // on her stand already, from screen 26
+    await ctx.wait(carried ? 450 : 300); // the panel before finishes fading away first
 
     // The card: the sneakers, then their price tag, then the discount tag lands like a stamp and glows.
     const card = FX.productCard(scene.ui, SNEAKER_CARD);
@@ -1641,11 +1840,13 @@
     await card.showOff();
     await ctx.wait(500);
 
-    // Swifty flies in to her corner, waves, and points at the card while she talks.
+    // Swifty (flying in to her corner, and waving, if she is not there yet) points at the card while she talks.
     const talk = await cornerSwifty(ctx, scene);
     const bird = talk.bird;
-    bird.wave();
-    await ctx.wait(400);
+    if (!carried) {
+      bird.wave();
+      await ctx.wait(400);
+    }
     bird.point();
     await ctx.wait(200);
     await talk.show([
@@ -1674,8 +1875,10 @@
   // and Swifty points at them while the player picks one. Then she explains: right() after a right pick (with
   // sparkles), wrong(answers) after a wrong one (no second try: the player learns it and carries on), and
   // so(answers) either way. 3 seconds later (or once Swifty has flown off, at the end of her run) the Next
-  // button appears level with the last answer. `t.below` is where the answers go.
-  async function percentQuestion(ctx, scene, t, talk, { options, right, wrong, so, stack = false }) {
+  // button appears level with the last answer; or, with { auto: true }, there is no Next button and the screen
+  // moves on by itself 3 seconds after her last line; or the screen carries on with then(answers) (e.g. working
+  // the answer out). `t.below` is where the answers go.
+  async function percentQuestion(ctx, scene, t, talk, { options, right, wrong, so, stack = false, auto = false, then = null }) {
     const answers = FX.choices(t.below, {
       options,
       stack,
@@ -1697,6 +1900,14 @@
       await so(answers);
       talk.line.emphasize();
       talk.bird.point();
+      if (then) {
+        await then(answers);
+        return;
+      }
+      if (auto) {
+        endWithSwifty(ctx, scene, talk); // on by itself, 3 seconds later
+        return;
+      }
       if (lastOfRun(scene)) {
         await swiftyDone(ctx, scene, talk); // she flies off
       } else {
@@ -1710,7 +1921,7 @@
     talk.bird.point();
   }
 
-  // How screens 26 and 27 begin: the panel springs up and Swifty (on her stand, or flying in) reads its question out
+  // How screens 28, 29 and 37 begin: the panel springs up and Swifty (on her stand, or flying in) reads its question out
   // (its words are on the strip); then she names the part and the whole, e.g. ['125', '500']: each takes its colour
   // in the question as she says it, and its box pops in. `cls` styles them in her bubble ('var' for letters).
   async function percentStart(ctx, scene, f, ask, [part, whole], cls = '') {
@@ -1784,7 +1995,7 @@
   }
 
   // The rule first, in general: "a is what percent of b?" Over the same blurred shop, with Swifty in her corner,
-  // the sneakers card dissolves away and the panel of the example (screen 27) springs up, with letters, in
+  // the sneakers card dissolves away and the panel of the example (screen 29) springs up, with letters, in
   // italic, for the part and the whole: a is the part and b the whole, and the formula is written line by line
   // as she says it: Percentage = Part / Whole × 100 = a / b × 100 = (a / b × 100)%. Then "Let's take an example!"
   const PERCENT_RULE = {
@@ -1850,7 +2061,7 @@
   // A quick check: "250 is what percent of 1000?" Over the same blurred shop, with Swifty in her corner, the
   // formula dissolves away and a panel springs up with the question on its purple strip; Swifty reads it out
   // and three answers slide in under it, one above the other. Whichever the player picks, she explains it the
-  // way screen 27 worked it out: the part and the whole take their colours in the question as she names them.
+  // way screen 29 worked it out: the part and the whole take their colours in the question as she names them.
   const CHECK = {
     question: [{ t: '250', role: 'part' }, { t: ' is what percent of ' }, { t: '1000', role: 'whole' }, { t: '?' }],
   };
@@ -1917,11 +2128,12 @@
   }
 
   // Back to the sneakers: the main question. Over the same blurred shop, with Swifty in her corner, the quick
-  // check dissolves away and a panel springs up with the sneakers (their photo, the ₹1800 tag and the 30% OFF
+  // check dissolves away and a big panel springs up with the sneakers (their photo, the ₹1800 tag and the 30% OFF
   // tag) and the question "Now, what is 30% of ₹1800?", with three answers. Whichever the player picks, Swifty
-  // gives the answer; the next three screens work it out (29), name it (30) and use it (31).
+  // gives the answer, and 3 seconds later the next screen works it out (no Next button); the screens after it
+  // name it (33) and use it (34).
   async function playSneakerQuestion(ctx, scene) {
-    const pq = FX.productQuestion(scene.ui, Object.assign({ question: 'Now, what is\n30% of ₹1800?' }, SNEAKER_CARD));
+    const pq = FX.productQuestion(scene.ui, Object.assign({ question: 'Now, what is\n30% of ₹1800?', wide: true }, SNEAKER_CARD));
     await ctx.wait(450); // the quick check finishes fading away first
     const arriving = cornerSwifty(ctx, scene); // she flies in as the panel opens
     arriving.catch(() => {});
@@ -1953,6 +2165,7 @@
     await percentQuestion(ctx, scene, pq, talk, {
       options: [{ label: '₹360' }, { label: '₹540', correct: true }, { label: '₹720' }],
       stack: true,
+      auto: true,
       // Right: "Correct! 30% of ₹1800 is ₹540."
       async right() {
         await talk.show([
@@ -1974,7 +2187,7 @@
         await talk.part('mq-wrong-1', 0, 600);
         await partWith(ctx, talk, 'mq-wrong-2', 1, 1300, () => answers.show(1));
       },
-      // Both ways: "Let's see how to work it out!" (screen 30 does)
+      // Both ways: "Let's see how to work it out!" (screen 32 does)
       async so(answers) {
         await talk.show('Let’s see how\nto work it out!');
         await partWith(ctx, talk, 'mq-so', 0, 500, () => answers.ping(1));
@@ -2095,9 +2308,14 @@
     });
   }
 
-  // The amount to pay. The sneakers panel dissolves away and a worked solution springs up: Marked Price ₹1800 ↓
-  // Discount ₹540 on the left; Swifty says how to find the amount to pay while SP = MP − Discount is written
-  // in; ₹1800 and ₹540 glide out of their boxes into = 1800 − 540; and = ₹1260 lands, marked as the answer.
+  // The amount to pay. The sneakers panel dissolves away and, with nothing on the big panel yet, Swifty says what
+  // to find: "Now, let's find out how much money Aniket needs to pay." Then the sneakers spring up again with the
+  // question "What will be the Selling Price?", the rule as a hint (SP = MP − Discount, which she reads out) and
+  // three answers. Whichever the player picks, she says so, and "Let's see how to work it out!": the question
+  // dissolves away and a worked solution springs up: Marked Price ₹1800 ↓ Discount ₹540 on the left; Swifty says
+  // how to find the amount to pay while SP = MP − Discount is written in; the player drags ₹1800 and ₹540 out of
+  // their boxes into = 1800 − 540; and = ₹1260 lands, marked as the answer.
+  const PAY_HINT = [{ t: 'SP', cls: 'tone-sp' }, { t: '=' }, { t: 'MP', cls: 'tone-mp' }, { t: '−' }, { t: 'Discount', cls: 'tone-d' }];
   const PAY_SHEET = {
     boxes: [
       { label: 'Marked Price (MP)', value: '₹1800', tone: 'yellow' }, // the colours used since screen 11
@@ -2118,17 +2336,64 @@
   ];
 
   async function playToPay(ctx, scene) {
+    await ctx.wait(500); // the question before finishes fading away first
+    const talk = await cornerSwifty(ctx, scene); // on her stand already (or flying in to it)
+    const bird = talk.bird;
+    bird.point();
+    await talk.say('pay-intro', 'Now, let’s find out\nhow much money\nAniket needs to pay.', 600);
+    await ctx.wait(400);
+
+    // The question, with the rule as a hint: she reads both out (their words are on the panel).
+    await talk.clear();
+    const pq = FX.productQuestion(scene.ui, Object.assign({ question: 'What will be the\nSelling Price?', wide: true, hint: PAY_HINT }, SNEAKER_CARD));
+    pq.open();
+    await ctx.wait(500);
+    await pq.showItem(ctx);
+    await ctx.wait(300);
+    await pq.showQuestion();
+    await ctx.wait(300);
+    await readOut(ctx, bird, 'pay-ask', 'What will be the Selling Price?', ctx.wait(1400));
+    await ctx.wait(300);
+    await readOut(ctx, bird, 'pay-hint', 'Hint: SP = MP − Discount.', pq.showHint());
+    bird.point();
+    await ctx.wait(300);
+
+    await percentQuestion(ctx, scene, pq, talk, {
+      options: [{ label: '₹2340' }, { label: '₹1260', correct: true }, { label: '₹1340' }],
+      stack: true,
+      async right() {
+        await talk.say('pay-right', [{ t: 'Correct!', cls: 'stress' }], 600);
+      },
+      // Wrong: "Not quite!" (then the right answer lights up)
+      async wrong(answers) {
+        await talk.say('pay-wrong', 'Not quite!', 600);
+        answers.show(1);
+        await ctx.wait(900);
+      },
+      // Both ways: "Let's see how to work it out!" (then it is worked out, on this screen)
+      async so(answers) {
+        await talk.show('Let’s see how\nto work it out!');
+        await partWith(ctx, talk, 'pay-so', 0, 500, () => {
+          answers.ping(1);
+          pq.ping(pq.hint);
+        });
+      },
+      then: () => explainPay(ctx, scene, talk, pq),
+    });
+  }
+
+  // The amount to pay, worked out (after the question, on the same screen).
+  async function explainPay(ctx, scene, talk, question) {
+    const bird = talk.bird;
+    await ctx.wait(800);
+    await FX.settle(question.el.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 600, easing: 'ease-in', fill: 'forwards' }));
+    question.el.remove();
     const w = FX.workedSheet(scene.ui, PAY_SHEET);
-    await ctx.wait(450); // the question finishes fading away first
     w.open();
     await ctx.wait(600);
     await w.box(0);
     await ctx.wait(300);
-    const arriving = cornerSwifty(ctx, scene); // she flies in as the second amount appears
-    arriving.catch(() => {});
     await w.box(1);
-    const talk = await arriving;
-    const bird = talk.bird;
     bird.point();
     await ctx.wait(400);
 
@@ -2213,7 +2478,7 @@
     nextButton(scene, { right: STAGE_W - p.right, bottom: STAGE_H - p.bottom - 140 });
   }
 
-  // The final answer, in Aniket's words. Coming from screen 32, the sheet slides down (Swifty's part is done) and
+  // The final answer, in Aniket's words. Coming from screen 34, the sheet slides down (Swifty's part is done) and
   // Aniket is at the stand, pointing at the tags. As he
   // says "So, after a 30% discount, I will pay ₹1260.", the 30% OFF tag lights up and a red line crosses out
   // the ₹1800, then a green ₹1260 tag stamps onto the stand.
@@ -2258,15 +2523,81 @@
     line.emphasize();
     FX.twinkles(scene.layer, PAID_TWINKLES);
     Sound.chime();
-    ctx.advance(3000); // then the discount percentage
+    ctx.advance(3000); // then the sneakers, in their box
   }
   const PAID_TWINKLES = [[PAID_TAG.x - 190, PAID_TAG.y - 40], [PAID_TAG.x + 190, PAID_TAG.y - 30], [PAID_TAG.x - 170, PAID_TAG.y + 50], [PAID_TAG.x + 180, PAID_TAG.y + 52]];
 
-  // Discount percentage. Coming from screen 33, the shop, its updated tags and Aniket's line are first exactly
-  // as they were; his bubble goes, the shop blurs, and Swifty flies back in to her corner. A worked sheet
-  // springs up: as she says what discount percentage tells us, the rule Discount % = Discount / Marked Price
-  // × 100 is written in on a yellow band; then the sneakers' discount, 540, and marked price, 1800, go into it,
-  // and = 30% lands: the 30% off on the tag.
+  // The sneakers, in their box: over the counter, the shopkeeper hands them to Aniket. No words: a light sweeps
+  // across the box, with twinkles round it and a chime.
+  const SNEAKER_BOX = [[905, 440], [1245, 452], [1292, 598], [1240, 700], [880, 775], [800, 700], [800, 600], [935, 520]]; // the box and its lid (stage px)
+
+  async function playBoxed(ctx, scene) {
+    await ctx.wait(900);
+    FX.shine(scene.layer, SNEAKER_BOX, { duration: 1300, width: 260 });
+    await ctx.wait(450);
+    FX.twinkles(scene.layer, [[884, 446], [1286, 470], [1300, 690], [806, 764]]);
+    Sound.chime();
+    await ctx.wait(800);
+    ctx.advance(2600); // then the discount as a percent of the marked price
+  }
+
+  // What percent of the marked price is the discount? On the sheet that slides up over the shop, Swifty (flying
+  // back in to her stand) works it out the way screens 28 and 29 did, with the part and the whole: "540 is what
+  // percent of 1800?" 540 is the part and 1800 the whole; Percentage = Part / Whole × 100 = 540 / 1800 × 100 = 30%.
+  // Then the boxes go, and as she says "Here, the part is the discount, and the whole is the marked price.", the
+  // words dissolve into the new ones: Part → Discount, Whole → Marked Price (their amounts take the colours used
+  // since screen 11), and, as she reads out the rule, Percentage → Discount %.
+  const PERCENT_OF_MP = {
+    question: [{ t: '540', role: 'part' }, { t: ' is what percent of ' }, { t: '1800', role: 'whole' }, { t: '?' }],
+    part: { label: 'Part', value: '540' },
+    whole: { label: 'Whole', value: '1800' },
+    numbers: ['540', '1800'],
+    answer: '30%',
+  };
+
+  async function playPercentOfMP(ctx, scene) {
+    const f = FX.percentFormula(scene.ui, PERCENT_OF_MP);
+    const talk = await percentStart(ctx, scene, f, '540 is what percent of 1800?', ['540', '1800']);
+    const bird = talk.bird;
+    await percentRule(ctx, talk, f);
+
+    // Work it out: = 30%.
+    await talk.show([
+      { t: '540', cls: 'tone-part' }, { t: ' ÷ ' }, { t: '1800', cls: 'tone-whole' }, { t: ' × 100', end: true },
+      { t: '\n= ' }, { t: '30%', em: true }, { t: '.', end: true },
+      { t: '\nSo, ' }, { t: '540', cls: 'tone-part' }, { t: ' is\n' }, { t: '30%', em: true }, { t: ' of ' }, { t: '1800', cls: 'tone-whole' }, { t: '!' },
+    ]);
+    await talk.part('po-work', 0, 600);
+    await f.start(2);
+    await partWith(ctx, talk, 'po-equals', 1, 350, () => f.answer());
+    await partWith(ctx, talk, 'po-so', 2, 900, () => markAnswer(scene, f));
+    await ctx.wait(900);
+
+    // What the part and the whole are here: the boxes go, and the words dissolve into the new ones as she says it.
+    f.dropBoxes();
+    await talk.show([
+      { t: 'Here, the ' }, { t: 'part', cls: 'tone-part' }, { t: ' is\nthe ' }, { t: 'discount', cls: 'tone-d' }, { t: ',', end: true },
+      { t: '\nand the ' }, { t: 'whole', cls: 'tone-whole' }, { t: ' is\nthe ' }, { t: 'marked price', cls: 'tone-mp' }, { t: '.' },
+    ]);
+    await ctx.wait(400);
+    let renaming = null;
+    await partWith(ctx, talk, 'po-part', 0, 900, () => { renaming = f.rename('part', 'Discount', 'tone-d'); });
+    await renaming;
+    await partWith(ctx, talk, 'po-whole', 1, 1000, () => { renaming = f.rename('whole', 'Marked Price', 'tone-mp'); });
+    await renaming;
+    await ctx.wait(500);
+
+    // The rule for the discount percentage: she reads it out (no bubble: it is written on the sheet).
+    await talk.clear();
+    await readOut(ctx, bird, 'po-rule', 'So, Discount % = Discount ÷ Marked Price × 100.', ctx.wait(500).then(() => f.rename('label', 'Discount %')));
+    talk.bird.point();
+    endWithSwifty(ctx, scene, talk); // then what the discount percentage tells us
+  }
+
+  // Discount percentage. Over the same sheet, with Swifty on her stand (or flying back in to it), the working
+  // dissolves away and a worked sheet springs up: as she says what discount percentage tells us, the rule
+  // Discount % = Discount / Marked Price × 100 is written in on a yellow band; then the sneakers' discount, 540,
+  // and marked price, 1800, go into it, and = 30% lands: the 30% off on the tag.
   const DISCOUNT_PERCENT_SHEET = {
     big: true,
     rows: [
@@ -2280,16 +2611,19 @@
   };
 
   async function playDiscountPercent(ctx, scene) {
-    await ctx.wait(300);
+    const carried = !!scene.bird; // on her stand already, from screen 37
+    await ctx.wait(carried ? 450 : 300); // the working before finishes fading away first
     const w = FX.workedSheet(scene.ui, DISCOUNT_PERCENT_SHEET);
-    const arriving = cornerSwifty(ctx, scene); // she flies back in, to her stand, as the sheet opens
+    const arriving = cornerSwifty(ctx, scene); // she flies back in, to her stand, as the sheet opens (unless she is there)
     arriving.catch(() => {});
-    await ctx.wait(400);
+    await ctx.wait(carried ? 0 : 400);
     w.open();
     const talk = await arriving;
     const bird = talk.bird;
-    bird.wave();
-    await ctx.wait(500);
+    if (!carried) {
+      bird.wave();
+      await ctx.wait(500);
+    }
     bird.point();
     await ctx.wait(200);
 
@@ -2463,7 +2797,7 @@
   }
 
   // The list his father hands him: the camera pushes in until the list fills the middle of the screen, and it
-  // lights up; then the camera eases back out to the framing screen 39 starts from (KB_TABLE.from, about the same
+  // lights up; then the camera eases back out to the framing screen 43 starts from (KB_TABLE.from, about the same
   // `origin`), so the dissolve there only changes what is in their hands. No words.
   const SCHOOL_LIST = [[878, 384], [1118, 356], [1194, 622], [954, 660]]; // the sheet of paper (stage px)
   async function playList(ctx, scene) {
@@ -2541,7 +2875,7 @@
   // The shopping challenge begins: outside his house, Aniket is ready to go, and the challenge's panel builds up
   // beside him, as in the design (FX.challengePanel): the banner and its ribbon, the wallet (₹5,000, cha-ching),
   // the shopping list one item at a time, and the START SHOPPING button, which waits for the player and takes
-  // them to the shops (screen 43).
+  // them to the shops (screen 47).
   const BEGIN = ASSETS + 'ui/begin/';
   const BEGIN_ART = {
     panel: BEGIN + 'panel.png', banner: BEGIN + 'banner.png', ribbon: BEGIN + 'ribbon.png',
@@ -2573,7 +2907,7 @@
   }
 
   // ======================================================================
-  // The shopping game (screens 43–47): the Shopping Area, then a street of three shops for each item. The player
+  // The shopping game (screens 47–51): the Shopping Area, then a street of three shops for each item. The player
   // picks any item first; on its street they check each shop's offer (working out what they would pay), compare the
   // three, buy at the best one, and go back to the Shopping Area, until everything on the list is bought.
   // ======================================================================
@@ -2602,7 +2936,7 @@
     { id: 'bottle', name: 'Bottle', icon: SHOP + 'icon-bottle.png', tone: 'purple', sparks: [[21.7, 34, 46], [19.1, 45.3, 4], [78.1, 34, -47], [81, 45.2, -6]] },
   ];
 
-  // What has been bought so far (the ids, in the order bought). Screen 42 starts the challenge afresh.
+  // What has been bought so far (the ids, in the order bought). Screen 46 starts the challenge afresh.
   const BUDGET = 5000;
   const Shopping = { bought: [] };
   const rupees = n => '₹' + n.toLocaleString('en-IN');
@@ -3003,7 +3337,7 @@
   }
 
   // ======================================================================
-  // The end of the shopping game (screens 48–55): everything bought, the receipt, the money left, the two amounts
+  // The end of the shopping game (screens 52–59): everything bought, the receipt, the money left, the two amounts
   // not to mix up, back home, the mission's result, what we learnt, and the takeaway.
   // ======================================================================
 
@@ -3069,7 +3403,7 @@
     bird.idle();
   }
 
-  // The money left, worked out on the big panel (the way screen 32 worked out the amount to pay): what his father gave,
+  // The money left, worked out on the big panel (the way screen 34 worked out the amount to pay): what his father gave,
   // what he spent, and Money left = ₹5,000 − ₹4,340 = ₹660.
   const LEFT_SHEET = {
     boxes: [{ label: 'Father gave', value: rupees(BUDGET), tone: 'blue' }, { label: 'Aniket spent', value: rupees(TOTAL.pay), tone: 'red' }],
@@ -3499,15 +3833,17 @@
 
   // Cross-fade only between these neighbouring screens (at home → at the mall, Bookstore → sees the
   // book → holds it → How Much?, question → closer look at his new book, and into the shoe shop → at the
-  // sneakers' stand → the discount on them → his questions about it), both ways; and, going forward only, between screens
+  // sneakers' stand → the discount on them → his questions about it, and his final answer → the sneakers in their
+  // box), both ways; and, going forward only, between screens
   // over the same blurred picture: the price panels (Marked Price → its definition → MP vs SP, so only their
   // right side changes), MP vs SP → the counter, the Discount definition → formula → formula reveal → summary,
-  // the sneakers card → the percentage rule → its example → a quick check → the sneakers' question → 30% of ₹1800
-  // worked out → what ₹540 is → the amount to pay → the final answer; and the discount percentage → the summary.
+  // what the 30% OFF tag means → the sneakers card → the percentage rule → its example → a quick check → the sneakers' question → 30% of ₹1800
+  // worked out → what ₹540 is → the amount to pay → the final answer; and 540 as a percent of 1800 → the discount
+  // percentage → the summary.
   // Every other change is a straight cut.
-  const FADES = [['home', 'mall'], ['return', 'school'], ['school', 'list'], ['list', 'money'], ['money', 'pocket'], ['pocket', 'deal'], ['deal', 'begin'], ['begin', 'shops'], ['shops', 'uniform'], ['shops', 'shoes'], ['shops', 'bag'], ['shops', 'bottle'], ['shops', 'complete'], ['uniform', 'complete'], ['shoes', 'complete'], ['bag', 'complete'], ['bottle', 'complete'], ['complete', 'receipt'], ['homeagain', 'mission'], ['outside', 'see'], ['see', 'browse'], ['browse', 'ask'], ['quiz', 'look'], ['leave', 'sneakers'], ['sneakers', 'shoe'], ['shoe', 'tag'], ['tag', 'confused']];
-  const FORWARD_FADES = [['mp', 'mpdef'], ['mpdef', 'compare'], ['discount-def', 'formula'], ['formula', 'formula-reveal'], ['formula-reveal', 'summary'], ['recall', 'percentrule'], ['percentrule', 'whatpercent'],
-    ['whatpercent', 'check'], ['check', 'sneakerq'], ['sneakerq', 'thirty'], ['thirty', 'represent'], ['represent', 'topay'], ['topay', 'final'], ['discountpct', 'sneakersum'], ['left', 'two'], ['recap', 'takeaway']];
+  const FADES = [['home', 'mall'], ['return', 'school'], ['school', 'list'], ['list', 'money'], ['money', 'pocket'], ['pocket', 'deal'], ['deal', 'begin'], ['begin', 'shops'], ['shops', 'uniform'], ['shops', 'shoes'], ['shops', 'bag'], ['shops', 'bottle'], ['shops', 'complete'], ['uniform', 'complete'], ['shoes', 'complete'], ['bag', 'complete'], ['bottle', 'complete'], ['complete', 'receipt'], ['homeagain', 'mission'], ['outside', 'see'], ['see', 'browse'], ['browse', 'ask'], ['quiz', 'look'], ['exit', 'leave'], ['leave', 'sneakers'], ['sneakers', 'shoe'], ['shoe', 'tag'], ['tag', 'confused'], ['final', 'boxed']];
+  const FORWARD_FADES = [['mp', 'mpdef'], ['mpdef', 'compare'], ['discount-def', 'formula'], ['formula', 'formula-reveal'], ['formula-reveal', 'summary'], ['offmeans', 'recall'], ['recall', 'percentrule'], ['percentrule', 'whatpercent'],
+    ['whatpercent', 'check'], ['check', 'sneakerq'], ['sneakerq', 'thirty'], ['thirty', 'represent'], ['represent', 'topay'], ['topay', 'final'], ['pctofmp', 'discountpct'], ['discountpct', 'sneakersum'], ['left', 'two'], ['recap', 'takeaway']];
   const FADE_MS = 1200; // not stretched by PACE: changing screens stays brisk
   const SLIDE_MS = 950;  // a sheet sliding up over a story picture (see slide)
   const fadesBetween = (a, b) =>
@@ -3553,7 +3889,6 @@
     to.cameFrom = from ? from.id : null; // lets a screen carry on from the one before it
     if (from && !fade && !sheet) deactivate(from);
     Game.index = i;
-    $('#stage').classList.toggle('look-paper', to.look === 'paper'); // the buttons on top take the screen's look
     UI.update();
     syncBar(to);
 
@@ -3838,7 +4173,7 @@
           break;
         case ' ':
         case 'Enter':
-          if (control) return; // let the focused control handle it (e.g. an amount to drag, on screen 32)
+          if (control) return; // let the focused control handle it (e.g. an amount to drag, on screen 34)
           e.preventDefault();
           next();
           break;
@@ -3907,7 +4242,6 @@
   async function boot() {
     fit();
     window.addEventListener('resize', fit);
-    FX.inkDefs();
     buildScenes();
     buildPanel();
     wireUI();
@@ -3917,7 +4251,7 @@
     const label = $('#loader-text');
     const images = SCENES.flatMap(s => [s.bg, s.react]).filter(Boolean).concat(
       ASSETS + 'start button.png', WALK_SHEET.src, SWIFTY.fly.src, SWIFTY.stand.src, ART.money, ART.book,
-      ASSETS + 'ui/sneakers.png', STAND, ...Object.values(BEGIN_ART), ...SHOPPING_LIST.map(item => item.icon),
+      ASSETS + 'ui/sneakers.png', DOORWAY.src, STAND, ...Object.values(BEGIN_ART), ...SHOPPING_LIST.map(item => item.icon),
       ...Object.values(SHOP_ART), MONEY_NOTES, ...SHOPS.map(shop => shop.icon), ASSETS + 'boy stand and talk .png',
       ...Object.values(STREET_ART).flatMap(v => (typeof v === 'string' ? [v] : Object.values(v)))
     );
