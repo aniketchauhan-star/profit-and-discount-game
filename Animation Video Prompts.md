@@ -20,7 +20,7 @@ From your first batch:
   - `hf_…062459` starts on Screen 10 and zooms into the book, so it can't end on the picture. If it was `s10-aniket`, make it again with the same picture as the end frame. If it was `s09-to-s10`, its start frame is `boy see the book .png`.
   - `hf_…063148` is the shopkeeper talking, but his hand ends down.
 
-**Adding clips:** save them anywhere (your `videos ` folder is fine) with the clip's name in the file name, for example `s09-to-s10.mp4`, and tell me. I'll check each one, convert it (H.264, no sound, about 1 MB) into `game assets/video/`, and the game plays it. A clip that isn't made yet leaves the still picture, as before.
+**Adding clips:** save them anywhere with the clip's name in the file name, for example `s09-to-s10.mp4`, and tell me. I'll check each one, convert it (H.264, no sound, about 1 MB) into `game assets/video/`, and the game plays it. A clip that isn't made yet leaves the still picture, as before.
 
 ## How to make a clip on Higgsfield
 
