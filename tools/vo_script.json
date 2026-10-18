@@ -36,17 +36,16 @@
   },
   {
     "id": "vo006",
-    "line": "It's ₹800!",
+    "line": "It’s ₹800!",
     "spoken": "It's eight hundred rupees!",
     "speaker": "Shopkeeper",
     "devanagari": "इट्स एट हंड्रेड रुपीस!"
   },
   {
     "id": "vo007",
-    "line": "Think again. The shopkeeper sold the book for ₹800.",
-    "spoken": "Think again. The shopkeeper sold the book for eight hundred rupees.",
-    "speaker": "Swifty",
-    "devanagari": "थिंक अगेन। द शॉपकीपर सोल्ड द बुक फॉर एट हंड्रेड रुपीज़।"
+    "line": "Not quite! The shopkeeper sold the book for ₹800.",
+    "spoken": "Not quite! The shopkeeper sold the book for eight hundred rupees.",
+    "speaker": "Swifty"
   },
   {
     "id": "vo008",
@@ -78,14 +77,14 @@
   },
   {
     "id": "vo012",
-    "line": "Here, ₹800 is the shopkeeper’s Selling Price.",
+    "line": "Here, ₹800 is the shopkeeper’s selling price.",
     "spoken": "Here, eight hundred rupees is the shopkeeper’s Selling Price.",
     "speaker": "Swifty",
     "devanagari": "हियर, एट हंड्रेड रुपीस इज द शॉपकीपर्स सेलिंग प्राइस।"
   },
   {
     "id": "vo013",
-    "line": "Correct! The shopkeeper sold the book for ₹800, so ₹800 is the Selling Price.",
+    "line": "Correct! The shopkeeper sold the book for ₹800, so ₹800 is the selling price.",
     "spoken": "Correct! The shopkeeper sold the book for eight hundred rupees, so eight hundred rupees is the Selling Price.",
     "speaker": "Swifty",
     "devanagari": "करेक्ट! द शॉपकीपर सोल्ड द बुक फॉर एइट हंड्रेड रुपीस, सो एइट हंड्रेड रुपीस इज़ द सेलिंग प्राइस."
@@ -106,7 +105,7 @@
   },
   {
     "id": "vo016",
-    "line": "It is called the Marked Price (MP).",
+    "line": "It is called the marked price (MP).",
     "spoken": "It is called the Marked Price, M P.",
     "speaker": "Swifty",
     "devanagari": "इट इज कॉल्ड द मार्क्ड प्राइस, एम पी।"
@@ -120,22 +119,22 @@
   },
   {
     "id": "vo018",
-    "line": "The Marked Price is ₹1000.",
+    "line": "The marked price is ₹1000.",
     "spoken": "The Marked Price is one thousand rupees.",
     "speaker": "Swifty",
     "devanagari": "द मार्क्ड प्राइस इज वन थाउजेंड रुपीज।"
   },
   {
     "id": "vo019",
-    "line": "But the book was sold for ₹800. That is the Selling Price.",
+    "line": "But the book was sold for ₹800. That is the selling price.",
     "spoken": "But the book was sold for eight hundred rupees. That is the Selling Price.",
     "speaker": "Swifty",
     "devanagari": "बट द बुक वॉज़ सोल्ड फॉर एट हंड्रेड रुपीज़। दैट इज़ द सेलिंग प्राइस।"
   },
   {
     "id": "vo020",
-    "line": "Why is the Selling Price less than the Marked Price?",
-    "spoken": "Why is the Selling Price less than the Marked Price?",
+    "line": "Why is the selling price less than the marked price?",
+    "spoken": "Why is the selling price less than the marked price?",
     "speaker": "Swifty",
     "devanagari": "वाय इज द सेलिंग प्राइस लेस दैन द मार्क्ड प्राइस?"
   },
@@ -281,15 +280,15 @@
   },
   {
     "id": "vo041",
-    "line": "Marked Price is the price written on an item.",
-    "spoken": "Marked Price is the price written on an item.",
+    "line": "Marked price is the price written on an item.",
+    "spoken": "Marked price is the price written on an item.",
     "speaker": "Swifty",
     "devanagari": "मार्क्ड प्राइस इज द प्राइस रिटन ऑन एन आइटम।"
   },
   {
     "id": "vo042",
-    "line": "Selling Price is the price at which it is sold.",
-    "spoken": "Selling Price is the price at which it is sold.",
+    "line": "Selling price is the price at which it is sold.",
+    "spoken": "Selling price is the price at which it is sold.",
     "speaker": "Swifty",
     "devanagari": "सेलिंग प्राइस इज द प्राइस एट व्हिच इट इज सोल्ड."
   },
@@ -330,17 +329,15 @@
   },
   {
     "id": "vo048",
-    "line": "The price tagged is ₹1800.",
-    "spoken": "The price tagged is one thousand eight hundred rupees.",
-    "speaker": "Aniket",
-    "devanagari": "द प्राइस टैग्ड इज वन थाउजेंड ऐट हंड्रेड रुपीज।"
+    "line": "The tag says ₹1800.",
+    "spoken": "The tag says one thousand eight hundred rupees.",
+    "speaker": "Aniket"
   },
   {
     "id": "vo049",
-    "line": "Using 30% OFF! How much money I actually have to pay?",
-    "spoken": "Using thirty percent off! How much money I actually have to pay?",
-    "speaker": "Aniket",
-    "devanagari": "यूज़िंग थर्टी परसेंट ऑफ़! हाउ मच मनी आई एक्चुअली हैव टू पे?"
+    "line": "With 30% off, how much do I actually pay?",
+    "spoken": "With thirty percent off, how much do I actually pay?",
+    "speaker": "Aniket"
   },
   {
     "id": "vo050",
@@ -624,8 +621,8 @@
   },
   {
     "id": "vo090",
-    "line": "That’s the Discount!",
-    "spoken": "That’s the Discount!",
+    "line": "That’s the discount!",
+    "spoken": "That’s the discount!",
     "speaker": "Swifty",
     "devanagari": "दैट्स द डिस्काउंट!"
   },
@@ -792,10 +789,9 @@
   },
   {
     "id": "vo114",
-    "line": "of the marked price has been reduced.",
-    "spoken": "of the marked price has been reduced.",
-    "speaker": "Swifty",
-    "devanagari": "ऑफ द मार्क्ड प्राइस हैज बीन रिड्यूस्ड।"
+    "line": "of the marked price is taken off.",
+    "spoken": "of the marked price is taken off.",
+    "speaker": "Swifty"
   },
   {
     "id": "vo115",
@@ -827,7 +823,7 @@
   },
   {
     "id": "vo119",
-    "line": "Marked price: ₹1800.",
+    "line": "Marked Price: ₹1800.",
     "spoken": "Marked price: one thousand eight hundred rupees.",
     "speaker": "Swifty",
     "devanagari": "मार्कड प्राइस वन थाउजेंड एट हंड्रेड रुपीज"
@@ -848,7 +844,7 @@
   },
   {
     "id": "vo122",
-    "line": "Selling price: ₹1260.",
+    "line": "Selling Price: ₹1260.",
     "spoken": "Selling price: one thousand two hundred and sixty rupees.",
     "speaker": "Swifty",
     "devanagari": "सेलिंग प्राइस वन थाउजेंड टू हंड्रेड एंड सिक्सटी रुपीस"

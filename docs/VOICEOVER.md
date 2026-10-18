@@ -9,6 +9,22 @@ Every line the game speaks is a recorded clip, made with the TTS studio **Ai Wal
 | Line → clip map (generated) | `js/vo_lines.js` |
 | Player | `js/voice.js` (typing in step: `js/fx.js`, `type`, `revealDefinition`) |
 | Rebuild tool | `tools/vo_build.py` |
+| Line log, for the language check | `js/linelog.js` (see [Checking the language](#checking-the-language-the-line-log)) |
+
+## To record next
+
+The language fixes (the revamp brief's "lines to fix already", and the text spreadsheet's must-fix on screen 8) changed the words of four lines. Their old clips said the old words, so they were taken out (they are in git), and until the four are recorded the device's voice reads them. `python3 tools/vo_build.py` lists them as "no clip yet".
+
+| Clip | Speaker | Screen (the brief's) | Was | Now (spoken as) |
+|---|---|---|---|---|
+| vo007 | Swifty | 8 (a wrong answer) | Think again. The shopkeeper sold the book for ₹800. | Not quite! The shopkeeper sold the book for ₹800. ("…for eight hundred rupees.") |
+| vo048 | Aniket | 25 | The price tagged is ₹1800. | The tag says ₹1800. ("…one thousand eight hundred rupees.") |
+| vo049 | Aniket | 25 | Using 30% OFF! How much money I actually have to pay? | With 30% off, how much do I actually pay? ("With thirty percent off, …") |
+| vo114 | Swifty | 38 (40 in the game) | of the marked price has been reduced. | of the marked price is taken off. |
+
+The brief asks for every changed line to be recorded in **one batch**, after the content team has checked the language review's suggestions (below). Then: `python3 tools/vo_build.py --xlsx vo007 vo048 vo049 vo114` (plus any other changed lines), the studio as in [Remaking a line](#remaking-a-line), `python3 tools/vo_build.py --check`, and the whole game played again.
+
+Twelve other lines only changed their capital letters or apostrophe, so their words sound the same and their clips were kept (only `line` changed in `tools/vo_script.json`, as the text spreadsheet's style rules 1 and 7 suggest): *selling price*, *marked price* and *discount* in small letters inside a sentence (vo012, vo013, vo016, vo018, vo019, vo020, vo041, vo042, vo090), capitals on a label (vo119 "Marked Price: ₹1800.", vo122 "Selling Price: ₹1260."), and the curly apostrophe in vo006 ("It’s ₹800!").
 
 ## The studio and its settings
 
@@ -93,7 +109,19 @@ Ogg Opus plays in current Chrome, Edge, Firefox and Safari (and on Android). Whe
 2. Run it in the studio: `python3 tools/vo_build.py --xlsx vo017` writes a sheet per voice (`vo_batch_swifty.xlsx` …) and prints the settings to choose; upload it on **Batch Generation**, press **GENERATE (N)**, then **DOWNLOAD ALL (.ZIP)**.
 3. Run `python3 tools/vo_build.py voiceovers_batch.zip` (several zips are fine). It makes the clips, regenerates `js/vo_lines.js` and the table below, and lists any line that still has no clip. Then `python3 tools/vo_build.py --check`.
 
+`tools/vo_build.py` prints its lines (₹, Devanagari) as UTF-8 itself, so it also runs in a Windows terminal (no need for `python -X utf8`).
+
 **A line added to the game** needs a new entry in `tools/vo_script.json`, at the place a player first hears it (any id for now, its line exactly as shown, its spoken form, its speaker); a line taken out of the game, its entry removed. Then `python3 tools/vo_build.py --renumber` gives every line the id of its place (renaming the clips to match, and deleting the clip of a line taken out), and the new line goes through steps 2 and 3. That is how screen 1's conversation became vo001–vo003.
+
+## Checking the language (the line log)
+
+The brief's language check starts from every line the learner meets, in order, on every path. `js/linelog.js` collects them while the game is played. It is off unless the address ends in `?log=right`, `?log=wrong` or `?log=1`; then a small note at the bottom left counts the lines.
+
+- **What it saves, as it appears:** each line a character says, with who says it, how (a speech bubble, a thought cloud, the question bar, or spoken with no bubble because its words are on the screen) and its clip (or "none yet", when the device's voice reads it); and the words written on each screen: titles, cards, questions, answers, buttons, the question bar's task, the notebook when it is open. A text that grows on the screen (a definition written word by word) is saved once, whole.
+- **Every path:** play the story once with `index.html?log=right`, answering every question right; then once with `index.html?log=wrong`, answering every question wrong first, dragging each amount into the wrong box first on screen 35, and pressing "Hear it again" on a checkpoint. The log is kept in the browser between the two.
+- **L** saves it all as `bookstore-journey-lines.csv` (UTF-8, opens in Excel or Google Sheets): one row per line, screen by screen, with the columns #, Screen, Screen name, Path, Who, Type, Text, Voice clip and Words that must not change. A line both paths meet is listed once, with the path "All"; one only a right (or wrong) answer leads to says "Right answer" ("Wrong answer"). The words that must not change (formulas, amounts, numbers, the maths terms, the names) are found by the log itself: check them. **Shift+L** empties the log.
+
+Then the brief's steps: paste the sheet into ChatGPT with `Language Review Prompt.txt` (fill in the grade first); the content team checks every suggestion before anything changes; change only what is needed, in the game and in `tools/vo_script.json`; add each spoken line whose words change to [To record next](#to-record-next) and record them all in one batch; run `--check` and play the whole game again.
 
 ## Every line
 
@@ -107,21 +135,21 @@ Generated by `tools/vo_build.py`. "=" means the line is said as written.
 | vo003 | Aniket | I will! | = | आई विल! | 1.3 |
 | vo004 | Aniket | This book looks interesting! | = | दिस बुक लुक्स इंटरेस्टिंग! | 2.33 |
 | vo005 | Aniket | How much is this book? | = | हाउ मच इज दिस बुक? | 1.7 |
-| vo006 | Shopkeeper | It's ₹800! | It's eight hundred rupees! | इट्स एट हंड्रेड रुपीस! | 2.45 |
-| vo007 | Swifty | Think again. The shopkeeper sold the book for ₹800. | Think again. The shopkeeper sold the book for eight hundred rupees. | थिंक अगेन। द शॉपकीपर सोल्ड द बुक फॉर एट हंड्रेड रुपीज़। | 5.09 |
+| vo006 | Shopkeeper | It’s ₹800! | It's eight hundred rupees! | इट्स एट हंड्रेड रुपीस! | 2.45 |
+| vo007 | Swifty | Not quite! The shopkeeper sold the book for ₹800. | Not quite! The shopkeeper sold the book for eight hundred rupees. | — | — |
 | vo008 | Swifty | Cost Price. C P. | = | कॉस्ट प्राइस. सी पी. | 2.5 |
 | vo009 | Swifty | Price at which an item is bought. | = | प्राइस एट विच एन आइटम इज बॉट | 2.74 |
 | vo010 | Swifty | Selling Price. S P. | = | सेलिंग प्राइस. एस पी. | 2.74 |
 | vo011 | Swifty | Price at which an item is sold. | = | प्राइस एट विच एन आइटम इज सोल्ड। | 2.78 |
-| vo012 | Swifty | Here, ₹800 is the shopkeeper’s Selling Price. | Here, eight hundred rupees is the shopkeeper’s Selling Price. | हियर, एट हंड्रेड रुपीस इज द शॉपकीपर्स सेलिंग प्राइस। | 4.66 |
-| vo013 | Swifty | Correct! The shopkeeper sold the book for ₹800, so ₹800 is the Selling Price. | Correct! The shopkeeper sold the book for eight hundred rupees, so eight hundred rupees is the Selling Price. | करेक्ट! द शॉपकीपर सोल्ड द बुक फॉर एइट हंड्रेड रुपीस, सो एइट हंड्रेड रुपीस इज़ द सेलिंग प्राइस. | 6.7 |
+| vo012 | Swifty | Here, ₹800 is the shopkeeper’s selling price. | Here, eight hundred rupees is the shopkeeper’s Selling Price. | हियर, एट हंड्रेड रुपीस इज द शॉपकीपर्स सेलिंग प्राइस। | 4.66 |
+| vo013 | Swifty | Correct! The shopkeeper sold the book for ₹800, so ₹800 is the selling price. | Correct! The shopkeeper sold the book for eight hundred rupees, so eight hundred rupees is the Selling Price. | करेक्ट! द शॉपकीपर सोल्ड द बुक फॉर एइट हंड्रेड रुपीस, सो एइट हंड्रेड रुपीस इज़ द सेलिंग प्राइस. | 6.7 |
 | vo014 | Aniket | ₹1000? What is this? | One thousand rupees? What is this? | वन थाउज़ेंड रुपीज़? वॉट इज़ दिस? | 3.58 |
 | vo015 | Swifty | ₹1000 is the price written on the book. | One thousand rupees is the price written on the book. | वन थाउजेंड रुपीज इज द प्राइस रिटन ऑन द बुक। | 3.89 |
-| vo016 | Swifty | It is called the Marked Price (MP). | It is called the Marked Price, M P. | इट इज कॉल्ड द मार्क्ड प्राइस, एम पी। | 3.26 |
+| vo016 | Swifty | It is called the marked price (MP). | It is called the Marked Price, M P. | इट इज कॉल्ड द मार्क्ड प्राइस, एम पी। | 3.26 |
 | vo017 | Swifty | Marked Price. The price marked or printed on an article is called its Marked Price. | Marked Price. The price marked, or printed, on an article is called its Marked Price. | मार्क्ड प्राइस। द प्राइस मार्क्ड, ऑर प्रिंटेड, ऑन एन आर्टिकल इज कॉल्ड इट्स मार्क्ड प्राइस। | 8.09 |
-| vo018 | Swifty | The Marked Price is ₹1000. | The Marked Price is one thousand rupees. | द मार्क्ड प्राइस इज वन थाउजेंड रुपीज। | 3.14 |
-| vo019 | Swifty | But the book was sold for ₹800. That is the Selling Price. | But the book was sold for eight hundred rupees. That is the Selling Price. | बट द बुक वॉज़ सोल्ड फॉर एट हंड्रेड रुपीज़। दैट इज़ द सेलिंग प्राइस। | 4.73 |
-| vo020 | Swifty | Why is the Selling Price less than the Marked Price? | = | वाय इज द सेलिंग प्राइस लेस दैन द मार्क्ड प्राइस? | 3.74 |
+| vo018 | Swifty | The marked price is ₹1000. | The Marked Price is one thousand rupees. | द मार्क्ड प्राइस इज वन थाउजेंड रुपीज। | 3.14 |
+| vo019 | Swifty | But the book was sold for ₹800. That is the selling price. | But the book was sold for eight hundred rupees. That is the Selling Price. | बट द बुक वॉज़ सोल्ड फॉर एट हंड्रेड रुपीज़। दैट इज़ द सेलिंग प्राइस। | 4.73 |
+| vo020 | Swifty | Why is the selling price less than the marked price? | = | वाय इज द सेलिंग प्राइस लेस दैन द मार्क्ड प्राइस? | 3.74 |
 | vo021 | Shopkeeper | The price printed on the book is ₹1000, | The price printed on the book is one thousand rupees, | द प्राइस प्रिंटेड ऑन द बुक इज वन थाउजेंड रुपीज, | 4.01 |
 | vo022 | Shopkeeper | but you paid only ₹800. | but you paid only eight hundred rupees. | बट यू पेड ओनली एट हंड्रेड रुपिस। | 3.02 |
 | vo023 | Shopkeeper | So, you got a ₹200 discount. | So, you got a two hundred rupee discount. | सो, यू गॉट ए टू हंड्रेड रूपी डिस्काउंट। | 3.05 |
@@ -142,15 +170,15 @@ Generated by `tools/vo_build.py`. "=" means the line is said as written.
 | vo038 | Swifty | = MP | equals M P | इक्वल्स एम पी | 2.66 |
 | vo039 | Swifty | − SP. | minus S P. | माइनस एस पी। | 2.14 |
 | vo040 | Swifty | Let’s remember! | = | लेट्स रिमेम्बर! | 1.9 |
-| vo041 | Swifty | Marked Price is the price written on an item. | = | मार्क्ड प्राइस इज द प्राइस रिटन ऑन एन आइटम। | 3.25 |
-| vo042 | Swifty | Selling Price is the price at which it is sold. | = | सेलिंग प्राइस इज द प्राइस एट व्हिच इट इज सोल्ड. | 3.59 |
+| vo041 | Swifty | Marked price is the price written on an item. | = | मार्क्ड प्राइस इज द प्राइस रिटन ऑन एन आइटम। | 3.25 |
+| vo042 | Swifty | Selling price is the price at which it is sold. | = | सेलिंग प्राइस इज द प्राइस एट व्हिच इट इज सोल्ड. | 3.59 |
 | vo043 | Swifty | Discount is the amount reduced from the marked price. | = | डिस्काउंट इज द अमाउंट रिड्यूस्ड फ्रॉम द मार्क्ड प्राइस। | 4.05 |
 | vo044 | Swifty | And remember the formula: Discount = MP − SP! | And remember the formula: Discount equals M P minus S P! | एंड रिमेंबर द फॉर्मूला: डिस्काउंट इक्वल्स एम पी माइनस एस पी! | 6.26 |
 | vo045 | Aniket | These sneakers look good! | = | दीज़ स्नीकर्स लुक गुड! | 2.5 |
 | vo046 | Aniket | What does 30% OFF mean here? | What does thirty percent off mean here? | वॉट डज़ थर्टी परसेंट ऑफ मीन हियर? | 2.78 |
 | vo047 | Aniket | Is this also a discount? | = | इज़ दिस ऑल्सो अ डिस्काउंट? | 2.3 |
-| vo048 | Aniket | The price tagged is ₹1800. | The price tagged is one thousand eight hundred rupees. | द प्राइस टैग्ड इज वन थाउजेंड ऐट हंड्रेड रुपीज। | 3.29 |
-| vo049 | Aniket | Using 30% OFF! How much money I actually have to pay? | Using thirty percent off! How much money I actually have to pay? | यूज़िंग थर्टी परसेंट ऑफ़! हाउ मच मनी आई एक्चुअली हैव टू पे? | 4.61 |
+| vo048 | Aniket | The tag says ₹1800. | The tag says one thousand eight hundred rupees. | — | — |
+| vo049 | Aniket | With 30% off, how much do I actually pay? | With thirty percent off, how much do I actually pay? | — | — |
 | vo050 | Swifty | 30% OFF means | Thirty percent off means | थर्टी परसेंट ऑफ मीन्स | 2.5 |
 | vo051 | Swifty | 30% Discount. | thirty percent discount. | थर्टी परसेंट डिस्काउंट. | 2.18 |
 | vo052 | Swifty | To find the discount amount, | = | टू फाइंड द डिस्काउंट अमाउंट, | 2.45 |
@@ -191,7 +219,7 @@ Generated by `tools/vo_build.py`. "=" means the line is said as written.
 | vo087 | Swifty | So, it’s ₹540! | So, it’s five hundred and forty rupees! | सो इट्स फाईव हंड्रेड एंड फोर्टी रुपीज़! | 2.86 |
 | vo088 | Swifty | What does ₹540 represent here? | What does five hundred and forty rupees represent here? | वॉट डज़ फाइव हंड्रेड एंड फोर्टी रुपीज़ रिप्रेजेंट हियर? | 3.89 |
 | vo089 | Swifty | ₹540 is the money taken off ₹1800. | Five hundred and forty rupees is the money taken off one thousand eight hundred rupees. | फाइव हंड्रेड एंड फोर्टी रुपीज इज द मनी टेकन ऑफ वन थाउजेंड एट हंड्रेड रुपीज। | 4.7 |
-| vo090 | Swifty | That’s the Discount! | = | दैट्स द डिस्काउंट! | 1.73 |
+| vo090 | Swifty | That’s the discount! | = | दैट्स द डिस्काउंट! | 1.73 |
 | vo091 | Swifty | Now, let’s find out how much money Aniket needs to pay. | = | नाउ, लेट्स फाइंड आउट हाउ मच मनी अनिकेत नीड्स टू पे। | 4.34 |
 | vo092 | Swifty | What will be the Selling Price? | = | वॉट विल बी द सेलिंग प्राइस? | 2.5 |
 | vo093 | Swifty | Hint: SP = MP − Discount. | Hint: S P equals M P minus Discount. | हिंट: एस पी इक्वल्स एम पी माइनस डिस्काउंट. | 4.9 |
@@ -215,15 +243,15 @@ Generated by `tools/vo_build.py`. "=" means the line is said as written.
 | vo111 | Swifty | and the whole is the marked price. | = | एंड द होल इज द मार्क्ड प्राइस। | 3.1 |
 | vo112 | Swifty | So, Discount % = Discount ÷ Marked Price × 100. | So, Discount percentage equals Discount divided by Marked Price, times one hundred. | सो, डिस्काउंट परसेंटेज इक्वल्स डिस्काउंट डिवाइडेड बाय मार्क्ड प्राइस, टाइम्स वन हंड्रेड। | 7.42 |
 | vo113 | Swifty | Discount percentage tells us what percent | = | डिस्काउंट परसेंटेज टेल्स अस वॉट परसेंट | 3.46 |
-| vo114 | Swifty | of the marked price has been reduced. | = | ऑफ द मार्क्ड प्राइस हैज बीन रिड्यूस्ड। | 2.69 |
+| vo114 | Swifty | of the marked price is taken off. | = | — | — |
 | vo115 | Swifty | The discount is ₹540, | The discount is five hundred and forty rupees, | द डिस्काउंट इज फाइव हंड्रेड एंड फोर्टी रूपीस, | 3.29 |
 | vo116 | Swifty | and the marked price is ₹1800. | and the marked price is one thousand eight hundred rupees. | एंड द मार्क्ड प्राइस इज वन थाउजेंड एट हंड्रेड रुपीस। | 4.1 |
 | vo117 | Swifty | That’s the 30% off on the tag! | That’s the thirty percent off on the tag! | दैट्स द थर्टी परसेंट ऑफ ऑन द टैग! | 3.02 |
 | vo118 | Swifty | Let’s sum up the sneakers! | = | लेट्स सम अप द स्नीकर्स! | 2.45 |
-| vo119 | Swifty | Marked price: ₹1800. | Marked price: one thousand eight hundred rupees. | मार्कड प्राइस वन थाउजेंड एट हंड्रेड रुपीज | 2.81 |
+| vo119 | Swifty | Marked Price: ₹1800. | Marked price: one thousand eight hundred rupees. | मार्कड प्राइस वन थाउजेंड एट हंड्रेड रुपीज | 2.81 |
 | vo120 | Swifty | Discount: 30%, | Discount: thirty percent, | डिस्काउंट थर्टी परसेंट, | 2.33 |
 | vo121 | Swifty | which is ₹540. | which is five hundred and forty rupees. | विच इज़ फाइव हंड्रेड एंड फोर्टी रुपीज़। | 3.02 |
-| vo122 | Swifty | Selling price: ₹1260. | Selling price: one thousand two hundred and sixty rupees. | सेलिंग प्राइस वन थाउजेंड टू हंड्रेड एंड सिक्सटी रुपीस | 4.37 |
+| vo122 | Swifty | Selling Price: ₹1260. | Selling price: one thousand two hundred and sixty rupees. | सेलिंग प्राइस वन थाउजेंड टू हंड्रेड एंड सिक्सटी रुपीस | 4.37 |
 | vo123 | Swifty | Discount = MP − SP, | Discount equals M P minus S P, | डिस्काउंट इक्वल्स एम पी माइनस एस पी, | 4.46 |
 | vo124 | Swifty | SP = MP − Discount, | S P equals M P minus Discount, | एस पी इक्वल्स एम पी माइनस डिस्काउंट, | 3.46 |
 | vo125 | Swifty | and Discount % = Discount ÷ MP × 100. | and Discount percentage equals Discount divided by M P, times one hundred. | एंड डिस्काउंट परसेंटेज इक्वल्स डिस्काउंट डिवाइडेड बाय एम पी, टाइम्स वन हंड्रेड। | 7.46 |

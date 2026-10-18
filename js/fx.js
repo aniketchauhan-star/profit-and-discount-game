@@ -215,9 +215,9 @@
       const target = seg.em ? el('span', 'em', host) : seg.cls ? el('span', seg.cls, host) : host;
       seg.t.split('\n').forEach((line, n) => {
         if (n > 0) el('br', '', target);
-        line.split(/(\s+)/).forEach(part => {
+        line.split(/([ \t]+)/).forEach(part => { // (a no-break space keeps a sum together: see softBreaks)
           if (!part) return;
-          if (/^\s+$/.test(part)) {
+          if (/^[ \t]+$/.test(part)) {
             target.appendChild(document.createTextNode(' '));
             return;
           }
@@ -248,13 +248,88 @@
 
   // The words of a speech bubble or thought cloud, laid out in `host` and measured (the letters are
   // invisible but already take their space): `box` is the text box and `w` × `h` its size.
-  function lineText(host, o) {
-    const box = el('div', 'b-text', host, { fontSize: px(o.size || 34) });
-    const letters = buildLetters(box, o.text);
+  // { wrap }: the revamp's dialogue box (screens with `.is-v2`): its words wrap by themselves into balanced lines no
+  // longer than WRAP_MEASURE (about 20–28 letters) or than the room it has (`max`, the box's width), and the box
+  // shrinks to its longest line (see softBreaks for the line breaks written in the text).
+  const WRAP_MEASURE = 450; // px of text, at 34 px
+
+  function lineText(host, o, { wrap = false, max = Infinity } = {}) {
+    const size = o.size || 34;
+    const box = el('div', wrap ? 'b-text b-text--wrap' : 'b-text', host, { fontSize: px(size) });
+    const letters = buildLetters(box, wrap ? softBreaks(o.text) : o.text);
+    if (wrap) {
+      const cs = getComputedStyle(box);
+      const padX = parseFloat(cs.paddingLeft) + parseFloat(cs.paddingRight);
+      const words = [...box.querySelectorAll('.b-word, .em, .key')]; // (an .em or .key never breaks inside)
+      // Lays the words out at this width of text: how many lines, and the longest (in layout px: the words' offsets
+      // are measured from the box, so the stage's scale doesn't count).
+      const layout = width => {
+        box.style.width = px(width + padX);
+        const lines = new Map();
+        words.forEach(word => {
+          const top = Math.round(word.offsetTop / 4);
+          const [l, r] = lines.get(top) || [Infinity, -Infinity];
+          lines.set(top, [Math.min(l, word.offsetLeft), Math.max(r, word.offsetLeft + word.offsetWidth)]);
+        });
+        return { count: lines.size, longest: Math.max(...[...lines.values()].map(([l, r]) => r - l)) };
+      };
+      let lo = Math.max(...words.map(w => w.offsetWidth));
+      let hi = Math.max(lo, Math.min((WRAP_MEASURE * size) / 34, max - padX - 4));
+      // Balanced: the narrowest width that needs no more lines than the widest does (no line is left nearly empty).
+      const count = layout(hi).count;
+      while (hi - lo > 3) {
+        const mid = (lo + hi) / 2;
+        if (layout(mid).count > count) lo = mid;
+        else hi = mid;
+      }
+      box.style.width = px(Math.ceil(layout(hi).longest + padX + 2));
+    }
     const h = box.offsetHeight;
     const w = Math.max(box.offsetWidth, h + 24);
     box.style.width = px(w);
     return { box, letters, w, h };
+  }
+
+  // A bubble's text for the revamp's dialogue box: a written line break becomes a space, so the words wrap by
+  // themselves, except after a short exclamation that opens the line ("Correct!", "Not quite!"), which keeps a line of
+  // its own; and a sum (125 ÷ 500 × 100) is kept on one line (no-break spaces round its signs).
+  function softBreaks(text) {
+    let sentence = '';
+    return (typeof text === 'string' ? [{ t: text }] : text).map(seg => {
+      let t = '';
+      for (const c of seg.t) {
+        const keep = c === '\n' && /^[^.!?]{1,11}[!?.]$/.test(sentence.trim()) && !/\d/.test(sentence);
+        t += c === '\n' && !keep ? ' ' : c;
+        sentence = c === '\n' ? '' : sentence + c;
+      }
+      t = t.replace(/ {2,}/g, ' ').replace(/ ([=−×÷+]) /g, '\u00a0$1\u00a0');
+      return Object.assign({}, seg, { t });
+    });
+  }
+
+  // The revamp's dialogue box shows its whole line at once; each word lights up as it is said (`part`: only that part's
+  // words). Each word's time is its share of the recording (`seconds`; or about 62 ms a letter when the device's voice
+  // reads it), a word after a comma or full stop three letters more (the voice pauses there); the last one goes out as
+  // the voice ends.
+  async function sayWords(ctx, root, { part, seconds }) {
+    const words = [...root.querySelectorAll('.b-word')].filter(w => !w.classList.contains('was-said') &&
+      (part === undefined || +w.firstElementChild.dataset.part === part));
+    if (!words.length) return;
+    const share = (w, i) => w.textContent.length + 1 + (i > 0 && /[!?.,]$/.test(words[i - 1].textContent) ? 3 : 0);
+    const total = words.reduce((sum, w, i) => sum + share(w, i), 0);
+    const unit = seconds ? Math.max(16, ((seconds - 0.35) * 1000) / total) : 62;
+    const start = performance.now();
+    let at = 0;
+    for (const [i, word] of words.entries()) {
+      word.classList.add('is-now');
+      at += share(word, i) * unit;
+      try {
+        await ctx.wait(Math.max(0, start + at - performance.now()), { real: true });
+      } finally {
+        word.classList.remove('is-now');
+        word.classList.add('was-said');
+      }
+    }
   }
 
   // What speech bubbles and thought clouds have in common: the line as plain text (for the voice),
@@ -273,6 +348,7 @@
       // ends (0.35 s before the clip does): each takes max(16 ms, (seconds − 0.35) / letters), and the one after a
       // comma or full stop three letters' time more (the voice pauses there).
       async type(ctx, { speed = 46, blips = true, part, seconds } = {}) {
+        if (o.calm) return sayWords(ctx, root, { part, seconds }); // the revamp's dialogue box
         if (seconds) {
           const todo = letters.filter(l => !l.classList.contains('on') && (part === undefined || +l.dataset.part <= part));
           const before = i => 1 + (i > 0 && /[!?.,]/.test(todo[i - 1].textContent) ? 3 : 0);
@@ -300,6 +376,7 @@
         }
       },
       emphasize() {
+        if (o.calm) return; // the revamp: nothing jumps
         root.querySelectorAll('.em, .key').forEach(e => e.classList.add('pulse'));
       },
     };
@@ -312,6 +389,26 @@
     paths.forEach(d => svg('path', { d }, g));
   }
 
+  // Where a box (x, y, w × h) can go nearest to where it was asked for without covering any of `avoid` ([left, top,
+  // right, bottom] stage rects, 14 px of room round them), on the stage (clear of the top buttons) and inside `within`
+  // ([minX, maxX]) if given: the nearest free spot on rings round it, 12 px apart, up to 420 px away.
+  function clearOf(avoid, x, y, w, h, within) {
+    const lo = within ? within[0] : 24;
+    const hi = (within ? within[1] : 1896) - w;
+    const free = (px0, py0) => px0 >= lo && px0 <= hi && py0 >= 104 && py0 + h <= 1056 &&
+      avoid.every(([l, t, r, b]) => px0 + w <= l - 14 || px0 >= r + 14 || py0 + h <= t - 14 || py0 >= b + 14);
+    if (free(x, y)) return [x, y];
+    for (let d = 12; d <= 420; d += 12) {
+      for (let a = 0; a < 360; a += 15) {
+        const rad = (a * Math.PI) / 180;
+        const nx = x + Math.round(Math.cos(rad) * d);
+        const ny = y - Math.round(Math.sin(rad) * d); // (0° is right, 90° up)
+        if (free(nx, ny)) return [nx, ny];
+      }
+    }
+    return [x, y];
+  }
+
   /**
    * Speech bubble, sized to fit its text; every bubble in the game looks the same (see pointerPath, paintShapes).
    *  anchor   [x, y] stage point where one corner (or edge middle) of the bubble sits
@@ -322,13 +419,20 @@
    *  text     see buildLetters; size (px, default 34), voice ('boy' | 'dad' | 'man' | 'bird'), rotate (deg)
    */
   function bubble(parent, o) {
+    const calm = !!parent.closest('.is-v2'); // the revamp's dialogue box: calm, its whole line at once (see sayWords)
+    if (calm) o = Object.assign({}, o, { calm });
     const root = el('div', 'bubble', parent);
     const float = el('div', 'bubble-float', root);
-    const { box: textBox, letters, w, h } = lineText(float, o);
+    const { box: textBox, letters, w, h } = lineText(float, o, { wrap: calm, max: o.within ? o.within[1] - o.within[0] : Infinity });
+    if (calm) letters.forEach(l => l.classList.add('on'));
     const corner = o.corner || 'bl';
     let x = { r: o.anchor[0] - w, c: o.anchor[0] - w / 2 }[corner[1]] ?? o.anchor[0];
     if (o.within) x = Math.max(o.within[0], Math.min(o.within[1] - w, x));
-    const y = { b: o.anchor[1] - h, m: o.anchor[1] - h / 2 }[corner[0]] ?? o.anchor[1];
+    let y = { b: o.anchor[1] - h, m: o.anchor[1] - h / 2 }[corner[0]] ?? o.anchor[1];
+    // keep-clear areas (faces, prices, tags, the book): given, or the scene's own for a bubble on its picture
+    const onPicture = parent.classList.contains('scene-layer');
+    const avoid = o.avoid || (calm && onPicture && parent.closest('.scene').keepClear);
+    if (avoid) [x, y] = clearOf(avoid, x, y, w, h, o.within);
     const tip = [o.tip[0] - x, o.tip[1] - y];
     Object.assign(root.style, {
       left: px(x), top: px(y), width: px(w), height: px(h),
@@ -346,6 +450,10 @@
 
     return Object.assign(lineMethods(root, letters, o), {
       show() {
+        if (calm) { // a soft fade in: no bounce, no sound
+          return settle(root.animate([{ opacity: 0, transform: 'translateY(8px)' }, { opacity: 1, transform: 'none' }],
+            { duration: 300, easing: 'cubic-bezier(.25,.1,.25,1)', fill: 'forwards' }));
+        }
         Sound.bloop();
         return settle(root.animate([
           { opacity: 0, transform: `scale(.15) rotate(${rot - 10}deg)` },
@@ -363,6 +471,7 @@
       },
       // Shrinks back towards the speaker and is removed.
       hide() {
+        if (calm) return settle(root.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 220, fill: 'forwards' })).then(() => root.remove());
         return settle(root.animate([
           { opacity: 1, transform: `scale(1) rotate(${rot}deg)` },
           { opacity: 0, transform: `scale(.3) rotate(${rot - 8}deg)` },
@@ -413,10 +522,13 @@
    *  text  see buildLetters; size (px, default 34), voice ('boy' | 'dad' | 'man' | 'bird')
    */
   function thought(parent, o) {
+    const calm = !!parent.closest('.is-v2'); // the revamp: a soft fade, the whole line at once
+    if (calm) o = Object.assign({}, o, { calm });
     const root = el('div', 'bubble thought', parent);
     const cloud = el('div', 'thought-cloud', root);
     const float = el('div', 'bubble-float', cloud);
-    const { box, letters, w, h } = lineText(float, o);
+    const { box, letters, w, h } = lineText(float, o, { wrap: calm });
+    if (calm) letters.forEach(l => l.classList.add('on'));
     const x = o.at[0] - w / 2;
     const y = o.at[1] - h / 2;
     Object.assign(root.style, { left: px(x), top: px(y), width: px(w), height: px(h) });
@@ -455,6 +567,15 @@
       show() {
         root.style.opacity = '1';
         const step = T(150);
+        if (calm) { // the puffs and the cloud fade in, one after the other: no bounce, no sound
+          puffs.forEach((puff, i) => {
+            puff.style.opacity = '';
+            settle(puff.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 240, delay: i * step, fill: 'backwards' }));
+          });
+          cloud.style.opacity = '';
+          return settle(cloud.animate([{ opacity: 0, transform: 'translateY(8px)' }, { opacity: 1, transform: 'none' }],
+            { duration: 340, delay: puffs.length * step, easing: 'cubic-bezier(.25,.1,.25,1)', fill: 'backwards' }));
+        }
         puffs.forEach((puff, i) => {
           puff.style.opacity = '';
           settle(puff.animate(reducedMotion ? [{ opacity: 0 }, { opacity: 1 }] : [
@@ -1052,6 +1173,230 @@
     };
   }
 
+  /**
+   * A checkpoint (the revamp brief, rule 8), closing a topic: on top, "Checkpoint 2 of 4" and the topic (ticked when it
+   * is done); then 2–3 lined index cards, each a term in its colour, what it means and (optionally) its value; one formula
+   * on a yellow sticky note; an example (optional); and the learner's buttons: "Got it, next", "Hear it again", "Go back".
+   *  index, total, topic   which checkpoint it is, of how many, and its topic
+   *  say                   the line her voice opens with ("Let’s remember!"), written above the cards
+   *  cards                 [{ term, tone: 'mp' | 'sp' | 'd' | 'part' | 'whole' | 'ink', text, value }]
+   *  note                  the formula: segments [{ t, tone }] (see formulaNote)
+   *  example               text ({amount} highlighted)
+   *  on                    { next, again, back }: what the buttons do
+   * open() → card(i) … → showNote() → showExample() → done() → actions(): each returns what came in.
+   */
+  function checkpoint(parent, { index, total, topic, say, cards, note, example, on = {} }) {
+    const root = el('div', 'ck', parent);
+    const head = el('div', 'ck-head', root);
+    el('small', '', head).textContent = `Checkpoint ${index} of ${total}`;
+    const title = el('div', 'ck-title', head);
+    el('span', '', title).textContent = topic;
+    const tick = el('span', 'ck-tick', title);
+    tick.textContent = '✓';
+    tick.setAttribute('aria-label', 'done');
+    const body = el('div', 'ck-body', root);
+    body.setAttribute('role', 'group');
+    body.setAttribute('aria-label', `Checkpoint ${index}: ${topic}`);
+    const sayEl = say ? el('div', 'ck-say', body) : null; // what her voice says first ("Let’s remember!"), written
+    if (sayEl) sayEl.textContent = say;
+    const row = el('div', 'ck-cards', body);
+    const cardEls = cards.map(c => {
+      const card = el('div', `ck-card ck-card--${c.tone || 'ink'}`, row);
+      el('div', 'ck-term', card).textContent = c.term;
+      if (c.value) el('div', 'ck-value', card).textContent = c.value;
+      el('div', 'ck-text', card).textContent = c.text;
+      return card;
+    });
+    const foot = el('div', 'ck-foot', body);
+    const noteEl = note ? formulaNote(foot, note) : null;
+    let exEl = null;
+    if (example) {
+      exEl = el('div', 'ck-example', foot);
+      el('span', 'ck-ex-label', exEl).textContent = 'Example';
+      richText(el('span', 'ck-ex-text', exEl), example);
+    }
+    const bar = el('div', 'ck-actions', body);
+    const button = (label, cls, fn) => {
+      const b = el('button', `ck-btn ${cls}`, bar);
+      b.type = 'button';
+      b.textContent = label;
+      b.addEventListener('click', () => { Sound.click(); if (fn) fn(); });
+      return b;
+    };
+    const buttons = {
+      next: button('Got it, next', 'ck-btn--go', on.next),
+      again: button('Hear it again', '', on.again),
+      back: button('Go back', '', on.back),
+    };
+    [head, sayEl, ...cardEls, noteEl, exEl, bar].forEach(n => { if (n) n.style.opacity = '0'; });
+    const pop = (node, from = 'translateY(24px)') => {
+      reveal(node, [{ opacity: 0, transform: from }, { opacity: 1, transform: 'none' }], { duration: T(520), easing: 'cubic-bezier(.2,.8,.3,1)' });
+      return node;
+    };
+    return {
+      el: root,
+      head,
+      say: sayEl,
+      cards: cardEls,
+      note: noteEl,
+      example: exEl,
+      buttons,
+      open: () => {
+        if (sayEl) pop(sayEl);
+        return pop(head, 'translateY(-14px)');
+      },
+      card: i => pop(cardEls[i]),
+      showNote: () => noteEl && pop(noteEl, 'translateY(24px) rotate(-4deg)'),
+      showExample: () => {
+        if (!exEl) return null;
+        pop(exEl);
+        setTimeout(() => exEl.querySelectorAll('.hl').forEach(h => h.classList.add('is-marked')), 450);
+        return exEl;
+      },
+      // The topic is done: its tick pops.
+      done() {
+        tick.classList.add('is-on');
+        return tick;
+      },
+      actions: () => pop(bar),
+    };
+  }
+
+  // A formula on a yellow sticky note: segments [{ t, tone }] (a tone for a term: 'mp', 'sp', 'd', 'part', 'whole').
+  // { small }: the note as it is kept in the notebook, or shown again at the start of the next topic.
+  function formulaNote(parent, segments, { small = false } = {}) {
+    const note = el('div', small ? 'f-note f-note--small' : 'f-note', parent);
+    segments.forEach(({ t, tone }) => { el('span', tone ? `tone-${tone}` : 'f-op', note).textContent = t; });
+    note.setAttribute('aria-label', segments.map(s => s.t).join(' '));
+    return note;
+  }
+
+  /**
+   * The revamp's Concept layout (rule 5): a value on a taped paper note (it flies in from the story's snapshot: see
+   * game.js), the new word under it, big, in its colour, and one line saying what it means.
+   *  value, term, abbr, meaning, tone ('mp' | 'sp' | 'd')
+   * showNote() → showTerm() → showMeaning(): each comes in, and returns what came in.
+   */
+  function concept(parent, { value, term, abbr, meaning, tone = 'mp' }) {
+    const root = el('div', 'mp', parent); // the content area (see .is-v2 .mp)
+    const box = el('div', `cn cn--${tone}`, root);
+    const note = el('div', 'cn-note', box);
+    const valueEl = el('div', 'cn-value', note);
+    valueEl.textContent = value;
+    const termEl = el('div', 'cn-term', box);
+    el('span', '', termEl).textContent = term;
+    if (abbr) el('span', 'cn-abbr', termEl).textContent = ` ${abbr}`;
+    const meaningEl = el('div', 'cn-meaning', box);
+    meaningEl.textContent = meaning;
+    box.setAttribute('role', 'group');
+    box.setAttribute('aria-label', `${value}: ${term} ${abbr || ''}. ${meaning}`);
+    [note, termEl, meaningEl].forEach(n => { n.style.opacity = '0'; });
+    const pop = (node, from) => {
+      reveal(node, [{ opacity: 0, transform: from }, { opacity: 1, transform: 'none' }], { duration: T(560), easing: 'cubic-bezier(.2,.8,.3,1)' });
+      return node;
+    };
+    return {
+      el: root,
+      note,
+      value: valueEl,
+      term: termEl,
+      meaning: meaningEl,
+      showNote: () => pop(note, 'scale(.92)'),
+      showTerm: () => pop(termEl, 'translateY(18px)'),
+      showMeaning: () => pop(meaningEl, 'translateY(14px)'),
+    };
+  }
+
+  /**
+   * A bar model (the revamp, screens 17, 32 and 34): the whole amount as a long bar, then split into its parts.
+   *  total   { value, label, tone }: what the whole bar is (written over it)
+   *  parts   [{ value, label, tone, share }]: the parts, left to right (shares add up to 1)
+   *  tenths  { each, shade, label, tone }: or the bar cut into ten equal parts of `each`, `shade` of them shaded
+   * open() draws the bar; split() divides it (or cuts it into tenths); shade() shades the tenths, one at a time.
+   */
+  function barModel(parent, { total, parts = [], tenths = null }) {
+    const root = el('div', 'bm', parent);
+    const head = el('div', `bm-total tone-${total.tone}`, root);
+    el('b', '', head).textContent = total.value;
+    el('span', '', head).textContent = ` ${total.label}`;
+    const bar = el('div', 'bm-bar', root);
+    const segs = tenths
+      ? Array.from({ length: 10 }, () => el('div', `bm-seg bm-tenth tone-${tenths.tone}`, bar))
+      : parts.map(p => {
+        const seg = el('div', `bm-seg bm-seg--${p.tone}`, bar);
+        seg.style.flex = String(p.share);
+        el('b', `tone-${p.tone}`, seg).textContent = p.value;
+        el('small', '', seg).textContent = p.label;
+        return seg;
+      });
+    if (tenths) segs.forEach(seg => { el('small', '', seg).textContent = tenths.each; });
+    const note = tenths ? el('div', `bm-note tone-${tenths.tone}`, root) : null;
+    if (note) note.textContent = tenths.label;
+    root.setAttribute('role', 'img');
+    root.setAttribute('aria-label', tenths
+      ? `${total.value} cut into ten parts of ${tenths.each}; ${tenths.label}`
+      : `${total.value} ${total.label} = ${parts.map(p => `${p.value} ${p.label}`).join(' + ')}`);
+    [root, ...(note ? [note] : [])].forEach(n => { n.style.opacity = '0'; });
+    return {
+      el: root,
+      bar,
+      segs,
+      note,
+      async open(ctx) {
+        root.style.opacity = '';
+        await settle(bar.animate([{ clipPath: 'inset(0 100% 0 0)' }, { clipPath: 'inset(0 0 0 0)' }],
+          { duration: reducedMotion ? 1 : T(700), easing: 'cubic-bezier(.45,0,.3,1)', fill: 'backwards' }));
+      },
+      split() {
+        root.classList.add('is-split');
+        return Sound.swish();
+      },
+      async shade(ctx) {
+        for (let i = 0; i < tenths.shade; i++) {
+          segs[i].classList.add('is-shaded');
+          await ctx.wait(T(260));
+        }
+        note.style.opacity = '';
+        reveal(note, [{ opacity: 0, transform: 'translateY(10px)' }, { opacity: 1, transform: 'none' }], { duration: T(420) });
+      },
+    };
+  }
+
+  /**
+   * A 10 × 10 grid of squares (the revamp, screens 28–30): `shade` of the hundred shaded in the part's colour, and under
+   * it what that is (e.g. "25 out of 100 = 25%"). fill() shades them, a row at a time.
+   */
+  function grid100(parent, { shade, label }) {
+    const root = el('div', 'g100', parent);
+    const grid = el('div', 'g100-grid', root);
+    const cells = Array.from({ length: 100 }, () => el('span', 'g100-cell', grid));
+    const caption = el('div', 'g100-label', root);
+    caption.textContent = label;
+    root.setAttribute('role', 'img');
+    root.setAttribute('aria-label', `A grid of 100 squares, ${shade} shaded: ${label}`);
+    root.style.opacity = '0';
+    caption.style.opacity = '0';
+    return {
+      el: root,
+      open() {
+        return reveal(root, [{ opacity: 0, transform: 'scale(.94)' }, { opacity: 1, transform: 'none' }], { duration: T(500), easing: 'cubic-bezier(.2,.8,.3,1)' });
+      },
+      async fill(ctx) {
+        for (let i = 0; i < shade; i += 10) {
+          cells.slice(i, Math.min(shade, i + 10)).forEach(c => c.classList.add('is-on'));
+          await ctx.wait(T(150));
+        }
+        caption.style.opacity = '';
+        reveal(caption, [{ opacity: 0, transform: 'translateY(10px)' }, { opacity: 1, transform: 'none' }], { duration: T(420) });
+      },
+      shown() { // already filled (carried over from the screen before)
+        root.style.opacity = '';
+        caption.style.opacity = '';
+        cells.slice(0, shade).forEach(c => c.classList.add('is-on'));
+      },
+    };
+  }
+
   // Wraps every word of `node` (keeping highlight spans around them) in its own span,
   // so the words can appear one at a time.
   function wordify(node) {
@@ -1146,8 +1491,10 @@
    *               \n = new line) read out word by word.            open() → showBook() (or showNow()) → define()
    *  compare      { top, bottom } price boxes ({ price, label, tone: 'yellow' | 'blue' }) with a down arrow
    *               between them.                                    open() → showBook() (or showNow()) → compare()
+   *  pin          { x, y, r }: in the review's new look the book is the story's snapshot in the corner (its
+   *               sticker there, in `parent`'s px): the ring and the line to the lens start from it, not the drawn book.
    */
-  function pricePanel(parent, { price, term, abbr, definition, compare, sheet = false }) {
+  function pricePanel(parent, { price, term, abbr, definition, compare, sheet = false, pin = null }) {
     const root = el('div', 'mp', parent);
     const panel = el('div', 'mp-panel', root); // { sheet: true }: on the big panel that fills the screen (see game.js)
     const left = el('div', 'mp-left', panel);
@@ -1200,6 +1547,8 @@
       panel,
       book,
       talk: parts.talk,
+      pill: parts.pill, // the name, under the lens
+      boxes: { top: parts.top, bottom: parts.bottom }, // the compared prices
       open() {
         if (sheet) { // nothing to spring up: the screen is the panel
           panel.style.opacity = '';
@@ -1228,23 +1577,28 @@
       // A pulsing ring around the price sticker (only one, however often it is asked for).
       highlight() {
         if (ringed) return ringed;
-        const s = local(sticker);
         Sound.sparkle();
+        if (pin) {
+          ringed = ring(parent, { x: pin.x, y: pin.y, r: pin.r * 1.25 });
+          return ringed;
+        }
+        const s = local(sticker);
         ringed = ring(panel, { x: (s.l + s.r) / 2, y: (s.t + s.b) / 2, r: Math.max(s.r - s.l, s.b - s.t) * 0.72 });
         return ringed;
       },
       // A line draws itself from the sticker to the lens, then the lens pops open showing the price big.
       async zoom() {
         const lens = parts.lens;
-        const s = local(sticker);
-        const z = local(lens);
+        const host = pin ? parent : panel; // the line is drawn in the snapshot's layer when the sticker is there
+        const s = pin ? { l: pin.x - pin.r, r: pin.x + pin.r, t: pin.y - pin.r * 0.7, b: pin.y + pin.r * 0.7 } : local(sticker);
+        const z = pin ? panelBox(parent, lens) : local(lens);
         const r = (z.r - z.l) / 2;
         const zc = [(z.l + z.r) / 2, (z.t + z.b) / 2];
         const a = [s.r + 18, (s.t + s.b) / 2];
         const dir = Math.atan2(a[1] - zc[1], a[0] - zc[0]);
         const b = [zc[0] + Math.cos(dir) * (r + 14), zc[1] + Math.sin(dir) * (r + 14)];
         const c = [(a[0] + b[0]) / 2, Math.max(a[1], b[1]) + 24]; // a gentle sag
-        const line = svg('svg', { class: 'mp-link', width: panel.clientWidth, height: panel.clientHeight }, panel);
+        const line = svg('svg', { class: 'mp-link', width: host.clientWidth, height: host.clientHeight }, host);
         const path = svg('path', { pathLength: 1, d: `M ${num(a[0])} ${num(a[1])} Q ${num(c[0])} ${num(c[1])} ${num(b[0])} ${num(b[1])}` }, line);
         svg('circle', { class: 'mp-link-dot', cx: num(a[0]), cy: num(a[1]), r: 9 }, line);
         const end = svg('circle', { class: 'mp-link-dot', cx: num(b[0]), cy: num(b[1]), r: 9 }, line);
@@ -4526,7 +4880,7 @@
 
   window.FX = {
     CANCELLED, el, rand, settle, reveal, flyAcross, glow, motes, twinkles, burst, shine, exclaim, bubble, thought, badge, ring, question, definitions, pricePanel,
-    reduction, definitionCard, formulaPanel, formulaReveal, summaryPanel, productCard, productQuestion, meansPanel, workedSheet, summarySheet, strike, stickTag, choices, percentFormula, questionPanel, challengePanel, walletPanel, shopPicker, street, streetVeil, questionBar, offerCard, flyPicture, purchaseSlip, confetti, celebration, receipt, twoAmounts, missionPanel, recapCards, takeaway, Bird, Walker,
+    reduction, definitionCard, checkpoint, formulaNote, concept, barModel, grid100, formulaPanel, formulaReveal, summaryPanel, productCard, productQuestion, meansPanel, workedSheet, summarySheet, strike, stickTag, choices, percentFormula, questionPanel, challengePanel, walletPanel, shopPicker, street, streetVeil, questionBar, offerCard, flyPicture, purchaseSlip, confetti, celebration, receipt, twoAmounts, missionPanel, recapCards, takeaway, Bird, Walker,
     setPace(p) { pace = p; },
   };
 })();

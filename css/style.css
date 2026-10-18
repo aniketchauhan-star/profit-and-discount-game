@@ -3478,3 +3478,632 @@ kbd {
   .qcard-pos { transition: none; }
   .cp-glint, .cp-start.is-calling, .sp-hint.is-bobbing, .st-shop.is-open .st-glow, .st-buy, .gm-opt.is-guide, .st-cloud { animation: none !important; }
 }
+
+/* ==========================================================================
+   The revamp (Bookstore Journey - Revamp Brief.docx): screens 1–46, and the conversation back home at the end
+   (scenes with `v2` in game.js: class .is-v2)
+   - One small palette (rule 6): paper, ink and grey for text and backgrounds; teal for buttons, headings and the
+     progress bar; and colours that mean one thing only: Marked Price amber, Selling Price blue, Discount red, a right
+     answer green; the part and the whole their own pair (violet, olive); one yellow highlighter for the key word. No
+     colour is typed anywhere below: only these names. Light tints for boxes, full colour only on the key number.
+   - The notebook style (rule 5): prices on taped paper notes, definitions on lined index cards, working on graph paper
+     with the answer circled in red pen, formulas on a yellow sticky note, a right answer ticked in green marker and a
+     wrong one crossed out in grey. White space and soft paper shadows, no thick black outlines.
+   - The layout (rule 5): the title, or the story's question, on top; the snapshot of the story on the left; the content
+     in the middle; Swifty's corner on the right, only on a screen where she comes (.has-swifty).
+   ========================================================================== */
+:root {
+  --ink-2: #5d6b73;          /* grey text */
+  --line: #e8dfcf;           /* a hairline on paper */
+  --teal-tint: #e3f1f2;      /* question strips */
+  --mp: #8a5300;  --mp-tint: #fff1d2;   /* Marked Price */
+  --sp: #1f63b0;  --sp-tint: #e5f0fc;   /* Selling Price */
+  --d: #c0342a;   --d-tint: #fde6e3;    /* Discount */
+  --ok: #23955a;  --ok-tint: #e2f5ea;   /* a right answer */
+  --part: #6a46b8; --part-tint: #efe8fb; /* the part (screens 28–30, 37) */
+  --whole: #5f6d14; --whole-tint: #eef2d6; /* the whole */
+  --hl: #ffe27a;             /* the highlighter: the one key word, the word being said */
+  --note: #fff09c;           /* a sticky note */
+  --band: #fff6cf;           /* a rule band */
+  --pen: #d23b2f;            /* the red pen circling an answer */
+  --tape: rgba(234, 222, 188, .85);
+  --grid: #dbe7f3;           /* graph paper and the lines of an index card */
+  --muted: #9aa5ab;          /* a wrong answer, crossed out */
+  --muted-tint: #eef0f1;
+  --paper-shadow: 0 12px 24px rgba(27, 42, 51, .13), 0 2px 4px rgba(27, 42, 51, .10);
+  --soft-shadow: 0 12px 30px rgba(27, 42, 51, .10), 0 2px 6px rgba(27, 42, 51, .06);
+  /* the same colours, as shadows and lines: ink and the deep teal at a little strength, a soft glow of a meaning colour */
+  --white: #fff; /* cards, and words on teal */
+  --margin: #f2b0aa; /* an index card's red line */
+  --arrow: #c3ccd2; /* every arrow between boxes */
+  --ink-06: rgba(27, 42, 51, .06); --ink-08: rgba(27, 42, 51, .08); --ink-10: rgba(27, 42, 51, .10);
+  --ink-12: rgba(27, 42, 51, .12); --ink-13: rgba(27, 42, 51, .13); --ink-14: rgba(27, 42, 51, .14);
+  --ink-16: rgba(27, 42, 51, .16); --ink-22: rgba(27, 42, 51, .22); --ink-45: rgba(27, 42, 51, .45);
+  --deep-18: rgba(4, 18, 22, .18); --deep-28: rgba(4, 18, 22, .28); --deep-30: rgba(4, 18, 22, .30); --deep-45: rgba(4, 18, 22, .45);
+  --d-glow: rgba(192, 52, 42, .45); --d-glow-0: rgba(192, 52, 42, 0);
+  --mp-edge: rgba(138, 83, 0, .35); --whole-edge: rgba(95, 109, 20, .25);
+  --tag-shadow: rgba(120, 20, 20, .28); --paper-92: rgba(255, 253, 247, .92);
+}
+
+/* ---------- The layout of a teaching screen ---------- */
+.scene-snap { /* the story picture it came from, framed (zoomed on what matters: game.js snapFocus) */
+  position: absolute;
+  left: 96px;
+  top: 228px;
+  width: 424px;
+  height: 239px;
+  border-radius: 18px;
+  overflow: hidden;
+  background: var(--paper);
+  box-shadow: 0 0 0 8px var(--white), 0 14px 30px var(--ink-22);
+  pointer-events: none;
+}
+.scene-snap img, .snap-ghost { display: block; width: 100%; height: 100%; object-fit: cover; -webkit-user-drag: none; }
+.scene-snap img { transform-origin: var(--focus, 50% 50%); transform: scale(var(--zoom, 1)); }
+.snap-ghost { position: absolute; left: 0; top: 0; pointer-events: none; transform-origin: var(--focus, 50% 50%); transform: scale(var(--zoom, 1)); }
+.scene.is-snapping, .scene.has-sheet .scene-parallax { overflow: hidden; } /* round corners while it moves */
+.scene-head, .scene-ask { /* the title, or the story's question (Aniket's own words), on top */
+  position: absolute;
+  left: 96px;
+  top: 116px;
+  max-width: 1380px;
+  margin: 0;
+  color: var(--ink);
+  font-size: 52px;
+  font-weight: 800;
+  line-height: 1.1;
+  text-wrap: balance;
+  pointer-events: none;
+}
+.scene-head::before { /* a short teal rule above the title */
+  content: '';
+  display: block;
+  width: 60px;
+  height: 7px;
+  margin-bottom: 16px;
+  border-radius: 4px;
+  background: var(--teal);
+}
+.scene-ask { /* Aniket's question, carried from the story (screens 16, 26–34): a quote, with who asks it */
+  top: 106px;
+  font-size: 46px;
+  font-weight: 700;
+}
+.scene-ask small { display: block; margin-bottom: 6px; color: var(--teal); font-size: 26px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; }
+.scene-ask .ask-answer { margin-left: 18px; color: var(--ok); font-weight: 800; }
+.scene-sheet--snap { box-shadow: none; } /* screen 8's panel comes in under the picture (game.js: snapUp) */
+/* The content: under the title, right of the snapshot (x 576–1824); on a screen where Swifty comes, clear of her
+   corner and her bubbles (x 576–1340). Every panel sits right on the big panel, with no frame of its own. */
+.is-v2 :is(.mp, .dd, .defs) { padding: 228px 96px 56px 576px; }
+.is-v2.has-swifty :is(.mp, .dd, .defs) { padding-right: 580px; }
+.is-v2 :is(.mp-panel, .fm-panel, .fr-panel, .sm-panel, .pc-panel, .pf-panel, .qp-panel, .mn-panel, .pqp-panel, .ws-panel, .ss-panel) {
+  margin: 0 !important;
+  padding: 0;
+  border: 0;
+  background: none;
+  box-shadow: none;
+}
+/* the earlier steps fade a little; the current one is clear (rule 5) */
+.is-v2 .is-past { opacity: .55; transition: opacity .5s ease; }
+/* what is being said lights up (game.js talk.read): the highlighter round it */
+.is-v2 .is-said { box-shadow: 0 0 0 6px var(--hl), var(--paper-shadow) !important; transition: box-shadow .2s ease; }
+.is-v2 :is(.w, .pf-q-value, .fr-term, .pf-label, .pf-num, .pf-den, .pf-times, .ws-text).is-said { box-shadow: none !important; border-radius: 8px; background: var(--hl); }
+/* the meaning colours, and the pair for the part and the whole */
+.is-v2 .tone-mp { color: var(--mp); }
+.is-v2 .tone-sp { color: var(--sp); }
+.is-v2 .tone-d { color: var(--d); }
+.is-v2 .tone-part, .is-v2 .pf-q-value.is-part { color: var(--part); }
+.is-v2 .tone-whole, .is-v2 .pf-q-value.is-whole { color: var(--whole); }
+.is-v2 .tone-pct, .is-v2 .pf-label { color: var(--ink); } /* (no colour of their own) */
+.is-v2 .hl::before { background: var(--hl); }
+
+/* ---------- Dialogue boxes (rule 2) ---------- */
+/* Lighter words, line spacing 1.3, the same room on every side; the whole line is there at once (no letters jumping
+   in), and each word is lit with the highlighter as it is said (js/fx.js sayWords). The key word or amount is bold,
+   with no colour of its own. */
+.is-v2 .b-text { padding: 22px 26px; font-weight: 600; line-height: 1.3; }
+.is-v2 .b-text--wrap { white-space: normal; } /* js/fx.js lineText balances the lines itself */
+.is-v2 .b-text .ch { transition: none; }
+.is-v2 .b-text :is(.em, .key, .stress) { font-weight: 800; }
+.is-v2 .b-text .em { color: inherit; }
+.is-v2 .b-text .key { color: var(--d); }     /* the new word in the story is "discount" */
+.is-v2 .b-text .stress { color: var(--sp); } /* "Selling Price" */
+.is-v2 .b-word { margin: 0 -4px; padding: 0 4px; border-radius: 8px; transition: background-color .12s linear; }
+.is-v2 .b-word.is-now { background: var(--hl); }
+
+/* ---------- The notebook style (rule 5) ---------- */
+/* Prices on taped paper notes: a light tint, the amount in its colour, its name in grey; a strip of tape on top */
+.is-v2 .cmp-box {
+  position: relative;
+  border: 0;
+  border-radius: 5px;
+  background: var(--white);
+  box-shadow: var(--paper-shadow);
+  rotate: -1deg;
+}
+.is-v2 .cmp-box::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: -15px;
+  width: 104px;
+  height: 30px;
+  margin-left: -52px;
+  background: var(--tape);
+  box-shadow: 0 1px 2px var(--ink-12);
+  rotate: 3deg;
+}
+.is-v2 .cmp-box--yellow { background: var(--mp-tint); }
+.is-v2 .cmp-box--blue { background: var(--sp-tint); rotate: 1deg; }
+.is-v2 .cmp-box--red { background: var(--d-tint); rotate: -.5deg; }
+.is-v2 .cmp-box .cmp-label { color: var(--ink-2); }
+.is-v2 .cmp-box--yellow .cmp-price { color: var(--mp); }
+.is-v2 .cmp-box--blue .cmp-price { color: var(--sp); }
+.is-v2 .cmp-box--red .cmp-price { color: var(--d); }
+.is-v2 .cmp-box--red .cmp-label { color: var(--ink-2); }
+.is-v2 .cmp-box--yellow { --ring: var(--mp); }
+.is-v2 .cmp-box--blue { --ring: var(--sp); }
+.is-v2 .cmp-box--red { --ring: var(--d); }
+.is-v2 .cmp-box.is-key { animation: v2-key 1.8s ease-out infinite; }
+@keyframes v2-key { /* a soft ring spreading out (the box and its words hold still) */
+  0%   { box-shadow: var(--paper-shadow), 0 0 0 0 var(--d-glow); }
+  100% { box-shadow: var(--paper-shadow), 0 0 0 24px var(--d-glow-0); }
+}
+.is-v2 :is(.cmp-arrow path, .def-arrow path) { fill: var(--arrow); stroke: none; } /* one colour for every arrow */
+.is-v2 .def-arrow path { fill: none; stroke: var(--muted); }
+.is-v2 .fly-chip--card { border: 0; box-shadow: var(--paper-shadow); }
+
+/* Definitions on lined index cards: the name in its colour over the red margin line, the words on faint blue lines */
+.is-v2 :is(.mp-def, .mp-def.dd-card, .def) {
+  height: auto;
+  border: 0;
+  border-radius: 6px;
+  background-color: var(--white);
+  box-shadow: var(--paper-shadow);
+  rotate: -.6deg;
+}
+.is-v2 :is(.mp-def, .mp-def.dd-card) { width: 960px; }
+.is-v2 :is(.mp-def-head, .dd-card .mp-def-head) {
+  padding: 30px 52px 14px;
+  border-bottom: 3px solid var(--margin); /* an index card's red line */
+  background: none;
+  color: var(--mp);
+  font-size: 54px;
+  text-align: left;
+  text-shadow: none;
+}
+.is-v2 .dd-card .mp-def-head { color: var(--d); }
+.is-v2 .mp-def-abbr { color: var(--mp); opacity: .7; }
+.is-v2 :is(.mp-def-text, .mp-def-text.dd-text) {
+  margin: 0;
+  padding: 16px 52px 34px;
+  background-image: repeating-linear-gradient(to bottom, transparent 0 66px, var(--grid) 66px 68px, transparent 68px 70px);
+  background-origin: content-box;
+  font-size: 46px;
+  font-weight: 600;
+  line-height: 70px;
+}
+.is-v2 .mp-def-text .stress { color: var(--mp); font-weight: 800; }
+.is-v2 .dd-text .stress { color: var(--d); }
+
+/* Working on graph paper; the answer circled in red pen */
+.is-v2 :is(.pf-sheet, .pf-sheet.ws-sheet) {
+  border: 0;
+  border-radius: 4px;
+  background-color: var(--white);
+  background-image: linear-gradient(var(--grid) 1.5px, transparent 1.5px), linear-gradient(90deg, var(--grid) 1.5px, transparent 1.5px);
+  background-size: 32px 32px;
+  box-shadow: var(--paper-shadow);
+}
+.is-v2 .pf-answer::before {
+  inset: -18px -30px -20px -24px;
+  border: 5px solid var(--pen);
+  border-radius: 48% 52% 46% 54% / 56% 44% 58% 42%; /* drawn by hand */
+  background: none;
+  box-shadow: none;
+  transform: rotate(-4deg) scale(.6);
+}
+.is-v2 .pf-answer.is-marked::before { transform: rotate(-4deg); }
+
+/* Formulas on a yellow sticky note */
+.is-v2 :is(.fr-short, .sm-formula) {
+  border: 0;
+  border-radius: 3px;
+  background: var(--note);
+  box-shadow: 0 14px 26px var(--ink-16), 0 2px 4px var(--ink-10);
+  rotate: 1.2deg;
+}
+/* Rule bands: all the same (34, 38) */
+.is-v2 :is(.ws-band, .ws-band--yellow, .pqp-hint) { background: var(--band); }
+/* Question strips: all the same (28–34, 37) */
+.is-v2 :is(.pf-question, .pqp-question) {
+  border: 0;
+  border-radius: 18px;
+  background: var(--teal-tint);
+  box-shadow: none;
+  color: var(--ink);
+}
+/* The formula in words (screen 18): plain paper */
+.is-v2 .fr-strip { border: 0; border-radius: 6px; background: var(--white); box-shadow: var(--paper-shadow); }
+
+/* Answers: paper strips with a letter chip; a right one ticked in green marker, a wrong one crossed out in grey */
+.is-v2 .q-opt {
+  border: 2px solid var(--line);
+  background: var(--white);
+  box-shadow: 0 4px 12px var(--ink-08);
+  color: var(--ink);
+  font-weight: 700;
+}
+.is-v2 .q-opt:hover:not(:disabled) { transform: translateY(-3px); background: var(--paper); box-shadow: 0 10px 22px var(--ink-12); }
+.is-v2 .q-opt:active:not(:disabled) { transform: translateY(2px); box-shadow: 0 2px 6px var(--ink-10); }
+.is-v2 .q-chip, .is-v2 .pq-opt .q-chip { border: 0; background: var(--teal); color: var(--white); }
+.is-v2 .q-opt.is-correct { border-color: var(--ok); background: var(--ok-tint); color: var(--ok); }
+.is-v2 .q-opt.is-correct .q-chip { background: var(--ok); transform: scale(1.12) rotate(-8deg); }
+.is-v2 .q-opt.is-correct .q-chip svg { stroke: var(--white); stroke-width: 8; } /* a marker tick */
+.is-v2 .q-opt.is-wrong { border-color: var(--muted); background: var(--muted-tint); color: var(--ink-2); text-decoration: line-through; text-decoration-thickness: 4px; } /* grey, but readable (4.8:1) */
+.is-v2 .q-opt.is-wrong .q-chip { background: var(--muted); }
+.is-v2 .q-opt.is-wrong .q-chip svg { stroke: var(--white); }
+
+/* Screen 8: the question card, and its "Correct!" side */
+.is-v2 .qcard { border: 0; background: var(--white); box-shadow: 0 18px 44px var(--deep-30); }
+.is-v2 .qcard-tape { display: none; }
+.is-v2 .q-mark { color: var(--ink); }
+.is-v2 .qback-head { border-bottom: 2px solid var(--line); background: var(--ok-tint); color: var(--ok); }
+.is-v2 .qback-title { text-shadow: none; }
+.is-v2 .qback-tick { border: 0; background: var(--ok); box-shadow: none; }
+.is-v2 .qback-tick svg { stroke: var(--white); }
+.is-v2 .qback-text { font-weight: 600; }
+.is-v2 .qback-text .hl { color: var(--ink); }
+.is-v2 :is(.qback-text, .def-text) .stress { color: var(--sp); }
+.is-v2 .qcard-pos.is-center { transform: translate(-674px, -50%) translate(0, 110px); } /* the middle of the content (x 576–1340) */
+/* Screen 8, after a wrong answer: Cost Price (no colour of its own) and Selling Price (blue), on index cards */
+.is-v2 .def { padding: 26px 26px 30px; }
+.is-v2 .def-title { font-size: 50px; }
+.is-v2 .def--neutral .def-title, .is-v2 .def--neutral .def-text .hl { color: var(--ink); }
+.is-v2 .def--blue .def-title, .is-v2 .def--blue .def-text .hl { color: var(--sp); }
+.is-v2 .def-pics { margin: 18px 0 20px; }
+.is-v2 .def-pic { border: 0; box-shadow: 0 6px 16px var(--ink-16); }
+.is-v2 .def-text { font-size: 44px; font-weight: 600; }
+.is-v2 .defs-row { gap: 36px; }
+.is-v2 .def { width: 360px; }
+
+/* Screen 11: the lens and its name side by side */
+.is-v2 .mp-left, .is-v2 .mp-talk { display: none; }
+.is-v2 .mp-panel { grid-template-columns: auto; }
+.is-v2 .mp-side { height: auto; gap: 40px; padding: 0; }
+.is-v2 .mp-side--lens { flex-direction: row; align-items: center; gap: 64px; }
+.is-v2 .mp-zoom { width: 330px; height: 330px; }
+.is-v2 .mp-zoom-art { filter: drop-shadow(0 16px 26px var(--ink-22)); }
+.is-v2 .mp-zoom-rim { stroke: var(--ink); stroke-width: 7; }
+.is-v2 .mp-link path { stroke: var(--muted); stroke-width: 5; }
+.is-v2 .mp-link-dot { fill: var(--hl); stroke: var(--muted); stroke-width: 3; }
+.is-v2 .mp-pill { /* the new word, on a taped note */
+  position: relative;
+  padding: 26px 48px 18px;
+  border: 0;
+  border-radius: 5px;
+  background: var(--mp-tint);
+  box-shadow: var(--paper-shadow);
+  color: var(--mp);
+  font-size: 62px;
+  rotate: -1.5deg;
+}
+.is-v2 .mp-pill::before { content: ''; position: absolute; left: 50%; top: -15px; width: 110px; height: 30px; margin-left: -55px; background: var(--tape); rotate: -3deg; }
+.is-v2 .mp-abbr { color: var(--mp); opacity: .7; }
+
+/* Screen 17: the book, the bar, and ₹1000 − ₹800 = ₹200 */
+.is-v2 .fm-book { width: 220px; }
+.is-v2 .mp-book-art { filter: drop-shadow(0 14px 22px var(--ink-22)); }
+.is-v2 .fm-op { color: var(--ink-2); }
+.is-v2 .fm-panel { gap: 40px; }
+/* Screen 18: the formula in words, then in short on a sticky note */
+.is-v2 .fr-panel { gap: 60px; }
+.is-v2 .fr-foot { height: 0; }
+.is-v2 .fr-ini::before { border-width: 2px; }
+/* Screen 14: the card on the right of the counter */
+.is-v2 .red-card { border: 0; border-radius: 6px; background: var(--white); box-shadow: 0 18px 44px var(--deep-28); }
+.is-v2 .red-tag { color: var(--d); text-shadow: none; }
+/* Screen 26: 30% OFF means a 30% discount */
+.is-v2 .mn-word { color: var(--ink); }
+.is-v2 .mn-arrow path { stroke: var(--ink-2); }
+.is-v2 .mn-card { position: relative; border: 0; border-radius: 5px; background: var(--white); box-shadow: var(--paper-shadow); color: var(--ink); rotate: 1deg; }
+.is-v2 .mn-card::before { content: ''; position: absolute; left: 50%; top: -15px; width: 120px; height: 32px; margin-left: -60px; background: var(--tape); rotate: 2deg; }
+/* The sneakers: a photo with its tags */
+.is-v2 .pc-photo { border: 0; border-radius: 14px; box-shadow: 0 0 0 8px var(--white), 0 14px 30px var(--ink-22); }
+.is-v2 .pc-price { border-width: .045em; box-shadow: 0 .2em .4em var(--deep-28); color: var(--ink); }
+.is-v2 .pc-off { border: 0; box-shadow: 0 10px 18px var(--tag-shadow); }
+/* Screens 28–30 and 37: the part and the whole */
+.is-v2 .pf-box { position: relative; border: 0; border-radius: 5px; box-shadow: var(--paper-shadow); }
+.is-v2 .pf-box--part { background: var(--part-tint); rotate: -1deg; }
+.is-v2 .pf-box--whole { background: var(--whole-tint); rotate: .8deg; }
+.is-v2 .pf-box-label { background: none !important; padding: 10px 8px 4px 16px; }
+.is-v2 .pf-box--part .pf-box-label { color: var(--part); }
+.is-v2 .pf-box--whole .pf-box-label { color: var(--whole); }
+.is-v2 .pf-hint path { stroke: var(--part); }
+/* Screens 32, 34 and 38: the working */
+.is-v2 .ws-slot { background-color: var(--white); }
+.is-v2 .ws-slot.is-over, .is-v2 .ws-slot.is-picked { background-color: var(--band); }
+
+/* ---------- Checkpoints (rule 8): FX.checkpoint ---------- */
+.ck { position: absolute; inset: 0; pointer-events: none; }
+.ck-head { position: absolute; left: 96px; top: 104px; }
+.ck-head small { display: block; margin-bottom: 8px; color: var(--teal); font-size: 26px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; }
+.ck-title { color: var(--ink); font-size: 56px; font-weight: 800; line-height: 1.05; }
+.ck-tick { display: inline-block; margin-left: 18px; color: var(--ok); opacity: 0; transform: scale(.3); transition: opacity .3s ease, transform .5s cubic-bezier(.3, 1.6, .5, 1); }
+.ck-tick.is-on { opacity: 1; transform: none; }
+.ck-body {
+  position: absolute;
+  left: 96px;
+  top: 252px;
+  width: 1244px;
+  display: flex;
+  flex-direction: column;
+  gap: 38px;
+  pointer-events: auto;
+}
+.ck-say { align-self: flex-start; margin: 0 0 -14px -8px; padding: 2px 8px 0; border-radius: 8px; color: var(--ink-2); font-size: 38px; font-weight: 700; line-height: 1.15; }
+.is-v2 .ck-say.is-said { background: var(--hl); box-shadow: none !important; color: var(--ink); }
+.ck-cards { display: flex; gap: 34px; align-items: stretch; }
+.ck-card { /* a lined index card */
+  flex: 1;
+  padding: 22px 30px 26px;
+  border-radius: 6px;
+  background-color: var(--white);
+  background-image: repeating-linear-gradient(to bottom, transparent 0 46px, var(--grid) 46px 48px);
+  background-position: 0 92px;
+  box-shadow: var(--paper-shadow);
+  rotate: -.8deg;
+}
+.ck-card:nth-child(2) { rotate: .6deg; }
+.ck-card:nth-child(3) { rotate: -.3deg; }
+.ck-term { padding-bottom: 10px; border-bottom: 3px solid var(--margin); font-size: 40px; font-weight: 800; line-height: 1.1; }
+.ck-value { margin-top: 12px; font-size: 56px; font-weight: 800; line-height: 1; }
+.ck-text { margin-top: 12px; color: var(--ink); font-size: 34px; font-weight: 600; line-height: 48px; }
+.ck-card--mp :is(.ck-term, .ck-value) { color: var(--mp); }
+.ck-card--sp :is(.ck-term, .ck-value) { color: var(--sp); }
+.ck-card--d :is(.ck-term, .ck-value) { color: var(--d); }
+.ck-card--part :is(.ck-term, .ck-value) { color: var(--part); }
+.ck-card--whole :is(.ck-term, .ck-value) { color: var(--whole); }
+.ck-card--ink :is(.ck-term, .ck-value) { color: var(--ink); }
+.ck-foot { display: flex; align-items: center; gap: 44px; }
+.ck-example { color: var(--ink); font-size: 38px; font-weight: 600; }
+.ck-ex-label { display: block; margin-bottom: 6px; color: var(--teal); font-size: 26px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; }
+.ck-ex-text .hl { font-weight: 800; }
+.ck-actions { display: flex; gap: 22px; }
+.ck-btn {
+  height: 84px;
+  padding: 6px 34px 0;
+  border: 2px solid var(--line);
+  border-radius: 42px;
+  background: var(--white);
+  box-shadow: 0 4px 12px var(--ink-10);
+  color: var(--teal);
+  font: 800 38px/1 var(--font);
+  cursor: pointer;
+  transition: transform .15s ease, box-shadow .15s ease;
+}
+.ck-btn:hover { transform: translateY(-3px); box-shadow: 0 10px 22px var(--ink-14); }
+.ck-btn:active { transform: translateY(2px); }
+.ck-btn--go { border-color: var(--teal); background: var(--teal); color: var(--white); }
+.ck-btn:focus-visible { outline: 5px solid var(--hl); outline-offset: 4px; }
+
+/* A formula on a yellow sticky note (FX.formulaNote): on a checkpoint, kept in the notebook, shown again later */
+.f-note {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 18px;
+  padding: 26px 40px 18px;
+  border-radius: 3px;
+  background: var(--note);
+  box-shadow: 0 14px 26px var(--ink-16), 0 2px 4px var(--ink-10);
+  color: var(--ink);
+  font-size: 54px;
+  font-weight: 800;
+  line-height: 1;
+  white-space: nowrap;
+  rotate: 1.2deg;
+}
+.f-op { color: var(--ink-2); }
+.f-note .tone-mp { color: var(--mp); }
+.f-note .tone-sp { color: var(--sp); }
+.f-note .tone-d { color: var(--d); }
+.f-note .tone-part { color: var(--part); }
+.f-note .tone-whole { color: var(--whole); }
+.f-note--small { gap: 10px; padding: 16px 22px 10px; font-size: 32px; }
+.f-note.is-flying { position: absolute; z-index: 40; margin: 0; pointer-events: none; }
+.remember { /* the last topic's card, shown again as the next topic starts (rule 8): under the snapshot */
+  position: absolute;
+  left: 96px;
+  top: 516px;
+  width: 424px;
+  pointer-events: none;
+}
+.remember small { display: block; margin-bottom: 10px; color: var(--teal); font-size: 24px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; }
+
+/* ---------- The progress bar: Marked Price → Discount → Percentages → Discount % ---------- */
+#progress {
+  position: absolute;
+  z-index: 30;
+  left: 50%;
+  top: 34px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+#progress[hidden] { display: none; }
+#progress li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 18px 6px;
+  border-radius: 24px;
+  background: var(--paper-92);
+  color: var(--ink-2);
+  font-size: 22px;
+  font-weight: 800;
+  line-height: 1;
+  white-space: nowrap;
+  box-shadow: 0 2px 8px var(--deep-18);
+}
+#progress li + li::before { content: '→'; margin: 0 2px 0 -2px; color: var(--muted); }
+#progress li.is-here { background: var(--teal); color: var(--white); }
+#progress li.is-done { color: var(--teal); }
+#progress li.is-done::after { content: '✓'; color: var(--ok); }
+
+/* ---------- The notebook: the checkpoints' cards ---------- */
+#btn-notebook { left: 104px; top: 28px; }
+#btn-notebook[hidden] { display: none; }
+#btn-notebook.is-getting { animation: nb-get .7s cubic-bezier(.3, 1.6, .5, 1); }
+@keyframes nb-get { 40% { transform: scale(1.18); } }
+#notebook-scrim { position: absolute; inset: 0; z-index: 44; background: var(--deep-45); opacity: 0; pointer-events: none; transition: opacity .3s ease; }
+#notebook-scrim.is-open { opacity: 1; pointer-events: auto; }
+#notebook {
+  position: absolute;
+  z-index: 45;
+  left: 50%;
+  top: 50%;
+  width: 1500px;
+  max-height: 900px;
+  padding: 40px 56px 50px;
+  border-radius: 10px;
+  background-color: var(--white);
+  background-image: repeating-linear-gradient(to bottom, transparent 0 58px, var(--grid) 58px 60px);
+  box-shadow: 0 30px 80px var(--deep-45);
+  overflow-y: auto;
+  opacity: 0;
+  transform: translate(-50%, -46%) scale(.96);
+  pointer-events: none;
+  transition: opacity .3s ease, transform .3s ease;
+}
+#notebook.is-open { opacity: 1; transform: translate(-50%, -50%); pointer-events: auto; }
+.nb-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+.nb-head h2 { margin: 0; color: var(--teal); font-size: 48px; }
+.nb-page { display: grid; grid-template-columns: 330px 1fr; align-items: center; gap: 30px; padding: 22px 0; border-top: 2px solid var(--line); }
+.nb-page h3 { margin: 0; color: var(--ink); font-size: 34px; line-height: 1.15; }
+.nb-page h3 small { display: block; color: var(--teal); font-size: 22px; letter-spacing: 1px; text-transform: uppercase; }
+.nb-cards { display: flex; flex-wrap: wrap; align-items: center; gap: 16px 22px; }
+.nb-card { padding: 12px 18px 8px; border-radius: 5px; background: var(--paper); box-shadow: 0 4px 10px var(--ink-10); font-size: 26px; font-weight: 700; }
+.nb-card b { margin-right: 8px; }
+.nb-empty { color: var(--ink-2); font-size: 30px; }
+
+/* ---------- The Concept layout (FX.concept): the value on a taped note, the new word, one line of meaning ---------- */
+.cn { display: flex; flex-direction: column; align-items: center; gap: 30px; text-align: center; }
+.cn-note {
+  position: relative;
+  padding: 30px 60px 18px;
+  border-radius: 5px;
+  background: var(--white);
+  box-shadow: var(--paper-shadow);
+  rotate: -1.5deg;
+}
+.cn-note::before { content: ''; position: absolute; left: 50%; top: -16px; width: 120px; height: 32px; margin-left: -60px; background: var(--tape); rotate: 3deg; }
+.cn-value { font-size: 120px; font-weight: 800; line-height: 1; }
+.cn-term { font-size: 72px; font-weight: 800; line-height: 1.05; }
+.cn-abbr { opacity: .7; }
+.cn-meaning { color: var(--ink); font-size: 42px; font-weight: 600; }
+.cn--mp .cn-note { background: var(--mp-tint); }
+.cn--mp :is(.cn-value, .cn-term) { color: var(--mp); }
+.cn--d .cn-note { background: var(--d-tint); }
+.cn--d :is(.cn-value, .cn-term) { color: var(--d); }
+.pin { position: absolute; font-size: 30px; line-height: 1; } /* a spot on the snapshot something flies from (game.js) */
+
+/* ---------- Bar models (FX.barModel): the whole as a bar, split into its parts ---------- */
+.bm { display: flex; flex-direction: column; gap: 14px; width: 940px; margin-top: 46px; }
+.bm-total { font-size: 36px; font-weight: 600; }
+.bm-total b { font-weight: 800; }
+.bm-bar {
+  position: relative;
+  display: flex;
+  height: 104px;
+  border-radius: 8px;
+  overflow: hidden;
+  background: var(--mp-tint);
+  box-shadow: inset 0 0 0 3px var(--mp-edge);
+}
+.bm-seg {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  flex: 1;
+  transition: background-color .5s ease;
+}
+.bm-seg > * { opacity: 0; transition: opacity .4s ease .2s; }
+.bm-seg b { font-size: 42px; line-height: 1; }
+.bm-seg small { color: var(--ink-2); font-size: 24px; font-weight: 700; }
+.bm-seg + .bm-seg { border-left: 3px dashed transparent; transition: border-color .4s ease; }
+.bm.is-split .bm-seg + .bm-seg { border-left-color: var(--ink-45); }
+.bm.is-split .bm-seg > * { opacity: 1; }
+.bm.is-split .bm-seg--sp { background: var(--sp-tint); }
+.bm.is-split .bm-seg--d { background: var(--d-tint); }
+.bm.is-split .bm-seg--mp { background: var(--mp-tint); }
+.bm-tenth small { font-size: 22px; color: var(--ink); }
+.bm-tenth.is-shaded { background: var(--d-tint); box-shadow: inset 0 0 0 3px var(--d-glow); }
+.bm-note { font-size: 38px; font-weight: 800; }
+
+/* ---------- The 10 × 10 grid (FX.grid100) ---------- */
+.g100 { display: flex; flex-direction: column; align-items: center; gap: 16px; }
+.g100-grid { display: grid; grid-template-columns: repeat(10, 24px); gap: 4px; padding: 10px; border-radius: 6px; background: var(--white); box-shadow: var(--paper-shadow); }
+.g100-cell { width: 24px; height: 24px; border-radius: 3px; background: var(--whole-tint); box-shadow: inset 0 0 0 1px var(--whole-edge); transition: background-color .25s ease; }
+.g100-cell.is-on { background: var(--part); box-shadow: none; }
+.g100-label { color: var(--ink); font-size: 32px; font-weight: 800; }
+
+/* A note shown on a story picture for a moment, going back to the story (game.js noteOnPicture) */
+.pic-note { position: absolute; z-index: 4; pointer-events: none; }
+/* Screen 30: the 10 × 10 grid, under the snapshot */
+.side-grid { position: absolute; left: 96px; top: 508px; width: 424px; display: flex; justify-content: center; pointer-events: none; }
+/* Screen 29: the grid beside the working */
+.is-v2 .pf-panel:has(.g100) { grid-template-columns: auto auto auto; }
+.is-v2 .pf-panel .g100 { grid-row: 2; grid-column: 3; }
+/* Screens 31, 33 and 34: the sneakers are in the snapshot, so the question has the panel to itself */
+.is-v2 .pqp-item { display: none; }
+.is-v2 .pqp-panel { grid-template-columns: auto; }
+.is-v2 :is(.pqp-question, .pf-question) { font-size: 50px; }
+.is-v2 .pqp-answers { min-width: 0; min-height: 0; }
+/* Screen 27: the sneakers' card, sized to the room left of Swifty */
+.is-v2 .pc-photo { width: 640px; height: 280px; }
+/* Screen 34: the working, sized to the room left of Swifty */
+.is-v2.has-swifty .ws-panel { gap: 30px; }
+.is-v2.has-swifty .cmp-box.ws-box { width: 300px; height: 130px; }
+.is-v2.has-swifty .ws-box .cmp-price { font-size: 60px; }
+.is-v2.has-swifty .ws-box .cmp-label { font-size: 30px; }
+.is-v2.has-swifty .ws-sheet { font-size: 46px; }
+/* Screen 26: what the tag means, sized to the room left of Swifty */
+.is-v2 .mn-panel { gap: 36px; }
+.is-v2 .mn-tag { padding: 24px 36px 12px; font-size: 88px; }
+.is-v2 .mn-card { padding: 24px 40px 12px; font-size: 88px; }
+.is-v2 .mn-word { font-size: 52px; }
+.is-v2 .mn-arrow { width: 140px; }
+/* Checkpoints: bigger cards, filling their room */
+.ck-cards { gap: 40px; }
+.ck-card { min-height: 250px; padding: 26px 34px 30px; }
+.ck-term { font-size: 46px; }
+.ck-value { font-size: 56px; }
+.ck-text { font-size: 38px; line-height: 50px; }
+.ck-card { background-position: 0 96px; background-image: repeating-linear-gradient(to bottom, transparent 0 48px, var(--grid) 48px 50px); }
+.ck-example { white-space: nowrap; }
+/* A checkpoint's text in four sizes only (the brief's rule 5): 26 labels, 38 text, 46 terms, 56 the title, amounts and formula */
+.ck .f-note { font-size: 56px; }
+
+/* The line log (js/linelog.js, only with ?log= in the address): what it is doing, bottom left, outside the stage */
+.dev-log {
+  position: fixed; left: 8px; bottom: 8px; z-index: 9999; pointer-events: none;
+  padding: 4px 10px; border-radius: 6px; background: var(--ink); color: var(--paper);
+  font: 600 12px/1.4 system-ui, sans-serif; opacity: .85;
+}
+
+/* The story pictures brought to life (game.js Clips): a screen's video clips, over its picture and under everything on
+   it. Each fades in over the one before (0.15 s), so a clip never pops in. */
+.scene-clips { position: absolute; inset: 0; pointer-events: none; isolation: isolate; } /* (its clips' order stays inside it: under the bubbles) */
+.scene-clip {
+  position: absolute; inset: 0; width: 100%; height: 100%; display: block;
+  object-fit: fill; opacity: 0; transition: opacity .15s linear;
+}
+.scene-clip.is-on { opacity: 1; }

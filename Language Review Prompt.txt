@@ -1,0 +1,53 @@
+LANGUAGE REVIEW PROMPT (for ChatGPT)
+
+Before you paste it:
+1. Replace [GRADE] below with the learners' grade (for example "Grade 7, ages 12-13").
+2. Paste the line log at the bottom, all its rows and columns: the sheet "All lines in order" of "Bookstore Journey - Lines for the language check.xlsx" (made with the game's line log), or a new one from the line log itself (index.html?log=right, then ?log=wrong, then L; see docs/VOICEOVER.md).
+3. The content team checks every suggestion before anything changes in the game.
+
+---------------------------------------------------------------------------
+
+You are the language editor for a children's maths game for [GRADE] learners in India. It teaches Marked Price, Selling Price, Discount and Discount Percentage through a story: Aniket shops at a mall, and Swifty, a friendly bird, explains the maths. At the end the learner plays a shopping game.
+
+Below is every line in the order the learner meets it, as a table with these columns:
+# | Screen | Screen name | Path | Who | Type | Text | Voice clip | Words that must not change
+
+- Path: "All" (everyone sees it), "Right answer" or "Wrong answer" (only after that answer).
+- Type: Speech bubble, Thought cloud, Question bar (Swifty's lines on the bar in the shopping game), Spoken (no bubble: Swifty reads out words already written on the screen), On-screen text (titles, cards, questions, answers, buttons), Progress bar, Notebook.
+- Voice clip: a line with a clip id is a recording. If its words change, it has to be recorded again, so change a spoken line only when it is really needed. A change of capital letters or of an apostrophe sounds the same and needs no new recording.
+
+Check each line, and suggest a change only where it helps. A good line:
+- is correct, natural English that Indian learners of this grade understand easily;
+- is short and clear: one idea, ideally under 15 words;
+- sounds like its speaker: Aniket is an excited boy, his father is warm and wise, the shopkeeper is polite, Swifty is a friendly teacher; conversational, never textbook-like;
+- keeps its meaning.
+
+Do not change:
+- the words in the column "Words that must not change" (formulas, ₹ amounts, numbers, percentages, the maths terms, the names);
+- the answer options of a question (fix only spelling there);
+- the order of the lines.
+
+Keep the game's style rules:
+1. Capital letters for the maths terms on cards, boxes, labels and headings (Marked Price, Selling Price, Cost Price, Discount); small letters inside normal sentences (marked price, selling price, discount).
+2. Four-digit amounts without a comma (₹1000, ₹1800) in the story; the shopping game writes ₹1,600 and ₹5,000. Point out any amount written both ways.
+3. "OFF" in capitals only for the tag itself ("30% OFF"); in a sentence "30% off".
+4. Feedback is always "Correct!" for a right answer and "Not quite!" for a wrong one.
+5. Short forms in speech (That's, Let's, I'll); cards and formulas in full words.
+6. British / Indian spelling (learnt, colour, centre).
+7. The curly apostrophe (’) everywhere.
+8. Maths on screen with symbols (Discount % = Discount ÷ MP × 100); in speech "discount percentage" and "divided by".
+9. A spoken line (Type "Spoken (no bubble)") reads words that are on the screen: if you change one, say what must change in the other so they still match.
+
+Reply with one table, every row in the same order with the same #:
+# | Now | Suggested text (or "no change") | Why (a few words) | Change? | Voice impact
+
+- Change?: "Must fix" (wrong or not grammatical), "Should change" (clearer, simpler or more consistent), "Style only" (capital letters, commas, apostrophes), "Optional" (nice to have), or "Keep".
+- Voice impact: "Re-record the clip" (the words change), "Update the text only" (it sounds the same), or "No voice".
+
+Under the table, list:
+- the same idea said twice on one screen;
+- a word used for two different things, or two words used for one thing;
+- amounts written two ways (₹1800 and ₹1,800);
+- anything a child of this grade might find hard to understand.
+
+[PASTE THE LINE LOG HERE]

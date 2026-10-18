@@ -369,4 +369,7 @@ def main(args):
 
 
 if __name__ == '__main__':
+    # The lines hold ₹ and Devanagari: print them as UTF-8 even where the terminal's own code page can't (Windows).
+    for stream in (sys.stdout, sys.stderr):
+        stream.reconfigure(encoding='utf-8')
     main(sys.argv[1:])
