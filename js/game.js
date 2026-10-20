@@ -2803,8 +2803,19 @@
   // The sneakers, in their box: over the counter, the shopkeeper hands them to Aniket. No words: a light sweeps
   // across the box, with twinkles round it and a chime.
   const SNEAKER_BOX = [[905, 440], [1245, 452], [1292, 598], [1240, 700], [880, 775], [800, 700], [800, 600], [935, 520]]; // the box and its lid (stage px)
+  // Where the box ends up in the clip (s36-box), in Aniket's hands.
+  const SNEAKER_BOX_HELD = [[440, 700], [630, 628], [752, 580], [1000, 598], [880, 702], [880, 800], [686, 864], [438, 792]];
 
   async function playBoxed(ctx, scene) {
+    if (Clips.has('s36-box')) { // the clip hands the box over: the chime as Aniket takes it, the light once it's his
+      await ctx.wait(1250, { real: true }); // (the clip started about half a second before this script)
+      Sound.chime();
+      await ctx.wait(2400, { real: true });
+      FX.shine(scene.layer, SNEAKER_BOX_HELD, { duration: 1300, width: 260 });
+      await ctx.wait(1300, { real: true });
+      ctx.advance(2600);
+      return;
+    }
     await ctx.wait(900);
     FX.shine(scene.layer, SNEAKER_BOX, { duration: 1300, width: 260 });
     await ctx.wait(450);
@@ -3810,12 +3821,16 @@
   // Prompts.md"), kept in game assets/video/ and listed in js/video_clips.js: the game plays only the clips there are, and
   // where one isn't made yet the still picture stays, as before (so it does with reduced motion). On a screen with clips,
   // its quiet loop plays while nobody speaks and each line's talking clip as the line is said; every clip of a screen
-  // starts and ends on its picture, so each takes over from another without a jump. A movement clip (one picture turning
-  // into the next) plays in place of the fade into the next screen, which then comes in on its last frame.
+  // starts on its picture, so each takes over from another without a jump. (The clips made with Gemini don't end on it:
+  // a talking clip with no loop to go back to stays on its last frame, and on some screens, `hold`, so does every one.)
+  // A movement clip (one picture turning into the next) plays in place of the fade into the next screen, which then
+  // comes in on its last frame.
   const CLIP_DIR = ASSETS + 'video/';
   // Each screen's clips: its quiet loop (`idle`; `once`: it plays once and holds its last frame), and its lines' talking
-  // clips by line id (a list: the first one made; '': the clip already playing goes on). `react` and `after`: the
-  // clip of a reaction (see Clips.react), and the loop after it.
+  // clips by line id (a list: the first one made; '': the clip already playing goes on). `hold`: after a talking clip
+  // the loop doesn't start again, the clip stays on its last frame (where the people have moved on from the picture,
+  // e.g. Aniket has finished stepping in, so starting the loop again would jump back). `react` and `after`: the clip of
+  // a reaction (see Clips.react), and the loop after it.
   const CLIPS = {
     home: { idle: 's01-idle', lines: { plan: 's01-aniket-1', advice: 's01-father', promise: 's01-aniket-2' } },
     browse: { idle: 's05-idle', lines: { browse: 's05-aniket' } },
@@ -3832,12 +3847,15 @@
     shoe: { idle: 's23-idle' },
     tag: { idle: 's24-idle' },
     confused: { lines: { 'shoe-price': 's25-aniket-1', 'shoe-ask': 's25-aniket-2' } },
-    final: { lines: { 'final-1': 's35-aniket', 'final-2': '' } },
+    final: { lines: { 'final-1': 's35-aniket', 'final-2': 's35-aniket-2' } },
     boxed: { idle: 's36-box', once: true },
-    return: { idle: 's40-idle', lines: { 'home-ask': 's40-father-1', 'home-learnt': 's40-aniket', 'home-next': 's40-father-2' } },
-    school: { idle: 's41-idle', lines: { 'school-soon': 's41-father-1', 'school-need': 's41-father-2' } },
+    return: { idle: 's40-idle', hold: true, lines: { 'home-ask': 's40-father-1', 'home-learnt': 's40-aniket', 'home-next': 's40-father-2' } },
+    school: { idle: 's41-idle', lines: { 'school-soon': 's41-father-1', 'school-need': ['s41-father-2', 's41-father-1'] } },
     money: { lines: { money: 's43-father' } },
-    deal: { idle: 's45-idle', lines: { 'deal-use': 's45-father-1', 'deal-left': 's45-father-2', 'deal-really': 's45-aniket-1', 'deal-offers': 's45-aniket-2' } },
+    deal: {
+      idle: 's45-idle', hold: true,
+      lines: { 'deal-use': 's45-father-1', 'deal-left': ['s45-father-2', 's45-father-1'], 'deal-really': 's45-aniket-1', 'deal-offers': 's45-aniket-2' },
+    },
     begin: { idle: 's46-idle' },
     homeagain: {
       idle: 's56-idle',
@@ -3861,10 +3879,10 @@
     moveFor: (from, to) => (Clips.has(CLIP_MOVES[`${from.id}>${to.id}`]) ? CLIP_MOVES[`${from.id}>${to.id}`] : null),
 
     // The <video> of a clip on its screen: made when first needed, and loaded straight away (muted: the game plays the
-    // voices; inline, for tablets).
-    video(scene, name) {
+    // voices; inline, for tablets). `key`: a second copy of the clip (see play).
+    video(scene, name, key = name) {
       scene.clipEls = scene.clipEls || {};
-      let v = scene.clipEls[name];
+      let v = scene.clipEls[key];
       if (!v) {
         v = el('video', 'scene-clip', scene.clipBox);
         v.muted = true;
@@ -3874,7 +3892,7 @@
         ['muted', 'playsinline', 'disablepictureinpicture'].forEach(a => v.setAttribute(a, ''));
         v.setAttribute('aria-hidden', 'true');
         v.src = CLIP_DIR + name + '.mp4';
-        scene.clipEls[name] = v;
+        scene.clipEls[key] = v;
       }
       return v;
     },
@@ -3884,7 +3902,8 @@
     // or the clip isn't there.
     play(scene, name, { loop = false } = {}) {
       if (!scene.clipBox || !Clips.has(name)) return Promise.resolve(false);
-      const v = Clips.video(scene, name);
+      let v = Clips.video(scene, name);
+      if (v.classList.contains('is-on')) v = Clips.video(scene, name, name + ' again'); // said again while it shows: a copy fades in over it
       const turn = (scene.clipTurn || 0) + 1;
       scene.clipTurn = turn;
       v.loop = loop;
@@ -3915,12 +3934,13 @@
       });
     },
 
-    // Back to the screen's quiet loop; or, if it has none, back to its picture.
+    // Back to the screen's quiet loop. Without one (or on a `hold` screen), the clip that just ended stays on its last
+    // frame; after a reaction with no loop, the clips make way for the reaction picture.
     idle(scene) {
       const plan = CLIPS[scene.id] || {};
       const name = Clips.first(scene.reacted ? plan.after : plan.idle);
-      if (name && !(plan.once && !scene.reacted)) return Clips.play(scene, name, { loop: true });
-      if (!name) Clips.fade(scene);
+      if (scene.reacted && !name) Clips.fade(scene);
+      else if (name && !plan.hold && !(plan.once && !scene.reacted)) return Clips.play(scene, name, { loop: true });
       return Promise.resolve(false);
     },
 

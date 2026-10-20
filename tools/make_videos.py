@@ -7,8 +7,11 @@ The clips, their frames and their prompts are in "Animation Video Prompts.md".
   python3 tools/make_videos.py --all                    make every clip not made yet
   python3 tools/make_videos.py --import "videos "       bring in clips made elsewhere (a folder or files; each file's name
                                                         holds its clip's name, e.g. "s01-idle.mp4"; --as CLIP names a
-                                                        single file, --skip CLIP… leaves clips out)
+                                                        single file, --skip CLIP… leaves clips out; --gemini for clips
+                                                        made with Google Gemini: see tools/gemini_clean.py)
   python3 tools/make_videos.py --index                  just list the clips there are, for the game (js/video_clips.js)
+  python3 tools/make_videos.py --todo                   write "Animation Video Prompts - Left to Make.md": only the clips
+                                                        not made yet, by picture, each with its prompt
   options: --resolution 720p|1080p (default 1080p)   --duration SECONDS (4-30; default: each clip's own length)
            --again (remake clips already made)
 
@@ -36,6 +39,21 @@ PICTURES = ROOT / 'game assets'
 OUT = ROOT / 'game assets' / 'video'
 LOG = ROOT / 'tools' / 'video_log.jsonl'
 INDEX = ROOT / 'js' / 'video_clips.js'
+TODO = ROOT / 'Animation Video Prompts - Left to Make.md'
+# A clip to make again, and why (its first take didn't fit).
+_POINTING = ('Make it again, starting on "shoes shop enter.png": the first take started on "he saw a shoe.png" (Aniket '
+             'pointing), the wrong picture for Screen 22. (That take is in the game on Screen 35 instead.)')
+REDO = {
+    's06-to-s07': "Make it again: the first take started on Screen 7's picture, so the book was never handed over.",
+    's22-aniket-1': _POINTING,
+    's22-aniket-2': _POINTING.replace(' (That take is in the game on Screen 35 instead.)', ''),
+    's22-aniket-3': _POINTING,
+    's22-to-s23': 'Make it again on Higgsfield, with both frames: the Gemini take started on the wrong picture and zoomed '
+                  'in on the sneakers.',
+    's23-to-s24': 'Make it again on Higgsfield, with both frames: in the Gemini take his hand ended at his side, not at '
+                  'his chin.',
+    's24-to-s25': 'Make it again on Higgsfield, with both frames: in the Gemini take he crossed his arms instead.',
+}
 API = 'https://api.higgsfield.ai'
 MODEL = 'bytedance/seedance-2.5/image-to-video'
 DONE = {'completed', 'failed', 'nsfw', 'canceled', 'cancelled'}
@@ -50,19 +68,20 @@ def load_clips():
     for line in text.splitlines():  # the table: file, screen, start frame, end frame, length, what happens
         cells = [c.strip().strip('`') for c in line.strip().strip('|').split('|')]
         if len(cells) == 6 and re.fullmatch(r's\d\d[\w-]*', cells[0]):
-            name, _, start, end, length, what = cells
+            name, screen, start, end, length, what = cells
             end = None if end.startswith('(none)') else start if end == 'same' else end
-            frames[name] = (start, end, int(re.match(r'\d+', length).group()), what)
+            frames[name] = (start, end, int(re.match(r'\d+', length).group()), what, screen)
     # each prompt: its heading "#### name.mp4", the line saying where to save it, then the prompt in a text block
     prompts = dict(re.findall(r'^#### (s\d\d[\w-]*)\.mp4\n[^\n]*\n```text\n(.*?)\n```', text, re.S | re.M))
     clips = []
-    for name, (start, end, seconds, what) in frames.items():
+    for name, (start, end, seconds, what, screen) in frames.items():
         if name not in prompts:
             sys.exit(f'{name}: no prompt for it in {PROMPTS.name}')
         for picture in filter(None, (start, end)):
             if not (PICTURES / picture).exists():
                 sys.exit(f'{name}: no picture "{picture}" in {PICTURES}')
-        clips.append({'name': name, 'start': start, 'end': end, 'seconds': seconds, 'what': what, 'prompt': prompts[name].strip()})
+        clips.append({'name': name, 'screen': screen, 'start': start, 'end': end, 'seconds': seconds, 'what': what,
+                      'prompt': prompts[name].strip()})
     return clips
 
 
@@ -92,7 +111,15 @@ def write_index():
     print(f'{INDEX.relative_to(ROOT)}: {len(clips)} clip(s)')
 
 
-def import_clips(paths, known, as_name=None, skip=()):
+def import_clips(paths, known, as_name=None, skip=(), gemini=False):
+    """known: the clips by name. With gemini, each clip is readied by tools/gemini_clean.py (its framing put back on its
+    story picture, the sparkle taken off), from the pictures the prompts file gives it."""
+    if gemini:
+        try:
+            sys.path.insert(0, str(Path(__file__).resolve().parent))
+            import gemini_clean
+        except ImportError as e:
+            sys.exit(f'--gemini needs numpy and Pillow ({e}): python3 -m pip install numpy pillow')
     files = []
     for p in map(Path, paths):
         files += sorted(f for f in p.iterdir() if f.suffix.lower() in ('.mp4', '.mov', '.m4v', '.webm')) if p.is_dir() else [p]
@@ -106,9 +133,70 @@ def import_clips(paths, known, as_name=None, skip=()):
         if name in skip:
             print(f'skipped (--skip): {f.name}')
             continue
-        encode(f, OUT / f'{name}.mp4')
+        if gemini:
+            c = known[name]
+            print(f'{name}: from {f.name}')
+            gemini_clean.clean(f, OUT / f'{name}.mp4', PICTURES / c['start'],
+                               PICTURES / c['end'] if c['end'] and c['end'] != c['start'] else None)
+        else:
+            encode(f, OUT / f'{name}.mp4')
         print(f"{name}: from {f.name}, {(OUT / (name + '.mp4')).stat().st_size / 1e6:.1f} MB")
     write_index()
+
+
+def write_todo(clips):
+    """The clips not made yet, by the picture to upload first, each with what to set and its prompt."""
+    made = {p.stem for p in OUT.glob('s*.mp4') if '.' not in p.stem}
+    left = [c for c in clips if c['name'] not in made]
+    negative = re.search(r'negative prompt.*?```text\n(.*?)\n```', PROMPTS.read_text(encoding='utf-8'), re.S | re.I)
+    pictures = {}
+    for c in left:
+        pictures.setdefault(c['start'], []).append(c)
+    out = [
+        '# Animation clips left to make',
+        '',
+        f'{len(left)} of {len(clips)} clips are still to make; the other {len(clips) - len(left)} are in the game. This file holds only '
+        'the ones left, by the picture you upload first, each with its prompt. Everything about them is in '
+        '`Animation Video Prompts.md`. Made with `python3 tools/make_videos.py --todo`; it is written again after each batch.',
+        '',
+        '**For every clip, on Higgsfield** (Seedance 2.5, image to video):',
+        '1. **Start frame:** the picture named with the clip, from the game folder `game assets`: '
+        '`/Users/AniketChauhan/Desktop/profit and discount game/game assets/`.',
+        '2. **End frame:** the picture named as its end frame. For a talking clip or a quiet loop, that is the same picture again.',
+        '3. Paste the prompt. Set the **length** given, **1080p**, 16:9, and **sound off**.',
+        '4. Make 2 or 3 takes and keep the cleanest. The first and last frames must be the pictures, the faces must stay '
+        'the same, and the prices and signs must stay sharp.',
+        '5. Save it with the clip\'s name, for example `s09-to-s10.mp4`, anywhere, and tell me. I put it in the game.',
+        '',
+        '**Check before you keep a take:** for a talking clip or a quiet loop, the last frame must look like the picture again. '
+        'Two of the shopkeeper\'s first takes ended with his open hand down, so it jumped back up when the clip ended.',
+        '',
+        '**Made with Gemini instead?** That works for a talking clip or a quiet loop: keep the name Gemini gives the file '
+        'and tell me which clip it is (or name it as above). I take the sparkle off and line it up with the picture '
+        '(`--import --gemini`). Gemini can\'t be given an end frame, so make the **movement clips** (`…-to-…`) on '
+        'Higgsfield. Ask for no captions: one Gemini take wrote "Really?" on the screen.',
+        '',
+    ]
+    if negative:
+        out += ['If there is a field for a **negative prompt**, paste this:', '', '```text', negative.group(1), '```', '']
+    out += ['## The pictures left', '', '| Picture (start frame) | Screen | Clips to make |', '|---|---|---|']
+    for picture, cs in pictures.items():
+        screens = ', '.join(dict.fromkeys(c['screen'] for c in cs))
+        out.append(f"| `{picture}` | {screens} | {len(cs)}: {', '.join(c['name'] for c in cs)} |")
+    out.append('')
+    n = 0
+    for picture, cs in pictures.items():
+        out += [f'## `{picture}`', '']
+        for c in cs:
+            n += 1
+            end = 'the same picture' if c['end'] == c['start'] else f"`{c['end']}`" if c['end'] else 'none (it ends on a new pose)'
+            out += [f"### {n}. {c['name']}.mp4 · Screen {c['screen']} · {c['what']}", '']
+            if c['name'] in REDO:
+                out += [f"**{REDO[c['name']]}**", '']
+            out += [f"- [ ] Start frame `{c['start']}` · end frame {end} · **{c['seconds']} s** · 1080p · sound off · save as "
+                    f"`{c['name']}.mp4`", '', '```text', c['prompt'], '```', '']
+    TODO.write_text('\n'.join(out), encoding='utf-8')
+    print(f'{TODO.name}: {len(left)} clip(s) left, from {len(pictures)} picture(s)')
 
 
 # ---------- the key, and curl ----------
@@ -236,14 +324,19 @@ def main(args):
     if args[:1] == ['--index']:
         write_index()
         return
+    if args[:1] == ['--todo']:
+        write_todo(load_clips())
+        return
     if args[:1] == ['--import']:
-        known = {c['name'] for c in load_clips()}
-        rest = args[1:]
+        known = {c['name']: c for c in load_clips()}
+        gemini = '--gemini' in args
+        rest = [a for a in args[1:] if a != '--gemini']
         as_name = rest[rest.index('--as') + 1] if '--as' in rest else None
         skip = set(rest[rest.index('--skip') + 1:]) if '--skip' in rest else set()
         paths = [a for a in rest[:rest.index('--skip')] if '--skip' in rest] if '--skip' in rest else rest
         paths = [a for i, a in enumerate(paths) if a != '--as' and (i == 0 or paths[i - 1] != '--as')]
-        import_clips(paths, known, as_name, skip)
+        import_clips(paths, known, as_name, skip, gemini)
+        write_todo(load_clips())
         return
     yes, again, every = '--yes' in args, '--again' in args, '--all' in args
     resolution, duration = '1080p', None

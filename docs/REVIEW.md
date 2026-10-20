@@ -8,7 +8,7 @@ The brief is `Bookstore Journey - Revamp Brief.docx` ("Changes for Screens 1–4
 
 | Rule | State | What the game does now |
 |---|---|---|
-| 1. Animation | **Started** | Video clips made with Higgsfield (Seedance 2.5) from the prompts in `Animation Video Prompts.md` play in the game: a quiet loop between lines, a talking clip with each line, and a movement clip in place of a fade. 11 are in (Screens 1, 4 → 5, 5, 6, 7, 8). Each starts and ends on its picture; Back, Next, Scenes-list jumps and reduced motion land on a clean frame. The rest wait for their clips. |
+| 1. Animation | **Started** | Video clips made from the prompts in `Animation Video Prompts.md` (with Higgsfield's Seedance 2.5, or with Gemini) play in the game: a quiet loop between lines, a talking clip with each line, and a movement clip in place of a fade. 39 are in (Screens 1, 4 → 5, 5–8, 23–25, 35, 36, 40, 41, 42 → 43, 43, 45, 46 and 56). Each starts on its picture; Gemini's are cleaned first (`tools/gemini_clean.py`: the sparkle off, the framing back on the picture). Back, Next, Scenes-list jumps and reduced motion land on a clean frame. The rest wait for their clips. |
 | 2. Speech bubbles | Done | Lines wrap by themselves into balanced lines of about 20–28 letters (a typed line break counts as a space, except after a short "Correct!" or "Not quite!"); weight 600, line spacing 1.3, the same padding on every side; keep-clear areas on 11 story pictures (faces, prices, tags, the book), which bubbles move around; a soft fade in with the whole line (no bounce, no "bloop", no letters jumping in), each word lit with the highlighter as it is said; 34 px, about 18 px on a 1024 px-wide tablet. On Screens 1–46 and the conversation back home (56); the shopping game's own bubbles are unchanged. |
 | 3. Swifty | Done | No bubble when her words are on the screen (the voice stays, and what she reads lights up). Bubbles only for questions, hints, "Correct!" / "Not quite!", instructions and links. She comes only to introduce an idea (11, 16, 26, 37), ask or react (8, 13, 30, 31, 33, 34) and celebrate at a checkpoint; she is not there in the worked solutions (12, 17, 18, 28, 29, 32, 38, the working on 37), where her voice goes on by itself, and the content uses her room. |
 | 4. Story → panel | Done | The picture zooms in on the key object, then shrinks into a framed photo on the left of the panel; the ₹1000 (11) and the 30% OFF tag (26) fly from it onto the panel. Going back, the photo grows back to full screen, and the result shows on the picture: "₹1000 → ₹800" (14), "Discount = MP − SP" (20), the green ₹1260 tag (35). |
@@ -35,7 +35,7 @@ The brief is `Bookstore Journey - Revamp Brief.docx` ("Changes for Screens 1–4
 | 18 | No Swifty | Done. |
 | 19 | Checkpoint 1 | Done. |
 | 20 | "D = MP − SP" on the picture | Done ("Discount = MP − SP", the checkpoint's own note). |
-| 22–25 | One movement; tags sharp; the question to the top on 26 until 34 | The question: done ("ANIKET ASKS", answered "→ ₹1260 ✓" on 34). Movement: not done. |
+| 22–25 | One movement; tags sharp; the question to the top on 26 until 34 | The question: done ("ANIKET ASKS", answered "→ ₹1260 ✓" on 34). 23, 24 and 25 move (a quiet loop on 23 and 24, Aniket talking on 25). Not done: Screen 22's talking (the takes started on the wrong picture) and the movements from one picture to the next (to make on Higgsfield, which takes an end frame). |
 | 26 | Photo; the tag flies; Swifty stays | Done. |
 | 27 | Checkpoint 1's card first; the bubble kept; a small sneakers card in a corner until 30 | Done. The "sneakers card" is the photo itself, zoomed on the sneakers and both tags, on every screen 26–34 (and 37–38). |
 | 28–29 | No Swifty, words lit as said; new Part / Whole colours; one question strip colour; 10 × 10 grid | Done (the grid on 29). |
@@ -45,13 +45,13 @@ The brief is `Bookstore Journey - Revamp Brief.docx` ("Changes for Screens 1–4
 | 33 | Swifty stays | Done. |
 | 34 | Swifty only for the drag and its hints; the working voice only; the bar ₹1260 / ₹540; one rule band colour | Done. Before the working, the screen's question is hers too: she says what to find and reacts to the answer in bubbles, and reads the question and its hint with none. The working has no bubbles. The question's own sneakers picture is gone (the photo shows them). |
 | 35 | The green ₹1260 tag kept; Checkpoint 3 after | Done. Checkpoint 3's Discount card shows the sneakers' working, "30% of ₹1800 = 30/100 × 1800", which Swifty's recorded lines read, rather than a general "Discount = % × Marked Price" (that would need new words and new recordings: for the content team). |
-| 36 | The box handed over as a movement | Not done (animation). |
+| 36 | The box handed over as a movement | Done: the shopkeeper hands the box over in the clip; the chime plays as Aniket takes it, and the light sweeps over the box once it's in his hands. |
 | 37 | Checkpoint 3's card first; the sneakers card; Swifty introduces, then leaves; Part → Discount red, Whole → Marked Price amber | Done. |
 | 38 | No Swifty; the same rule band as 34 | Done. |
 | 39 | Checkpoint 4; no repeated bubbles; Swifty only to celebrate | Done. |
-| 40, 41, 45 | Talking loops | Not done (animation). The new bubbles: done. |
-| 42–44 | One movement: the list, the notes, the pocket | Not done (animation). |
-| 46 | A small movement on Aniket; optional notebook cards as "your tools for shopping" | Not done. |
+| 40, 41, 45 | Talking loops | Done: a quiet loop and a talking clip with each line (the father's second line on 41 and 45 uses his first clip until its own is made). The new bubbles: done. |
+| 42–44 | One movement: the list, the notes, the pocket | The list, then the notes: done (42 → 43), and the father talks on 43. Into the pocket (43 → 44): not done. |
+| 46 | A small movement on Aniket; optional notebook cards as "your tools for shopping" | Aniket waves: done. The notebook cards: not done. |
 
 ## Language check
 
@@ -93,7 +93,7 @@ The brief is `Bookstore Journey - Revamp Brief.docx` ("Changes for Screens 1–4
 
 ## Still to do
 
-1. **The rest of the animation clips:** 44 of 55 are still to make, on Higgsfield, from `Animation Video Prompts.md`; `s06-to-s07` again. Each one plays in the game as soon as it is brought in.
+1. **The rest of the animation clips:** 17 of 56 are still to make (`Animation Video Prompts - Left to Make.md`): Screen 22's three talking clips again, from its own picture; the movements on Higgsfield (Gemini can't be given an end frame), `s06-to-s07` again among them; Screens 10, 14 and 15; and the father's second lines on 41 and 45. Each one plays in the game as soon as it is brought in.
 2. **The language review** with ChatGPT and the content team (above), then one recording batch.
 3. **Text sizes:** bring Screens 17, 27, 29–34 and 37 down to the checkpoints' four sizes (26 / 38 / 46 / 56). They use 6–9 now: the question on top, the bubbles, the working, the answers, the bar's labels and the key number. The checkpoints were done first, as the sample. The rest changes how those panels look, so it waits for your OK on them.
 4. **The older styles' colours** (mostly the shopping game's): still typed directly, not yet named variables.

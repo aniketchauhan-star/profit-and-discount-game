@@ -2,8 +2,8 @@
 
 These prompts turn the game's still pictures into short videos, made on Higgsfield with **Seedance 2.5, image to video**. Every clip below has a file name to save it as, and every talking clip has the exact words its person says.
 
-There are 55 clips in three kinds:
-- **Talking clips (33):** one for each line a person says. The lips move with that line's words, then the person stops and smiles. The game plays the recorded voice with the clip.
+There are 56 clips in three kinds:
+- **Talking clips (34):** one for each line a person says. The lips move with that line's words, then the person stops and smiles. The game plays the recorded voice with the clip.
 - **Quiet loops (12):** blinking, breathing, a sip of tea. They play between the lines.
 - **Movements (10):** one picture turns into the next, for example Aniket picking up the book. They replace the fades.
 
@@ -11,7 +11,17 @@ Screen numbers are the brief's (as in `PROMPT.md`).
 
 ## In the game now
 
-**11 clips play in the game** (Screens 1, 4 → 5, 5, 6, 7 and 8): `s01-idle`, `s01-aniket-1`, `s01-father`, `s01-aniket-2`, `s04-to-s05`, `s05-idle`, `s05-aniket`, `s06-idle`, `s06-aniket`, `s06-shopkeeper` and `s07-idle`. Screen 8 uses `s07-idle` too (the same picture). Until Screen 14 has its own clips, the shopkeeper there also talks with `s06-shopkeeper`.
+**39 clips play in the game.**
+- **Screens 1, 4 → 5, 5, 6, 7 and 8** (made on Higgsfield): `s01-idle`, `s01-aniket-1`, `s01-father`, `s01-aniket-2`, `s04-to-s05`, `s05-idle`, `s05-aniket`, `s06-idle`, `s06-aniket`, `s06-shopkeeper` and `s07-idle`. Screen 8 uses `s07-idle` too (the same picture). Until Screen 14 has its own clips, the shopkeeper there also talks with `s06-shopkeeper`.
+- **Screens 23, 24, 25, 35, 36, 40, 41, 42 → 43, 43, 45, 46 and 56** (made with Gemini, 28 clips): `s23-idle`, `s24-idle`, `s25-aniket-1`, `s25-aniket-2`, `s35-aniket`, `s35-aniket-2`, `s36-box`, `s40-idle`, `s40-father-1`, `s40-aniket`, `s40-father-2`, `s41-idle`, `s41-father-1`, `s42-to-s43`, `s43-father`, `s45-idle`, `s45-father-1`, `s45-aniket-1`, `s45-aniket-2`, `s46-idle` and all eight of Screen 56. Until `s41-father-2` and `s45-father-2` are made, the father says those lines with `s41-father-1` and `s45-father-1`.
+
+From the Gemini batch:
+- **Cleaned** with `tools/gemini_clean.py`: the Gemini sparkle is gone, and each clip sits exactly on its picture again (Gemini shows the picture about 2% closer, and in `s25-aniket-2` and `s45-aniket-2` the camera also pushed in; it is held still now). They stay 1280 × 720, about 1 MB each.
+- **Screen 35** uses two takes made for Screen 22, because they start on Aniket pointing, which is Screen 35's picture: `s35-aniket` for "So, after a 30% discount," and `s35-aniket-2` for "I will pay ₹1260."
+- **Started a little later:** `s40-aniket` and `s40-father-2` begin once Aniket has finished stepping in (0.7 s and 0.6 s into the take), and `s45-aniket-1` and `s45-aniket-2` once the father's hand is down (0.75 s and 0.5 s). Otherwise Aniket, or the father's hand, would jump back at each new line. On Screens 40 and 45 the last clip also stays on its last frame between lines. Gemini wrote "Really?" on the screen in `s45-aniket-1`; it is covered.
+- **Loops:** `s24-idle` and `s46-idle` play forwards and then backwards, so they loop without a jump.
+- **Not used:** the takes for `s22-aniket-2` (the wrong picture), `s22-to-s23` (it zooms in on the sneakers), `s23-to-s24` (his hand ends at his side), `s24-to-s25` (he crosses his arms), and a second take of `s45-idle` (the camera pushes in). Gemini's original files (with the sparkle) were moved to the Trash, so they don't weigh down the folder.
+- **To make again:** `s22-aniket-1`, `-2` and `-3`, starting on `shoes shop enter.png`, and the three movements on Higgsfield (Gemini can't be given an end frame).
 
 From your first batch:
 - **`s06-shopkeeper`:** your take named `s06-shopkeeper` ends with his hand down, so it would jump back up when the clip ends. Your unnamed take `hf_…064244` ends with the hand back where it started, so that one is in the game.
@@ -20,7 +30,7 @@ From your first batch:
   - `hf_…062459` starts on Screen 10 and zooms into the book, so it can't end on the picture. If it was `s10-aniket`, make it again with the same picture as the end frame. If it was `s09-to-s10`, its start frame is `boy see the book .png`.
   - `hf_…063148` is the shopkeeper talking, but his hand ends down.
 
-**Adding clips:** save them anywhere with the clip's name in the file name, for example `s09-to-s10.mp4`, and tell me. I'll check each one, convert it (H.264, no sound, about 1 MB) into `game assets/video/`, and the game plays it. A clip that isn't made yet leaves the still picture, as before.
+**Adding clips:** save them anywhere with the clip's name in the file name, for example `s09-to-s10.mp4`, and tell me. I'll check each one, convert it (H.264, no sound, about 1 MB) into `game assets/video/`, and the game plays it. A clip that isn't made yet leaves the still picture, as before. Clips made with Gemini can keep the names Gemini gives them: tell me which clip each one is, or let me work it out from the picture.
 
 ## How to make a clip on Higgsfield
 
@@ -82,7 +92,8 @@ camera movement, zoom, pan, shake, cut, morphing, melting, warping, flicker, fac
 | s24-to-s25 | 24 → 25 | hee see discount on shoes.png | he is tinking to see the shoes.png | 4 s | Aniket becomes confused |
 | s25-aniket-1 | 25 | he is tinking to see the shoes.png | same | 4 s | Aniket: "The tag says ₹1800." |
 | s25-aniket-2 | 25 | he is tinking to see the shoes.png | same | 6 s | Aniket: "With 30% off, how much do I actually pay?" |
-| s35-aniket | 35 | he saw a shoe.png | same | 8 s | Aniket: "So, after a 30% discount, I will pay ₹1260." |
+| s35-aniket | 35 | he saw a shoe.png | same | 4 s | Aniket: "So, after a 30% discount," |
+| s35-aniket-2 | 35 | he saw a shoe.png | same | 4 s | Aniket: "I will pay ₹1260." |
 | s36-box | 36 | shopkeeper gives sneakers box.png | (none) | 5 s | the shopkeeper hands over the box |
 | s40-idle | 40 | boy return home .png | same | 5 s | both smile, back home |
 | s40-father-1 | 40 | boy return home .png | same | 4 s | Dad: "How was your shopping?" |
@@ -303,9 +314,15 @@ In a shoe shop, a boy (green T-shirt, navy backpack), his hand on his chin, look
 ```
 
 #### s35-aniket.mp4
-Save as `game assets/video/s35-aniket.mp4` · start frame `he saw a shoe.png` · end frame: the same picture · 8 s · sound off
+Save as `game assets/video/s35-aniket.mp4` · start frame `he saw a shoe.png` · end frame: the same picture · 4 s · sound off
 ```text
-In a shoe shop, a boy (green T-shirt, navy backpack) stands by the display stand, pointing at the blue sneakers and their tags, and says happily and clearly, in two parts with a short pause between them: "So, after a thirty percent discount, ... I will pay one thousand two hundred and sixty rupees." His lips move in time with these words from the very first second, with natural mouth shapes, and he gives a small, pleased nod at the end. He finishes speaking by about 7 seconds, then smiles with his mouth closed. His pointing arm stays still. The sneakers, the white "₹1800" tag and the red "30% OFF" label stay exactly in place, sharp and readable. Start and end on exactly this picture with his mouth closed. Camera locked: no zoom, pan or shake. Same 2D cartoon illustration style as the picture (clean outlines, soft flat colours, warm light). Every face, hairstyle, outfit, body shape and colour stays exactly the same. Everything not described stays perfectly still. No added text, captions or speech bubbles.
+In a shoe shop, a boy (green T-shirt, navy backpack) stands by the display stand, pointing at the blue sneakers and their tags, and says happily and clearly: "So, after a thirty percent discount," His lips move in time with these words from the very first second, with natural mouth shapes. He finishes speaking by about 3 seconds, then smiles with his mouth closed. His pointing arm stays still. The sneakers, the white "₹1800" tag and the red "30% OFF" label stay exactly in place, sharp and readable. Start and end on exactly this picture with his mouth closed. Camera locked: no zoom, pan or shake. Same 2D cartoon illustration style as the picture (clean outlines, soft flat colours, warm light). Every face, hairstyle, outfit, body shape and colour stays exactly the same. Everything not described stays perfectly still. No added text, captions or speech bubbles.
+```
+
+#### s35-aniket-2.mp4
+Save as `game assets/video/s35-aniket-2.mp4` · start frame `he saw a shoe.png` · end frame: the same picture · 4 s · sound off
+```text
+In a shoe shop, a boy (green T-shirt, navy backpack) stands by the display stand, pointing at the blue sneakers and their tags, and says happily and clearly: "I will pay one thousand two hundred and sixty rupees." His lips move in time with these words from the very first second, with natural mouth shapes. He finishes speaking by about 3 seconds, gives a small, pleased nod, then smiles with his mouth closed. His pointing arm stays still. The sneakers, the white "₹1800" tag and the red "30% OFF" label stay exactly in place, sharp and readable. Start and end on exactly this picture with his mouth closed. Camera locked: no zoom, pan or shake. Same 2D cartoon illustration style as the picture (clean outlines, soft flat colours, warm light). Every face, hairstyle, outfit, body shape and colour stays exactly the same. Everything not described stays perfectly still. No added text, captions or speech bubbles.
 ```
 
 ### Screen 36: the sneakers in their box
