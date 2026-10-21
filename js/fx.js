@@ -782,8 +782,9 @@
           { opacity: 0, transform: 'translateY(40px) scale(.86)' },
         ], { duration: reducedMotion ? 1 : T(360), easing: 'cubic-bezier(.5,0,.75,0)', fill: 'forwards' }));
       },
-      // Turns the card over to show the result, e.g. "Correct!" and why.
-      async flip({ title, text }) {
+      // Turns the card over to show the result, e.g. "Correct!" and why. `wide`: it turns over wider (css .is-wide),
+      // as tall as what is on it, so the reason runs in full lines.
+      async flip({ title, text, wide = false }) {
         const back = el('div', 'qcard-back', card);
         back.setAttribute('role', 'status');
         const head = el('div', 'qback-head', back);
@@ -801,6 +802,14 @@
         await settle(turn);
         q.style.visibility = 'hidden';
         list.style.visibility = 'hidden';
+        if (wide) { // edge-on now: it widens unseen
+          pos.style.transition = 'none';
+          pos.classList.add('is-wide');
+          q.style.display = 'none';
+          list.style.display = 'none';
+          void pos.offsetWidth;
+          pos.style.transition = '';
+        }
         back.style.visibility = '';
         card.setAttribute('aria-label', `${title} ${plain(text)}`);
         const land = card.animate([
@@ -1032,7 +1041,7 @@
         return reveal(tag, [
           { opacity: 0, transform: 'scale(1.9) rotate(-12deg)' },
           { opacity: 1, transform: 'scale(.94) rotate(0deg)', offset: 0.62 },
-          { opacity: 1, transform: 'rotate(-2deg)' },
+          { opacity: 1, transform: 'none' }, // (it lands straight: the user, 2026-10-21)
         ], { duration: T(600), easing: 'cubic-bezier(.2,.8,.3,1)' });
       },
       showNow() {
@@ -1131,8 +1140,11 @@
     const start = performance.now();
     let at = voice ? voice.lead * unit : 0;
     await (voice ? ctx.wait(Math.max(0, start + at - performance.now()), { real: true }) : ctx.wait(800));
+    let lastWord = null;
     for (const word of words) {
-      word.classList.add('on');
+      word.classList.add('on', 'is-said'); // it appears, lit as it is said (the user, 2026-10-21)
+      if (lastWord) lastWord.classList.remove('is-said');
+      lastWord = word;
       const hl = word.closest('.hl');
       if (hl) {
         const inside = hl.querySelectorAll('.w');
@@ -1148,6 +1160,7 @@
         await ctx.wait(/[.,]$/.test(word.textContent) ? 420 : 230);
       }
     }
+    if (lastWord) lastWord.classList.remove('is-said');
     await Promise.all([ctx.wait(600), reading]);
   }
 
@@ -1192,17 +1205,16 @@
 
   /**
    * A checkpoint (the revamp brief, rule 8), closing a topic: on top, the topic (ticked when it
-   * is done); then 2–3 lined index cards, each a term in its colour, what it means and (optionally) its value; one formula
-   * on a yellow sticky note; an example (optional); and the learner's buttons: "Got it, next", "Hear it again", "Go back".
-   *  index, total, topic   which checkpoint it is, of how many, and its topic
-   *  say                   the line her voice opens with ("Let’s remember!"), written above the cards
-   *  cards                 [{ term, tone: 'mp' | 'sp' | 'd' | 'part' | 'whole' | 'ink', text, value }]
-   *  note                  the formula: segments [{ t, tone }] (see formulaNote)
-   *  example               text ({amount} highlighted)
-   *  on                    { next, again, back }: what the buttons do
-   * open() → card(i) … → showNote() → showExample() → done() → actions(): each returns what came in.
+   * is done); then 2–3 lined index cards, each a term in its colour, what it means and (optionally) its value; and one
+   * formula on a yellow sticky note. (No example and no buttons of its own since the meeting of 2026-10-21: the screen
+   * moves on by itself, or with the top Next.)
+   *  index, topic   which checkpoint it is, and its topic
+   *  say            the line her voice opens with ("Let’s remember!"), written above the cards
+   *  cards          [{ term, tone: 'mp' | 'sp' | 'd' | 'part' | 'whole' | 'ink', text, value }]
+   *  note           the formula: segments [{ t, tone }] (see formulaNote)
+   * open() → card(i) … → showNote() → done(): each returns what came in.
    */
-  function checkpoint(parent, { index, topic, say, cards, note, example, on = {} }) {
+  function checkpoint(parent, { index, topic, say, cards, note }) {
     const root = el('div', 'ck', parent);
     const head = el('div', 'ck-head', root);
     const title = el('div', 'ck-title', head);
@@ -1225,26 +1237,7 @@
     });
     const foot = el('div', 'ck-foot', body);
     const noteEl = note ? formulaNote(foot, note) : null;
-    let exEl = null;
-    if (example) {
-      exEl = el('div', 'ck-example', foot);
-      el('span', 'ck-ex-label', exEl).textContent = 'Example';
-      richText(el('span', 'ck-ex-text', exEl), example);
-    }
-    const bar = el('div', 'ck-actions', body);
-    const button = (label, cls, fn) => {
-      const b = el('button', `ck-btn ${cls}`, bar);
-      b.type = 'button';
-      b.textContent = label;
-      b.addEventListener('click', () => { Sound.click(); if (fn) fn(); });
-      return b;
-    };
-    const buttons = {
-      next: button('Got it, next', 'ck-btn--go', on.next),
-      again: button('Hear it again', '', on.again),
-      back: button('Go back', '', on.back),
-    };
-    [head, sayEl, ...cardEls, noteEl, exEl, bar].forEach(n => { if (n) n.style.opacity = '0'; });
+    [head, sayEl, ...cardEls, noteEl].forEach(n => { if (n) n.style.opacity = '0'; });
     const pop = (node, from = 'translateY(24px)') => {
       reveal(node, [{ opacity: 0, transform: from }, { opacity: 1, transform: 'none' }], { duration: T(520), easing: 'cubic-bezier(.2,.8,.3,1)' });
       return node;
@@ -1255,26 +1248,17 @@
       say: sayEl,
       cards: cardEls,
       note: noteEl,
-      example: exEl,
-      buttons,
       open: () => {
         if (sayEl) pop(sayEl);
         return pop(head, 'translateY(-14px)');
       },
       card: i => pop(cardEls[i]),
       showNote: () => noteEl && pop(noteEl, 'translateY(24px) rotate(-4deg)'),
-      showExample: () => {
-        if (!exEl) return null;
-        pop(exEl);
-        setTimeout(() => exEl.querySelectorAll('.hl').forEach(h => h.classList.add('is-marked')), 450);
-        return exEl;
-      },
       // The topic is done: its tick pops.
       done() {
         tick.classList.add('is-on');
         return tick;
       },
-      actions: () => pop(bar),
     };
   }
 
@@ -1687,7 +1671,8 @@
     const bookBox = el('div', 'fm-book', panel);
     bookBox.innerHTML = bookArt(price);
     const sticker = bookBox.querySelector('.mp-sticker-card');
-    const row = el('div', 'fm-row', panel);
+    const side = el('div', 'fm-side', panel); // the sum, and under it what is added later (screen 14: the bar)
+    const row = el('div', 'fm-row', side);
     const boxes = [];
     const values = [];
     const names = [];
@@ -1721,6 +1706,7 @@
     return {
       el: root,
       panel,
+      side,
       boxes,
       ops: opEls,
       open() {
@@ -2055,6 +2041,7 @@
     const EASE = 'cubic-bezier(.2,.8,.3,1)';
     const SWING = 'cubic-bezier(.45,0,.55,1)';
     return {
+      photo: pic,
       priceTag,
       offTag,
       percent: lines[0],
@@ -2121,6 +2108,7 @@
     return {
       el: root,
       panel,
+      photo: item.photo,
       priceTag: item.priceTag,
       offTag: item.offTag,
       percent: item.percent,
@@ -2157,6 +2145,7 @@
       hint.forEach(seg => { el('span', seg.cls || '', hintEl).textContent = seg.t; });
     }
     const below = el('div', 'pqp-answers', side);
+    const slot = hint ? null : el('div', 'q-slot', side); // under the answers: what to remember after a wrong answer
     panel.setAttribute('role', 'group');
     panel.setAttribute('aria-label', `${price}, ${off.join(' ')}. ${question.replace(/\n/g, ' ')}` +
       (hint ? ` Hint: ${hint.map(seg => seg.t).join(' ')}` : ''));
@@ -2165,6 +2154,7 @@
       el: root,
       panel,
       below,
+      slot,
       hint: hintEl,
       priceTag: item.priceTag,
       offTag: item.offTag,
@@ -2709,14 +2699,17 @@
   /**
    * A row of answer buttons for a question on the screen (the question card's own are in question()), or
    * with { stack: true } a column of them.
-   *  options  [{ label, correct }];  onAnswer(correct, button, i) is called for the first pick only: then every
-   *           button locks (there is no second try), the picked one turning green ✓ or red ✗.
+   *  options  [{ label, correct }];  onAnswer(correct, button, i, last) is called for each pick that counts: on the
+   *           last (or right) one every button locks, the picked one turning green ✓ or red ✗.
+   *  tries    1 (default: no second try), or 2: a first wrong pick is crossed out on its own (last: false; the
+   *           game gives a hint meanwhile, lock() … unlock()), and the answers left can be picked again.
    * enter(ctx) brings them in one by one, then enables them; show(i) lights up the right answer (after a
    * wrong pick); ping(i) makes a button pop.
    */
-  function choices(parent, { options, onAnswer, stack = false }) {
+  function choices(parent, { options, onAnswer, stack = false, tries = 1 }) {
     const row = el('div', stack ? 'pq-choices pq-choices--stack' : 'pq-choices', parent);
     let answered = false;
+    let left = tries; // with tries: 2, a first wrong pick is crossed out and the others stay to pick from
     const buttons = options.map((opt, i) => {
       const letter = String.fromCharCode(65 + i);
       const b = el('button', 'q-opt pq-opt', row);
@@ -2728,6 +2721,15 @@
       el('span', 'q-label', b).textContent = opt.label;
       b.addEventListener('click', () => {
         if (answered || b.disabled) return;
+        if (!opt.correct && left > 1) { // not the last try: only this one is out (onAnswer's `last` is false)
+          left--;
+          b.disabled = true;
+          b.classList.add('is-wrong');
+          chip.innerHTML = ICON_CROSS;
+          Sound.wrong();
+          if (onAnswer) onAnswer(false, b, i, false);
+          return;
+        }
         answered = true;
         buttons.forEach(other => {
           other.disabled = true;
@@ -2737,15 +2739,23 @@
         chip.innerHTML = opt.correct ? ICON_CHECK : ICON_CROSS;
         if (opt.correct) Sound.correct();
         else Sound.wrong();
-        if (onAnswer) onAnswer(!!opt.correct, b, i);
+        if (onAnswer) onAnswer(!!opt.correct, b, i, true);
       });
       b.style.opacity = '0';
       return b;
     });
+    const open = () => buttons.filter(b => !b.classList.contains('is-wrong'));
 
     return {
       el: row,
       buttons,
+      // While a hint is given after a first wrong pick, the answers left wait (lock), then can be picked again (unlock).
+      lock() {
+        buttons.forEach(b => { b.disabled = true; });
+      },
+      unlock() {
+        if (!answered) open().forEach(b => { b.disabled = false; });
+      },
       async enter(ctx) {
         for (const b of buttons) {
           reveal(b, [
@@ -2757,7 +2767,7 @@
           await ctx.wait(160);
         }
         await ctx.wait(300);
-        if (!answered) buttons.forEach(b => { b.disabled = false; });
+        if (!answered) open().forEach(b => { b.disabled = false; });
       },
       // Lights up the right answer (after a wrong pick).
       show(i) {
@@ -3080,6 +3090,7 @@
     const panel = el('div', 'qp-panel', root);
     const q = questionStrip(panel, question);
     const below = el('div', 'qp-answers', panel);
+    const slot = el('div', 'q-slot', panel); // under the answers: what to remember after a wrong answer, and on 25 the grid
     panel.setAttribute('role', 'group');
     panel.setAttribute('aria-label', question.map(seg => seg.t).join(''));
     panel.style.opacity = '0';
@@ -3087,6 +3098,7 @@
       el: root,
       panel,
       below,
+      slot,
       open() {
         Sound.whoosh();
         return reveal(panel, [

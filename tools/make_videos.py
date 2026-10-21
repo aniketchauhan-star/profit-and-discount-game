@@ -44,6 +44,30 @@ TODO = ROOT / 'Animation Video Prompts - Left to Make.md'
 REDO = {
     's06-to-s07': "Make it again: the first take started on Screen 7's picture, so the book was never handed over.",
 }
+# The clips made with Gemini, to make again on Higgsfield (the meeting of 2026-10-21): in Gemini's takes the characters
+# change from clip to clip, the lips move a little after the words, and the picture is soft (1280 x 720). So they are
+# made again in 1080p, the people exactly as in the pictures, their faces showing what they say.
+GEMINI_MADE = [
+    's20-out', 's21-walk', 's22-aniket-1', 's22-aniket-2', 's22-aniket-3', 's23-idle', 's23-zoom', 's25-idle', 's25-aniket-1',
+    's25-aniket-2', 's36-box', 's40-idle', 's40-father-1', 's40-aniket', 's40-father-2', 's41-idle', 's41-father-1', 's42-to-s43',
+    's43-father', 's45-idle', 's45-father-1', 's45-aniket-1', 's45-aniket-2', 's46-idle', 's56-idle', 's56-father-1', 's56-aniket-1',
+    's56-father-2', 's56-aniket-2', 's56-father-3', 's56-aniket-3', 's56-father-4',
+]
+REMAKE = {name: ('Make it again on Higgsfield (the meeting of 2026-10-21): the Gemini take is in the game for now, but its '
+                 'people change from clip to clip and it is soft. Keep the people exactly as in the picture, and their faces '
+                 'showing what they say.') for name in GEMINI_MADE}
+REMAKE['s20-out'] = ('Make it again on Higgsfield as one 6 s clip (the meeting of 2026-10-21: Aniket must look the same as in '
+                     'the other pictures, and walk properly): I cut it into `s20-out` and `s21-walk`, as I did with your Gemini '
+                     'take `outgoing.mp4`. Give the whole prompt; the length here is only the first part.')
+REMAKE['s21-walk'] = 'Comes from the same take as `s20-out`: make that one, and I cut this part from it.'
+REMAKE['s36-box'] = ('Make it again on Higgsfield (the meeting of 2026-10-21: the people change completely in the Gemini take). '
+                     'Check the picture too: the shopkeeper and Aniket must look as they do on the other shop screens.')
+# Clips made backwards (there is no picture of what comes before them): turned round as they come in, so they end on
+# their picture. s05-pickup: he puts the book down; in the game he picks it up (the user, 2026-10-21).
+BACKWARDS = {
+    's05-pickup': ('Made backwards: in this take he puts the book down. I turn it round as I bring it in, so in the game he '
+                   'picks the book up, and it ends exactly on the picture.'),
+}
 API = 'https://api.higgsfield.ai'
 MODEL = 'bytedance/seedance-2.5/image-to-video'
 DONE = {'completed', 'failed', 'nsfw', 'canceled', 'cancelled'}
@@ -77,10 +101,11 @@ def load_clips():
 
 # ---------- clips made elsewhere, and the list for the game ----------
 
-def encode(src, dest):
-    """A clip as the game plays it: H.264 (every browser plays it), 1920 x 1080, 24 fps, no sound, fast to start."""
+def encode(src, dest, backwards=False):
+    """A clip as the game plays it: H.264 (every browser plays it), 1920 x 1080, 24 fps, no sound, fast to start;
+    turned round if it was made backwards (see BACKWARDS)."""
     part = dest.with_suffix('.part.mp4')
-    subprocess.run(['ffmpeg', '-v', 'error', '-y', '-i', str(src), '-an', '-vf', 'scale=1920:1080', '-r', '24',
+    subprocess.run(['ffmpeg', '-v', 'error', '-y', '-i', str(src), '-an', '-vf', 'scale=1920:1080' + (',reverse' if backwards else ''), '-r', '24',
                     '-c:v', 'libx264', '-preset', 'slow', '-crf', '20', '-pix_fmt', 'yuv420p', '-profile:v', 'high',
                     '-movflags', '+faststart', str(part)], check=True)
     part.replace(dest)
@@ -130,7 +155,7 @@ def import_clips(paths, known, as_name=None, skip=(), gemini=False):
                                PICTURES / c['end'] if c['end'] and c['end'] != c['start'] else None)
             subprocess.run([sys.executable, str(Path(__file__).resolve().parent / 'enhance_clips.py'), name], check=True)
         else:
-            encode(f, OUT / f'{name}.mp4')
+            encode(f, OUT / f'{name}.mp4', backwards=name in BACKWARDS)
         print(f"{name}: from {f.name}, {(OUT / (name + '.mp4')).stat().st_size / 1e6:.1f} MB")
     write_index()
 
@@ -138,7 +163,8 @@ def import_clips(paths, known, as_name=None, skip=(), gemini=False):
 def write_todo(clips):
     """The clips not made yet, by the picture to upload first, each with what to set and its prompt."""
     made = {p.stem for p in OUT.glob('s*.mp4') if '.' not in p.stem}
-    left = [c for c in clips if c['name'] not in made]
+    left = [c for c in clips if c['name'] not in made or c['name'] in REMAKE]
+    again = [c for c in left if c['name'] in made]
     negative = re.search(r'negative prompt.*?```text\n(.*?)\n```', PROMPTS.read_text(encoding='utf-8'), re.S | re.I)
     pictures = {}
     for c in left:
@@ -146,9 +172,11 @@ def write_todo(clips):
     out = [
         '# Animation clips left to make',
         '',
-        f'{len(left)} of {len(clips)} clips are still to make; the other {len(clips) - len(left)} are in the game. This file holds only '
-        'the ones left, by the picture you upload first, each with its prompt. Everything about them is in '
-        '`Animation Video Prompts.md`. Made with `python3 tools/make_videos.py --todo`; it is written again after each batch.',
+        f'{len(left)} of {len(clips)} clips to make: {len(left) - len(again)} not made yet, and {len(again)} made with Gemini to make '
+        'again on Higgsfield (the meeting of 2026-10-21: in the Gemini takes the people change from clip to clip, the lips '
+        'move a little after the words, and the picture is soft). This file holds only those, by the picture you upload '
+        'first, each with its prompt. Everything about them is in `Animation Video Prompts.md`. Made with '
+        '`python3 tools/make_videos.py --todo`; it is written again after each batch.',
         '',
         '**For every clip, on Higgsfield** (Seedance 2.5, image to video):',
         '1. **Start frame:** the picture named with the clip, from the game folder `game assets`: '
@@ -184,6 +212,10 @@ def write_todo(clips):
             out += [f"### {n}. {c['name']}.mp4 · Screen {c['screen']} · {c['what']}", '']
             if c['name'] in REDO:
                 out += [f"**{REDO[c['name']]}**", '']
+            if c['name'] in REMAKE:
+                out += [f"**{REMAKE[c['name']]}**", '']
+            if c['name'] in BACKWARDS:
+                out += [f"**{BACKWARDS[c['name']]}**", '']
             out += [f"- [ ] Start frame `{c['start']}` · end frame {end} · **{c['seconds']} s** · 1080p · sound off · save as "
                     f"`{c['name']}.mp4`", '', '```text', c['prompt'], '```', '']
     TODO.write_text('\n'.join(out), encoding='utf-8')
@@ -303,7 +335,7 @@ def make(clips, key, resolution, duration=None):
             if code >= 400 or not got.exists() or got.stat().st_size < 1000:
                 problems.append(f"{c['name']}: download failed (HTTP {code})")
                 continue
-            encode(got, OUT / f"{c['name']}.mp4")  # as the game plays it (H.264, no sound)
+            encode(got, OUT / f"{c['name']}.mp4", backwards=c['name'] in BACKWARDS)  # as the game plays it (H.264, no sound)
             got.unlink()
             made.append(c['name'])
             log({'clip': c['name'], 'request_id': request_id, 'status': status, 'file': f"game assets/video/{c['name']}.mp4"})

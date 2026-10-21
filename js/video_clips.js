@@ -5,7 +5,6 @@ const VIDEO_CLIPS = {
   "s01-aniket-2": 6.04,
   "s01-father": 6.04,
   "s01-idle": 5.04,
-  "s04-to-s05": 6.04,
   "s05-aniket": 6.04,
   "s05-idle": 6.04,
   "s06-aniket": 6.04,

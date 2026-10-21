@@ -13,9 +13,8 @@
     <main id="stage" aria-label="Bookstore Journey story">
       <div id="scenes"></div>
 
-      <!-- Top-left: scene panel toggle; beside it, the notebook (the checkpoints' cards), once there is one -->
+      <!-- Top-left: scene panel toggle -->
       <button id="btn-panel" class="hud-btn" type="button" aria-label="Open scene list (P)" title="Scenes (P)"></button>
-      <button id="btn-notebook" class="hud-btn" type="button" aria-label="Open the notebook (N)" title="Notebook (N)" hidden></button>
 
       <!-- Top-right: back / next -->
       <nav id="nav" aria-label="Scene navigation">
@@ -49,16 +48,6 @@
           </p>
         </footer>
       </aside>
-
-      <!-- The notebook: the cards from the checkpoints so far -->
-      <div id="notebook-scrim"></div>
-      <section id="notebook" aria-label="Notebook" aria-hidden="true">
-        <header class="nb-head">
-          <h2>My notebook</h2>
-          <button id="btn-notebook-close" class="panel-close" type="button" aria-label="Close the notebook">&times;</button>
-        </header>
-        <div id="notebook-pages"></div>
-      </section>
 
       <div id="loader">
         <div class="loader-title">Bookstore Journey</div>

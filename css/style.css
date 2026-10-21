@@ -140,13 +140,16 @@ button:focus-visible, .switch input:focus-visible + .switch-track {
 }
 
 /* Soft blurred copy of the picture behind everything, for screens whose camera pans past the edge. */
-.scene-backdrop {
+.scene-backdrop { /* only the picture's right edge, stretched across (blurred): it carries the edge's colours on past it,
+                     and nothing in it can show twice beside the picture (the user, 2026-10-21: the poster's words doubled) */
   position: absolute;
   inset: -60px;
-  background: center / cover no-repeat;
+  background: right center / 2000% 100% no-repeat;
   filter: blur(22px) brightness(.9);
 }
-/* The sharp picture's right edge feathers into that backdrop (the fade starts off to the right). */
+/* The sharp picture's right edge feathers into that backdrop (the fade starts off to the right): the picture and its
+   clips together, in one layer (game.js: .scene-pic), so the picture never shows through a fading clip. */
+.scene-pic { position: absolute; inset: 0; }
 /* A reaction picture (e.g. Aniket puzzled) that lines up exactly with the picture under it, faded in by
    the screen's script, so only the character's face visibly changes. It only fades in; resetting it
    (when the screen starts again) is instant. */
@@ -621,7 +624,7 @@ button:focus-visible, .switch input:focus-visible + .switch-track {
 .bs-doors { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; pointer-events: none; }
 .bs-doors svg { display: block; overflow: visible; }
 
-/* The names of the books on the display stand (screens 4 and 5), as if printed on their covers (see standTitles) */
+/* The names of the books on the display stand (where Aniket holds the book), as if printed on their covers (see standTitles) */
 .cover-title {
   position: absolute;
   display: flex;
@@ -1487,7 +1490,7 @@ button:focus-visible, .switch input:focus-visible + .switch-track {
 .pf-frac { display: inline-flex; flex-direction: column; align-items: center; }
 .pf-num, .pf-den { position: relative; padding: 6px 8px 0; }
 .pf-bar { align-self: stretch; height: 5px; margin: 6px 0; border-radius: 3px; background: currentColor; } /* the fraction's colour */
-/* A fraction in running text (FX.fracText: a card, the notebook, the scene list): its top over its bottom, a little
+/* A fraction in running text (FX.fracText: a card, the scene list): its top over its bottom, a little
    smaller than the words, centred on the line; its negative margins keep the lines round it where they were. */
 .frac { position: relative; display: inline-flex; flex-direction: column; align-items: center; margin: -.48em .14em; vertical-align: middle; font-size: .8em; line-height: 1.04; }
 .frac-num { padding: 0 .16em .02em; }
@@ -1881,40 +1884,6 @@ button:focus-visible, .switch input:focus-visible + .switch-track {
 }
 .mp-link-dot { fill: #ffd23f; stroke: var(--ink); stroke-width: 4; }
 .mp-link-dot--end { fill: #ff8fb0; }
-
-/* ---------- Big "Next" (bottom-right) that moves the story on after the question ---------- */
-
-.story-next {
-  position: absolute;
-  right: 44px;
-  bottom: 40px;
-  z-index: 5;
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  height: 96px;
-  padding: 0 34px 0 46px;
-  border: 5px solid var(--ink);
-  border-radius: 48px;
-  background: linear-gradient(180deg, #ffd866, #ffb52e);
-  color: var(--ink);
-  box-shadow: 0 9px 0 var(--ink), 0 18px 34px rgba(0, 0, 0, .3);
-  font-size: 44px;
-  font-weight: 800;
-  line-height: 1;
-  cursor: pointer;
-  pointer-events: auto;
-  animation: next-nudge 1.8s ease-in-out .6s infinite;
-  transition: box-shadow .15s ease;
-}
-.story-next:hover { box-shadow: 0 12px 0 var(--ink), 0 22px 38px rgba(0, 0, 0, .32); }
-.story-next:active { box-shadow: 0 3px 0 var(--ink), 0 8px 16px rgba(0, 0, 0, .25); }
-.story-next-label { padding-top: 4px; }
-.story-next svg { width: 40px; height: 40px; }
-@keyframes next-nudge { /* a gold glow round the button (it and its label hold still) */
-  0%, 100% { box-shadow: 0 9px 0 var(--ink), 0 18px 34px rgba(0, 0, 0, .3), 0 0 0 0 rgba(255, 200, 61, .75); }
-  50%      { box-shadow: 0 9px 0 var(--ink), 0 18px 34px rgba(0, 0, 0, .3), 0 0 0 14px rgba(255, 200, 61, 0); }
-}
 
 /* ---------- Pulsing ring around a spot (the ₹1000 sticker) ---------- */
 
@@ -3488,7 +3457,7 @@ kbd {
   .mote, .twinkle { display: none; }
   .glow, .thought-puff-bob, .start-btn, .badge-rays,
   .exclaim-inner, .walker.is-idle .walker-body, #btn-next.is-ready, .rotate-phone,
-  .story-next, .spot-ring::after, .red-tag.is-pulsing,
+  .spot-ring::after, .red-tag.is-pulsing,
   .cmp-box.is-key, .fm-box.is-ping, .fm-op.is-ping, .fm-box.is-ping::after,
   .fr-term.is-ping, .fr-op.is-ping, .pc-price.is-ping, .pc-off.is-ping, .pc-off-line.is-ping, .mn-panel .is-ping, .pqp-hint.is-ping,
   .pf-hint.is-ping, .pf-q-value.is-ping, .pq-opt.is-ping, .ws-panel .is-ping, .ss-panel .is-ping,
@@ -3513,18 +3482,22 @@ kbd {
      in the middle; Swifty's corner on the right, only on a screen where she comes (.has-swifty).
    ========================================================================== */
 :root {
-  --ink-2: #5d6b73;          /* grey text */
+  /* (2026-10-21, the user: everything "properly fully visible in this panel": the tints are firm enough to stand out
+     from the cream panel, and each has an edge in its colour, at least 3:1 against the panel; text at least 4.5:1) */
+  --ink-2: #4f5d65;          /* grey text */
   --line: #e8dfcf;           /* a hairline on paper */
-  --teal-tint: #e3f1f2;      /* question strips */
-  --mp: #8a5300;  --mp-tint: #fff1d2;   /* Marked Price */
-  --sp: #1f63b0;  --sp-tint: #e5f0fc;   /* Selling Price */
-  --d: #c0342a;   --d-tint: #fde6e3;    /* Discount */
-  --ok: #23955a;  --ok-tint: #e2f5ea;   /* a right answer */
-  --part: #6a46b8; --part-tint: #efe8fb; /* the part (screens 28–30, 37) */
-  --whole: #5f6d14; --whole-tint: #eef2d6; /* the whole */
+  --card-edge: #d3c3a1;      /* the edge of a white card on the panel */
+  --teal-tint: #d4ecee; --teal-edge: #3f8f95;            /* question strips */
+  --mp: #8a5300;  --mp-tint: #ffe2a1; --mp-edge: #b07513;   /* Marked Price */
+  --sp: #1f63b0;  --sp-tint: #d6e8fc; --sp-edge: #4f86c6;   /* Selling Price */
+  --d: #b3261e;   --d-tint: #fdd8d2;  --d-edge: #d0574b;    /* Discount */
+  --ok: #17703f;  --ok-tint: #d6f0e0; --ok-edge: #3f9e6c;   /* a right answer */
+  --part: #6a46b8; --part-tint: #e6dcfa; --part-edge: #8b6bd0;    /* the part (screens 28–30, 37) */
+  --whole: #5f6d14; --whole-tint: #e6edc2; --whole-edge: #7d8b25; /* the whole */
   --hl: #ffe27a;             /* the highlighter: the one key word, the word being said */
-  --note: #fff09c;           /* a sticky note */
-  --band: #fff6cf;           /* a rule band */
+  --hl-ring: #e9a400;        /* …and round a box being read */
+  --note: #ffe46e;           /* a sticky note */
+  --band: #ffeaa6; --band-edge: #a87708; /* a rule band (and a sticky note's edge) */
   --pen: #d23b2f;            /* the red pen circling an answer */
   --tape: rgba(234, 222, 188, .85);
   --grid: #dbe7f3;           /* graph paper and the lines of an index card */
@@ -3535,13 +3508,12 @@ kbd {
   /* the same colours, as shadows and lines: ink and the deep teal at a little strength, a soft glow of a meaning colour */
   --white: #fff; /* cards, and words on teal */
   --margin: #f2b0aa; /* an index card's red line */
-  --arrow: #c3ccd2; /* every arrow between boxes */
+  --arrow: #7f8c94; /* every arrow between boxes */
   --ink-06: rgba(27, 42, 51, .06); --ink-08: rgba(27, 42, 51, .08); --ink-10: rgba(27, 42, 51, .10);
   --ink-12: rgba(27, 42, 51, .12); --ink-13: rgba(27, 42, 51, .13); --ink-14: rgba(27, 42, 51, .14);
   --ink-16: rgba(27, 42, 51, .16); --ink-22: rgba(27, 42, 51, .22); --ink-45: rgba(27, 42, 51, .45);
   --deep-18: rgba(4, 18, 22, .18); --deep-28: rgba(4, 18, 22, .28); --deep-30: rgba(4, 18, 22, .30); --deep-45: rgba(4, 18, 22, .45);
   --d-glow: rgba(192, 52, 42, .45); --d-glow-0: rgba(192, 52, 42, 0);
-  --mp-edge: rgba(138, 83, 0, .35); --whole-edge: rgba(95, 109, 20, .25);
   --tag-shadow: rgba(120, 20, 20, .28); --paper-92: rgba(255, 253, 247, .92);
 }
 
@@ -3549,7 +3521,7 @@ kbd {
 .scene-snap { /* the story picture it came from, framed (zoomed on what matters: game.js snapFocus) */
   position: absolute;
   left: 96px;
-  top: 228px;
+  top: 116px; /* (the top left, now that no title is over it: game.js SNAP) */
   width: 424px;
   height: 239px;
   border-radius: 18px;
@@ -3562,38 +3534,38 @@ kbd {
 .scene-snap img { transform-origin: var(--focus, 50% 50%); transform: scale(var(--zoom, 1)); }
 .snap-ghost { position: absolute; left: 0; top: 0; pointer-events: none; transform-origin: var(--focus, 50% 50%); transform: scale(var(--zoom, 1)); }
 .scene.is-snapping, .scene.has-sheet .scene-parallax { overflow: hidden; } /* round corners while it moves */
-.scene-head, .scene-ask { /* the title, or the story's question (Aniket's own words), on top */
+.scene-sheet--snap { box-shadow: none; } /* screen 8's panel comes in under the picture (game.js: snapUp) */
+/* The content: under the photo, spread across the panel (x 96–1824, y 400–1024; the user, 2026-10-21: "all things
+   should down side of the image and spread, no need space, but not overlap with Swifty"); on a screen with no photo,
+   the whole panel (from y 116); on a screen where Swifty comes, clear of her corner and her bubbles (x 96–1340). Every
+   panel sits right on the big panel, with no frame of its own. Its pieces are sized to fill it (see "Under the photo,
+   across the panel", at the end). */
+.is-v2 :is(.mp, .dd, .defs) { padding: 400px 96px 56px; }
+.is-v2.is-sheet:not(.has-snap) :is(.mp, .dd) { padding-top: 116px; }
+/* A pop-up on a story screen (game.js popUp, the meeting of 2026-10-21): the picture blurs and dims behind it, and the
+   card springs up in the middle, as big as what is in it (later things, e.g. a tag flying in, are drawn over it) */
+.pop-veil {
   position: absolute;
-  left: 96px;
-  top: 116px;
-  max-width: 1380px;
-  margin: 0;
-  color: var(--ink);
-  font-size: 52px;
-  font-weight: 800;
-  line-height: 1.1;
-  text-wrap: balance;
+  inset: 0;
+  background-color: transparent;
+  -webkit-backdrop-filter: blur(0);
+  backdrop-filter: blur(0);
+  transition: background-color .6s ease, -webkit-backdrop-filter .6s ease, backdrop-filter .6s ease;
   pointer-events: none;
 }
-.scene-head::before { /* a short teal rule above the title */
-  content: '';
-  display: block;
-  width: 60px;
-  height: 7px;
-  margin-bottom: 16px;
-  border-radius: 4px;
-  background: var(--teal);
+.pop-veil.is-on { background-color: var(--deep-28); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); }
+.pop-card {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  translate: -50% -50%;
+  padding: 64px 80px;
+  border-radius: 40px;
+  background: var(--paper);
+  box-shadow: 0 30px 80px var(--deep-45);
+  pointer-events: auto;
 }
-.scene-ask { /* Aniket's question, carried from the story (screens 16, 25–33): his words, where they were under the "Aniket asks" label (taken out) */
-  top: 141px;
-  font-size: 46px;
-  font-weight: 700;
-}
-.scene-ask .ask-answer { margin-left: 18px; color: var(--ok); font-weight: 800; }
-.scene-sheet--snap { box-shadow: none; } /* screen 8's panel comes in under the picture (game.js: snapUp) */
-/* The content: under the title, right of the snapshot (x 576–1824); on a screen where Swifty comes, clear of her
-   corner and her bubbles (x 576–1340). Every panel sits right on the big panel, with no frame of its own. */
-.is-v2 :is(.mp, .dd, .defs) { padding: 228px 96px 56px 576px; }
+.is-v2 .pop-card .mp { position: static; display: block; padding: 0; }
 .is-v2.has-swifty :is(.mp, .dd, .defs) { padding-right: 580px; }
 .is-v2 :is(.mp-panel, .fm-panel, .fr-panel, .sm-panel, .pc-panel, .pf-panel, .qp-panel, .mn-panel, .pqp-panel, .ws-panel, .ss-panel) {
   margin: 0 !important;
@@ -3603,8 +3575,14 @@ kbd {
   box-shadow: none;
 }
 /* what is being said lights up (game.js talk.read): the highlighter round it */
-.is-v2 .is-said { box-shadow: 0 0 0 6px var(--hl), var(--paper-shadow) !important; transition: box-shadow .2s ease; }
-.is-v2 :is(.w, .pf-q-value, .fr-term, .pf-label, .pf-num, .pf-den, .pf-times, .ws-text).is-said { box-shadow: none !important; border-radius: 8px; background: var(--hl); }
+.is-v2 .is-said { box-shadow: 0 0 0 7px var(--hl-ring), var(--paper-shadow) !important; transition: box-shadow .2s ease; }
+.is-v2 :is(.w, .sw, .pf-q-value, .fr-term, .pf-label, .pf-num, .pf-den, .pf-times, .ws-text).is-said { box-shadow: none !important; border-radius: 8px; background: var(--hl); }
+/* a word on the panel being said (game.js lightUp): the yellow highlighter behind it, a little room either side */
+.sw { margin: 0 -.08em; padding: 0 .08em; border-radius: 8px; transition: background-color .12s linear; }
+.sw.is-said { background: var(--hl); box-shadow: none !important; }
+/* what was read before the line being said fades back (game.js dimOthers), and comes back once all is said */
+.is-dim { filter: opacity(.32) saturate(.7); transition: filter .45s ease; }
+.is-undim { transition: filter .5s ease; }
 /* the meaning colours, and the pair for the part and the whole */
 .is-v2 .tone-mp { color: var(--mp); }
 .is-v2 .tone-sp { color: var(--sp); }
@@ -3788,7 +3766,7 @@ kbd {
 .is-v2 .qback-text { font-weight: 600; }
 .is-v2 .qback-text .hl { color: var(--ink); }
 .is-v2 :is(.qback-text, .def-text) .stress { color: var(--sp); }
-.is-v2 .qcard-pos.is-center { transform: translate(-674px, -50%) translate(0, 110px); } /* the middle of the content (x 576–1340) */
+.is-v2 .qcard-pos.is-center { transform: translate(-674px, -50%) translate(0, 30px); } /* the middle of the content (x 576–1340, y 116–1024) */
 /* Screen 8, after a wrong answer: Cost Price (no colour of its own) and Selling Price (blue), on index cards */
 .is-v2 .def { padding: 26px 26px 30px; }
 .is-v2 .def-title { font-size: 50px; }
@@ -3919,7 +3897,7 @@ kbd {
 .ck-btn--go, .ck-btn--go:hover { border-color: var(--teal-deep); background: var(--teal); color: var(--white); }
 .ck-btn:focus-visible { outline: 5px solid var(--hl); outline-offset: 4px; }
 
-/* A formula on a yellow sticky note (FX.formulaNote): on a checkpoint, kept in the notebook, shown again later */
+/* A formula on a yellow sticky note (FX.formulaNote): on a checkpoint, and what to remember after a wrong answer */
 .f-note {
   display: inline-flex;
   align-items: baseline;
@@ -3943,49 +3921,15 @@ kbd {
 .f-note .tone-whole { color: var(--whole); }
 .f-note--small { gap: 10px; padding: 16px 22px 10px; font-size: 32px; }
 .f-note.is-flying { position: absolute; z-index: 40; margin: 0; pointer-events: none; }
-.remember { /* the last topic's card, shown again as the next topic starts (rule 8): under the snapshot */
+.remember { /* what to remember, after a first wrong answer (game.js rememberBox): under the snapshot */
   position: absolute;
   left: 96px;
-  top: 516px;
+  top: 404px;
   width: 424px;
   pointer-events: none;
 }
 .remember small { display: block; margin-bottom: 10px; color: var(--teal); font-size: 24px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; }
 
-/* ---------- The notebook: the checkpoints' cards ---------- */
-#btn-notebook { left: 104px; top: 28px; }
-#btn-notebook[hidden] { display: none; }
-#btn-notebook.is-getting { animation: nb-get .7s cubic-bezier(.3, 1.6, .5, 1); }
-@keyframes nb-get { 40% { transform: scale(1.18); } }
-#notebook-scrim { position: absolute; inset: 0; z-index: 44; background: var(--deep-45); opacity: 0; pointer-events: none; transition: opacity .3s ease; }
-#notebook-scrim.is-open { opacity: 1; pointer-events: auto; }
-#notebook {
-  position: absolute;
-  z-index: 45;
-  left: 50%;
-  top: 50%;
-  width: 1500px;
-  max-height: 900px;
-  padding: 40px 56px 50px;
-  border-radius: 10px;
-  background-color: var(--white);
-  background-image: repeating-linear-gradient(to bottom, transparent 0 58px, var(--grid) 58px 60px);
-  box-shadow: 0 30px 80px var(--deep-45);
-  overflow-y: auto;
-  opacity: 0;
-  transform: translate(-50%, -46%) scale(.96);
-  pointer-events: none;
-  transition: opacity .3s ease, transform .3s ease;
-}
-#notebook.is-open { opacity: 1; transform: translate(-50%, -50%); pointer-events: auto; }
-.nb-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
-.nb-head h2 { margin: 0; color: var(--teal); font-size: 48px; }
-.nb-page { display: grid; grid-template-columns: 330px 1fr; align-items: center; gap: 30px; padding: 22px 0; border-top: 2px solid var(--line); }
-.nb-page h3 { margin: 0; color: var(--ink); font-size: 34px; line-height: 1.15; }
-.nb-cards { display: flex; flex-wrap: wrap; align-items: center; gap: 16px 22px; }
-.nb-card { padding: 12px 18px 8px; border-radius: 5px; background: var(--paper); box-shadow: 0 4px 10px var(--ink-10); font-size: 26px; font-weight: 700; }
-.nb-card b { margin-right: 8px; }
-.nb-empty { color: var(--ink-2); font-size: 30px; }
 
 /* ---------- The Concept layout (FX.concept): the value on a taped note, the new word, one line of meaning ---------- */
 .cn { display: flex; flex-direction: column; align-items: center; gap: 30px; text-align: center; }
@@ -4051,8 +3995,6 @@ kbd {
 .g100-cell.is-on { background: var(--part); box-shadow: none; }
 .g100-label { color: var(--ink); font-size: 32px; font-weight: 800; }
 
-/* Screen 30: the 10 × 10 grid, under the snapshot */
-.side-grid { position: absolute; left: 96px; top: 508px; width: 424px; display: flex; justify-content: center; pointer-events: none; }
 /* Screen 29: the grid beside the working */
 .is-v2 .pf-panel:has(.g100) { grid-template-columns: auto auto auto; }
 .is-v2 .pf-panel .g100 { grid-row: 2; grid-column: 3; }
@@ -4061,45 +4003,36 @@ kbd {
 .is-v2 .pqp-panel { grid-template-columns: auto; }
 .is-v2 :is(.pqp-question, .pf-question) { font-size: 50px; }
 .is-v2 .pqp-answers { min-width: 0; min-height: 0; }
-/* Screens whose content uses more of the panel (game.js `fill`; the user's "remove the negative space", 2026-10-21,
-   tried on 16 and 31 first): the brief's largest text size (56) and bigger boxes, in all the room beside the photo */
-.is-v2.is-fill .mp-def.dd-card { width: 1120px; margin: 0; }
-.is-v2.is-fill .dd-card .mp-def-head { padding: 40px 64px 18px; font-size: 56px; }
-.is-v2.is-fill .mp-def-text.dd-text {
-  padding: 22px 64px 44px;
-  background-image: repeating-linear-gradient(to bottom, transparent 0 84px, var(--grid) 84px 86px, transparent 86px 88px);
-  font-size: 56px;
-  line-height: 88px;
-}
-.is-v2.is-fill .pqp-question { padding: 22px 56px 28px; font-size: 56px; }
-.is-v2.is-fill .pqp-side { gap: 48px; }
-.is-v2.is-fill .pqp-answers .pq-choices--stack { gap: 30px; min-width: 420px; }
-.is-v2.is-fill .pqp-answers .pq-choices--stack .pq-opt { height: 124px; font-size: 56px; }
-.is-v2.is-fill .pq-opt .q-chip { width: 84px; height: 84px; font-size: 44px; }
-/* Screen 27: the sneakers' card, sized to the room left of Swifty */
-.is-v2 .pc-photo { width: 640px; height: 280px; }
-/* Screen 34: the working, sized to the room left of Swifty */
-.is-v2.has-swifty .ws-panel { gap: 30px; }
-.is-v2.has-swifty .cmp-box.ws-box { width: 300px; height: 130px; }
-.is-v2.has-swifty .ws-box .cmp-price { font-size: 60px; }
-.is-v2.has-swifty .ws-box .cmp-label { font-size: 30px; }
-.is-v2.has-swifty .ws-sheet { font-size: 46px; }
 /* Screen 26: what the tag means, sized to the room left of Swifty */
 .is-v2 .mn-panel { gap: 36px; }
 .is-v2 .mn-tag { padding: 24px 36px 12px; font-size: 88px; }
 .is-v2 .mn-card { padding: 24px 40px 12px; font-size: 88px; }
 .is-v2 .mn-word { font-size: 52px; }
 .is-v2 .mn-arrow { width: 140px; }
-/* Checkpoints: bigger cards, filling their room */
-.ck-cards { gap: 40px; }
-.ck-card { min-height: 250px; padding: 26px 34px 30px; }
-.ck-term { font-size: 46px; }
-.ck-value { font-size: 56px; }
-.ck-text { font-size: 38px; line-height: 50px; }
-.ck-card { background-position: 0 96px; background-image: repeating-linear-gradient(to bottom, transparent 0 48px, var(--grid) 48px 50px); }
-.ck-example { white-space: nowrap; }
-/* A checkpoint's text in four sizes only (the brief's rule 5): 26 labels, 38 text, 46 terms, 56 the title, amounts and formula */
-.ck .f-note { font-size: 56px; }
+/* Checkpoints: centred on the panel and big, using its room (the meeting of 2026-10-21); clear of Swifty's corner on
+   the one where she comes with a bubble */
+.ck { display: flex; flex-direction: column; justify-content: center; gap: 40px; padding: 116px 120px 96px; }
+.has-swifty .ck { padding-right: 520px; }
+.ck-head, .ck-body { position: relative; left: auto; top: auto; }
+.ck-body { width: 100%; gap: 44px; }
+.ck-title { font-size: 64px; }
+.ck-say { font-size: 46px; }
+/* Its cards one under the other, each a wide index card with its words in one line (the user, 2026-10-21: "the lines
+   should be written in a full line"): the term in its colour, the red margin line, its amount, what it means */
+.ck-cards { flex-direction: column; gap: 26px; }
+.ck-card {
+  display: grid;
+  grid-template-columns: 410px auto 1fr;
+  align-items: center;
+  padding: 24px 48px 22px 44px;
+  background-image: none;
+}
+.has-swifty .ck-card { grid-template-columns: 380px auto 1fr; }
+.ck-term { align-self: stretch; display: flex; align-items: center; padding: 0 30px 0 0; border-bottom: 0; border-right: 3px solid var(--margin); font-size: 56px; }
+.ck-value { margin: 0 0 0 34px; font-size: 64px; }
+.ck-text { margin: 0 0 0 34px; font-size: 48px; line-height: 1.2; }
+/* A checkpoint's text in four sizes only (the brief's rule 5): 46–48 text, 56 terms, 64 the title, amounts and formula */
+.ck .f-note { font-size: 64px; }
 
 /* The line log (js/linelog.js, only with ?log= in the address): what it is doing, bottom left, outside the stage */
 .dev-log {
@@ -4109,11 +4042,254 @@ kbd {
 }
 
 /* The story pictures brought to life (game.js Clips): a screen's video clips, over its picture and under everything on
-   it. Each fades in over the one before (0.15 s), so a clip never pops in. */
+   it. Each fades in over the one before (0.4 s, game.js CLIP_FADE: the meeting of 2026-10-21 found 0.15 s jumpy, and the
+   user wanted it seamless), so a clip never pops in; a loop fades into its own start the same way. */
 .scene-clips { position: absolute; inset: 0; pointer-events: none; isolation: isolate; } /* (its clips' order stays inside it: under the bubbles) */
 .scene-patches { position: absolute; inset: 0; pointer-events: none; } /* pieces of the picture over the clips (game.js pictureOver) */
 .scene-clip {
   position: absolute; inset: 0; width: 100%; height: 100%; display: block;
-  object-fit: fill; opacity: 0; transition: opacity .15s linear;
+  object-fit: fill; opacity: 0; transition: opacity .4s ease-in-out;
 }
 .scene-clip.is-on { opacity: 1; }
+
+/* ==========================================================================
+   Under the photo, across the panel (the user, 2026-10-21: "all things should down side of the image and spread, no
+   need space, but not overlap with Swifty"; "the lines should be written in a full line then down side line"). Each
+   screen's pieces are sized to fill the room under the photo (x 96–1824, y 400–1024; left of Swifty's corner, x 96–1340,
+   where she comes while they are up), and words run in full lines across their card, wrapping only at its edge.
+   (Screen numbers in this part are the game's own counter, n / 53.)
+   ========================================================================== */
+/* Definitions (screens 9 and 13): a lined index card as wide as the panel */
+.is-v2 :is(.mp-def, .mp-def.dd-card) { width: 1728px; margin: 0; }
+.is-v2 :is(.mp-def-head, .dd-card .mp-def-head) { padding: 40px 72px 20px; font-size: 68px; }
+.is-v2 :is(.mp-def-text, .mp-def-text.dd-text) {
+  padding: 24px 72px 44px;
+  background-image: repeating-linear-gradient(to bottom, transparent 0 104px, var(--grid) 104px 106px, transparent 106px 108px);
+  font-size: 66px;
+  line-height: 108px;
+}
+
+/* Screen 6, a wrong answer: Cost Price and Selling Price on two wide cards, one under the other (the name and what it
+   means on the left, in one line each; the two pictures on the right) */
+.is-v2 .defs-row { flex-direction: column; gap: 34px; }
+.is-v2 .def {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-rows: auto auto;
+  align-items: center;
+  column-gap: 40px;
+  row-gap: 14px;
+  width: 1244px;
+  padding: 30px 44px 32px 52px;
+  text-align: left;
+}
+.is-v2 .def-title { grid-area: 1 / 1; align-self: end; font-size: 60px; }
+.is-v2 .def-text { grid-area: 2 / 1; align-self: start; font-size: 48px; white-space: nowrap; } /* (one line: it fits) */
+.is-v2 .def-pics { grid-area: 1 / 2 / 3 / 3; margin: 0; gap: 14px; }
+.is-v2 .def-pic { width: 170px; height: 136px; }
+/* …and the question card waits in the middle of that room (x 96–1340, y 400–1024) while Swifty gives her hint */
+.is-v2 .qcard-pos.is-center { transform: translate(-866px, -50%) translate(0, 172px); }
+/* A right answer: no panel; the picture blurs and dims (game.js answerRight), the card comes to the middle of the screen
+   and turns over wide, as tall as what is on it, the reason in full lines */
+.is-v2 .qcard-pos.is-middle { transform: translate(-624px, -50%); }
+.is-v2 .qcard-pos.is-middle.is-wide { width: 1120px; transform: translate(-344px, -50%); }
+.is-v2 .is-wide .qcard { padding: 0; }
+.is-v2 .is-wide .qcard-back { position: relative; inset: auto; border-radius: 42px; }
+.is-v2 .is-wide .qback-head { padding: 34px 40px 26px; }
+.is-v2 .is-wide .qback-text { padding: 34px 72px 46px; font-size: 54px; text-wrap: wrap; }
+
+/* Screen 8: the ₹1000 on its note on the left, its name and what it means beside it, in one line each. The note comes
+   while Swifty is there (left of her corner); the words after she has gone, so they may use the panel's whole width. */
+.is-v2.is-sheet[data-scene="mp"] .mp { padding-right: 96px; }
+.is-v2 .cn { display: grid; grid-template-columns: auto auto; align-items: center; column-gap: 76px; row-gap: 26px; text-align: left; }
+.is-v2 .cn-note { grid-area: 1 / 1 / 3 / 2; padding: 44px 76px 26px; }
+.is-v2 .cn-value { font-size: 164px; }
+.is-v2 .cn-term { grid-area: 1 / 2; align-self: end; font-size: 86px; white-space: nowrap; }
+.is-v2 .cn-meaning { grid-area: 2 / 2; align-self: start; font-size: 56px; white-space: nowrap; }
+
+/* Screen 10: ₹1000 Marked Price → ₹800 Selling Price, side by side under the photo (left of Swifty's corner: she comes to
+   ask why); the arrow grows from one to the other */
+.is-v2 .mp-side--compare { flex-direction: row; align-items: center; gap: 0; padding: 0; }
+.is-v2 .mp-side--compare .cmp-box { width: 500px; height: 250px; gap: 16px; }
+.is-v2 .mp-side--compare .cmp-price { font-size: 124px; }
+.is-v2 .mp-side--compare .cmp-label { font-size: 54px; }
+.is-v2 .mp-side--compare .cmp-mid { width: 220px; height: 250px; }
+.is-v2 .mp-side--compare .cmp-arrow { top: 50%; width: 84px; height: 147px; margin: -73px 0 0 -42px; rotate: -90deg; } /* (it grows from its top: rotated, from the left) */
+
+/* Screen 14: the book big on the left, as tall as what is beside it (the user, 2026-10-21: "this book should big"); beside
+   it Marked Price − Selling Price = Discount, and the bar under them */
+.is-v2 .fm-panel { gap: 60px; }
+.is-v2 .fm-book { width: 400px; }
+.is-v2 .fm-side { display: flex; flex-direction: column; gap: 40px; }
+.is-v2 .fm-row { gap: 16px; }
+.is-v2 .cmp-box.fm-box { width: 300px; height: 270px; gap: 20px; }
+.is-v2 .fm-box .cmp-label { font-size: 44px; }
+.is-v2 .fm-box .cmp-price { font-size: 100px; }
+.is-v2 .fm-op { width: 66px; font-size: 110px; }
+.is-v2 .fm-side .bm { width: 100%; margin-top: 0; gap: 16px; }
+.is-v2 .fm-side .bm .bm-total { font-size: 46px; }
+.is-v2 .fm-side .bm .bm-bar { height: 124px; }
+.is-v2 .fm-side .bm .bm-seg b { font-size: 56px; }
+.is-v2 .fm-side .bm .bm-seg small { font-size: 30px; }
+
+/* Screen 15: the formula in words, then in short on its sticky note, both big */
+.is-v2 .fr-panel { gap: 76px; }
+.is-v2 .fr-strip { gap: 26px; padding: 30px 64px 26px; font-size: 74px; }
+.is-v2 .fr-short { gap: 36px; padding: 40px 84px 26px; font-size: 168px; }
+
+/* Screen 22: one picture (the user, 2026-10-21: "no need to show the two images"): the sneakers big in the middle of the
+   panel, left of Swifty's corner (game.js setupRecall: the shop's picture shrinks into the photo), then the ₹1800 tag,
+   then the 30% OFF */
+.is-v2 .pc-panel { gap: 40px; }
+.is-v2 .pc-panel .pc-photo { width: 1110px; height: 485px; }
+.is-v2 .pc-panel .pc-hang { font-size: 92px; }
+.is-v2 .pc-panel .pc-off { padding: 26px 46px 14px; font-size: 90px; }
+
+/* Colours that stand out on the cream panel (the user, 2026-10-21: "it should properly fully visible in this panel"):
+   every note and box has a firm tint and an edge in its own colour (at least 3:1 against the panel), a white card a soft
+   edge, a sticky note and a rule band a golden one; the question strips a teal one. (The colours: :root, above.) */
+.is-v2 .cmp-box { border: 3px solid var(--edge, var(--card-edge)); }
+.is-v2 .cmp-box--yellow { --edge: var(--mp-edge); }
+.is-v2 .cmp-box--blue { --edge: var(--sp-edge); }
+.is-v2 .cmp-box--red { --edge: var(--d-edge); }
+.is-v2 .cn-note { border: 3px solid var(--mp-edge); }
+.is-v2 .cn--d .cn-note { border-color: var(--d-edge); }
+.is-v2 .pf-box--part { border: 3px solid var(--part-edge); }
+.is-v2 .pf-box--whole { border: 3px solid var(--whole-edge); }
+.is-v2 :is(.pf-question, .pqp-question) { border: 3px solid var(--teal-edge); }
+.is-v2 :is(.ws-band, .ws-band--yellow, .pqp-hint) { border: 3px solid var(--band-edge); }
+.is-v2 :is(.fr-short, .sm-formula), .f-note { border: 3px solid var(--band-edge); }
+.is-v2 :is(.mp-def, .mp-def.dd-card, .def, .fr-strip, .pf-sheet, .pf-sheet.ws-sheet), .ck-card { border: 2px solid var(--card-edge); }
+.is-v2 .def.def--blue.def--blue { background: var(--sp-tint); border-color: var(--sp-edge); }
+
+/* Screens 23, 24 and 32: the question on top; under it, side by side, the part and the whole and the working (on 24,
+   after them, the 10 × 10 grid when it comes) */
+.is-v2 .pf-panel { column-gap: 64px; row-gap: 34px; }
+.is-v2 .pf-question { font-size: 60px; }
+.is-v2 .pf-boxes { gap: 34px; }
+.is-v2 .pf-box { font-size: 58px; }
+.is-v2 .pf-sheet { font-size: 54px; }
+.is-v2 .g100-grid { grid-template-columns: repeat(10, 27px); gap: 5px; padding: 12px; }
+.is-v2 .g100-cell { width: 27px; height: 27px; }
+.is-v2 .g100-label { font-size: 40px; }
+/* Screens 25, 26, 28 and 29: the question on its strip, in one line; the answers under it, side by side (28: one under
+   another, its answers are long), their room kept from the start; under them, what to remember after a wrong answer
+   (25: then the 10 × 10 grid, in the same place), its room kept too */
+.is-v2 .qp-panel { gap: 40px; }
+.is-v2 .pqp-side { gap: 40px; }
+.is-v2 :is(.qp-panel, .pqp-side) > :is(.pf-question, .pqp-question) { padding: 18px 56px 24px; font-size: 62px; white-space: nowrap; }
+.is-v2 :is(.qp-answers, .pqp-answers) { min-height: 124px; }
+.is-v2 :is(.qp-answers, .pqp-answers) .pq-choices { flex-direction: row; gap: 40px; width: auto; min-width: 0; }
+.is-v2 :is(.qp-answers, .pqp-answers) .pq-opt { width: 280px !important; height: 124px; padding: 0 28px 0 18px; font-size: 60px; }
+.is-v2 :is(.qp-answers, .pqp-answers) .pq-opt .q-chip { width: 84px; height: 84px; font-size: 44px; }
+.is-v2 :is(.qp-answers, .pqp-answers) .pq-opt .q-label { flex: 1; padding: 6px 0 0; text-align: center; }
+.is-v2 .pqp-hint { order: 3; padding: 18px 34px 12px; font-size: 50px; } /* (29: the rule, after a wrong answer: under the answers) */
+.q-slot { display: grid; justify-items: center; min-height: 150px; }
+.q-slot > * { grid-area: 1 / 1; }
+.q-slot .remember { position: static; width: auto; text-align: center; }
+.q-slot .remember .f-note--small { font-size: 44px; }
+.q-slot .remember small { font-size: 28px; }
+.qp-panel .q-slot { min-height: 0; }
+.is-v2[data-scene="percentrule"] .pf-sheet { font-size: 46px; } /* (its last line, the bracket, is the tallest: it fits the room) */
+.is-v2[data-scene="check"] .qp-panel { gap: 30px; }
+.is-v2[data-scene="check"] .g100 { gap: 12px; }
+.is-v2[data-scene="check"] .g100-grid { grid-template-columns: repeat(10, 21px); gap: 4px; padding: 10px; }
+.is-v2[data-scene="check"] .g100-cell { width: 21px; height: 21px; }
+.is-v2[data-scene="check"] .g100-label { font-size: 36px; }
+
+/* Screen 27: the working, and the bar of ten parts beside it */
+.is-v2[data-scene="thirty"] .mp { grid-auto-flow: column; column-gap: 80px; }
+.is-v2[data-scene="thirty"] .ws-sheet { font-size: 58px; }
+.is-v2 .ws-panel ~ .bm { width: 780px; margin-top: 0; gap: 18px; }
+.is-v2 .ws-panel ~ .bm .bm-total { font-size: 46px; }
+.is-v2 .ws-panel ~ .bm .bm-bar { height: 124px; }
+.is-v2 .ws-panel ~ .bm .bm-tenth small { font-size: 26px; }
+.is-v2 .ws-panel ~ .bm .bm-note { font-size: 46px; }
+/* Screen 29: the amounts and the working, then the bar under them, left of Swifty's corner (she is there for the drags) */
+.is-v2[data-scene="topay"] .mp { row-gap: 40px; }
+.is-v2.has-swifty .ws-panel { gap: 44px; }
+.is-v2.has-swifty .cmp-box.ws-box { width: 300px; height: 140px; }
+.is-v2.has-swifty .ws-box .cmp-price { font-size: 64px; }
+.is-v2.has-swifty .ws-box .cmp-label { font-size: 30px; }
+.is-v2.has-swifty .ws-sheet { padding-left: 40px; padding-right: 40px; font-size: 50px; }
+.is-v2[data-scene="topay"] .ws-panel ~ .bm { width: 1000px; }
+.is-v2[data-scene="topay"] .ws-panel ~ .bm .bm-seg b { font-size: 50px; }
+.is-v2[data-scene="topay"] .ws-panel ~ .bm .bm-seg small { font-size: 28px; }
+/* Screen 33: the working alone, big */
+.is-v2[data-scene="discountpct"] .ws-sheet--big { font-size: 66px; }
+
+/* The end of the game (screens 48, 49, 52 and 53, in the shopping game's own look), bigger in the room left of Swifty's
+   corner (the user, 2026-10-21: "use the negative space"). 48: the two amounts side by side, the working under them. */
+.scene[data-scene="left"] .ws-panel { flex-direction: column; gap: 56px; }
+.scene[data-scene="left"] .ws-boxes { flex-direction: row; }
+.scene[data-scene="left"] .ws-boxes .dc-arrow { width: 150px; height: 190px; }
+.scene[data-scene="left"] .ws-boxes .dc-arrow .cmp-arrow { top: 50%; width: 60px; height: 105px; margin: -52px 0 0 -30px; rotate: -90deg; }
+.scene[data-scene="left"] .cmp-box.ws-box { width: 460px; height: 190px; gap: 14px; }
+.scene[data-scene="left"] .ws-box .cmp-label { font-size: 42px; }
+.scene[data-scene="left"] .ws-box .cmp-price { font-size: 92px; }
+.scene[data-scene="left"] .ws-sheet { font-size: 68px; }
+/* 49 */
+.scene[data-scene="two"] .ta-title { font-size: 58px; }
+.scene[data-scene="two"] .ta-card { min-height: 540px; gap: 20px; }
+.scene[data-scene="two"] .ta-term { font-size: 46px; }
+.scene[data-scene="two"] .ta-value { font-size: 120px; }
+.scene[data-scene="two"] .ta-text { font-size: 37px; }
+.scene[data-scene="two"] .ta-sum { font-size: 38px; }
+/* 52 */
+.scene[data-scene="recap"] .rk-panel { gap: 26px; }
+.scene[data-scene="recap"] .rk-title { font-size: 56px; }
+.scene[data-scene="recap"] .rk-grid { grid-template-columns: 600px 600px; gap: 26px 30px; }
+.scene[data-scene="recap"] .rk-card { min-height: 250px; gap: 14px; padding: 22px 32px 26px; }
+.scene[data-scene="recap"] .rk-term { font-size: 50px; }
+.scene[data-scene="recap"] .rk-text { font-size: 35px; }
+.scene[data-scene="recap"] .rk-formula { font-size: 32px; }
+/* 53 */
+.scene[data-scene="takeaway"] .tk-panel { gap: 56px; }
+.scene[data-scene="takeaway"] .tk-offer { width: 470px; gap: 24px; padding: 42px 34px 36px; }
+.scene[data-scene="takeaway"] .tk-mp { font-size: 36px; }
+.scene[data-scene="takeaway"] .tk-pay-label { font-size: 34px; }
+.scene[data-scene="takeaway"] .tk-pay-value { font-size: 72px; }
+.scene[data-scene="takeaway"] .tk-vs { font-size: 76px; }
+
+/* Straight, not tilted (the user, 2026-10-21: "why this is tilted angle it should straight"): every note, card, box and
+   tag with words on it sits square (only the strips of tape on the notes, and the red pen's circle, keep a slant) */
+.is-v2 :is(.cmp-box, .cmp-box--blue, .cmp-box--red, .mp-def, .mp-def.dd-card, .def, .fr-short, .sm-formula, .mp-pill, .mn-card, .pf-box--part, .pf-box--whole, .cn-note),
+.ck-card, .ck-card:nth-child(n), .f-note { rotate: none; }
+.is-v2 .pc-off-pos, .is-v2 .mn-panel .pc-off-pos { transform: none; rotate: none; }
+.is-v2 .pc-hang { rotate: none; }
+.stick-tag { transform: none; }
+
+/* Screens 25, 26, 28 and 29: the question and its answers in the middle of the room, at their size (the user,
+   2026-10-21: "this options and question should between the frame"); what to remember after a wrong answer (and 29's rule)
+   comes under them without taking room of its own; on 25 the block moves up when the 10 × 10 grid comes in under it */
+.is-v2 :is(.qp-panel, .pqp-side) { position: relative; }
+.is-v2 :is(.qp-panel, .pqp-side) > :is(.q-slot, .pqp-hint) { position: absolute; top: 100%; left: 50%; min-height: 0; margin-top: 34px; translate: -50% 0; }
+.is-v2 .qp-panel { transition: translate .7s cubic-bezier(.45, 0, .3, 1); }
+.is-v2 .qp-panel.has-grid { translate: 0 -150px; }
+/* …in the middle of the panel, the question's strip and the answers the same width (800: clear of Swifty's corner, where
+   she comes with her bubbles; the user, 2026-10-21: "this options and question should between the frame same size") */
+.is-v2:is([data-scene="check"], [data-scene="sneakerq"], [data-scene="represent"], [data-scene="topay"]) .mp:is(:has(> .qp-panel), :has(> .pqp-panel)) { padding: 400px 96px 160px; }
+.is-v2 :is(.qp-panel, .pqp-side) { width: 800px; }
+.is-v2 :is(.qp-panel, .pqp-side) > :is(.pf-question, .pqp-question) { width: 100%; padding: 18px 24px 24px; text-align: center; }
+.is-v2[data-scene="check"] .pf-question { font-size: 52px; }
+.is-v2[data-scene="sneakerq"] .pqp-question { font-size: 56px; }
+.is-v2:is([data-scene="represent"], [data-scene="topay"]) .pqp-question { font-size: 48px; }
+.is-v2 :is(.qp-answers, .pqp-answers) { width: 100%; }
+.is-v2 :is(.qp-answers, .pqp-answers) .pq-choices { justify-content: space-between; gap: 0; width: 100%; }
+/* 25 and 26: three short answers in a row, each number well inside its button */
+.is-v2 :is(.qp-answers, .pqp-answers) .pq-opt { width: 246px !important; padding: 0 22px 0 14px; font-size: 50px; }
+.is-v2 :is(.qp-answers, .pqp-answers) .pq-opt .q-chip { width: 70px; height: 70px; font-size: 38px; }
+/* 28 and 29: their answers are longer (names, four-figure amounts: "fix the number should inside the boxes"), so one under
+   another, each as wide as the question */
+.is-v2:is([data-scene="represent"], [data-scene="topay"]) .pqp-answers .pq-choices { flex-direction: column; gap: 24px; }
+.is-v2:is([data-scene="represent"], [data-scene="topay"]) .pqp-answers .pq-opt { width: 100% !important; height: 116px; font-size: 56px; }
+.is-v2:is([data-scene="represent"], [data-scene="topay"]) .pqp-answers .pq-opt .q-chip { width: 84px; height: 84px; font-size: 44px; }
+.is-v2[data-scene="represent"] .pqp-answers { min-height: 396px; }
+.is-v2[data-scene="topay"] .pqp-answers .pq-choices { gap: 20px; }
+.is-v2[data-scene="topay"] .pqp-answers .pq-opt { height: 104px; }
+.is-v2[data-scene="topay"] .pqp-answers { min-height: 352px; }
+.is-v2[data-scene="topay"] .mp:has(> .pqp-panel) { padding-bottom: 170px; } /* (room under the answers for the rule, after a wrong one) */
+/* 23, 24 and 32: the question's strip as wide as what is under it; 32 in the middle of the panel too (Swifty has no
+   bubble there, so her corner isn't kept) */
+.is-v2 .pf-panel > .pf-question { justify-self: stretch; text-align: center; }
+.is-v2.has-swifty[data-scene="pctofmp"] .mp { padding-right: 96px; }

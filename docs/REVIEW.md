@@ -2,7 +2,7 @@
 
 The brief is `Bookstore Journey - Revamp Brief.docx` ("Changes for Screens 1–46"), with the text spreadsheet `Bookstore Journey - All Text (Screens 1-46).xlsx`. This file says what was done for each of its points, what was decided where the brief left a question open, and what is still to do. `PROMPT.md` describes the game as it is now, screen by screen.
 
-**Screen numbers** here are the brief's. The game also counts the two new checkpoint screens, so it has 61: Screens 31–35 here are 32–36 in the game, and 36–59 are 38–61 (Checkpoint 2 is 31 in the game, Checkpoint 3 is 37).
+**Screen numbers** here are the brief's. Screens 2, 4, 9, 24, 26 and 44 and the checkpoints on percentages and on the price after a discount were taken out on 2026-10-21 (the still screens at the user's request, the rest at the review meeting: `docs/MEETING-2026-10-21.md`), so the game has 53 screens: the brief's 1, 3, 5–8, 10–23, 25, 27–30, 31–35, 36–43 and 45–59 are the game's 1, 2, 3–6, 7–20, 21, 22–25, 26–30, 31–38 and 39–53.
 
 ## Part 1: rules for every screen
 
@@ -12,9 +12,9 @@ The brief is `Bookstore Journey - Revamp Brief.docx` ("Changes for Screens 1–4
 | 2. Speech bubbles | Done | Lines wrap by themselves into balanced lines of about 20–28 letters (a typed line break counts as a space, except after a short "Correct!" or "Not quite!"); weight 600, line spacing 1.3, the same padding on every side; keep-clear areas on 11 story pictures (faces, prices, tags, the book), which bubbles move around; a soft fade in with the whole line (no bounce, no "bloop", no letters jumping in), each word lit with the highlighter as it is said; 34 px, about 18 px on a 1024 px-wide tablet. On Screens 1–46 and the conversation back home (56); the shopping game's own bubbles are unchanged. |
 | 3. Swifty | Done | No bubble when her words are on the screen (the voice stays, and what she reads lights up). Bubbles only for questions, hints, "Correct!" / "Not quite!", instructions and links. She comes only to introduce an idea (11, 16, 26, 37), ask or react (8, 13, 30, 31, 33, 34) and celebrate at a checkpoint; she is not there in the worked solutions (12, 17, 18, 28, 29, 32, 38, the working on 37), where her voice goes on by itself, and the content uses her room. |
 | 4. Story → panel | Done | The picture zooms in on the key object, then shrinks into a framed photo on the left of the panel; the ₹1000 (11) and the 30% OFF tag (26) fly from it onto the panel. Going back, the photo grows back to full screen, and the result shows on the picture: the green ₹1260 tag (35). The notes "₹1000 → ₹800" (14) and "Discount = MP − SP" (20) were taken out: they covered the shopkeeper's first bubble and the shop's sign. |
-| 5. Layout | Done, except the text sizes | The notebook style on the plain panel: prices on taped notes, definitions on lined index cards, working on graph paper with the answer circled in red, formulas on yellow sticky notes, a green marker tick for a right answer and a grey cross-out for a wrong one. Five layouts (Concept, Definition, Worked example, Question, Summary / checkpoint). Every step stays clear (the earlier ones no longer fade, and the progress bar at the top was taken out, both at the user's request). **Text sizes**, measured on each screen once it has finished: the checkpoints now use four (26 labels, 38 text, 46 terms, 56 title, amounts and formula), and 8, 11–13, 16, 18, 26, 28 and 38 use 3–4. 17, 27, 29–34 and 37 still use 6–9 (see *Still to do*). |
+| 5. Layout | Done, except the text sizes | The notebook style on the plain panel: prices on taped notes, definitions on lined index cards, working on graph paper with the answer circled in red, formulas on yellow sticky notes, a green marker tick for a right answer and a grey cross-out for a wrong one. Five layouts (Concept, Definition, Worked example, Question, Summary / checkpoint), since 2026-10-21 all **under the photo and spread across the panel**, bigger, clear of Swifty, with words in full lines and colours that stand out on the panel (each box an edge in its own colour), at the user's request. Every step stays clear (the earlier ones no longer fade, and the progress bar at the top was taken out, both at the user's request). The screens have no Next buttons of their own: after an explanation they move on by themselves 5 seconds later. **Text sizes**, measured on each screen once it has finished: the checkpoints now use four (26 labels, 38 text, 46 terms, 56 title, amounts and formula), and 8, 11–13, 16, 18, 26, 28 and 38 use 3–4. 17, 27, 29–34 and 37 still use 6–9 (see *Still to do*). |
 | 6. Colours | Done for the new look | One palette of named CSS variables, and no colour typed in the revamp's styles; Part violet and Whole olive; one look for every question strip and every rule band; a wrong answer grey and crossed out with ✗; prices in ink unless MP, SP or Discount; one effect at a time; sparkles only for a right answer or a checkpoint; ✓, ✗ or a label with every colour. The older styles (mostly the shopping game's) still type their colours. |
-| 8. Checkpoints | Done | After 19, 30, 35 and 39, all the same: the topic (the "Checkpoint 2 of 4" label over it was taken out), ticked ✓ when done; "Let's remember!"; 2–3 lined index cards and one formula on a sticky note (an example on 1 and 2), read out with no bubbles; then the tick, the note flying into the notebook, and Swifty rising in to celebrate. Buttons: Got it, next / Hear it again / Go back (to the start of the topic). Never moves on by itself, even with Auto-play on. The next topic starts by showing the last note ("Remember" over it). The notebook opens any time, also in the shopping game (its button beside Scenes, or N), and keeps its pages on the device. |
+| 8. Checkpoints | Done, then changed at the review meeting (2026-10-21) | Two are left, after 19 and 39 (the ones on percentages and on the price after a discount were taken out as repetition). Both centred on the panel and big: the topic, ticked ✓ when done; "Let's remember!"; 2–3 lined index cards and one formula on a sticky note, read out with no bubbles; the tick, the note flying into the notebook, sparkles (and Swifty's bubble on 39). No example and no buttons: each moves on by itself 3 seconds after it is done. What to remember now shows only after a wrong answer, with a second try (30, 31, 34), not at the start of a topic. |
 
 ## Part 2: screen by screen
 
@@ -22,10 +22,10 @@ The brief is `Bookstore Journey - Revamp Brief.docx` ("Changes for Screens 1–4
 |---|---|---|
 | 1 | Animation; new bubbles | Done: the quiet loop (Dad sips his tea) and a talking clip for each of the three lines. |
 | 2 | Still, unless decided otherwise | Kept still. |
-| 4–5 | Picking up the book as one movement; the book names sharp | Done: Aniket picks up the book in place of the fade, and the book names stay on their covers. Screen 5 also has its quiet loop and talking clip. |
+| 4–5 | Picking up the book as one movement; the book names sharp | Screen 4 was taken out (2026-10-21), and its clip with it: Screen 3 fades into 5. The book names stay on their covers; Screen 5 has its quiet loop and talking clip. |
 | 6–7 | Handing over the book and the notes; ₹800 just above the money | Screens 6 and 7 talk and breathe (the notes stay under the ₹800 badge). The hand-over clip, `s06-to-s07`, is to be made again: it started on Screen 7's picture. |
 | 8 | Photo instead of hiding the counter; notebook-style answers; SP blue; Swifty stays; read the question aloud? | Done. The question is still not read aloud (open question, below). The wrong-answer hint is now "Not quite! …" (the spreadsheet's must-fix). |
-| 9–10 | The ₹1000 shock as a movement | Not done (animation). The gold ring is where it was. |
+| 9–10 | The ₹1000 shock as a movement | Screen 9 was taken out (2026-10-21): Screen 8's photo grows back out into 10. Screen 10's talking clip is still to make. |
 | 11 | Photo; ₹1000 flies; Swifty stays; "It is called the Marked Price (MP)" voice only; amber | Done. |
 | 12 | No Swifty; lined index card | Done. |
 | 13 | Two lines voice only, the question kept; taped notes; one arrow colour | Done (every arrow is grey now). |
@@ -50,7 +50,7 @@ The brief is `Bookstore Journey - Revamp Brief.docx` ("Changes for Screens 1–4
 | 38 | No Swifty; the same rule band as 34 | Done. |
 | 39 | Checkpoint 4; no repeated bubbles; Swifty only to celebrate | Done. |
 | 40, 41, 45 | Talking loops | Done: a quiet loop and a talking clip with each line (the father's second line on 41 and 45 uses his first clip until its own is made). The new bubbles: done. |
-| 42–44 | One movement: the list, the notes, the pocket | The list, then the notes: done (42 → 43), and the father talks on 43. Into the pocket (43 → 44): not done. |
+| 42–44 | One movement: the list, the notes, the pocket | The list, then the notes: done (42 → 43), and the father talks on 43. Screen 44 (into the pocket) was taken out (2026-10-21): 43 fades into 45. |
 | 46 | A small movement on Aniket; optional notebook cards as "your tools for shopping" | Aniket waves: done. The notebook cards: not done. |
 
 ## Language check
@@ -80,7 +80,7 @@ The brief is `Bookstore Journey - Revamp Brief.docx` ("Changes for Screens 1–4
 
 | Question | Meanwhile |
 |---|---|
-| Screen 2: still, or a little movement? | Kept still. |
+| Screen 2: still, or a little movement? | Kept still, then taken out (2026-10-21, with the other still screens 4, 9 and 44). |
 | Animation: AI-made video, or hand-made / rigged only? | Nothing made until it is decided (see *Still to do*). |
 | Which tablets and browsers? A size limit? | Not known. Bubble text is about 18 px on a 1024 px-wide tablet (small labels, such as "REMEMBER", are 12–15 px there). The voice clips are Ogg Opus, and the device's voice reads them where that can't play (older Safari). The game is about 2 MB of voice plus the pictures. |
 | When Swifty isn't needed: remove her, or keep her small and quiet? | Removed: she and her books rise in when needed and go back down after. |
@@ -92,6 +92,10 @@ The brief is `Bookstore Journey - Revamp Brief.docx` ("Changes for Screens 1–4
 | The "previous files" for layout ideas | Not shared yet. The design board (`design/hand-made design board.png`) was used. |
 
 ## Still to do
+
+0. **The review meeting of 2026-10-21** (`docs/MEETING-2026-10-21.md`): its changes are in, except two that wait for a yes: the
+   pop-up over the blurred story for every teaching screen (tried on Screen 25's "30% OFF means 30% Discount"), and making the
+   Gemini clips again on Higgsfield (the list: `Animation Video Prompts - Left to Make.md`; it spends credits).
 
 1. **The rest of the animation clips:** 12 of 54 are still to make (`Animation Video Prompts - Left to Make.md`): the movements on Higgsfield (Gemini can't be given an end frame), `s06-to-s07` again among them; Screens 10, 14 and 15; and the father's second lines on 41 and 45. Each one plays in the game as soon as it is brought in.
 2. **The language review** with ChatGPT and the content team (above), then one recording batch.

@@ -96,7 +96,7 @@
       for (const c of node.childNodes) {
         if (c.nodeType === 3) put(c.textContent, owner);
         else if (c.nodeType === 1 && c.tagName === 'BR') put(' ', owner);
-        else if (c.nodeType === 1 && !c.matches('.bubble, .qb-line, .story-next')) {
+        else if (c.nodeType === 1 && !c.matches('.bubble, .qb-line')) {
           const cs = getComputedStyle(c);
           if (cs.display === 'none' || cs.visibility === 'hidden' || cs.opacity === '0') continue;
           walk(c, /^(inline|contents)/.test(cs.display) ? owner : c);
