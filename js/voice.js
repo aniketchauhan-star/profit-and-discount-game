@@ -24,7 +24,8 @@
   const clipOf = text => (recorded && LINES[key(text)]) || null;
 
   // How each character sounds in the device's voice (for a line with no clip): `gender` picks the voice, pitch
-  // and rate shape it. A female part played by a male voice is pitched up (pitch + 0.45).
+  // and rate shape it. A female part played by a male voice is pitched up (pitch + 0.45), and a male part played by a
+  // female voice (only if the device has no man's voice) down (pitch − 0.3).
   const CAST = {
     boy: { gender: 'm', pitch: 1.25, rate: 0.92 },  // Aniket
     man: { gender: 'm', pitch: 0.9, rate: 0.88 },   // the shopkeeper
@@ -41,16 +42,21 @@
   }
 
   const FEMALE = /female|tara|veena|heera|neerja|kajal|lekha|swara|kalpana|aditi|raveena|isha|priya|ananya/i;
-  const MALE = /\bmale\b|rishi|aman|ravi|prabhat|hemant|madhur|kunal|aarav/i;
+  const MALE = /\bmale\b|rishi|aman|ravi|prabhat|hemant|madhur|kunal|aarav|daniel|\balex\b|fred|aaron|arthur|gordon|ralph|david|\bmark\b|\bguy\b|george|ryan/i;
   const better = v => (/natural|neural|online|enhanced|premium|google/i.test(v.name) ? 0 : 1);
 
   // The best voice for a character: Indian English first (the right gender if there is one),
-  // then Hindi voices (they read English with an Indian accent), then any English voice.
+  // then Hindi voices (they read English with an Indian accent), then any English voice. A man's part (Aniket, his
+  // father, the shopkeeper) takes a man's voice from any of them before a woman's: a woman's can't be made to sound
+  // like a man.
   function pick(gender) {
     const enIN = voices.filter(v => /^en[-_]IN/i.test(v.lang));
     const hiIN = voices.filter(v => /^hi[-_]IN/i.test(v.lang));
+    const en = voices.filter(v => /^en/i.test(v.lang));
     const fits = v => (gender === 'f' ? FEMALE.test(v.name) : MALE.test(v.name) && !FEMALE.test(v.name));
-    const pools = [enIN.filter(fits), enIN, hiIN.filter(fits), hiIN, voices.filter(v => /^en/i.test(v.lang))];
+    const pools = gender === 'm'
+      ? [enIN.filter(fits), hiIN.filter(fits), en.filter(fits), enIN, hiIN, en]
+      : [enIN.filter(fits), enIN, hiIN.filter(fits), hiIN, en];
     const pool = pools.find(p => p.length);
     return pool ? pool.slice().sort((a, b) => better(a) - better(b))[0] : null;
   }
@@ -172,7 +178,9 @@
         u.lang = 'en-IN';
       }
       const femaleVoice = voice && FEMALE.test(voice.name);
-      u.pitch = cast.gender === 'f' && !femaleVoice ? Math.min(2, cast.pitch + 0.45) : cast.pitch;
+      u.pitch = cast.gender === 'f' && !femaleVoice ? Math.min(2, cast.pitch + 0.45)
+        : cast.gender === 'm' && femaleVoice ? Math.max(0, cast.pitch - 0.3) // (only a woman's voice on the device)
+          : cast.pitch;
       u.rate = cast.rate;
       let done = false;
       const end = () => {

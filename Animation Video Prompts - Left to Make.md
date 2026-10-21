@@ -1,6 +1,6 @@
 # Animation clips left to make
 
-12 of 54 clips are still to make; the other 42 are in the game. This file holds only the ones left, by the picture you upload first, each with its prompt. Everything about them is in `Animation Video Prompts.md`. Made with `python3 tools/make_videos.py --todo`; it is written again after each batch.
+11 of 54 clips are still to make; the other 43 are in the game. This file holds only the ones left, by the picture you upload first, each with its prompt. Everything about them is in `Animation Video Prompts.md`. Made with `python3 tools/make_videos.py --todo`; it is written again after each batch.
 
 **For every clip, on Higgsfield** (Seedance 2.5, image to video):
 1. **Start frame:** the picture named with the clip, from the game folder `game assets`: `/Users/AniketChauhan/Desktop/profit and discount game/game assets/`.
@@ -27,7 +27,6 @@ camera movement, zoom, pan, shake, cut, morphing, melting, warping, flicker, fac
 | `boy see the book .png` | 9 → 10 | 1: s09-to-s10 |
 | `shocked aniket.png` | 10 | 1: s10-aniket |
 | `what is discount.png` | 15 | 1: s15-idle |
-| `hee see discount on shoes.png` | 24 → 25 | 1: s24-to-s25 |
 | `boy and his father talking.png` | 41 | 1: s41-father-2 |
 | `father gave him money.png` | 43 → 44 | 1: s43-to-s44 |
 | `boy stand and talk .png` | 45 | 1: s45-father-2 |
@@ -106,21 +105,9 @@ Seen from just behind a boy's shoulder (navy backpack, green T-shirt), he holds 
 At a bookshop counter, the boy on the left (green T-shirt, navy backpack), holding the blue book, looks puzzled and thinks to himself "Discount? What does that mean?" without saying it: his eyes glance up and to the side, his eyebrows knit and lift, his head tilts slightly, and he blinks. His mouth stays closed the whole time: he is only thinking. The shopkeeper on the right keeps smiling with his open hand still, and blinks. Start and end on exactly this picture, so the clip loops seamlessly. Camera locked: no zoom, pan or shake. Same 2D cartoon illustration style as the picture (clean outlines, soft flat colours, warm light). Every face, hairstyle, outfit, body shape and colour stays exactly the same. Everything not described stays perfectly still. All signs and printed words stay sharp and in place. No added text, captions or speech bubbles.
 ```
 
-## `hee see discount on shoes.png`
-
-### 9. s24-to-s25.mp4 · Screen 24 → 25 · Aniket becomes confused
-
-**Make it again on Higgsfield, with both frames: in the Gemini take he crossed his arms instead.**
-
-- [ ] Start frame `hee see discount on shoes.png` · end frame `he is tinking to see the shoes.png` · **4 s** · 1080p · sound off · save as `s24-to-s25.mp4`
-
-```text
-In a shoe shop, the boy (green T-shirt, navy backpack), his hand on his chin, turns his head a little towards us and frowns, confused about the price; he blinks. Nobody talks. The camera moves very slightly in towards the stand, ending exactly on the last frame. The sneakers, the white "₹1800" tag and the red "30% OFF" label stay sharp and readable the whole time. Same 2D cartoon illustration style as the pictures (clean outlines, soft flat colours, warm light). The boy's face, hair, clothes and colours stay exactly the same. Everything else stays still. No added text, captions or speech bubbles.
-```
-
 ## `boy and his father talking.png`
 
-### 10. s41-father-2.mp4 · Screen 41 · Dad: "You still need some things for school."
+### 9. s41-father-2.mp4 · Screen 41 · Dad: "You still need some things for school."
 
 - [ ] Start frame `boy and his father talking.png` · end frame the same picture · **4 s** · 1080p · sound off · save as `s41-father-2.mp4`
 
@@ -130,7 +117,7 @@ At a wooden dining table, the father on the right (light-blue shirt, moustache) 
 
 ## `father gave him money.png`
 
-### 11. s43-to-s44.mp4 · Screen 43 → 44 · Aniket pockets the money
+### 10. s43-to-s44.mp4 · Screen 43 → 44 · Aniket pockets the money
 
 - [ ] Start frame `father gave him money.png` · end frame `boy take money in his pocket.png` · **4 s** · 1080p · sound off · save as `s43-to-s44.mp4`
 
@@ -140,7 +127,7 @@ At home by the dining table, the boy (green T-shirt, navy backpack) takes the fa
 
 ## `boy stand and talk .png`
 
-### 12. s45-father-2.mp4 · Screen 45 · Dad: "Whatever is left after buying everything is yours."
+### 11. s45-father-2.mp4 · Screen 45 · Dad: "Whatever is left after buying everything is yours."
 
 - [ ] Start frame `boy stand and talk .png` · end frame the same picture · **5 s** · 1080p · sound off · save as `s45-father-2.mp4`
 

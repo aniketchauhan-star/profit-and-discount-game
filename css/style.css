@@ -636,6 +636,21 @@ button:focus-visible, .switch input:focus-visible + .switch-track {
 }
 .cover-title--light { color: #fffdf6; text-shadow: 0 1px 2px rgba(12, 30, 40, .55), 0 0 6px rgba(12, 30, 40, .25); }
 .cover-title--dark { color: #6e2a12; text-shadow: 0 1px 1px rgba(255, 244, 220, .7); }
+/* The names together: while a clip of the stand is on, they move with the stand as the clips show it (measured: 98%,
+   about 24 px up and to the left, round the stand's middle), as the clip fades in. */
+.stand-names { position: absolute; inset: 0; transform-origin: 1505px 720px; transition: transform .15s linear; pointer-events: none; }
+.scene:has(.scene-clip.is-on) .stand-names { transform: translate(-24px, -24px) scale(.983); }
+
+/* A piece of the picture laid back over its clips (game.js pictureOver), its edges fading out over 10 px */
+.pic-patch {
+  position: absolute;
+  background-size: 1920px 1080px; /* the picture, as the stage shows it */
+  pointer-events: none;
+  -webkit-mask: linear-gradient(90deg, transparent, #000 10px calc(100% - 10px), transparent), linear-gradient(transparent, #000 10px calc(100% - 10px), transparent);
+  -webkit-mask-composite: source-in;
+  mask: linear-gradient(90deg, transparent, #000 10px calc(100% - 10px), transparent), linear-gradient(transparent, #000 10px calc(100% - 10px), transparent);
+  mask-composite: intersect;
+}
 
 /* ---------- Definitions (screen 8, after a wrong answer, on the big panel) ----------
    Big and clear: the two cards fill the panel left of Swifty's stand (clear of her bubbles, which start at x 1380). */
@@ -1472,6 +1487,13 @@ button:focus-visible, .switch input:focus-visible + .switch-track {
 .pf-frac { display: inline-flex; flex-direction: column; align-items: center; }
 .pf-num, .pf-den { position: relative; padding: 6px 8px 0; }
 .pf-bar { align-self: stretch; height: 5px; margin: 6px 0; border-radius: 3px; background: currentColor; } /* the fraction's colour */
+/* A fraction in running text (FX.fracText: a card, the notebook, the scene list): its top over its bottom, a little
+   smaller than the words, centred on the line; its negative margins keep the lines round it where they were. */
+.frac { position: relative; display: inline-flex; flex-direction: column; align-items: center; margin: -.48em .14em; vertical-align: middle; font-size: .8em; line-height: 1.04; }
+.frac-num { padding: 0 .16em .02em; }
+.frac-den { align-self: stretch; padding: 0 .16em; text-align: center; }
+.frac-den::before { content: ''; display: block; height: .1em; margin: 0 -.04em .06em; border-radius: .05em; background: currentColor; } /* the bar, as wide as the wider half */
+.frac-slash { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; } /* kept for reading and copying, not seen */
 .pf-times { padding-top: 8px; white-space: nowrap; }
 .pf-answer { position: relative; z-index: 0; margin-left: 8px; padding-top: 10px; font-size: 66px; }
 .pf-answer::before { /* marked as the answer, it sits on a bright yellow box */
@@ -1643,7 +1665,7 @@ button:focus-visible, .switch input:focus-visible + .switch-track {
 .cmp-box.ws-box { width: 400px; height: 150px; gap: 12px; }
 .ws-box .cmp-label { font-size: 36px; }
 .ws-box .cmp-price { font-size: 72px; }
-.pf-sheet.ws-sheet { padding: 40px 46px 34px; row-gap: 28px; }
+.pf-sheet.ws-sheet { padding: 26px 46px 48px; row-gap: 28px; } /* (the yellow box round the answer reaches 10 px below it: room for it) */
 .ws-sheet .pf-label { justify-self: end; color: var(--ink); } /* each label sits right up to its = sign */
 .ws-sheet--big { font-size: 56px; }
 .ws-text { padding-top: 8px; white-space: nowrap; }
@@ -3480,8 +3502,8 @@ kbd {
 /* ==========================================================================
    The revamp (Bookstore Journey - Revamp Brief.docx): screens 1–46, and the conversation back home at the end
    (scenes with `v2` in game.js: class .is-v2)
-   - One small palette (rule 6): paper, ink and grey for text and backgrounds; teal for buttons, headings and the
-     progress bar; and colours that mean one thing only: Marked Price amber, Selling Price blue, Discount red, a right
+   - One small palette (rule 6): paper, ink and grey for text and backgrounds; teal for buttons and headings; and
+     colours that mean one thing only: Marked Price amber, Selling Price blue, Discount red, a right
      answer green; the part and the whole their own pair (violet, olive); one yellow highlighter for the key word. No
      colour is typed anywhere below: only these names. Light tints for boxes, full colour only on the key number.
    - The notebook style (rule 5): prices on taped paper notes, definitions on lined index cards, working on graph paper
@@ -3581,8 +3603,6 @@ kbd {
   background: none;
   box-shadow: none;
 }
-/* the earlier steps fade a little; the current one is clear (rule 5) */
-.is-v2 .is-past { opacity: .55; transition: opacity .5s ease; }
 /* what is being said lights up (game.js talk.read): the highlighter round it */
 .is-v2 .is-said { box-shadow: 0 0 0 6px var(--hl), var(--paper-shadow) !important; transition: box-shadow .2s ease; }
 .is-v2 :is(.w, .pf-q-value, .fr-term, .pf-label, .pf-num, .pf-den, .pf-times, .ws-text).is-said { box-shadow: none !important; border-radius: 8px; background: var(--hl); }
@@ -3702,6 +3722,11 @@ kbd {
   transform: rotate(-4deg) scale(.6);
 }
 .is-v2 .pf-answer.is-marked::before { transform: rotate(-4deg); }
+/* The red circle reaches 20 px below the answer: room for it at the bottom of the sheet (the worked sheets take it
+   from the top, so they stay the same size; the formula sheets keep their room on top for the arrow over "Part", and
+   get as much below the circle as there is above the arrow) */
+.is-v2 .pf-sheet.ws-sheet { padding-top: 22px; padding-bottom: 52px; }
+.is-v2 .pf-sheet:not(.ws-sheet) { padding-bottom: 35px; }
 
 /* Formulas on a yellow sticky note */
 .is-v2 :is(.fr-short, .sm-formula) {
@@ -3713,7 +3738,8 @@ kbd {
 }
 /* Rule bands: all the same (34, 38) */
 .is-v2 :is(.ws-band, .ws-band--yellow, .pqp-hint) { background: var(--band); }
-/* Question strips: all the same (28–34, 37) */
+/* Question strips: all the same (28–34, 37). Flat, so the room the old dark edge took below is given back: the words
+   sit in the middle (measured), the strip the same size. */
 .is-v2 :is(.pf-question, .pqp-question) {
   border: 0;
   border-radius: 18px;
@@ -3721,29 +3747,39 @@ kbd {
   box-shadow: none;
   color: var(--ink);
 }
-/* The formula in words (screen 18): plain paper */
-.is-v2 .fr-strip { border: 0; border-radius: 6px; background: var(--white); box-shadow: var(--paper-shadow); }
+.is-v2 .pf-question { padding-top: 16px; padding-bottom: 20px; }
+.is-v2 .pqp-question { padding-top: 14px; padding-bottom: 18px; }
+/* The formula in words (screen 18): plain paper, the words in the middle of it */
+.is-v2 .fr-strip { padding-top: 20px; padding-bottom: 24px; border: 0; border-radius: 6px; background: var(--white); box-shadow: var(--paper-shadow); }
 
-/* Answers: paper strips with a letter chip; a right one ticked in green marker, a wrong one crossed out in grey */
+/* Answers: buttons that look pressable, a white face on a deep-teal edge that lifts under the pointer and presses
+   down when tapped; the letter chip, then the words right after it (no gap that changes from answer to answer).
+   Once picked, a button is pressed in: a right one green with a tick, a wrong one grey and crossed out. */
 .is-v2 .q-opt {
-  border: 2px solid var(--line);
-  background: var(--white);
-  box-shadow: 0 4px 12px var(--ink-08);
+  border: 3px solid var(--teal);
+  background: linear-gradient(180deg, var(--white) 55%, var(--teal-tint) 100%);
+  box-shadow: 0 7px 0 var(--teal-deep), 0 14px 22px var(--ink-14);
   color: var(--ink);
   font-weight: 700;
+  transition: transform .15s ease, translate .15s ease, box-shadow .15s ease, background-color .25s ease, color .25s ease, opacity .3s ease;
 }
-.is-v2 .q-opt:hover:not(:disabled) { transform: translateY(-3px); background: var(--paper); box-shadow: 0 10px 22px var(--ink-12); }
-.is-v2 .q-opt:active:not(:disabled) { transform: translateY(2px); box-shadow: 0 2px 6px var(--ink-10); }
+.is-v2 .q-opt:hover:not(:disabled) { transform: translateY(-3px); background: var(--teal-tint); box-shadow: 0 10px 0 var(--teal-deep), 0 18px 28px var(--ink-16); }
+.is-v2 .q-opt:active:not(:disabled) { transform: translateY(6px); box-shadow: 0 1px 0 var(--teal-deep), 0 4px 8px var(--ink-10); }
 .is-v2 .q-chip, .is-v2 .pq-opt .q-chip { border: 0; background: var(--teal); color: var(--white); }
-.is-v2 .q-opt.is-correct { border-color: var(--ok); background: var(--ok-tint); color: var(--ok); }
+.is-v2 .q-label, .is-v2 .pq-choices--stack .pq-opt .q-label { padding-right: 0; text-align: left; }
+/* A column of answers is as wide as its longest answer, every button the same width: no answer in a wide empty box */
+.is-v2 .pq-choices--stack { width: max-content; min-width: 280px; max-width: 100%; margin-inline: auto; align-items: stretch; }
+.is-v2 .pq-choices--stack .pq-opt { width: auto !important; padding: 0 44px 0 16px; }
+.is-v2 .q-opt:is(.is-correct, .is-wrong) { translate: 0 5px; } /* pressed in */
+.is-v2 .q-opt.is-correct { border-color: var(--ok); background: var(--ok-tint); box-shadow: 0 2px 0 var(--ok); color: var(--ok); }
 .is-v2 .q-opt.is-correct .q-chip { background: var(--ok); transform: scale(1.12) rotate(-8deg); }
 .is-v2 .q-opt.is-correct .q-chip svg { stroke: var(--white); stroke-width: 8; } /* a marker tick */
-.is-v2 .q-opt.is-wrong { border-color: var(--muted); background: var(--muted-tint); color: var(--ink-2); text-decoration: line-through; text-decoration-thickness: 4px; } /* grey, but readable (4.8:1) */
+.is-v2 .q-opt.is-wrong { border-color: var(--muted); background: var(--muted-tint); box-shadow: 0 2px 0 var(--muted); color: var(--ink-2); text-decoration: line-through; text-decoration-thickness: 4px; } /* grey, but readable (4.8:1) */
 .is-v2 .q-opt.is-wrong .q-chip { background: var(--muted); }
 .is-v2 .q-opt.is-wrong .q-chip svg { stroke: var(--white); }
 
 /* Screen 8: the question card, and its "Correct!" side */
-.is-v2 .qcard { border: 0; background: var(--white); box-shadow: 0 18px 44px var(--deep-30); }
+.is-v2 .qcard { padding: 35px 44px 53px; border: 0; background: var(--white); box-shadow: 0 18px 44px var(--deep-30); } /* (no tape on top) 44 px of room all round what is on it, measured */
 .is-v2 .qcard-tape { display: none; }
 .is-v2 .q-mark { color: var(--ink); }
 .is-v2 .qback-head { border-bottom: 2px solid var(--line); background: var(--ok-tint); color: var(--ok); }
@@ -3824,8 +3860,7 @@ kbd {
 
 /* ---------- Checkpoints (rule 8): FX.checkpoint ---------- */
 .ck { position: absolute; inset: 0; pointer-events: none; }
-.ck-head { position: absolute; left: 96px; top: 104px; }
-.ck-head small { display: block; margin-bottom: 8px; color: var(--teal); font-size: 26px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; }
+.ck-head { position: absolute; left: 96px; top: 141px; } /* the topic, where it was under the "Checkpoint 2 of 4" label (taken out) */
 .ck-title { color: var(--ink); font-size: 56px; font-weight: 800; line-height: 1.05; }
 .ck-tick { display: inline-block; margin-left: 18px; color: var(--ok); opacity: 0; transform: scale(.3); transition: opacity .3s ease, transform .5s cubic-bezier(.3, 1.6, .5, 1); }
 .ck-tick.is-on { opacity: 1; transform: none; }
@@ -3868,21 +3903,21 @@ kbd {
 .ck-ex-label { display: block; margin-bottom: 6px; color: var(--teal); font-size: 26px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; }
 .ck-ex-text .hl { font-weight: 800; }
 .ck-actions { display: flex; gap: 22px; }
-.ck-btn {
+.ck-btn { /* pressable, like the answers: a white face on a teal border, standing on a deep-teal edge */
   height: 84px;
   padding: 6px 34px 0;
-  border: 2px solid var(--line);
+  border: 3px solid var(--teal);
   border-radius: 42px;
-  background: var(--white);
-  box-shadow: 0 4px 12px var(--ink-10);
+  background: linear-gradient(180deg, var(--white) 55%, var(--teal-tint) 100%);
+  box-shadow: 0 6px 0 var(--teal-deep), 0 12px 20px var(--ink-14);
   color: var(--teal);
   font: 800 38px/1 var(--font);
   cursor: pointer;
-  transition: transform .15s ease, box-shadow .15s ease;
+  transition: transform .15s ease, box-shadow .15s ease, background-color .2s ease;
 }
-.ck-btn:hover { transform: translateY(-3px); box-shadow: 0 10px 22px var(--ink-14); }
-.ck-btn:active { transform: translateY(2px); }
-.ck-btn--go { border-color: var(--teal); background: var(--teal); color: var(--white); }
+.ck-btn:hover { transform: translateY(-3px); background: var(--teal-tint); box-shadow: 0 9px 0 var(--teal-deep), 0 16px 26px var(--ink-16); }
+.ck-btn:active { transform: translateY(5px); box-shadow: 0 1px 0 var(--teal-deep), 0 4px 8px var(--ink-10); }
+.ck-btn--go, .ck-btn--go:hover { border-color: var(--teal-deep); background: var(--teal); color: var(--white); }
 .ck-btn:focus-visible { outline: 5px solid var(--hl); outline-offset: 4px; }
 
 /* A formula on a yellow sticky note (FX.formulaNote): on a checkpoint, kept in the notebook, shown again later */
@@ -3918,41 +3953,6 @@ kbd {
 }
 .remember small { display: block; margin-bottom: 10px; color: var(--teal); font-size: 24px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; }
 
-/* ---------- The progress bar: Marked Price → Discount → Percentages → Discount % ---------- */
-#progress {
-  position: absolute;
-  z-index: 30;
-  left: 50%;
-  top: 34px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  transform: translateX(-50%);
-  pointer-events: none;
-}
-#progress[hidden] { display: none; }
-#progress li {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 18px 6px;
-  border-radius: 24px;
-  background: var(--paper-92);
-  color: var(--ink-2);
-  font-size: 22px;
-  font-weight: 800;
-  line-height: 1;
-  white-space: nowrap;
-  box-shadow: 0 2px 8px var(--deep-18);
-}
-#progress li + li::before { content: '→'; margin: 0 2px 0 -2px; color: var(--muted); }
-#progress li.is-here { background: var(--teal); color: var(--white); }
-#progress li.is-done { color: var(--teal); }
-#progress li.is-done::after { content: '✓'; color: var(--ok); }
-
 /* ---------- The notebook: the checkpoints' cards ---------- */
 #btn-notebook { left: 104px; top: 28px; }
 #btn-notebook[hidden] { display: none; }
@@ -3983,7 +3983,6 @@ kbd {
 .nb-head h2 { margin: 0; color: var(--teal); font-size: 48px; }
 .nb-page { display: grid; grid-template-columns: 330px 1fr; align-items: center; gap: 30px; padding: 22px 0; border-top: 2px solid var(--line); }
 .nb-page h3 { margin: 0; color: var(--ink); font-size: 34px; line-height: 1.15; }
-.nb-page h3 small { display: block; color: var(--teal); font-size: 22px; letter-spacing: 1px; text-transform: uppercase; }
 .nb-cards { display: flex; flex-wrap: wrap; align-items: center; gap: 16px 22px; }
 .nb-card { padding: 12px 18px 8px; border-radius: 5px; background: var(--paper); box-shadow: 0 4px 10px var(--ink-10); font-size: 26px; font-weight: 700; }
 .nb-card b { margin-right: 8px; }
@@ -4053,8 +4052,6 @@ kbd {
 .g100-cell.is-on { background: var(--part); box-shadow: none; }
 .g100-label { color: var(--ink); font-size: 32px; font-weight: 800; }
 
-/* A note shown on a story picture for a moment, going back to the story (game.js noteOnPicture) */
-.pic-note { position: absolute; z-index: 4; pointer-events: none; }
 /* Screen 30: the 10 × 10 grid, under the snapshot */
 .side-grid { position: absolute; left: 96px; top: 508px; width: 424px; display: flex; justify-content: center; pointer-events: none; }
 /* Screen 29: the grid beside the working */
@@ -4100,6 +4097,7 @@ kbd {
 /* The story pictures brought to life (game.js Clips): a screen's video clips, over its picture and under everything on
    it. Each fades in over the one before (0.15 s), so a clip never pops in. */
 .scene-clips { position: absolute; inset: 0; pointer-events: none; isolation: isolate; } /* (its clips' order stays inside it: under the bubbles) */
+.scene-patches { position: absolute; inset: 0; pointer-events: none; } /* pieces of the picture over the clips (game.js pictureOver) */
 .scene-clip {
   position: absolute; inset: 0; width: 100%; height: 100%; display: block;
   object-fit: fill; opacity: 0; transition: opacity .15s linear;

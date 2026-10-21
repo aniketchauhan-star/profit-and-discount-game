@@ -4,22 +4,24 @@ These prompts turn the game's still pictures into short videos, made on Higgsfie
 
 There are 54 clips in three kinds:
 - **Talking clips (32):** one for each line a person says. The lips move with that line's words, then the person stops and smiles. The game plays the recorded voice with the clip.
-- **Quiet clips (15):** blinking, breathing, a sip of tea; they play between the lines. Two play once instead: the box handed over (36) and the camera moving in on the price tags (23).
-- **Movements (7):** one picture turns into the next, for example Aniket picking up the book. They replace the fades.
+- **Quiet clips (16):** blinking, breathing, a sip of tea; they play between the lines. Four play once instead: the box handed over (36), the camera moving in on the price tags (23), and Aniket coming out of the bookstore and walking on (20 and 21).
+- **Movements (6):** one picture turns into the next, for example Aniket picking up the book. They replace the fades.
 
 Screen numbers are the brief's (as in `PROMPT.md`).
 
 ## In the game now
 
-**42 clips play in the game.**
+**43 clips play in the game.** (Screen 24, "30% Off!", was taken out on 2026-10-21: its clip `s24-idle` was removed, and `s24-to-s25` isn't needed.)
 - **Screens 1, 4 → 5, 5, 6, 7 and 8** (made on Higgsfield): `s01-idle`, `s01-aniket-1`, `s01-father`, `s01-aniket-2`, `s04-to-s05`, `s05-idle`, `s05-aniket`, `s06-idle`, `s06-aniket`, `s06-shopkeeper` and `s07-idle`. Screen 8 uses `s07-idle` too (the same picture). Until Screen 14 has its own clips, the shopkeeper there also talks with `s06-shopkeeper`.
-- **Screens 22–25, 35, 36, 40, 41, 42 → 43, 43, 45, 46 and 56** (made with Gemini, 31 clips): `s22-aniket-1`, `s22-aniket-2`, `s22-aniket-3`, `s23-idle`, `s23-zoom`, `s24-idle`, `s25-idle`, `s25-aniket-1`, `s25-aniket-2`, `s36-box`, `s40-idle`, `s40-father-1`, `s40-aniket`, `s40-father-2`, `s41-idle`, `s41-father-1`, `s42-to-s43`, `s43-father`, `s45-idle`, `s45-father-1`, `s45-aniket-1`, `s45-aniket-2`, `s46-idle` and all eight of Screen 56. Until `s41-father-2` and `s45-father-2` are made, the father says those lines with `s41-father-1` and `s45-father-1`.
+- **Screens 20 and 21** (your Gemini take `outgoing.mp4`, cut in two 4.6 s in, where Aniket walks past the open door, as in your screenshot of Screen 21): `s20-out` and `s21-walk`, with a cut between the two screens. The take sits 15 px higher than the picture, so `tools/gemini_clean.py` was given its framing (`--framing 1.0226,0.6,-15`), and its sparkle is covered with the floor just left of it (`--star-from -60,-3`): under the sparkle, the take draws the glass's base lower than the picture does. On Screens 4 and 5, the clips show the book stand a little smaller and higher up than the pictures (about 24 px); the names on the books move with it. On Screen 25, `s25-idle` and `s25-aniket-1` blur the price on the white card into "e1800", and on Screens 22 and 35 the clips redraw the ₹1800 tent card's price roughly: the game lays the picture's card over them (`s23-zoom`, whose camera moves, draws it well).
+- **Screens 22, 23, 25, 35, 36, 40, 41, 42 → 43, 43, 45, 46 and 56** (made with Gemini, 30 clips): `s22-aniket-1`, `s22-aniket-2`, `s22-aniket-3`, `s23-idle`, `s23-zoom`, `s25-idle`, `s25-aniket-1`, `s25-aniket-2`, `s36-box`, `s40-idle`, `s40-father-1`, `s40-aniket`, `s40-father-2`, `s41-idle`, `s41-father-1`, `s42-to-s43`, `s43-father`, `s45-idle`, `s45-father-1`, `s45-aniket-1`, `s45-aniket-2`, `s46-idle` and all eight of Screen 56. Until `s41-father-2` and `s45-father-2` are made, the father says those lines with `s41-father-1` and `s45-father-1`.
 
 From the Gemini batch:
-- **Cleaned** with `tools/gemini_clean.py`: the Gemini sparkle is gone, and each clip sits exactly on its picture again (Gemini shows the picture about 2% closer, and in `s25-aniket-2` and `s45-aniket-2` the camera also pushed in; it is held still now; `s23-zoom` keeps its camera move, which is the point of it). They stay 1280 × 720, about 1 MB each.
-- **The shoe shop is all video, no still picture** (Screens 22–25 and 35). Your three takes for Screen 22 start on Aniket pointing, so Screen 22 now shows that picture, `he saw a shoe.png`, and plays them, with `s23-idle` between the lines; `shoes shop enter.png` is no longer used. Screen 23 plays `s23-zoom`: Aniket points, and the camera moves in on the ₹1800 and 30% OFF tags. Screen 25 has its quiet loop, `s25-idle` (from the quiet end of the take for `s25-aniket-1`). Screen 35 reuses Screen 22's clips: `s23-idle`, then `s22-aniket-1` for "So, after a 30% discount," and `s22-aniket-3` for "I will pay ₹1260." So `s22-to-s23` and `s23-to-s24` are no longer needed, nor clips of Screen 35's own.
+- **Cleaned** with `tools/gemini_clean.py`: the Gemini sparkle is gone, and each clip sits exactly on its picture again (Gemini shows the picture about 2% closer, and in `s25-aniket-2` and `s45-aniket-2` the camera also pushed in; it is held still now; `s23-zoom` keeps its camera move, which is the point of it). Then `tools/enhance_clips.py --ai` redrew each one at 1920 × 1080, the stage's size, with **Real-ESRGAN** (its model for cartoon video, `realesr-animevideov3`, at twice the size, then brought to 1080p), so outlines, faces and printed words are sharp instead of blurred when the browser stretches a 720p clip: about 1.5 MB each now. The tool is a free download (github.com/xinntao/Real-ESRGAN/releases, v0.2.5.0, `realesrgan-ncnn-vulkan-20220424-macos.zip`); give its folder to `--ai`. Without it, `tools/enhance_clips.py` sharpens instead (a light denoise, Lanczos, sharpening on the lines), and `--import --gemini` does that by itself for new takes.
+- **`s23-zoom`, repaired by hand:** where its camera moves in, the cleaner covered the sparkle with the wrong spot of the picture, so a white, yellow or purple star showed on the stand (frames 51–68, 81–94 and 123–124). In those frames, that spot was taken from the nearest frame without one, fitted to the camera and blended in. If the clip is ever made or cleaned again, check the stand under the sparkle.
+- **The shoe shop is all video, no still picture** (Screens 22, 23, 25 and 35). Your three takes for Screen 22 start on Aniket pointing, so Screen 22 now shows that picture, `he saw a shoe.png`, and plays them, with `s23-idle` between the lines; `shoes shop enter.png` is no longer used. Screen 23 plays `s23-zoom`: Aniket points, and the camera moves in on the ₹1800 and 30% OFF tags. Screen 25 has its quiet loop, `s25-idle` (from the quiet end of the take for `s25-aniket-1`). Screen 35 reuses Screen 22's clips: `s23-idle`, then `s22-aniket-1` for "So, after a 30% discount," and `s22-aniket-3` for "I will pay ₹1260." So `s22-to-s23` and `s23-to-s24` are no longer needed, nor clips of Screen 35's own.
 - **Started a little later:** `s40-aniket` and `s40-father-2` begin once Aniket has finished stepping in (0.7 s and 0.6 s into the take), and `s45-aniket-1` and `s45-aniket-2` once the father's hand is down (0.75 s and 0.5 s). Otherwise Aniket, or the father's hand, would jump back at each new line. On Screens 40 and 45 the last clip also stays on its last frame between lines. Gemini wrote "Really?" on the screen in `s45-aniket-1`; it is covered.
-- **Loops:** `s24-idle`, `s25-idle` and `s46-idle` play forwards and then backwards, so they loop without a jump.
+- **Loops:** `s25-idle` and `s46-idle` play forwards and then backwards, so they loop without a jump.
 - **Not used:** a take of Aniket pointing (it ends with his arm down, turned away), the take for `s24-to-s25` (he crosses his arms), and a second take of `s45-idle` (the camera pushes in). Gemini's original files (with the sparkle) were moved to the Trash, so they don't weigh down the folder.
 - **To make on Higgsfield:** the movements (Gemini can't be given an end frame).
 
@@ -82,13 +84,13 @@ camera movement, zoom, pan, shake, cut, morphing, melting, warping, flicker, fac
 | s14-shopkeeper-3 | 14 | aniket give a book to shopkepper.png | same | 4 s | Shopkeeper: "So, you got a ₹200 discount." |
 | s14-to-s15 | 14 → 15 | aniket give a book to shopkepper.png | what is discount.png | 4 s | Aniket's face turns puzzled |
 | s15-idle | 15 | what is discount.png | same | 5 s | Aniket thinks (mouth closed) |
+| s20-out | 20 | book store outside view.png | (none) | 5 s | Aniket comes out of the bookstore, stops, smiling, and walks off to the right (the first 4.6 s of your Gemini take `outgoing.mp4`) |
+| s21-walk | 21 | book store outside view.png | (none) | 1 s | Aniket walks on past the open door, to the shoe shop (the last 1.4 s of `outgoing.mp4`, from where your screenshot of Screen 21 shows him) |
 | s22-aniket-1 | 22, 35 | he saw a shoe.png | same | 4 s | Aniket: "These sneakers look good!" (on 35: "So, after a 30% discount,") |
 | s22-aniket-2 | 22 | he saw a shoe.png | same | 4 s | Aniket: "What does 30% OFF mean here?" |
 | s22-aniket-3 | 22, 35 | he saw a shoe.png | same | 4 s | Aniket: "Is this also a discount?" (on 35: "I will pay ₹1260.") |
 | s23-idle | 22, 35 | he saw a shoe.png | same | 5 s | Aniket points (no words) |
 | s23-zoom | 23 | he saw a shoe.png | (none) | 6 s | Aniket points; the camera moves in on the ₹1800 and 30% OFF tags |
-| s24-idle | 24 | hee see discount on shoes.png | same | 5 s | Aniket thinks, hand on chin |
-| s24-to-s25 | 24 → 25 | hee see discount on shoes.png | he is tinking to see the shoes.png | 4 s | Aniket becomes confused |
 | s25-idle | 25 | he is tinking to see the shoes.png | same | 4 s | Aniket thinks, hand on chin (no words) |
 | s25-aniket-1 | 25 | he is tinking to see the shoes.png | same | 4 s | Aniket: "The tag says ₹1800." |
 | s25-aniket-2 | 25 | he is tinking to see the shoes.png | same | 6 s | Aniket: "With 30% off, how much do I actually pay?" |
@@ -249,6 +251,22 @@ Save as `game assets/video/s15-idle.mp4` · start frame `what is discount.png` �
 At a bookshop counter, the boy on the left (green T-shirt, navy backpack), holding the blue book, looks puzzled and thinks to himself "Discount? What does that mean?" without saying it: his eyes glance up and to the side, his eyebrows knit and lift, his head tilts slightly, and he blinks. His mouth stays closed the whole time: he is only thinking. The shopkeeper on the right keeps smiling with his open hand still, and blinks. Start and end on exactly this picture, so the clip loops seamlessly. Camera locked: no zoom, pan or shake. Same 2D cartoon illustration style as the picture (clean outlines, soft flat colours, warm light). Every face, hairstyle, outfit, body shape and colour stays exactly the same. Everything not described stays perfectly still. All signs and printed words stay sharp and in place. No added text, captions or speech bubbles.
 ```
 
+### Screens 20–21: out of the bookstore
+
+Both clips come from one 6 s Gemini take, `outgoing.mp4`, cut 4.6 s in (frame 110), where Aniket is walking past the open door: Screen 20 plays everything before it and Screen 21 the rest, with a cut between them, so he never jumps. The prompt is the take's; to make it again, make it as one clip and cut it the same way.
+
+#### s20-out.mp4
+Save as `game assets/video/s20-out.mp4` · start frame `book store outside view.png` · end frame: none · 2 s · sound off
+```text
+In a shopping mall, in front of a bookstore with a big glass front and the sign "CHAUHAN BOOK STORE", the right-hand glass door is open and a boy (green T-shirt, navy backpack, blue jeans) walks out of the store towards us, stops in front of it and smiles. Then he turns to his left and walks off along the mall, past the glass front. Camera locked: no zoom, pan or shake. Same 2D cartoon illustration style as the picture (clean outlines, soft flat colours, warm light). His face, hairstyle, outfit, body shape and colours stay exactly the same. The sign and the store stay sharp and in place. No added text, captions or speech bubbles.
+```
+
+#### s21-walk.mp4
+Save as `game assets/video/s21-walk.mp4` · start frame `book store outside view.png` · end frame: none · 4 s · sound off
+```text
+In a shopping mall, in front of a bookstore with a big glass front and the sign "CHAUHAN BOOK STORE", the right-hand glass door is open and a boy (green T-shirt, navy backpack, blue jeans) walks out of the store towards us, stops in front of it and smiles. Then he turns to his left and walks off along the mall, past the glass front. Camera locked: no zoom, pan or shake. Same 2D cartoon illustration style as the picture (clean outlines, soft flat colours, warm light). His face, hairstyle, outfit, body shape and colours stay exactly the same. The sign and the store stay sharp and in place. No added text, captions or speech bubbles.
+```
+
 ### Screens 22–25 and 35: the sneakers
 
 #### s22-aniket-1.mp4
@@ -279,18 +297,6 @@ In a shoe shop, a boy (green T-shirt, navy backpack) stands by the display stand
 Save as `game assets/video/s23-zoom.mp4` · start frame `he saw a shoe.png` · no end frame (it ends close on the tags) · 6 s · sound off
 ```text
 In a shoe shop, a boy (green T-shirt, navy backpack) stands by the display stand, pointing at the blue sneakers. He lifts a finger as if he has spotted something, then points again, and the camera moves slowly and smoothly in towards the sneakers until the white "₹1800" tag and the red "30% OFF" label fill the middle of the frame. Nobody talks. The sneakers, the white "₹1800" tag and the red "30% OFF" label stay exactly the same, sharp and readable. Same 2D cartoon illustration style as the picture (clean outlines, soft flat colours, warm light). His face, hair, clothes and colours stay exactly the same. No added text, captions or speech bubbles.
-```
-
-#### s24-idle.mp4
-Save as `game assets/video/s24-idle.mp4` · start frame `hee see discount on shoes.png` · end frame: the same picture · 5 s · sound off
-```text
-In a shoe shop, a boy (green T-shirt, navy backpack), his hand on his chin, looks thoughtfully at the red "30% OFF" label on the display stand. He breathes gently, blinks, and taps his chin once lightly with one finger. Nobody talks. The sneakers, the white "₹1800" tag and the red "30% OFF" label stay exactly in place, sharp and readable. Start and end on exactly this picture, so the clip loops seamlessly. Camera locked: no zoom, pan or shake. Same 2D cartoon illustration style as the picture (clean outlines, soft flat colours, warm light). Every face, hairstyle, outfit, body shape and colour stays exactly the same. Everything not described stays perfectly still. No added text, captions or speech bubbles.
-```
-
-#### s24-to-s25.mp4
-Save as `game assets/video/s24-to-s25.mp4` · start frame `hee see discount on shoes.png` · end frame `he is tinking to see the shoes.png` · 4 s · sound off
-```text
-In a shoe shop, the boy (green T-shirt, navy backpack), his hand on his chin, turns his head a little towards us and frowns, confused about the price; he blinks. Nobody talks. The camera moves very slightly in towards the stand, ending exactly on the last frame. The sneakers, the white "₹1800" tag and the red "30% OFF" label stay sharp and readable the whole time. Same 2D cartoon illustration style as the pictures (clean outlines, soft flat colours, warm light). The boy's face, hair, clothes and colours stay exactly the same. Everything else stays still. No added text, captions or speech bubbles.
 ```
 
 #### s25-idle.mp4

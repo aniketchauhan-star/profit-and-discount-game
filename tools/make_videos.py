@@ -43,7 +43,6 @@ TODO = ROOT / 'Animation Video Prompts - Left to Make.md'
 # A clip to make again, and why (its first take didn't fit).
 REDO = {
     's06-to-s07': "Make it again: the first take started on Screen 7's picture, so the book was never handed over.",
-    's24-to-s25': 'Make it again on Higgsfield, with both frames: in the Gemini take he crossed his arms instead.',
 }
 API = 'https://api.higgsfield.ai'
 MODEL = 'bytedance/seedance-2.5/image-to-video'
@@ -129,6 +128,7 @@ def import_clips(paths, known, as_name=None, skip=(), gemini=False):
             print(f'{name}: from {f.name}')
             gemini_clean.clean(f, OUT / f'{name}.mp4', PICTURES / c['start'],
                                PICTURES / c['end'] if c['end'] and c['end'] != c['start'] else None)
+            subprocess.run([sys.executable, str(Path(__file__).resolve().parent / 'enhance_clips.py'), name], check=True)
         else:
             encode(f, OUT / f'{name}.mp4')
         print(f"{name}: from {f.name}, {(OUT / (name + '.mp4')).stat().st_size / 1e6:.1f} MB")

@@ -218,11 +218,10 @@
         out.push([n, row.s, path, row.w, row.t, row.x, clip, keep(row.x)]);
       });
     });
-    // On top of the screens, the same on every one: the progress bar's topics and the notebook's title.
-    document.querySelectorAll('#progress li, #notebook .nb-head h2').forEach(node => {
+    // On top of the screens, the same on every one: the notebook's title.
+    document.querySelectorAll('#notebook .nb-head h2').forEach(node => {
       const text = tidy(node.textContent);
-      const bar = node.tagName === 'LI';
-      if (text) out.push(['—', bar ? 'Every teaching screen' : 'The notebook', 'All', 'On screen', bar ? 'Progress bar' : 'Notebook', text, '', keep(text)]);
+      if (text) out.push(['—', 'The notebook', 'All', 'On screen', 'Notebook', text, '', keep(text)]);
     });
     return out;
   }

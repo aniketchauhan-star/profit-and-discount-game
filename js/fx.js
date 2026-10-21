@@ -688,6 +688,23 @@
   }
   const plain = text => text.replace(/[{}*]/g, '').replace(/\s*\n\s*/g, ' ');
 
+  // Text whose fractions are stacked: "30/100" is written 30 over a bar over 100, as on the worked sheets. The slash
+  // stays in the text, hidden, so the text still reads (and copies) as "30/100".
+  function fracText(host, text) {
+    text.split(/(\d+\/\d+)/).forEach(part => {
+      const m = /^(\d+)\/(\d+)$/.exec(part);
+      if (!m) {
+        if (part) host.appendChild(document.createTextNode(part));
+        return;
+      }
+      const f = el('span', 'frac', host);
+      el('span', 'frac-num', f).textContent = m[1];
+      el('span', 'frac-slash', f).textContent = '/';
+      el('span', 'frac-den', f).textContent = m[2];
+    });
+    return host;
+  }
+
   // Shows a node that was hidden with opacity 0, with an entrance animation (a plain fade if motion is reduced).
   function reveal(node, frames, opts) {
     node.style.opacity = '';
@@ -1174,7 +1191,7 @@
   }
 
   /**
-   * A checkpoint (the revamp brief, rule 8), closing a topic: on top, "Checkpoint 2 of 4" and the topic (ticked when it
+   * A checkpoint (the revamp brief, rule 8), closing a topic: on top, the topic (ticked when it
    * is done); then 2–3 lined index cards, each a term in its colour, what it means and (optionally) its value; one formula
    * on a yellow sticky note; an example (optional); and the learner's buttons: "Got it, next", "Hear it again", "Go back".
    *  index, total, topic   which checkpoint it is, of how many, and its topic
@@ -1185,10 +1202,9 @@
    *  on                    { next, again, back }: what the buttons do
    * open() → card(i) … → showNote() → showExample() → done() → actions(): each returns what came in.
    */
-  function checkpoint(parent, { index, total, topic, say, cards, note, example, on = {} }) {
+  function checkpoint(parent, { index, topic, say, cards, note, example, on = {} }) {
     const root = el('div', 'ck', parent);
     const head = el('div', 'ck-head', root);
-    el('small', '', head).textContent = `Checkpoint ${index} of ${total}`;
     const title = el('div', 'ck-title', head);
     el('span', '', title).textContent = topic;
     const tick = el('span', 'ck-tick', title);
@@ -1204,7 +1220,7 @@
       const card = el('div', `ck-card ck-card--${c.tone || 'ink'}`, row);
       el('div', 'ck-term', card).textContent = c.term;
       if (c.value) el('div', 'ck-value', card).textContent = c.value;
-      el('div', 'ck-text', card).textContent = c.text;
+      fracText(el('div', 'ck-text', card), c.text);
       return card;
     });
     const foot = el('div', 'ck-foot', body);
@@ -4879,7 +4895,7 @@
   }
 
   window.FX = {
-    CANCELLED, el, rand, settle, reveal, flyAcross, glow, motes, twinkles, burst, shine, exclaim, bubble, thought, badge, ring, question, definitions, pricePanel,
+    CANCELLED, el, fracText, rand, settle, reveal, flyAcross, glow, motes, twinkles, burst, shine, exclaim, bubble, thought, badge, ring, question, definitions, pricePanel,
     reduction, definitionCard, checkpoint, formulaNote, concept, barModel, grid100, formulaPanel, formulaReveal, summaryPanel, productCard, productQuestion, meansPanel, workedSheet, summarySheet, strike, stickTag, choices, percentFormula, questionPanel, challengePanel, walletPanel, shopPicker, street, streetVeil, questionBar, offerCard, flyPicture, purchaseSlip, confetti, celebration, receipt, twoAmounts, missionPanel, recapCards, takeaway, Bird, Walker,
     setPace(p) { pace = p; },
   };

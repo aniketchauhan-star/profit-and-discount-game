@@ -6,7 +6,7 @@
 >
 > **The revamp brief is applied** (`Bookstore Journey - Revamp Brief.docx`; what was done, the decisions made on its open questions, and what is still to do: `docs/REVIEW.md`). Its rules for every screen are in section 1, and each screen below says what it does now.
 >
-> **Screen numbers** here are the story's own, as in the brief and the text spreadsheet. The game also counts the two new checkpoint screens, **Checkpoint 2** (after Screen 30) and **Checkpoint 3** (after Screen 35), so it has **61 screens**: Screens 1–30 here are 1–30 in the game, Checkpoint 2 is 31, Screens 31–35 are 32–36, Checkpoint 3 is 37, and Screens 36–59 are 38–61. Checkpoints 1 and 4 are Screens 19 and 39 themselves.
+> **Screen numbers** here are the story's own, as in the brief and the text spreadsheet. The game also counts the two new checkpoint screens, **Checkpoint 2** (after Screen 30) and **Checkpoint 3** (after Screen 35), so it has **60 screens**: Screens 1–23 here are 1–23 in the game, Screens 25–30 are 24–29 (Screen 24 was taken out), Checkpoint 2 is 30, Screens 31–35 are 31–35, Checkpoint 3 is 36, and Screens 36–59 are 37–60. Checkpoints 1 and 4 are Screens 19 and 39 themselves.
 
 ---
 
@@ -28,20 +28,19 @@ A short animated **story game** for kids that runs in a web browser. It asks a f
   - **On the left**, **the story picture it came from, as a small framed photo** (424 × 239 at stage x 96, y 228; a white 8 px frame, round corners, a soft shadow), **zoomed on what matters**: the book and its ₹1000 sticker (11–13), Aniket's puzzled face (16–18), the sneakers with their ₹1800 and 30% OFF tags (26–34, 37 and 38: the "small sneakers card" that keeps in view what all this maths is for).
   - **In the middle**, the content, big (stage x 576–1824; x 576–1340 on a screen where Swifty comes), in one of **five layouts**: **Concept** (11, 13, 26, 27: the new word or number, on a taped note, and one line of meaning), **Definition** (12, 16: a lined index card), **Worked example** (17, 18, 28, 29, 32, the working on 34, 37, 38: the working on graph paper, the answer circled in red pen), **Question** (8, 30, 31, 33, the start of 34: the question on its strip, the answers stacked under it) and **Summary / checkpoint** (19, 39 and the two new ones: cards and one formula on a sticky note).
   - **On the right**, **Swifty's corner**, only on a screen where she comes: she rises in from the bottom edge **standing on her three books** (red, blue, yellow), and goes back down with them when her part is done. On a screen without her, the content uses that room.
-  - **The step being done is clear; the earlier ones fade a little.** What the voice is reading **lights up**: a yellow highlighter round a card or box, and on the worked sheets each word as it is said.
+  - **Every step stays clear** (the earlier ones don't fade). What the voice is reading **lights up**: a yellow highlighter round a card or box, and on the worked sheets each word as it is said.
   - **Text sizes (rule 5: only 3–4):** the checkpoints use four: 26 px for labels, 38 px for text, 46 px for terms, 56 px for the title, the amounts and the formula. Screens 8, 11–13, 16, 18, 26, 28 and 38 use 3–4. Screens 17, 27, 29–34 and 37 still use 6–9, counting the question on top, the bubbles and the small labels: they are to be brought to the same four (`docs/REVIEW.md`).
   - **The notebook style** of the design board (`design/hand-made design board.png`), on the plain panel: prices on **taped paper notes** (a light tint, the amount in its colour, a strip of tape on top), definitions on **lined index cards** (the name over a red margin line, the words on faint blue lines), the working on **graph paper** with the answer **circled in red pen**, formulas on a **yellow sticky note**, a right answer **ticked in green marker** and a wrong one **crossed out in grey** (with ✗). White space and soft paper shadows, no thick black outlines.
-- **Swifty (rule 3)** appears only to **introduce a new idea, ask a question or react to an answer, and celebrate at a checkpoint**. She keeps a bubble only for questions, hints, "Correct!" / "Not quite!", instructions and the lines that link one topic to the next. **When her words are already on the screen, she says them with no bubble** (her beak moving, if she is there), and what she reads lights up. **She isn't on the screen during the worked solutions** (12, 17, 18, 28, 29, 32, 38 and the working on 37): her voice goes on by itself. So she comes on Screens 8 (after the answer), 11, 13 (for her question), 16, 26–27, 30, 31, 33–34 (on 34 she reads the working with no bubbles, and has bubbles only for "Now, let's find out…", "Correct!" / "Not quite!", "Let's see how to work it out!", "Your turn!" and the drag hints) and 37 (to introduce it, then she goes), and at the end of each checkpoint, only to celebrate.
-- **Checkpoints (rule 8):** each topic ends with one: **Checkpoint 1** (Screen 19), **2** (after Screen 30), **3** (after Screen 35) and **4** (Screen 39). Always the same layout: on top, "CHECKPOINT 2 OF 4" and the topic ("Percentages"), ticked ✓ once it is done; the line her voice opens with ("Let's remember!"; on Checkpoint 4 "Let's sum up the sneakers!"); **2–3 lined index cards** (each a term in its colour, its value, what it means); **one formula on a yellow sticky note**; on 1 and 2 an example. Her voice reads it all out as it comes in (her recorded lines, no bubbles), each card lighting up; then the topic is ticked (a chime), **the formula note flies into the notebook** (its button, top left, pops), and **Swifty rises in to celebrate** (a wave, sparkles round the cards; on Checkpoint 4 her bubble says "Now you can work out any discount!"). Then three buttons: **Got it, next**, **Hear it again** (it is all read out again) and **Go back** (to the start of the topic: Screens 11, 27, 31 and 37). **A checkpoint never moves on by itself, even with Auto-play on.**
-  - **The next topic starts with the last note:** on Screens 27, 31 and 37 the note of the checkpoint before comes out of the notebook button and settles under the photo, with "REMEMBER · CHECKPOINT 1" over it.
+- **Swifty (rule 3)** appears only to **introduce a new idea, ask a question or react to an answer, and celebrate at a checkpoint**. She keeps a bubble only for questions, hints, "Correct!" / "Not quite!", instructions and the lines that link one topic to the next. **When her words are already on the screen, she says them with no bubble**, and what she reads lights up. **Swifty is on the screen only while one of her speech bubbles is** (2026-10-21): she rises in on her books with a bubble and goes back down with them when it goes; a line with no bubble is her voice on its own, with neither her nor her books on the panel. (Where a screen below has her "rise in" or "stay on her books" while she reads with no bubble, she now comes only with her next bubble.) **She isn't on the screen during the worked solutions** (12, 17, 18, 28, 29, 32, 38 and the working on 37): her voice goes on by itself. So she comes on Screens 8 (after the answer), 11, 13 (for her question), 16, 26–27, 30, 31, 33–34 (on 34 she reads the working with no bubbles, and has bubbles only for "Now, let's find out…", "Correct!" / "Not quite!", "Let's see how to work it out!", "Your turn!" and the drag hints) and 37 (to introduce it, then she goes), and at the end of Checkpoint 4, with her bubble "Now you can work out any discount!" (on Checkpoints 1–3 the sparkles celebrate without her).
+- **Checkpoints (rule 8):** each topic ends with one: **Checkpoint 1** (Screen 19), **2** (after Screen 30), **3** (after Screen 35) and **4** (Screen 39). Always the same layout: on top, the topic ("Percentages"; no "Checkpoint 2 of 4" label over it), ticked ✓ once it is done; the line her voice opens with ("Let's remember!"; on Checkpoint 4 "Let's sum up the sneakers!"); **2–3 lined index cards** (each a term in its colour, its value, what it means); **one formula on a yellow sticky note**; on 1 and 2 an example. Her voice reads it all out as it comes in (her recorded lines, no bubbles), each card lighting up; then the topic is ticked (a chime), **the formula note flies into the notebook** (its button, top left, pops), and **Swifty rises in to celebrate** (a wave, sparkles round the cards; on Checkpoint 4 her bubble says "Now you can work out any discount!"). Then three buttons: **Got it, next**, **Hear it again** (it is all read out again) and **Go back** (to the start of the topic: Screens 11, 27, 31 and 37). **A checkpoint never moves on by itself, even with Auto-play on.**
+  - **The next topic starts with the last note:** on Screens 27, 31 and 37 the note of the checkpoint before comes out of the notebook button and settles under the photo, with "REMEMBER" over it.
 - **The notebook:** every checkpoint's cards and formula go into it, and it keeps them on the device. It opens any time, also during the shopping game, from its button beside the Scenes button (top left; it appears with the first checkpoint) or with **N**; Escape or × closes it.
-- **The progress bar:** at the top middle of Screens 9–39, four steps, **Marked Price → Discount → Percentages → Discount %**: the topic being learnt is filled in teal, and each is ticked ✓ by its checkpoint.
 - **From the story to a teaching screen (rule 4):** the story picture **first zooms in on the key object** (the ₹1000 sticker, Aniket's puzzled face, the sneakers' tags), **then shrinks into the small framed photo** on the left as the panel appears around it; the key number or tag then **flies from the photo onto the panel** (the ₹1000 on Screen 11, the 30% OFF tag on Screen 26). Between teaching screens the photo stays put, and only the panel's content dissolves. **Going back**, the photo **grows back to full screen** into the next picture, and **the result shows on the picture** for a moment: "₹1000 → ₹800" on Screen 14 and "Discount = MP − SP" on Screen 20 (on a small sticky note), and the green ₹1260 tag on Screen 35. On Screen 8 the counter picture itself shrinks into the photo when the player answers.
-- **The story pictures come alive (rule 1):** short videos made from the pictures with Higgsfield's Seedance 2.5 or with Google Gemini (the prompts: `Animation Video Prompts.md`), in `game assets/video/`: H.264, 24 fps, no sound (Higgsfield's 1920 × 1080, Gemini's 1280 × 720); `tools/make_videos.py --import` converts and names a batch and lists the clips in `js/video_clips.js`, and the game plays only those. With `--gemini` it runs `tools/gemini_clean.py` on each clip: Gemini's sparkle is covered with the same spot of the picture, and its framing (about 2% closer than the picture, sometimes pushing in) is put back on the picture.
+- **The story pictures come alive (rule 1):** short videos made from the pictures with Higgsfield's Seedance 2.5 or with Google Gemini (the prompts: `Animation Video Prompts.md`), in `game assets/video/`: H.264, 24 fps, no sound (Higgsfield's 1920 × 1080; Gemini's 1280 × 720 takes are redrawn at 1920 × 1080 by `tools/enhance_clips.py --ai`, with Real-ESRGAN); `tools/make_videos.py --import` converts and names a batch and lists the clips in `js/video_clips.js`, and the game plays only those. With `--gemini` it runs `tools/gemini_clean.py` on each clip: Gemini's sparkle is covered with the same spot of the picture, and its framing (about 2% closer than the picture, sometimes pushing in) is put back on the picture.
   - On a screen with clips, its **quiet loop** plays while nobody speaks (blinks, breathing, Dad sipping his tea), and **each line's talking clip** plays as its voice starts, then the quiet loop again. Every clip of a screen starts on its picture, and each fades in over the one before in 0.15 s; the bubbles stay on top. Higgsfield's clips end on the picture too; Gemini's don't, so a talking clip with no quiet loop to go back to stays on its last frame, and on Screens 40 and 45 every clip does (Aniket has stepped in, the father's hand is down: going back to the loop would jump).
   - A **movement clip** (one picture turning into the next) plays in place of the fade into the next screen, whose picture then comes in on its last frame. Next or Back during it moves on at once; a jump from the Scenes list, and reduced motion, never play one (reduced motion keeps the still pictures).
   - Where a clip isn't made yet, the still picture stays. Made so far: Screen 1 (the quiet loop and all three lines), 4 → 5 (Aniket picks up the book), 5, 6, 7 and 8 (and the shopkeeper's talking on Screen 14); the whole shoe shop, 22–25 and 35 (Screen 35 reuses Screen 22's clips, and Screen 23's camera moves in on the price tags); 36 (the box handed over: the chime as Aniket takes it, the light once it's his), 40, 41, 42 → 43 (the list, then the money), 43, 45, 46 (Aniket waves) and 56.
-- **One small palette (rule 6),** named CSS variables only (no colour is typed in the revamp's styles): paper, ink and grey for text and backgrounds; **teal** for buttons, headings and the progress bar; **Marked Price amber**, **Selling Price blue**, **Discount red**, **green** only for a right answer; the **part violet and the whole olive**, a pair of their own (Screens 28–30 and 37); one **yellow highlighter** for the key word and the word being said. A wrong answer is **grey, crossed out, with ✗** (red means Discount). Prices are plain ink unless they are a Marked Price, a Selling Price or a discount. At most three meaning colours on a screen, light tints for boxes, full colour only on the key number; **all question strips look the same** (pale teal) and **all rule bands look the same** (pale yellow). **One effect at a time** (a glow, or a ring, or sparkles), and **sparkles only for a right answer or a checkpoint**. Colour never carries a meaning on its own: ✓, ✗ or a label goes with it.
+- **One small palette (rule 6),** named CSS variables only (no colour is typed in the revamp's styles): paper, ink and grey for text and backgrounds; **teal** for buttons and headings; **Marked Price amber**, **Selling Price blue**, **Discount red**, **green** only for a right answer; the **part violet and the whole olive**, a pair of their own (Screens 28–30 and 37); one **yellow highlighter** for the key word and the word being said. A wrong answer is **grey, crossed out, with ✗** (red means Discount). Prices are plain ink unless they are a Marked Price, a Selling Price or a discount. At most three meaning colours on a screen, light tints for boxes, full colour only on the key number; **all question strips look the same** (pale teal) and **all rule bands look the same** (pale yellow). **One effect at a time** (a glow, or a ring, or sparkles), and **sparkles only for a right answer or a checkpoint**. Colour never carries a meaning on its own: ✓, ✗ or a label goes with it.
 - **The shopping game (Screens 47–59):** after the story the learner **plays**: with ₹5,000 and a school shopping list, they find the best deal for each item, street by street, and the game ends with what Aniket bought, what he paid, what is left, and what we learnt. **Learning becomes the gameplay.** These screens are drawn by the game on a light blue (the streets on their own picture, `game background.png`), with the story's own pieces (Swifty, who speaks from a question bar at the top of the screen in the game itself and stands on her books on the big panel, Aniket walking in, the speech bubbles at home, the answer buttons, the worked sheet, the big panel and the home picture), the Shopping Area's design sheet, and the streets' asset sheet made with ChatGPT (tags, badge, ribbon and button, all without words: the game writes them); the streets' shop fronts are cut from `new shops for game .png`, and their sign and clouds are drawn by the game, as in the street's design. See *The shopping game*, after Screen 46.
 - **Characters:** **Aniket** (boy, green T-shirt, navy backpack), the **Shopkeeper** (glasses, navy apron) and **Swifty** (a teal bird with a backpack, the helper; "she").
 - **Voices:** every line is spoken aloud in an **Indian-English voice** (see section 6).
@@ -50,8 +49,8 @@ A short animated **story game** for kids that runs in a web browser. It asks a f
 
 | File | Used on |
 |---|---|
-| `start screen.png` | Start screen background (it already has the "Bookstore Journey" title) |
-| `start button.png` | Start button, placed **below the title text** |
+| `start screen.png` | Start screen background (it already has the title, "The Best Deal") |
+| `start button.png` | Start button (the game uses `ui/start-button.png`, a square cut of it whose disc is the old button's size), placed **below the title text** |
 | `starting boy talking with father.png` | Screen 1: at home, Aniket, ready to go out, talks to his father on the sofa |
 | `mall outside view .png` | Screen 2: Aniket (drawn in the picture) outside the mall, looking up at its entrance and the **MALL** sign |
 | `book store outside view.png` | Screen 3 background (inside the mall), and Screens 20–21 (Aniket coming out, then walking on): the CHAUHAN BOOK STORE front, with glass windows and double glass doors in the middle, the shop seen through them; the wall lamp on the left and the ceiling lights behind the glass glow softly |
@@ -71,7 +70,7 @@ A short animated **story game** for kids that runs in a web browser. It asks a f
 | `shoes shop enter.png` | Aniket walking into the shoe shop. *No longer used: Screen 22 shows `he saw a shoe.png`, which its clips start on. Removed from the folder; it is in git's history.* |
 | `he saw a shoe.png` | Screens 22 and 23: Aniket at the stand, pointing at the blue sneakers, a white **₹1800** tag hanging from them and a red **30% OFF** label on the front of the stand; and Screen 35, where the tags are updated |
 | `shopkeeper gives sneakers box.png` | Screen 36: at the shop's counter, the shopkeeper (teal polo shirt) hands Aniket the sneakers in an open orange-and-white box |
-| `hee see discount on shoes.png` | Screen 24: the same view (it lines up with Screen 23's picture to within a few pixels; only Aniket differs), Aniket with his hand on his chin, looking at the 30% OFF label |
+| `hee see discount on shoes.png` | *No longer used: Screen 24 was taken out.* It was Screen 24: the same view (it lines up with Screen 23's picture to within a few pixels; only Aniket differs), Aniket with his hand on his chin, looking at the 30% OFF label |
 | `he is tinking to see the shoes.png` | Screen 25: nearly the same view (the stand is drawn a little closer, so its label sits a little lower and bigger), Aniket confused, hand on his chin |
 | `ui/sneakers.png` | Made from `he is tinking to see the shoes.png`: a product photo of the blue sneakers (they and the stand top kept sharp, the shop softly blurred behind), for the sneakers card on Screen 27 (on Screens 26–34 the small photo shows the shop's own picture, zoomed on the sneakers and their tags) |
 | `boy return home .png` | Screen 40: back home, Aniket (with the new book and the sneakers in a bag) talks to his father at the dining table |
@@ -104,8 +103,8 @@ Cut both bird sheets the same way. Line up the flying frames on her body centre 
 ## 3. Screens
 
 ### Start screen
-- Background: `start screen.png` with a slow zoom.
-- `start button.png` sits **under the title**, gently floating with a pulsing glow ✨ (no text label).
+- Background: `start screen.png` (Aniket in the mall with his shopping bags, sale signs in the shop windows, the title "The Best Deal" top left) with a slow zoom; a light sweeps across the title every few seconds, and twinkles sit round it (off Aniket).
+- The Start button (`start button.png`, as the square cut `ui/start-button.png`, 232 px with its disc about 197 px across, as before) sits **under the title**, between the planter and Aniket's hand and his red bag (centred at 567, 640, at least 16 px from each), gently floating with a pulsing glow ✨ (no text label).
 - Click: chime and sparkle burst ✨, then cut straight to Screen 1 (no fade).
   (The first click also turns sound on, because browsers block sound until the player clicks.)
 
@@ -133,7 +132,7 @@ Cut both bird sheets the same way. Line up the flying frames on her body centre 
 ### Screen 4 — He Sees a Book
 - Background: `aniket saw a book.png`, with Aniket's hand on his chin as he looks at the book on the table.
 - **Nothing else** on this screen: no speech bubble, no text. It only has the gentle movement every screen has.
-- **The books on the display stand have names**, written by the game on their covers as if printed there (the same on Screen 5): **Magic Tree** (the green cover with the tree), **Golden Hills** (the sunset over the hills, in dark brown on its pale sky) and **Starry Nights** (the night sky over the mountains). Each name sits in its cover's top part, slanted with the cover (the books lean back on the stand), and moves with the picture.
+- **The books on the display stand have names**, written by the game on their covers as if printed there (the same on Screen 5): **Magic Tree** (the green cover with the tree), **Golden Hills** (the sunset over the hills, in dark brown on its pale sky) and **Starry Nights** (the night sky over the mountains). Each name sits in its cover's top part, slanted with the cover (the books lean back on the stand), and moves with the picture. On the clips of Screens 4 → 5 and 5, which show the stand a little smaller and higher up, the names move with the stand.
 - After about 3 seconds, a smooth **cross-fade to Screen 5**.
   Screens 4 and 5 use the same camera shot, so the fade looks like Aniket picking the book up ✨. During the fade both pictures move as one (even if the mouse moves), so the stand and the books' names never double.
 
@@ -162,16 +161,16 @@ Cut both bird sheets the same way. Line up the flying frames on her body centre 
 - Show **only** this on the card:
   - **For the shopkeeper,**
   - **₹800 is the —** (₹800 big, with a yellow highlighter swipe behind it)
-  - Two answers: **A Cost Price** and **B Selling Price** (white paper strips with a teal letter chip; they lift on hover and press down on click).
+  - Two answers: **A Cost Price** and **B Selling Price**. **Every answer button in the story and teaching screens looks pressable** (2026-10-21): a white face on a teal border, standing on a solid deep-teal edge; it lifts (and turns pale teal) under the pointer and presses down when tapped; a teal letter chip, then the words right after it. Once picked, it stays pressed in: green with a tick if right, grey and crossed out if wrong. A column of answers (Screens 30, 31, 33 and 34) is as wide as its longest answer, every button the same width, so no answer sits in a wide empty box. The card's room is the same all round (44 px above the question, beside and below the answers).
 - The right side of the scene softly darkens behind the card so it stands out.
 - No auto-advance here: the story moves on only through the answer flows below, or the top-right Next.
 - **Either answer:** the picture **shrinks into the small framed photo** in the top-left corner while the cream panel comes in under it (its camera easing back to rest), with the title **"Cost Price or Selling Price?"** on top, and the card **glides to the middle** of the content. Swifty rises in on her books in her corner.
 
 #### Wrong answer (Cost Price) — Swifty helps
 1. The answer shakes, turns **grey and is crossed out** (✗), with a soft "buzz".
-2. The panel and the photo come in as above, and Swifty rises in on her books.
+2. The panel and the photo come in as above, and Swifty rises in on her books with her hint (once the card has reached the middle).
 3. Her bubble (40 px words on this screen, so they read clearly): **"Not quite! The shopkeeper sold the book for ₹800."** ("Not quite!" on a line of its own).
-4. Then her bubble goes, the card makes way for the **two definition cards** (lined index cards, left of her corner), and she reads them out with no bubble (their words are on them), each lighting up:
+4. Then her bubble goes and she goes with it; the card makes way for the **two definition cards** (lined index cards, left of her corner), and her voice reads them out (their words are on them), each lighting up:
    - **Cost Price (CP)** (no colour of its own): picture of money → picture of the book. "Price at which an item is **bought**."
    - **Selling Price (SP)** (blue): picture of the book → picture of money. "Price at which an item is **sold**."
    They are taught **one at a time**, Cost Price first: each card eases in piece by piece (card → title → first picture → the arrow drawing itself → second picture → definition → a highlighter swipe on the key word), and she says its name ("Cost Price. C P.") as the title appears, then the definition once it is up.
@@ -184,13 +183,13 @@ Cut both bird sheets the same way. Line up the flying frames on her body centre 
 - The panel and the photo come in as above, and the card **flips over** to show:
   - a pale green header with a ✓ badge: **Correct!**
   - **"The shopkeeper sold the book for ₹800, so ₹800 is the selling price."** (₹800 highlighted, *selling price* in blue)
-- Swifty rises in on her books, points at the card and reads it out (no bubble: "Correct! The shopkeeper sold the book…"), then goes.
+- Her voice reads the card out (no bubble, so Swifty doesn't come: "Correct! The shopkeeper sold the book…").
 - **3 seconds later**, the same big **Next ▶** button moves the story on to Screen 9.
 
 ### Screen 9 — A Closer Look
 - Background: `boy see the book .png`: seen from behind Aniket, he looks at the book in his hands.
 - Reached from the question screen as the **small photo grows back out** to full screen (there is no "Aniket holds his new book" screen in between).
-- A **glowing gold ring pulses around the ₹1000 sticker** ✨ to draw the eye to it. No words. The progress bar appears at the top: **Marked Price** is lit.
+- A **glowing gold ring pulses around the ₹1000 sticker** ✨ to draw the eye to it. No words.
 - After about 3 seconds, a quick **cut** to Screen 10. It's the same view, so only Aniket's reaction changes.
 
 ### Screen 10 — What Is This?
@@ -227,12 +226,11 @@ Cut both bird sheets the same way. Line up the flying frames on her body centre 
 
 ### Screen 14 — Shopkeeper reveals the reduction
 - Background: `aniket give a book to shopkepper.png`, framed like the question screen: the camera is shifted left so Aniket and the shopkeeper stay in view, and a soft blurred copy fills in past the picture's right edge from the first frame.
-- **Coming back from Screen 13, the result shows on the picture** for a moment: a small sticky note **"₹1000 → ₹800"** (amber, then blue) above the counter.
 - The shopkeeper's line comes in **three bubbles, one after the other** (each goes before the next), in his deeper voice. **As he says each price, it flies out of his bubble to a card on the right** and is pasted into its place: a copy of the amount lifts off the bubble (a little bigger, with a soft shadow and a "swish"), glides along a low arc, and lands exactly on its place; its box appears around it with a little squash, like a sticker pressed on (a "pop"). The amount stays in the bubble.
   1. **"The price printed on the book is ₹1000,"** → the ₹1000 flies out, and the card (white, a soft shadow) **swings in from the right to catch it**: the amber **₹1000** note is pasted onto it as it lands.
   2. **"but you paid only ₹800."** → a **grey arrow grows downwards** with a falling "whoop", then the ₹800 flies into the blue **₹800** note.
   3. **"So, you got a ₹200 discount."** → the ₹200 flies beside the arrow: **"₹200 reduced"**, in red, which keeps gently glowing. "discount." (red, the new word) pulses at the end, with a soft "ding".
-- The ₹1000 and ₹800 keep the **same colours as Screen 13** (amber = Marked Price, blue = Selling Price), so the learner can see it's the same comparison, now with its explanation. The progress bar moves on to **Discount**.
+- The ₹1000 and ₹800 keep the **same colours as Screen 13** (amber = Marked Price, blue = Selling Price), so the learner can see it's the same comparison, now with its explanation.
 - About 3 seconds later it carries straight on to Screen 15.
 
 ### Screen 15 — Aniket asks about discount
@@ -276,25 +274,24 @@ Cut both bird sheets the same way. Line up the flying frames on her body centre 
 
 ### Screen 19 — Checkpoint 1: Discount
 (The **Summary / checkpoint** layout; see *Checkpoints* in section 1.)
-- On top: **CHECKPOINT 1 OF 4** and **Discount**. Her voice opens with **"Let’s remember!"** (written above the cards).
+- On top: **Discount**. Her voice opens with **"Let’s remember!"** (written above the cards).
 - **Three lined index cards**, one at a time, each read out as it comes in (her recorded lines, no bubbles), in general, with no amounts:
   1. **Marked Price** (amber): "Price written on an item." ("Marked price is the price written on an item.")
   2. **Selling Price** (blue): "Price at which it is sold." ("Selling price is the price at which it is sold.")
   3. **Discount** (red): "Amount reduced from the marked price." ("Discount is the amount reduced from the marked price.")
 - The formula on a **yellow sticky note**: **Discount = MP − SP** ("And remember the formula: Discount = MP − SP!", read "Discount equals M P minus S P"), then **Example: The book: ₹1000 − ₹800 = ₹200** (highlighted).
-- Then **Discount ✓** is ticked (Marked Price and Discount are ticked on the progress bar), the note **flies into the notebook**, and **Swifty rises in to celebrate** (a wave, sparkles round the cards). The buttons **Got it, next**, **Hear it again** and **Go back** (to Screen 11) wait for the player.
+- Then **Discount ✓** is ticked, the note **flies into the notebook**, and sparkles round the cards celebrate (Swifty has no bubble here, so she doesn't come). The buttons **Got it, next**, **Hear it again** and **Go back** (to Screen 11) wait for the player.
 - **Got it, next** (or the top Next): the big panel slides back down, revealing Screen 20.
 
 ### Screen 20 — Coming Out of the Bookstore
 - Background: `book store outside view.png`, the bookstore from the mall, as on Screen 3, with the same slow zoom and lights.
-- **Coming from Checkpoint 1, the formula shows on the picture** for a moment, on a small sticky note: **Discount = MP − SP**.
-- **The doors open:** the shop's two glass doors are drawn over the picture (`ui/bookstore-doorway.png` is the doorway with the doors taken out: their seam, handles and fittings painted out and the glass's haze off; over it, the two door leaves are drawn as pale glass with their pull handles and fittings). Closed, they look just as in the picture.
-- **Aniket comes out:** he walks up to the doors inside the shop, seen through the glass (footsteps); the **shop's bell rings and the doors swing open into the shop** on their hinges (in 3D, with a little settle), the left one on the left and the right one on the right, and the shop is seen clearly through the open doorway. He **walks out through the doors** into the mall, coming closer, and stops just outside. No words. The progress bar moves on to **Percentages**.
-- About 1.5 seconds later, a **dissolve into Screen 21** (the same view: nothing changes but what Aniket does).
+- **Aniket comes out (a video clip, `s20-out`):** the right-hand door stands open, and Aniket walks out of the shop towards us, stops in front of it, smiling, and walks off to the right (the first 4.6 s of the Gemini take `outgoing.mp4`). No words. As it ends, **a cut to Screen 21**: its clip starts on the very next frame, so nothing jumps.
+- **With motion turned down (no clips):** the doors open: the shop's two glass doors are drawn over the picture (`ui/bookstore-doorway.png` is the doorway with the doors taken out: their seam, handles and fittings painted out and the glass's haze off; over it, the two door leaves are drawn as pale glass with their pull handles and fittings). Closed, they look just as in the picture.
+- **Then he comes out** (still with motion turned down): he walks up to the doors inside the shop, seen through the glass (footsteps); the **shop's bell rings and the doors swing open into the shop** on their hinges (in 3D, with a little settle), the left one on the left and the right one on the right, and the shop is seen clearly through the open doorway. He **walks out through the doors** into the mall, coming closer, and stops just outside. No words. About 1.5 seconds later, a **cut to Screen 21** (the same view: nothing changes but what Aniket does).
 
 ### Screen 21 — To the Shoe Shop
-- The same view: **the bookstore's doors stand open** behind Aniket, who is just outside them, as Screen 20 left him.
-- He **walks off along the mall to the right**, to the next shop, the sneakers shop (the same walk as on Screen 3, with footsteps), coming a little closer as he goes, and out of the picture. No words.
+- The same view. **The rest of the take (`s21-walk`, 1.4 s):** Aniket walks on past the open door, along the mall to the right; the fade to Screen 22 comes as he walks on.
+- With motion turned down: **the bookstore's doors stand open** behind Aniket, who is just outside them, as Screen 20 left him. He **walks off along the mall to the right**, to the next shop, the sneakers shop (the same walk as on Screen 3, with footsteps), coming a little closer as he goes, and out of the picture. No words.
 - About a second later, a **cross-fade into Screen 22**: the shoe shop.
 
 ### Screen 22 — The Shoe Shop
@@ -310,19 +307,16 @@ Cut both bird sheets the same way. Line up the flying frames on her body centre 
 ### Screen 23 — Tagged Price
 - Background: `he saw a shoe.png`, the same view: Aniket **points at the sneakers and their ₹1800 tag** (the red 30% OFF label on the stand under them).
 - Its clip (`s23-zoom`): Aniket lifts a finger as if he has spotted something and points again, and **the camera moves in on the sneakers until the ₹1800 tag and the 30% OFF label fill the screen**. No speech bubble, no text.
-- About 2 seconds after the camera gets there, a smooth **cross-fade into Screen 24**, back to the whole stand. (Without the clip: the picture, and the fade about 3 seconds later.)
+- About 2 seconds after the camera gets there, a smooth **cross-fade into Screen 25**, back to the whole stand. (Without the clip: the picture, and the fade about 3 seconds later.)
 
-### Screen 24 — 30% Off!
-- Background: `hee see discount on shoes.png`: Aniket, **hand on his chin**, thinks about the red **30% OFF** label on the stand, under the ₹1800 tag.
-- **Only the discount is highlighted**: the red 30% OFF label lights up with a **glowing gold frame** that hugs it (rounded corners, clear of the ₹1800 tag above it), pulsing gently, with a sparkle sound ✨ (one effect: no twinkles).
-- No speech bubble, no text.
-- About 3 seconds later, a smooth **cross-fade into Screen 25** (the same view: only Aniket changes, and the lit tag stays lit).
+### Screen 24 — 30% Off! (taken out)
+- Taken out on 2026-10-21, at the user's request: Screen 23 now fades straight into Screen 25. (It was Aniket, hand on his chin, looking at the 30% OFF label, which lit up in gold; `hee see discount on shoes.png` and its clip `s24-idle`.)
 
 ### Screen 25 — What Does 30% Mean?
 (Storyboard: "Amit is confused". In the game he stays **Aniket**.)
-- Background: `he is tinking to see the shoes.png`: Aniket, confused, hand on his chin, at the sneakers' stand; he thinks (a quiet loop, `s25-idle`) until he speaks, and each line has its talking clip. Coming from Screen 24, the **30% OFF label is still framed in glowing gold** (on a direct jump it lights up first). This picture shows the stand a little closer, so during the fade the label and its frame move a little with it.
+- Background: `he is tinking to see the shoes.png`: Aniket, confused, hand on his chin, at the sneakers' stand; he thinks (a quiet loop, `s25-idle`) until he speaks, and each line has its talking clip. Half a second in, the **30% OFF label lights up in glowing gold** (a sparkle sound).
 - **Two lines, one at a time**, in Aniket's voice (no thought cloud), each in a **speech bubble** with its tail at his mouth by his hand, clear of his face and the two tags:
-  1. **"The tag says ₹1800."** (₹1800 bold), while a gold frame lights up round the white **₹1800** card on the sneakers.
+  1. **"The tag says ₹1800."** (₹1800 bold), while a gold frame lights up round the white **₹1800** card on the sneakers. The card is always the picture's (its clips blur the price into "e1800"), so **₹1800** stays clear.
   2. In its place: **"With 30% off, how much do I actually pay?"** (30% off bold), both tags still lit. This question goes to the top of the teaching screens that follow (26–34), until Screen 34 answers it.
 - About 3 seconds later: Screen 26.
 
@@ -331,16 +325,16 @@ Cut both bird sheets the same way. Line up the flying frames on her body centre 
 - The shop **zooms in on the sneakers and their two tags, then shrinks into the small photo** on the left as the panel comes in round it. On top: **ANIKET ASKS** "**With 30% off, how much do I actually pay?**" (it stays on top until Screen 34 answers it).
 - A gold ring lights up round the 30% OFF tag in the photo, and **the tag lifts off the stand and flies onto the panel**, where the red **30% OFF** tag ("30%" over "OFF", white letters) **lands like a stamp**.
 - **Swifty rises in on her books** (she introduces the new idea), waves, then points at it, and **reads it out** (no bubble: it is all written on the panel), in two parts: **"30% OFF means"** → the tag lights up, then **"means"** rises in beside it and **an arrow draws itself** under the word, pointing right. **"30% Discount."** → a **white card springs up** on the right of the arrow, line for line with the tag: **"30%"** over **"Discount"** ("Discount" in red, the discount's colour since Screens 14–15), lighting up as she says it.
-- She stays on her books for Screen 27. About 3 seconds later it **dissolves into Screen 27**.
+- About 3 seconds later it **dissolves into Screen 27**.
 
 ### Screen 27 — Recall Percentages
 (Storyboard: "Bridge to percentage recall". Its robot is **Swifty** in the game.)
-- **The topic starts with Checkpoint 1's note:** the yellow sticky note **Discount = MP − SP** comes out of the notebook button and settles under the photo, with "REMEMBER · CHECKPOINT 1" over it.
+- **The topic starts with Checkpoint 1's note:** the yellow sticky note **Discount = MP − SP** comes out of the notebook button and settles under the photo, with "REMEMBER" over it.
 - On the same panel, what the tag means dissolves away and **the sneakers' card springs up** in the middle:
   1. A **product photo of the blue sneakers** eases in (`ui/sneakers.png`).
   2. The white **₹1800** price tag **drops onto the sneakers**: it hangs on a string tied to the laces of the front shoe, like the tag in the shop's pictures, swings left and right, and settles, tilted a little against the shoe.
   3. Under the photo, the red **30% OFF** tag (tilted, like the one on the stand) **lands like a stamp**.
-- Swifty, still on her books from Screen 26 (on a direct jump she rises in and waves first), points at the card. Her bubble (a line that links the two topics, so it keeps its bubble), said in two parts:
+- Swifty rises in on her books with her bubble (a line that links the two topics, so it keeps its bubble), said in two parts:
   1. **"To find the discount amount,"** → the 30% OFF tag lights up.
   2. **"let’s first recall how percentages work."** → the "30%" on the tag lights up.
   ("discount amount" and "percentages" in red, the key words)
@@ -356,7 +350,7 @@ Cut both bird sheets the same way. Line up the flying frames on her body centre 
 - Step by step, in time with her voice (no bubbles), **each word on the sheet lit as it is said**:
   1. The question is read out (its strip lights up). **"*a* is the part,"** → *a* in the question turns violet, and the **Part = *a*** box comes in. **"and *b* is the whole."** → *b* turns olive, and the **Whole = *b*** box comes in.
   2. **"To find the percentage,"** → "Percentage" is written in. **"divide the part by the whole,"** → "=" and the fraction Part / Whole. **"then multiply by 100."** → "× 100".
-  3. That line fades a little (the earlier step), and the next line's "=" pops and its fraction bar draws itself. **"Put the part on top,"** → the little arrow over "Part" nudges down and ***a*** glides out of its box into the top of the fraction. **"and the whole below."** → ***b*** glides into the bottom. Then "× 100".
+  3. The next line's "=" pops and its fraction bar draws itself. **"Put the part on top,"** → the little arrow over "Part" nudges down and ***a*** glides out of its box into the top of the fraction. **"and the whole below."** → ***b*** glides into the bottom. Then "× 100".
   4. **"Then put a % sign after it."** → the last line's "=" pops, and **(*a* / *b* × 100)%** lands and is **circled in red pen**.
   5. **"Let’s take an example!"**
 - About 3 seconds later the working **dissolves into Screen 29**.
@@ -378,17 +372,17 @@ Cut both bird sheets the same way. Line up the flying frames on her body centre 
 
 ### Checkpoint 2 — Percentages (new, after Screen 30; Screen 31 in the game)
 (The **Summary / checkpoint** layout; see *Checkpoints* in section 1.)
-- A dissolve from Screen 30. On top: **CHECKPOINT 2 OF 4** and **Percentages**; her voice opens with **"Let’s remember!"** (written above the cards).
+- A dissolve from Screen 30. On top: **Percentages**; her voice opens with **"Let’s remember!"** (written above the cards).
 - **Two lined index cards**, each read out as it comes in with the recorded lines of Screen 29: **Part 125** (violet) "the amount we look at" ("125 is the part,") and **Whole 500** (olive) "the whole amount" ("and 500 is the whole.").
 - The formula on a **yellow sticky note**: **Percentage = Part ÷ Whole × 100** ("To find the percentage," "divide the part by the whole," "then multiply by 100."), then **Example: 125 ÷ 500 × 100 = 25%** ("So, 125 is 25% of 500!").
-- Then **Percentages ✓** is ticked on the progress bar, the note flies into the notebook, Swifty rises in to celebrate, and the buttons wait: **Got it, next** (a dissolve into Screen 31), **Hear it again**, **Go back** (to Screen 27).
+- Then **Percentages ✓** is ticked, the note flies into the notebook, sparkles celebrate, and the buttons wait: **Got it, next** (a dissolve into Screen 31), **Hear it again**, **Go back** (to Screen 27).
 
 #### Screens 31–34 — Back to the sneakers
 (Storyboards 14–17. Screen 31 is a question; **whichever answer the player picks**, Screens 32, 33 and 34 follow in order: the working, what the answer means, and the amount to pay. Screen 33 is a question too, and Screen 34 asks for the Selling Price before the player drags the amounts into place. The photo of the sneakers stays on the left and Aniket's question on top; each screen dissolves into the next. Where the storyboards show no dialogue, Swifty's lines below are written for the game.)
 
 ### Screen 31 — Back to the Sneakers
 (The **Question** layout.)
-- **The topic starts with Checkpoint 2's note:** **Percentage = Part ÷ Whole × 100** comes out of the notebook button and settles under the photo ("REMEMBER · CHECKPOINT 2").
+- **The topic starts with Checkpoint 2's note:** **Percentage = Part ÷ Whole × 100** comes out of the notebook button and settles under the photo ("REMEMBER" over it).
 - **Swifty rises in on her books** (she asks the question), and the question springs up big, with the whole panel to itself (the sneakers are in the photo): **"Now, what is 30% of ₹1800?"**, and under it three big answers **stacked**: **A ₹360**, **B ₹540**, **C ₹720**.
 - She reads the question out (no bubble); as she says it, **the 30% OFF tag and then the ₹1800 tag light up in the photo**.
 - **Right (B ₹540):** green tick, chime, sparkles. Her bubble: **"Correct! 30% of ₹1800 is ₹540."**
@@ -399,7 +393,7 @@ Cut both bird sheets the same way. Line up the flying frames on her body centre 
 (The **Worked example** layout. Swifty isn't here: her voice on its own.)
 - The question dissolves into the **working on graph paper**, written line by line, its = signs lined up (big writing): **30% = 30/100**, then **30% of ₹1800 = 30/100 × 1800**, then **= ₹540** (real stacked fractions, in ink).
 - Each line is written in (a left-to-right wipe with a marker scribble) as her voice says it, with no bubbles:
-  1. **"30% means"** → "30% =". **"30 out of 100."** → the fraction 30/100. That line then fades a little.
+  1. **"30% means"** → "30% =". **"30 out of 100."** → the fraction 30/100 (stacked).
   2. **"So, 30% of ₹1800 ="** → "30% of ₹1800 =". **"30/100 × 1800"** (read "30 over 100 times 1800") → the fraction, then "× 1800".
   3. **"1800 ÷ 100 = 18,"** → "× 1800" and the 100 light up. **"and 18 × 30 = 540."** → the 30 lights up. **"So, it’s ₹540!"** → **₹540** lands and is **circled in red pen**.
 - **A bar model** comes in under the working: a bar for **₹1800 (Marked Price)** cut into **10 parts of ₹180**, then **3 parts are shaded** red: "3 parts = 30% = ₹540".
@@ -409,7 +403,7 @@ Cut both bird sheets the same way. Line up the flying frames on her body centre 
 - **Swifty rises in on her books**, and the question springs up: **"What does ₹540 represent here?"** with three answers stacked: **A Marked Price**, **B Selling Price**, **C Discount**. She reads the question out (no bubble).
 - **Right (C Discount):** her bubble: **"Correct! ₹540 is the money taken off ₹1800."** (the 30% OFF tag lights up in the photo).
 - **Wrong (A or B):** **"Not quite! ₹540 is the money taken off ₹1800."** (the 30% OFF tag lights up), and C is ticked. No second try.
-- Both ways: **"That’s the discount!"** with no bubble (the right answer, lit, says it). 3 seconds later the **Next** button. She stays on her books for Screen 34.
+- Both ways: **"That’s the discount!"** with no bubble (the right answer, lit, says it). 3 seconds later the **Next** button.
 
 ### Screen 34 — The Amount to Pay
 - **First, what to find (nothing on the panel yet).** The question before dissolves away, and Swifty, on her books, says in her bubble: **"Now, let’s find out how much money Aniket needs to pay."**
@@ -431,7 +425,7 @@ Cut both bird sheets the same way. Line up the flying frames on her body centre 
 
 ### Screen 35 — Final Answer
 (Storyboard 18: "Final answer and summary". The line is Aniket's, in his voice.)
-- Background: `he saw a shoe.png` (the same view as Screens 22–24: Aniket at the stand, **pointing at the price tags**). Coming from Screen 34, the small photo grows back out into it. It moves as on Screen 22, with the same clips: Aniket pointing between the parts of his line, and talking with each part.
+- Background: `he saw a shoe.png` (the same view as Screens 22–23: Aniket at the stand, **pointing at the price tags**). Coming from Screen 34, the small photo grows back out into it. It moves as on Screen 22, with the same clips: Aniket pointing between the parts of his line, and talking with each part.
 - Aniket's bubble, right of his face above the sneakers (clear of his face and both tags), the tail at his mouth, spoken in two parts:
   1. **"So, after a 30% discount,"** → the **30% OFF** tag on the stand lights up with its glowing gold frame, then **a red line draws itself across the ₹1800** on the tag hanging from the sneakers (a marker scribble): the old price is crossed out.
   2. **"I will pay ₹1260."** → a **green ₹1260 tag stamps onto the stand**, under both tags, a little tilted (a thud, a sparkle burst: the answer to his question), and a chime.
@@ -441,20 +435,20 @@ Cut both bird sheets the same way. Line up the flying frames on her body centre 
 
 ### Checkpoint 3 — Price after a discount (new, after Screen 35; Screen 37 in the game)
 (The **Summary / checkpoint** layout; see *Checkpoints* in section 1.)
-- On top: **CHECKPOINT 3 OF 4** and **Price after a discount**; her voice opens with **"Let’s remember!"** (written above the cards).
-- **Two lined index cards**, each read out with the recorded lines of Screens 32 and 34: **Discount ₹540** (red) "30% of ₹1800 = 30/100 × 1800" ("So, 30% of ₹1800 =" "30/100 × 1800" "So, it’s ₹540!") and **Selling Price ₹1260** (blue) "₹1800 − ₹540: what Aniket pays" ("To find how much you have to pay," "subtract the discount from the marked price." "₹1800 − ₹540" "= ₹1260.").
+- On top: **Price after a discount**; her voice opens with **"Let’s remember!"** (written above the cards).
+- **Two lined index cards**, each read out with the recorded lines of Screens 32 and 34: **Discount ₹540** (red) "30% of ₹1800 = 30/100 × 1800" (the fraction stacked: 30 over 100, as everywhere a fraction is written) ("So, 30% of ₹1800 =" "30/100 × 1800" "So, it’s ₹540!") and **Selling Price ₹1260** (blue) "₹1800 − ₹540: what Aniket pays" ("To find how much you have to pay," "subtract the discount from the marked price." "₹1800 − ₹540" "= ₹1260.").
 - The formula on a **yellow sticky note**: **SP = MP − Discount**.
-- Then the topic is ticked, the note flies into the notebook, Swifty rises in to celebrate, and the buttons wait: **Got it, next** (the panel slides back down, revealing Screen 36), **Hear it again**, **Go back** (to Screen 31).
+- Then the topic is ticked, the note flies into the notebook, sparkles celebrate, and the buttons wait: **Got it, next** (the panel slides back down, revealing Screen 36), **Hear it again**, **Go back** (to Screen 31).
 
 ### Screen 36 — Here Are Your Sneakers
 - Background: `shopkeeper gives sneakers box.png`: at the shop's counter, the shopkeeper hands Aniket his new sneakers in an open orange-and-white box; both smile. A slow zoom eases in towards the box; the shelf lights glow softly.
-- No speech bubble, no words: a soft **light sweeps across the box**, with a chime (no twinkles). The progress bar moves on to **Discount %**.
+- No speech bubble, no words: a soft **light sweeps across the box**, with a chime (no twinkles).
 - About 3 seconds later: Screen 37.
 
 ### Screen 37 — What Percent Is the Discount?
 (Before the discount percentage formula: the discount, as a percent of the marked price, worked out with the part and the whole, the way Screens 28 and 29 did; then the rule's words dissolve into the discount percentage formula. Swifty's lines are written for the game.)
 - The counter picture gives way to the panel, with **the photo of the sneakers and their ₹1800 and 30% OFF tags** on the left (so 540 and 1800 clearly come from them) and the title **"What percent is the discount?"** on top.
-- **The topic starts with Checkpoint 3's note:** **SP = MP − Discount** comes out of the notebook button and settles under the photo ("REMEMBER · CHECKPOINT 3").
+- **The topic starts with Checkpoint 3's note:** **SP = MP − Discount** comes out of the notebook button and settles under the photo ("REMEMBER" over it).
 - **Swifty rises in on her books** (she introduces it), and the working of Screen 29 springs up with the sneakers' numbers (no ₹): the question **"540 is what percent of 1800?"**, the boxes **Part = 540** and **Whole = 1800**, and on the graph paper **Percentage = Part / Whole × 100**, then **= 540 / 1800 × 100**, then **= 30%**.
 - She reads the question out (no bubble), then **"540 is the part,"** / **"and 1800 is the whole."** (each amount turns its colour in the question, violet and olive, and its box comes in). **Then she goes back down with her books**, and her voice works it out on its own, exactly as on Screen 29: **"To find the percentage,"** / **"divide the part by the whole,"** / **"then multiply by 100."**, **"Put the part on top,"** / **"and the whole below."** (540 and 1800 glide into the fraction), **"540 ÷ 1800 × 100"** / **"= 30%."** (30% lands, circled in red pen) / **"So, 540 is 30% of 1800!"**
 - **Then the formula of the discount percentage, by dissolving.** The two boxes fade away and their column folds up, so the working glides into the middle and grows a little. **"Here, the part is the discount,"** → over the line, **"Part" dissolves into "Discount"**: the old word blurs and fades away while the new one comes into focus in its place, the fraction widening to fit it; "Discount" is red, and **540** turns red too, in the working and in the question. **"and the whole is the marked price."** → under the line, **"Whole" dissolves into "Marked Price"** (amber), and **1800** turns amber.
@@ -472,10 +466,10 @@ Cut both bird sheets the same way. Line up the flying frames on her body centre 
 
 ### Screen 39 — Checkpoint 4: Discount %
 (Storyboard 20: "Complete summary". The **Summary / checkpoint** layout; see *Checkpoints* in section 1.)
-- On top: **CHECKPOINT 4 OF 4** and **Discount %**; her voice opens with **"Let’s sum up the sneakers!"** (written above the cards).
+- On top: **Discount %**; her voice opens with **"Let’s sum up the sneakers!"** (written above the cards).
 - **Three lined index cards**, each read out as it comes in (no bubbles): **Marked Price ₹1800** (amber) "on the tag" ("Marked Price: ₹1800."), **Discount ₹540** (red) "30% of the marked price" ("Discount: 30%," "which is ₹540."), **Selling Price ₹1260** (blue) "what Aniket pays" ("Selling Price: ₹1260.").
 - The formula on a **yellow sticky note**: **Discount % = Discount ÷ MP × 100** ("and Discount % = Discount ÷ MP × 100.", read "Discount percentage equals Discount divided by M P, times one hundred").
-- Then **Discount % ✓** is ticked (the whole progress bar is ticked now), the note flies into the notebook, and **Swifty rises in to celebrate**, with her bubble: **"Now you can work out any discount!"** The buttons wait: **Got it, next** (the panel slides back down into Screen 40), **Hear it again**, **Go back** (to Screen 37).
+- Then **Discount % ✓** is ticked, the note flies into the notebook, and **Swifty rises in to celebrate**, with her bubble: **"Now you can work out any discount!"** The buttons wait: **Got it, next** (the panel slides back down into Screen 40), **Hear it again**, **Go back** (to Screen 37).
 
 ### Screen 40 — Back Home
 - Background: `boy return home .png`: back home, Aniket comes in with his backpack, the new book under his arm and the sneakers in a shopping bag; his father sits at the dining table with a cup of tea and the newspaper. A slow drift, the daylight through the far window softly glowing, and dust floating in the sunlight ✨.
@@ -643,7 +637,7 @@ The four streets (what each shop's card asks, and the answers it offers, the rig
 - **Video clips** (section 1) bring the pictures to life where they are made: Screens 1, 5–8, 22–25, 35, 36, 40, 41, 43, 45, 46 and 56 talk and breathe, Screen 4 turns into 5 with Aniket picking up the book, and 42 into 43 with the list and then the money handed over (in place of those fades). The rest of the brief's animations wait for their clips (`Animation Video Prompts.md`, `docs/REVIEW.md`).
 
 ## 5. Controls
-- **Top-right corner:** small **◀ Back** and **Next ▶** buttons, with a "2 / 61" counter between them (empty until the game has loaded). In the shopping game they follow the game (see *The shopping game*).
+- **Top-right corner:** small **◀ Back** and **Next ▶** buttons, with a "2 / 60" counter between them (empty until the game has loaded). In the shopping game they follow the game (see *The shopping game*).
   While a screen is about to move on by itself, the Next button fills up like a timer. Clicking it skips ahead ✨. A checkpoint never moves on by itself: it waits for **Got it, next** (or Next).
 - **Side screen panel:** a small **Scenes** button (top-left) opens a side panel with a picture of every screen. Click one to jump straight to it.
   Once the list is taller than the panel it scrolls (with a thin scrollbar), and it opens scrolled to the current screen.
@@ -679,18 +673,17 @@ footsteps · pop · speech-bubble "bloop" (the shopping game's bubbles: the stor
 - Next leads to Screens 9 → 10 ("₹1000? What is this?") → 11, the photo growing back out into Screen 9.
 - Screen 11: the shocked picture zooms on the ₹1000 sticker and shrinks into the photo; Swifty rises in on her books and says "₹1000 is the price written on the book." while the ₹1000 flies from the sticker onto a taped note; "It is called the marked price (MP)." with no bubble as "Marked Price (MP)" comes in; then one line of meaning.
 - Screens 11 → 12 → 13 dissolve into each other with the photo not moving: 12 is read out without Swifty (the definition on a lined index card, word by word); on 13, ₹1000 Marked Price → a grey arrow → ₹800 Selling Price on taped notes, read with no bubbles, then Swifty rises in to ask "Why is the selling price less than the marked price?"; then the photo grows back out into Screen 14.
-- Screen 14: "₹1000 → ₹800" shows on the picture for a moment; the shopkeeper's line in three bubbles, "The price printed on the book is ₹1000," "but you paid only ₹800." "So, you got a ₹200 discount.", and the card builds ₹1000 → ₹200 reduced → ₹800 in step with them.
+- Screen 14: the shopkeeper's line in three bubbles, "The price printed on the book is ₹1000," "but you paid only ₹800." "So, you got a ₹200 discount.", and the card builds ₹1000 → ₹200 reduced → ₹800 in step with them.
 - Screen 15 picks up from 14 with no jump. The card leaves and the camera re-centres (the shopkeeper says nothing more); Aniket's face turns puzzled (only his face changes) and "Discount? What does that mean?" appears in a thought cloud whose puffs rise from his head.
 - Screen 16: the picture shrinks into the photo, Aniket's thought settles on top of the panel as its heading, the Discount card springs up, and Swifty rises in on her books and reads the definition while the words appear.
 - Screens 17 and 18 have no Swifty (her voice goes on): 17 builds ₹1000 − ₹800 = ₹200 (the amounts only, the ₹1000 flying off the book's sticker), writes each box's name in as the formula is said, then splits a ₹1000 bar into ₹800 paid and ₹200 discount; 18 builds "Discount = Marked Price − Selling Price", then its first letters fly down onto a sticky note to make "D = MP − SP".
 - Screen 19 (Checkpoint 1 of 4: Discount): "Let’s remember!", the three cards and "Discount = MP − SP" read out with no bubbles, the example, the tick, the note flying into the notebook, Swifty rising in to celebrate; it waits for Got it, next / Hear it again / Go back.
-- Screen 20: "Discount = MP − SP" on the picture for a moment; Aniket walks up to the glass doors inside the shop; the bell rings and the doors swing open into the shop, and he walks out through them into the mall; then a dissolve to Screen 21.
-- Screen 21: the doors stand open behind him, and Aniket walks off along the mall to the next shop, the sneakers shop; then a fade to Screen 22.
+- Screen 20: a video clip: Aniket comes out of the open door, stops in front of the shop, smiling, and walks off to the right; then a cut to Screen 21 (with motion turned down: he walks up to the glass doors inside the shop, the bell rings, the doors swing open and he walks out).
+- Screen 21: the rest of the clip: Aniket walks on past the open door, along the mall to the next shop, the sneakers shop; then a fade to Screen 22.
 - Screen 22: in the shoe shop, Aniket points at the sneakers; a light sweeps across them, and he says "These sneakers look good!", then (the 30% OFF label lighting up) "What does 30% OFF mean here?" and "Is this also a discount?", one bubble at a time, his lips moving with each; then a plain dissolve to Screen 23.
 - Screen 23: Aniket points, and the camera moves in on the ₹1800 and 30% OFF tags, with no words; then a fade back to the whole stand.
-- The shoe shop (Screens 22–25 and 35) is all video: no still picture shows.
-- Screen 24: only the 30% OFF tag is highlighted, with a glowing gold frame hugging it; no words; then a fade where only Aniket changes.
-- Screen 25: the tag stays lit; "The tag says ₹1800." (the ₹1800 card lighting up) and "With 30% off, how much do I actually pay?" in speech bubbles, one at a time.
+- The shoe shop (Screens 22, 23, 25 and 35) is all video: no still picture shows.
+- Screen 25: the 30% OFF tag lights up; "The tag says ₹1800." (the ₹1800 card lighting up, always the picture's clear ₹1800) and "With 30% off, how much do I actually pay?" in speech bubbles, one at a time.
 - Screen 26: the shop shrinks into the photo (zoomed on the tags) and Aniket's question goes on top; the 30% OFF tag flies from the photo and stamps on; Swifty rises in on her books and reads out "30% OFF means… 30% Discount." (no bubble) as "means", its arrow and the "30% / Discount" card come in.
 - Screen 27: Checkpoint 1's note comes out of the notebook; the sneakers card (photo, the ₹1800 tag swinging onto the laces, 30% OFF stamped); Swifty, still on her books, says "To find the discount amount, let’s first recall how percentages work." in two parts, then goes.
 - Screens 28 and 29 have no Swifty: the rule "a is what percent of b?" (a and b in italic), then the example "125 is what percent of 500?" (no ₹); the part (violet) and the whole (olive) are named, the formula is written line by line, each word lit as it is said, earlier lines fading a little, the amounts glide into the fraction, and the answer is circled in red; on 29 a 10 × 10 grid fills 25 squares.
@@ -702,8 +695,8 @@ footsteps · pop · speech-bubble "bloop" (the shopping game's bubbles: the stor
 - Screen 36: the shop's counter: the shopkeeper hands Aniket the sneakers in their box; a light sweeps across the box, with a chime; no words.
 - Screen 37: the photo of the sneakers and Checkpoint 3's note; Swifty rises in, reads "540 is what percent of 1800?" and names the part and the whole, then goes; her voice works it out as on Screen 29 (= 30%); the boxes fold away, and as "Here, the part is the discount, and the whole is the marked price." is said the words dissolve: Part → Discount (540 turning red), Whole → Marked Price (1800 amber), and, with "So, Discount % = Discount ÷ Marked Price × 100.", Percentage → Discount %.
 - Screen 38: without Swifty, the graph paper writes Discount % = Discount / Marked Price × 100 on the rule band as her voice explains it, then = 540 / 1800 × 100 (each number coming in under its word), then = 30% (circled), "That’s the 30% off on the tag!"
-- Screen 39 (Checkpoint 4 of 4: Discount %): "Let’s sum up the sneakers!", ₹1800, ₹540 and ₹1260 on three cards, "Discount % = Discount ÷ MP × 100", the whole progress bar ticked, Swifty celebrating with "Now you can work out any discount!"; then the panel slides down into Screen 40.
-- Checkpoints: the same layout every time, never moving on by themselves; "Hear it again" reads it all again, "Go back" goes to the start of the topic; each one's note is in the notebook, which opens any time (also in the shopping game); the progress bar ticks its topic.
+- Screen 39 (Checkpoint 4 of 4: Discount %): "Let’s sum up the sneakers!", ₹1800, ₹540 and ₹1260 on three cards, "Discount % = Discount ÷ MP × 100", Swifty celebrating with "Now you can work out any discount!"; then the panel slides down into Screen 40.
+- Checkpoints: the same layout every time, never moving on by themselves; "Hear it again" reads it all again, "Go back" goes to the start of the topic; each one's note is in the notebook, which opens any time (also in the shopping game).
 - Screen 40: back home, his father asks "How was your shopping?", Aniket answers "Great! I learnt about marked price, discount and discount percentage.", and his father says "That’s useful, because you have another shopping job.", one bubble at a time.
 - Screens 41–45: his father brings up school (two lines), hands Aniket the list (the camera pushes in on it and eases back), gives him "₹5,000" (the notes shine, "cha-ching"), Aniket pockets it, and his father's advice and Aniket's "Really?" / "Then I’m definitely finding the best offers!" come one bubble at a time; 42 → 43 → 44 are dissolves where only their hands change.
 - Screen 46: outside his house, the "Game Begins" panel builds up beside Aniket, uncluttered (banner, ribbon, ₹5,000 wallet, the four items side by side as small cards, one by one, the glowing START SHOPPING button), which waits for the player and leads to Screen 47.

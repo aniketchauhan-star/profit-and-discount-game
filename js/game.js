@@ -70,7 +70,8 @@
   const STAND = ASSETS + 'ui/book-stack.png';
 
   // Shapes on the artwork (stage px).
-  const TITLE_PLATE = [[150, 340], [860, 340], [884, 420], [862, 520], [800, 668], [200, 668], [128, 600], [108, 430]];
+  const TITLE_PLATE = [[410, 150], [740, 150], [745, 280], [985, 280], [1010, 330], [1010, 470], [960, 535], [290, 535], [245, 470], [250, 300], [405, 285]];
+  const START_AT = [567, 640]; // the Start button's centre: under the title, between the planter and Aniket's hand and bags
   const SHOP_SIGN = [[380, 148], [1885, 18], [1885, 172], [380, 292]];
   const MONEY = [[896, 534], [1011, 477], [1040, 498], [1062, 514], [1062, 612], [942, 624], [930, 600], [896, 560]];
   const PRICE_TAG = { x: 975, y: 404, text: '₹800', radius: 72 }; // small ₹800 just above the money
@@ -284,7 +285,6 @@
       id: 'discount-def', title: 'Discount Definition', sub: 'The reduction on the marked price',
       snap: PUZZLED, snapFocus: [900, 520, 1.25], ask: DISCOUNT_ASK, swifty: true,
       sheet: 'panel', still: true, kb: null, origin: '50% 50%', lamps: [], dust: null,
-      setup: setupDiscountDef,
       play: playDiscountDef,
     },
     {
@@ -335,6 +335,7 @@
       lamps: [[1740, 160, 260], [1740, 370, 260], [120, 60, 180]], // shelf lights, a ceiling light
       dust: [600, 40, 1900, 720],
       shot: 'point', // the same view as screen 23, so the change there is a plain dissolve
+      setup: tentCard, // the ₹1800 card, as the picture has it
       play: playSneakers,
     },
     {
@@ -347,18 +348,9 @@
       play: playShoe,
     },
     {
-      id: 'tag', title: '30% Off!', sub: 'He spots the discount',
-      bg: ASSETS + 'hee see discount on shoes.png',
-      kb: { origin: '63% 66%', from: 'scale(1.02)', to: 'scale(1.07)' }, // as on screen 23
-      lamps: [[1740, 160, 260], [1740, 370, 260], [120, 60, 180]],
-      dust: [600, 40, 1900, 720],
-      shot: 'stand',
-      play: playDiscountTag,
-    },
-    {
       id: 'confused', title: 'What Does 30% Mean?', sub: 'With 30% off, how much do I actually pay?',
       bg: ASSETS + 'he is tinking to see the shoes.png',
-      kb: { origin: '63% 66%', from: 'scale(1.02)', to: 'scale(1.07)' }, // as on screens 23–24
+      kb: { origin: '63% 66%', from: 'scale(1.02)', to: 'scale(1.07)' }, // as on screen 23
       lamps: [[1740, 160, 260], [1740, 370, 260], [120, 60, 180]],
       dust: [600, 40, 1900, 720],
       shot: 'stand',
@@ -442,6 +434,7 @@
       lamps: [[1740, 160, 260], [1740, 370, 260], [120, 60, 180]],
       dust: [600, 40, 1900, 720],
       shot: 'stand',
+      setup: tentCard,
       play: playFinal,
     },
     {
@@ -605,11 +598,6 @@
   // the end (the same dialogue boxes): `v2` (css: .is-v2).
   const REVAMP_END = SCENES.findIndex(s => s.id === 'begin');
   SCENES.forEach((scene, i) => { if ((i >= 1 && i <= REVAMP_END) || scene.id === 'homeagain') scene.v2 = true; });
-  // Each screen's topic, for the progress bar (Marked Price → Discount → Percentages → Discount %).
-  const TOPIC_OF = [['look', 'compare'], ['reveal', 'summary'], ['exit', 'ck3'], ['boxed', 'sneakersum']];
-  TOPIC_OF.forEach(([a, b], t) => {
-    for (let i = SCENES.findIndex(s => s.id === a); i <= SCENES.findIndex(s => s.id === b); i++) SCENES[i].topic = t;
-  });
 
   // ======================================================================
   // Scene scripts. `ctx.wait()` throws CANCELLED as soon as the player
@@ -618,14 +606,14 @@
 
   async function playTitle(ctx, scene) {
     const L = scene.layer;
-    FX.twinkles(L, [[300, 250], [700, 205], [140, 470], [884, 420], [250, 668], [810, 640], [520, 160]]);
+    FX.twinkles(L, [[380, 125], [760, 125], [570, 100], [870, 250], [230, 520], [420, 570], [900, 560]]); // round the title, off Aniket
 
-    const wrap = el('div', 'start-wrap', L, { left: '495px', top: '812px' });
+    const wrap = el('div', 'start-wrap', L, { left: `${START_AT[0]}px`, top: `${START_AT[1]}px` });
     const btn = el('button', 'start-btn', wrap);
     btn.type = 'button';
     btn.setAttribute('aria-label', 'Start the story');
     const img = el('img', '', btn);
-    img.src = ASSETS + 'start button.png';
+    img.src = ASSETS + 'ui/start-button.png'; // (a square cut of "start button.png", its disc the old button's size)
     img.alt = '';
     img.draggable = false;
     btn.addEventListener('click', startStory);
@@ -647,7 +635,7 @@
     Sound.unlock();
     Sound.chime();
     const scene = SCENES[0];
-    FX.burst(scene.layer, 495, 812, { count: 22, dist: [150, 320] });
+    FX.burst(scene.layer, ...START_AT, { count: 22, dist: [150, 320] });
     const btn = scene.layer.querySelector('.start-btn');
     if (btn) {
       btn.animate([
@@ -835,16 +823,24 @@
   // Where Aniket stands once he is out of the doors (the next screen starts him there).
   const OUT_OF_THE_DOORS = { x: 1070, y: 958, s: 0.7 };
 
-  // Coming out of the bookstore (the same view as screen 3): Aniket walks up to the doors inside the shop, seen through
-  // the glass; the doors swing open (the shop's bell), and he walks out through them into the mall, coming closer.
-  // The doors are there from the screen's first frame (setup).
+  // Coming out of the bookstore (the same view as screen 3). With its clip (s20-out): Aniket comes out of the open door,
+  // stops in front of the shop, smiling, and walks off to the right; the next screen's clip carries on from its last
+  // frame, as it ends. Without it: he walks up to the doors inside the shop,
+  // seen through the glass; the doors swing open (the shop's bell), and he walks out through them into the mall, coming
+  // closer. The doors are there from the screen's first frame (setup).
   function setupExit(scene) {
-    scene.doors = bookstoreDoors(scene.layer);
+    if (!Clips.has('s20-out')) scene.doors = bookstoreDoors(scene.layer); // (the clip has its own)
   }
 
   async function playExit(ctx, scene) {
+    if (Clips.has('s20-out')) {
+      const v = scene.clipEls && scene.clipEls['s20-out'];
+      const left = v && v.duration ? v.duration - v.currentTime : VIDEO_CLIPS['s20-out']; // (the clip started with the screen)
+      await ctx.wait(Math.max(0, left * 1000 - 250), { real: true });
+      ctx.advance(250); // on as it ends, so he walks straight on into the next screen's clip
+      return;
+    }
     const L = scene.layer;
-    if (scene.cameFrom === 'summary') noteOnPicture(scene, CHECKPOINTS[1].note, [1380, 150]); // what was learnt, on the picture
     const doors = scene.doors;
     const walker = new FX.Walker(L, WALK_SHEET);
     doors.under(walker.root); // inside the shop, behind the glass
@@ -877,10 +873,13 @@
     ctx.advance(1600); // then on to the next shop
   }
 
-  // On to the shoe shop (the same view): the doors stand open behind him, and Aniket walks off along the mall to the right,
-  // coming a little closer as he goes. The open doors and Aniket, just out of them, are there from the screen's first
-  // frame (setup), exactly as the screen before left them: so the dissolve between the two changes nothing.
+  // On to the shoe shop (the same view): Aniket walks off along the mall to the right. With its clip (s21-walk, the rest
+  // of the take s20-out comes from), he walks on past the open door. Without it, the doors stand open behind
+  // him and he walks off, coming a little closer as he goes: the open doors and Aniket, just out of them, are there from
+  // the screen's first frame (setup), exactly as the screen before left them. Either way, the cut between the two
+  // changes nothing.
   function setupLeave(scene) {
+    if (Clips.has('s21-walk')) return;
     bookstoreDoors(scene.layer, { open: true });
     const walker = new FX.Walker(scene.layer, WALK_SHEET);
     walker.place(OUT_OF_THE_DOORS.x, OUT_OF_THE_DOORS.y, OUT_OF_THE_DOORS.s);
@@ -890,6 +889,10 @@
   }
 
   async function playLeave(ctx, scene) {
+    if (Clips.has('s21-walk')) {
+      ctx.advance(700); // the fade to the shoe shop comes as he walks on (the clip plays on under it)
+      return;
+    }
     const walker = scene.walker;
     const from = OUT_OF_THE_DOORS;               // just out of the doors, as the screen before left him
     const to = { x: 2200, y: 1012, s: 0.8 };      // off to the right
@@ -910,7 +913,9 @@
   // same place), each written on its cover as if printed there: centred in the cover's top part and slanted with it
   // (the books lean back on the stand). On the pictures' layer, so they move with the camera. x, y: the title's centre
   // (stage px); slant: how far the cover leans (deg); tone: light words (on the green and the night-blue covers) or
-  // dark ones (on the pale sunset sky).
+  // dark ones (on the pale sunset sky). The clips of these screens (s04-to-s05, s05-idle, s05-aniket) show the stand a
+  // little smaller and higher up and to the left than the pictures do: while one is on, the names move with it (css:
+  // .stand-names).
   const STAND_BOOKS = [
     { lines: ['Magic', 'Tree'], x: 1357, y: 679, slant: 12.8, tone: 'light' },
     { lines: ['Golden', 'Hills'], x: 1500, y: 684, slant: 10.7, tone: 'dark' },
@@ -918,10 +923,23 @@
   ];
 
   function standTitles(scene) {
+    const names = el('div', 'stand-names', scene.layer);
     STAND_BOOKS.forEach(book => {
-      const title = el('div', `cover-title cover-title--${book.tone}`, scene.layer);
+      const title = el('div', `cover-title cover-title--${book.tone}`, names);
       book.lines.forEach(line => { el('span', '', title).textContent = line; });
       Object.assign(title.style, { left: book.x + 'px', top: book.y + 'px', transform: `translate(-50%, -50%) skewX(${-book.slant}deg)` });
+    });
+  }
+
+  // A piece of a screen's picture laid back over its clips, where a clip draws it wrong (the clips sit exactly on their
+  // pictures, so it lines up); its edges fade out (css: .pic-patch). box: [x, y, w, h] (stage px). Just over the clips,
+  // so it moves with the camera, and stays as the picture shrinks into a teaching screen's photo (only what is on the
+  // picture fades then).
+  function pictureOver(scene, [x, y, w, h]) {
+    if (!scene.patchBox) return null; // (no clips: the picture is all there is)
+    return el('div', 'pic-patch', scene.patchBox, {
+      left: `${x}px`, top: `${y}px`, width: `${w}px`, height: `${h}px`,
+      backgroundImage: `url("${scene.bg}")`, backgroundPosition: `${-x}px ${-y}px`,
     });
   }
 
@@ -1010,12 +1028,13 @@
     const talk = {
       bird,
       get line() { return line; },
-      // Puts up the bubble for her next line, once the one before has gone.
+      // Puts up the bubble for her next line, once the one before has gone; if she isn't there, she rises in first.
       async show(text) {
         if (line) {
           await line.hide();
           await ctx.wait(120);
         }
+        await swiftyIn(ctx, bird);
         line = FX.bubble(ui, Object.assign(place(bird), { text, voice: 'bird', rotate: 1.5 }));
         await line.show();
       },
@@ -1023,28 +1042,29 @@
       part(id, i, ms = 0) {
         return Promise.all([speakPart(ctx, line, i, id, line.parts[i], 'bird', bird), ctx.wait(ms)]);
       },
-      // Her bubble goes (e.g. before she reads out something that is written on the screen).
+      // Her bubble goes, and she goes with it (e.g. before her voice reads out something written on the screen).
       async clear() {
         if (!line) return;
         const old = line;
         line = null;
         await old.hide();
+        await swiftyOut(ctx, bird);
       },
       // A whole line in a new bubble, typed while she says it; never quicker than `ms`.
       async say(id, text, ms = 0) {
         await talk.show(text);
         await Promise.all([speak(ctx, line, id, 'bird', bird), ctx.wait(ms)]);
       },
-      // A line whose words (or what it says) are already on the screen (the revamp: no second copy in a bubble; and on a
-      // screen without Swifty, her voice on its own): her bubble goes, her beak moves while she says it (if she is there),
-      // and `marks` (what it is about, on the panel) light up meanwhile. `cues`: [[word, node], …]: each node lights up
+      // A line whose words (or what it says) are already on the screen (the revamp: no second copy in a bubble): her
+      // voice on its own (she is only there with a bubble, so her bubble goes and she with it), and `marks` (what it is
+      // about, on the panel) light up meanwhile. `cues`: [[word, node], …]: each node lights up
       // as its word is said (and goes out at the next one), so the words on the panel are lit as they are spoken.
       // `text` is the line's plain words, as recorded. Never quicker than `ms`.
       async read(id, text, marks = [], ms = 0, cues = []) {
         await talk.clear();
         const lit = marks.filter(Boolean);
         lit.forEach(m => m.classList.add('is-said'));
-        if (bird) bird.talk();
+        if (bird && bird.here) bird.talk();
         const timers = cueWords(text, cues);
         try {
           await Promise.all([sayHere(ctx, id, text, 'bird'), ctx.wait(ms)]);
@@ -1146,10 +1166,6 @@
     const sheet = el('div', 'scene-sheet');
     scene.ui.insertBefore(sheet, under);
     el('div', 'sheet-panel', sheet);
-    const stand = el('img', 'sheet-stand', sheet);
-    stand.src = STAND;
-    stand.alt = '';
-    stand.draggable = false;
     scene.el.classList.remove('is-asking');
     scene.el.classList.add('has-sheet');
     Sound.whoosh();
@@ -1166,8 +1182,6 @@
     const sheet = el('div', 'scene-sheet scene-sheet--snap');
     scene.el.insertBefore(sheet, scene.parallax);
     el('div', 'sheet-panel', sheet);
-    const stand = el('img', 'sheet-stand', sheet);
-    Object.assign(stand, { src: STAND, alt: '', draggable: false });
     const head = el('h2', 'scene-head', sheet);
     head.textContent = 'Cost Price or Selling Price?';
     scene.el.classList.remove('is-asking', 'is-feathered');
@@ -1248,7 +1262,8 @@
     Sound.duck(true);
     sheetUp(scene, card.el);
     card.el.classList.add('is-center');
-    const talk = await cornerSwifty(ctx, scene, { size: 40 }); // she flies in as the panel comes up (big, clear words here)
+    await ctx.wait(reducedMotion ? 60 : 850); // the card gets to the middle first: it never crosses her corner
+    const talk = await cornerSwifty(ctx, scene, { size: 40 }); // she flies in onto the panel (big, clear words here)
     const bird = talk.bird;
     bird.point();
     await ctx.wait(250);
@@ -1378,7 +1393,6 @@
     scene.mp = FX.pricePanel(scene.ui, Object.assign({ price: '₹1000', term: 'Marked Price', abbr: '(MP)', sheet: true, pin: scene.snap ? SNAP_STICKER : null }, side));
     scene.carried = PANEL_FLOW.indexOf(scene.cameFrom) === PANEL_FLOW.indexOf(scene.id) - 1;
     scene.mp.showNow(); // (the revamp: the panel has no frame, and the book is the snapshot: nothing to bring in)
-    carrySwifty(scene);
   }
 
   // The Marked Price definition (the revamp's Definition layout): on a lined index card in the middle, the snapshot beside
@@ -1488,19 +1502,7 @@
     ctx.advance(3000); // then Aniket wonders what it means
   }
 
-  // Going back to the story, what was worked out is shown on the picture for a moment (the revamp, rule 4): a sticky note
-  // on the picture (it moves with it), `at` [x, y] in the picture's px.
-  function noteOnPicture(scene, segments, [x, y], ms = 2800) {
-    const box = el('div', 'pic-note', scene.layer, { left: `${x}px`, top: `${y}px` });
-    FX.formulaNote(box, segments);
-    if (reducedMotion) return box;
-    box.animate([{ opacity: 0, transform: 'translateY(16px) scale(.9)' }, { opacity: 1, transform: 'none' }], { duration: 450, easing: 'cubic-bezier(.2,.8,.3,1)' });
-    box.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 500, delay: ms, fill: 'forwards' });
-    return box;
-  }
-
   async function playRevealParts(ctx, scene) {
-    if (scene.cameFrom === 'compare') noteOnPicture(scene, [{ t: '₹1000', tone: 'mp' }, { t: '→' }, { t: '₹800', tone: 'sp' }], [520, 150], 2200);
     const card = FX.reduction(scene.ui, REDUCTION_CARD);
     await ctx.wait(500);
     const fly = async (from, to, ms) => {
@@ -1590,9 +1592,6 @@
   // card and reads it out while the words appear.
   const DISCOUNT_DEFINITION = 'The {reduction} given on the\n{marked price} of an item\nis called a *discount.*';
 
-  function setupDiscountDef(scene) {
-    carrySwifty(scene);
-  }
 
   // The revamp: Aniket's thought, "Discount? What does that mean?", is the heading here, and the definition answers it.
   // Coming from screen 15, the heading lifts out of where his thought cloud was and settles on top of the panel.
@@ -1706,31 +1705,19 @@
 
   function setupGuide(scene) {
     blurredFromStart(scene);
-    carrySwifty(scene);
   }
 
-  // Runs of screens where Swifty keeps talking, one after another. She flies in to her stand for the first line
-  // of a run, stays there through the run (carried across each dissolve without moving), and flies off after
-  // its last line; so she is only on the screen while she has something to say.
+  // Runs of screens where Swifty keeps talking, one after another: at the end of a screen in a run, her last bubble
+  // stays up (see swiftyDone); after the last, she goes. Swifty is on screen only while one of her speech bubbles is,
+  // her books with her (the user's rule, 2026-10-21): she rises in with a bubble and goes back down when it goes, and a
+  // line with no bubble is her voice on its own (see swiftyTalk). So she isn't there during worked solutions either.
   // (The revamp, Part 1 rule 3: she comes only to introduce an idea, ask a question or react to an answer, and celebrate
-  // at a checkpoint; she isn't there during worked solutions, where her voice goes on by itself (see talk.read).)
+  // at a checkpoint.)
   const RUNS = [['offmeans', 'recall'], ['represent', 'topay'], ['left', 'two'], ['recap', 'takeaway']];
   const lastOfRun = scene => {
     const run = RUNS.find(r => r.includes(scene.id));
     return !run || run[run.length - 1] === scene.id;
   };
-
-  // Coming from the screen before in the same run, Swifty is already on her stand.
-  function carrySwifty(scene) {
-    scene.bird = null;
-    const carried = RUNS.some(run => run.indexOf(scene.cameFrom) >= 0 && run.indexOf(scene.id) === run.indexOf(scene.cameFrom) + 1);
-    if (!carried) return;
-    if (scene.v2) standFor(scene);
-    scene.bird = new FX.Bird(scene.ui, SWIFTY, { scale: CORNER.s });
-    scene.bird.place(CORNER.x, CORNER.y);
-    scene.bird.shadowOn(true);
-    if (scene.v2) scene.bird.stand = scene.ui.querySelector('.sheet-stand');
-  }
 
   // The revamp: Swifty's books are there only with her (they come and go together).
   function standFor(scene) {
@@ -1739,55 +1726,63 @@
     return stand;
   }
 
-  // Swifty on her stand (CORNER), ready to talk (her bubbles go above her head): already there, or flying in now.
-  // { size }: her bubbles' text size (default 34 px).
+  // Swifty on her stand (CORNER), ready to talk (her bubbles go above her head). She is out of sight until her first
+  // bubble: then she and her books rise in together from the bottom edge (swiftyIn), and they go back down when her
+  // bubble goes (swiftyOut). { size }: her bubbles' text size (default 34 px).
   async function cornerSwifty(ctx, scene, { size } = {}) {
     let bird = scene.bird && !scene.bird.gone ? scene.bird : null;
-    if (!bird && scene.v2) { // the revamp: she and her books rise in together from the bottom edge, and settle
-      const stand = standFor(scene);
+    if (!bird) {
+      const stand = standFor(scene); // first, so that she is drawn over it: both feet on the top book
       bird = new FX.Bird(scene.ui, SWIFTY, { scale: CORNER.s });
       bird.place(CORNER.x, CORNER.y);
       bird.shadowOn(true);
       bird.stand = stand;
+      bird.here = false;
+      [bird.root, bird.stand].forEach(n => { n.style.visibility = 'hidden'; });
       scene.bird = bird;
-      const ms = reducedMotion ? 1 : 650;
-      const rise = d => [{ transform: `translateY(${d}px)`, opacity: 0 }, { transform: 'translateY(-8px)', opacity: 1, offset: 0.75 }, { transform: 'none', opacity: 1 }];
-      stand.animate(rise(380), { duration: ms, easing: 'cubic-bezier(.2,.8,.3,1)' });
-      bird.body.animate(rise(475), { duration: ms, easing: 'cubic-bezier(.2,.8,.3,1)' }); // (her body is drawn at 0.8)
-      Sound.chirp();
-      await ctx.wait(ms);
-    } else if (!bird) {
-      bird = new FX.Bird(scene.ui, SWIFTY, { scale: CORNER.s });
-      bird.place(2140, CORNER.y - 300);
-      await bird.flyTo(ctx, { x: CORNER.x, y: CORNER.y, s: CORNER.s, duration: 1300, lift: 100, ease: 'out' });
-      await bird.land();
     }
     return swiftyTalk(ctx, scene.ui, bird, b => Object.assign(overHead(b, CORNER.bubbles), size ? { size } : {}));
   }
 
-  // Swifty's part is over: her bubble (if any) goes with her, and she waves and flies off.
+  // She and her books rise in from the bottom edge and settle (for a bubble)…
+  async function swiftyIn(ctx, bird) {
+    if (!bird || bird.here || bird.gone) return;
+    bird.here = true;
+    [bird.root, bird.stand].forEach(n => { n.style.visibility = ''; });
+    const ms = reducedMotion ? 1 : 650;
+    const rise = d => [{ transform: `translateY(${d}px)`, opacity: 0 }, { transform: 'translateY(-8px)', opacity: 1, offset: 0.75 }, { transform: 'none', opacity: 1 }];
+    bird.stand.animate(rise(380), { duration: ms, easing: 'cubic-bezier(.2,.8,.3,1)' });
+    bird.body.animate(rise(475), { duration: ms, easing: 'cubic-bezier(.2,.8,.3,1)' }); // (her body is drawn at 0.8)
+    Sound.chirp();
+    await ctx.wait(ms);
+  }
+
+  // …and go back down out of sight (when it has gone).
+  async function swiftyOut(ctx, bird) {
+    if (!bird || !bird.here) return;
+    bird.here = false;
+    const ms = reducedMotion ? 1 : 480;
+    const sink = d => [{ transform: 'none', opacity: 1 }, { transform: `translateY(${d}px)`, opacity: 0 }];
+    const going = [bird.stand.animate(sink(380), { duration: ms, easing: 'cubic-bezier(.5,0,.75,0)', fill: 'forwards' }),
+      bird.body.animate(sink(475), { duration: ms, easing: 'cubic-bezier(.5,0,.75,0)', fill: 'forwards' })];
+    await ctx.wait(ms);
+    [bird.root, bird.stand].forEach(n => { n.style.visibility = 'hidden'; });
+    going.forEach(a => a.cancel());
+  }
+
+  // Swifty's part is over: if she is there, she waves with her last bubble still up; then the bubble goes, and she and
+  // her books go back down with it.
   async function flyOff(ctx, bird, bubble) {
     await ctx.wait(600); // her last words sink in first
-    if (bubble) await bubble.hide();
-    if (bird.stand) { // the revamp: she waves, and she and her books go back down
+    if (bird.here) {
       bird.wave();
       await ctx.wait(450);
-      const ms = reducedMotion ? 1 : 480;
-      const sink = d => [{ transform: 'none', opacity: 1 }, { transform: `translateY(${d}px)`, opacity: 0 }];
-      bird.stand.animate(sink(380), { duration: ms, easing: 'cubic-bezier(.5,0,.75,0)', fill: 'forwards' });
-      bird.body.animate(sink(475), { duration: ms, easing: 'cubic-bezier(.5,0,.75,0)', fill: 'forwards' });
-      await ctx.wait(ms);
-      bird.stand.remove();
-      bird.remove();
-      bird.gone = true; // (cornerSwifty brings her back if she is needed again)
-      return;
     }
-    bird.wave();
-    Sound.chirp();
-    await ctx.wait(300);
-    await bird.takeOff(ctx);
-    await bird.flyTo(ctx, { x: 2160, y: bird.y - 420, duration: 900, lift: 40, ease: 'in' });
+    if (bubble) await bubble.hide();
+    await swiftyOut(ctx, bird);
+    bird.stand.remove();
     bird.remove();
+    bird.gone = true; // (cornerSwifty brings her back if she is needed again)
   }
 
   // Swifty's lines on this screen are done. If she talks on the next screen too (the same run), she stays on her
@@ -1876,11 +1871,10 @@
   // recorded lines), each card lighting up; then the topic is ticked, its note goes into the notebook, and Swifty comes in
   // to celebrate. Each is laid out the same: 2–3 cards and one formula on a sticky note.
   //  cards: [{ term, tone, value, text, say: [her lines, as recorded] }]; note (formula segments) and sayNote; example
-  //  (text) and sayExample; ticks: the topics of the progress bar it ticks; start: where "Go back" goes; end: her line as
-  //  she celebrates (a bubble), if any.
+  //  (text) and sayExample; start: where "Go back" goes; end: her line as she celebrates (a bubble), if any.
   const CHECKPOINTS = {
     1: {
-      topic: 'Discount', ticks: [0, 1], start: 'mp', title: 'Let’s remember!',
+      topic: 'Discount', start: 'mp', title: 'Let’s remember!',
       cards: [ // in general: no amounts (the example has them)
         { term: 'Marked Price', tone: 'mp', text: 'Price written on an item.', say: ['Marked price is the price written on an item.'] },
         { term: 'Selling Price', tone: 'sp', text: 'Price at which it is sold.', say: ['Selling price is the price at which it is sold.'] },
@@ -1891,7 +1885,7 @@
       example: 'The book: {₹1000 − ₹800 = ₹200}',
     },
     2: {
-      topic: 'Percentages', ticks: [2], start: 'recall', title: 'Let’s remember!',
+      topic: 'Percentages', start: 'recall', title: 'Let’s remember!',
       cards: [
         { term: 'Part', tone: 'part', value: '125', text: 'the amount we look at', say: ['125 is the part,'] },
         { term: 'Whole', tone: 'whole', value: '500', text: 'the whole amount', say: ['and 500 is the whole.'] },
@@ -1902,7 +1896,7 @@
       sayExample: 'So, 125 is 25% of 500!',
     },
     3: {
-      topic: 'Price after a discount', ticks: [2], start: 'sneakerq', title: 'Let’s remember!',
+      topic: 'Price after a discount', start: 'sneakerq', title: 'Let’s remember!',
       cards: [
         { term: 'Discount', tone: 'd', value: '₹540', text: '30% of ₹1800 = 30/100 × 1800', say: ['So, 30% of ₹1800 =', '30/100 × 1800', 'So, it’s ₹540!'] },
         { term: 'Selling Price', tone: 'sp', value: '₹1260', text: '₹1800 − ₹540: what Aniket pays',
@@ -1912,7 +1906,7 @@
       sayNote: [],
     },
     4: {
-      topic: 'Discount %', ticks: [3], start: 'pctofmp', title: 'Let’s sum up the sneakers!',
+      topic: 'Discount %', start: 'pctofmp', title: 'Let’s sum up the sneakers!',
       cards: [
         { term: 'Marked Price', tone: 'mp', value: '₹1800', text: 'on the tag', say: ['Marked Price: ₹1800.'] },
         { term: 'Discount', tone: 'd', value: '₹540', text: '30% of the marked price', say: ['Discount: 30%,', 'which is ₹540.'] },
@@ -1930,7 +1924,7 @@
     const here = () => SCENES[Game.index] === scene;
     let reading = null;
     const cp = FX.checkpoint(scene.ui, {
-      index: n, total: 4, topic: c.topic, say: c.title, cards: c.cards, note: c.note, example: c.example,
+      index: n, topic: c.topic, say: c.title, cards: c.cards, note: c.note, example: c.example,
       on: {
         next: () => { if (here()) next(); },
         again: () => {
@@ -2016,7 +2010,7 @@
   // settles under the snapshot, with "Remember" over it.
   async function rememberNote(ctx, scene, n) {
     const box = el('div', 'remember', scene.ui);
-    el('small', '', box).textContent = `Remember · Checkpoint ${n}`;
+    el('small', '', box).textContent = 'Remember';
     const note = FX.formulaNote(box, CHECKPOINTS[n].note, { small: true });
     const b = stageRect($('#btn-notebook'));
     const a = stageRect(note);
@@ -2081,22 +2075,13 @@
   }
 
   // The red "30% OFF" label on the front of the sneakers' stand: a glowing frame hugging it (stage px). It sits
-  // here on screens 24 and 35; on 25 the picture shows the stand a little closer (THINKING_OFF_TAG).
+  // here on screens 22 and 35; on 25 the picture shows the stand a little closer (THINKING_OFF_TAG).
   const OFF_TAG = { x: 1253, y: 733, w: 322, h: 141, round: 24 };
   const THINKING_OFF_TAG = { x: 1284, y: 778, w: 336, h: 153, round: 26 };
 
-  // No words: Aniket, hand on his chin, looks at the discount, and the red 30% OFF tag lights up.
-  async function playDiscountTag(ctx, scene) {
-    await ctx.wait(900);
-    FX.ring(scene.layer, OFF_TAG);
-    Sound.sparkle();
-    await ctx.wait(800);
-    ctx.advance(2600);
-  }
-
-  // Coming from screen 24, the 30% OFF tag is still lit, exactly as it was.
+  // The ₹1800 card is the picture's: its clips blur the price into "e1800" (laid on first, so the rings stay on top).
   function setupConfused(scene) {
-    scene.offRing = scene.cameFrom === 'tag' ? FX.ring(scene.layer, Object.assign({ instant: true }, THINKING_OFF_TAG)) : null;
+    pictureOver(scene, PRICE_CARD_FACE);
   }
 
   // Aniket, hand on his chin, looks at the sneakers' tags: he says what he sees, and asks how much he will actually
@@ -2107,13 +2092,18 @@
     text: [{ t: 'With ' }, { t: '30% off', em: true }, { t: ', how much do I actually pay?' }], // (the revamp's language fix)
   }, SHOE_SAY);
   const PRICE_CARD = { x: 1346, y: 634, w: 196, h: 152, round: 16 }; // the white ₹1800 card on the sneakers (stage px)
+  const PRICE_CARD_FACE = [1259, 566, 173, 135]; // that card's face, with a little round it: x, y, w, h (stage px)
+  // The ₹1800 tent card on the stand, with a little round it, on the picture of screens 22 and 35 (he saw a shoe.png):
+  // their clips redraw the price roughly, so the picture's is laid over them.
+  const TENT_CARD = { 'he saw a shoe.png': [1196, 538, 236, 130] };
+  function tentCard(scene) {
+    pictureOver(scene, TENT_CARD[scene.bg.slice(ASSETS.length)]);
+  }
 
   async function playConfused(ctx, scene) {
-    if (!scene.offRing) {
-      await ctx.wait(500);
-      FX.ring(scene.layer, THINKING_OFF_TAG);
-      Sound.sparkle();
-    }
+    await ctx.wait(500);
+    FX.ring(scene.layer, THINKING_OFF_TAG); // the 30% OFF label lights up first
+    Sound.sparkle();
     await ctx.wait(700);
     // "The price tagged is ₹1800.": the price card on the sneakers lights up.
     const price = FX.bubble(scene.layer, SHOE_PRICE);
@@ -2297,7 +2287,6 @@
     await writing;
     await readWith(ctx, talk, 'wp-rule-3', 'then multiply by 100.', 700, () => f.times(0), [['100', times]]);
     await ctx.wait(500);
-    f.el.querySelectorAll('.pf-sheet > *').forEach(n => n.classList.add('is-past')); // the earlier step fades a little
     await f.start(1);
     await ctx.wait(300);
     let flying = null;
@@ -2526,7 +2515,6 @@
     await readWith(ctx, voice, 'th-1', '30% means', 200, () => w.write(0));
     await readWith(ctx, voice, 'th-2', '30 out of 100.', 300, () => w.part(0, 0));
     await ctx.wait(400);
-    w.rows[0].parts.forEach(n => n.classList.add('is-past'));
     // 30% of ₹1800 = 30/100 × 1800
     await readWith(ctx, voice, 'th-3', 'So, 30% of ₹1800 =', 200, () => w.write(1));
     let writing = null;
@@ -3827,10 +3815,12 @@
       lines: { 'reveal-1': ['s14-shopkeeper-1', 's06-shopkeeper'], 'reveal-2': ['s14-shopkeeper-2', 's06-shopkeeper'], 'reveal-3': ['s14-shopkeeper-3', 's06-shopkeeper'] },
     },
     discount: { idle: 's06-idle', react: 's14-to-s15', after: 's15-idle' },
+    // Out of the bookstore: one take cut in two, each played once (its last frame stays), and a cut between the screens.
+    exit: { idle: 's20-out', once: true },
+    leave: { idle: 's21-walk', once: true },
     // (The shoe shop is all clips: Screen 22 and 35 share Aniket pointing (s23-idle) and his talking clips.)
     sneakers: { idle: 's23-idle', lines: { sneakers: 's22-aniket-1', 'sneakers-off': 's22-aniket-2', 'sneakers-discount': 's22-aniket-3' } },
     shoe: { idle: 's23-zoom', once: true },
-    tag: { idle: 's24-idle' },
     confused: { idle: 's25-idle', lines: { 'shoe-price': 's25-aniket-1', 'shoe-ask': 's25-aniket-2' } },
     final: { idle: 's23-idle', lines: { 'final-1': 's22-aniket-1', 'final-2': 's22-aniket-3' } },
     boxed: { idle: 's36-box', once: true },
@@ -3852,7 +3842,7 @@
   };
   // The movement clips, going forward from one screen to the next ("from>to").
   const CLIP_MOVES = {
-    'see>browse': 's04-to-s05', 'ask>pay': 's06-to-s07', 'look>shock': 's09-to-s10', 'tag>confused': 's24-to-s25',
+    'see>browse': 's04-to-s05', 'ask>pay': 's06-to-s07', 'look>shock': 's09-to-s10',
     'list>money': 's42-to-s43', 'money>pocket': 's43-to-s44',
   };
 
@@ -4091,6 +4081,8 @@
   function activate(scene, mode, camera) {
     scene.layer.replaceChildren();
     scene.ui.replaceChildren();
+    scene.bird = null; // (Swifty comes with her first bubble: see cornerSwifty)
+    if (scene.patchBox) scene.patchBox.replaceChildren();
     scene.el.classList.remove('is-leaving', 'is-entering', 'is-feathered', 'is-asking', 'is-hushed', 'is-instant', 'is-reacting', 'has-sheet');
     scene.el.classList.add('is-active');
     if (mode === 'cut' && !reducedMotion && !scene.still) {
@@ -4182,7 +4174,7 @@
   // worked out → what ₹540 is → the amount to pay → the final answer; and 540 as a percent of 1800 → the discount
   // percentage → the summary.
   // Every other change is a straight cut.
-  const FADES = [['home', 'mall'], ['return', 'school'], ['school', 'list'], ['list', 'money'], ['money', 'pocket'], ['pocket', 'deal'], ['deal', 'begin'], ['begin', 'shops'], ['shops', 'uniform'], ['shops', 'shoes'], ['shops', 'bag'], ['shops', 'bottle'], ['shops', 'complete'], ['uniform', 'complete'], ['shoes', 'complete'], ['bag', 'complete'], ['bottle', 'complete'], ['complete', 'receipt'], ['homeagain', 'mission'], ['outside', 'see'], ['see', 'browse'], ['browse', 'ask'], ['exit', 'leave'], ['leave', 'sneakers'], ['sneakers', 'shoe'], ['shoe', 'tag'], ['tag', 'confused'], ['final', 'boxed']];
+  const FADES = [['home', 'mall'], ['return', 'school'], ['school', 'list'], ['list', 'money'], ['money', 'pocket'], ['pocket', 'deal'], ['deal', 'begin'], ['begin', 'shops'], ['shops', 'uniform'], ['shops', 'shoes'], ['shops', 'bag'], ['shops', 'bottle'], ['shops', 'complete'], ['uniform', 'complete'], ['shoes', 'complete'], ['bag', 'complete'], ['bottle', 'complete'], ['complete', 'receipt'], ['homeagain', 'mission'], ['outside', 'see'], ['see', 'browse'], ['browse', 'ask'], ['leave', 'sneakers'], ['sneakers', 'shoe'], ['shoe', 'confused'], ['final', 'boxed']];
   const FORWARD_FADES = [['mp', 'mpdef'], ['mpdef', 'compare'], ['discount-def', 'formula'], ['formula', 'formula-reveal'], ['formula-reveal', 'summary'], ['offmeans', 'recall'], ['recall', 'percentrule'], ['percentrule', 'whatpercent'],
     ['whatpercent', 'check'], ['check', 'ck2'], ['ck2', 'sneakerq'], ['sneakerq', 'thirty'], ['thirty', 'represent'], ['represent', 'topay'], ['topay', 'final'], ['pctofmp', 'discountpct'], ['discountpct', 'sneakersum'], ['left', 'two'], ['recap', 'takeaway']];
   const FADE_MS = 1200; // not stretched by PACE: changing screens stays brisk
@@ -4441,27 +4433,6 @@
   };
   const icon = name => `<svg class="icon" viewBox="0 0 48 48" aria-hidden="true">${ICONS[name]}</svg>`;
 
-  // The progress bar (the revamp, rule 5): the four topics of the story, the one the learner is in lit, the ones whose
-  // checkpoint has been passed ticked. A screen's topic is set in TOPIC_OF.
-  const TOPICS = ['Marked Price', 'Discount', 'Percentages', 'Discount %'];
-  const Progress = {
-    build() {
-      const bar = $('#progress');
-      TOPICS.forEach(t => { el('li', '', bar).textContent = t; });
-    },
-    show(scene) {
-      const bar = $('#progress');
-      const topic = scene ? scene.topic : undefined;
-      bar.hidden = topic === undefined;
-      if (bar.hidden) return;
-      const done = new Set(Notebook.pages().flatMap(n => CHECKPOINTS[n].ticks));
-      [...bar.children].forEach((li, k) => {
-        li.classList.toggle('is-here', k === topic && !done.has(k));
-        li.classList.toggle('is-done', done.has(k));
-      });
-    },
-  };
-
   // The notebook (the revamp, rule 8): each checkpoint's cards go into it, and it can be opened any time (also during the
   // shopping game) with its button beside the Scenes button, or N. What is in it is kept on the device.
   const Notebook = {
@@ -4485,13 +4456,12 @@
         const c = CHECKPOINTS[n];
         const page = el('div', 'nb-page', host);
         const h = el('h3', '', page);
-        el('small', '', h).textContent = `Checkpoint ${n}`;
-        h.appendChild(document.createTextNode(c.topic));
+        h.textContent = c.topic;
         const cards = el('div', 'nb-cards', page);
         c.cards.forEach(card => {
           const k = el('div', `nb-card ck-card--${card.tone || 'ink'}`, cards);
           el('b', 'ck-term', k).textContent = card.term + (card.value ? ` ${card.value}` : '');
-          k.appendChild(document.createTextNode(card.text));
+          FX.fracText(k, card.text);
         });
         if (c.note) FX.formulaNote(cards, c.note, { small: true });
       });
@@ -4527,7 +4497,6 @@
         if (k === i) s.item.setAttribute('aria-current', 'step');
         else s.item.removeAttribute('aria-current');
       });
-      Progress.show(SCENES[i]);
       $('#btn-notebook').hidden = !Notebook.pages().length || i <= 0;
     },
     countdown(ms) {
@@ -4610,16 +4579,9 @@
       if (scene.sheet) scene.el.classList.add('is-sheet');
       if (scene.look) scene.el.classList.add('look-' + scene.look);
       if (BAR_SCREENS.has(scene.id)) scene.el.classList.add('has-bar'); // Swifty speaks from the question bar
-      if (scene.sheet === 'panel') { // one big panel filling the screen, and Swifty's stand on it (not under the bar)
-        el('div', 'sheet-panel', scene.world);
-        if (scene.v2 && scene.swifty) scene.el.classList.add('has-swifty'); // she comes on this screen: her corner is kept
-        if (!BAR_SCREENS.has(scene.id) && !scene.v2) { // (the revamp: her books come with her, see standFor)
-          const stand = el('img', 'sheet-stand', scene.world);
-          stand.src = STAND;
-          stand.alt = '';
-          stand.draggable = false;
-        }
-      }
+      // She comes on this screen: her corner is kept (also on screen 8, whose panel slides up over the picture).
+      if (scene.v2 && scene.swifty) scene.el.classList.add('has-swifty');
+      if (scene.sheet === 'panel') el('div', 'sheet-panel', scene.world); // one big panel filling the screen (Swifty's books come with her: see standFor)
       [scene.bg, scene.react].filter(Boolean).forEach((src, i) => { // the picture, and a reaction to fade in over it
         const img = el('img', (scene.backdrop ? 'scene-bg scene-bg--feather' : 'scene-bg') + (i ? ' scene-react' : ''), scene.world);
         img.src = src;
@@ -4628,6 +4590,7 @@
       });
       if (Clips.planned(scene)) { // its picture brought to life, over it (see Clips), once its clips are made
         scene.clipBox = el('div', scene.backdrop ? 'scene-clips scene-bg--feather' : 'scene-clips', scene.world);
+        scene.patchBox = el('div', 'scene-patches', scene.world); // pieces of the picture over its clips (see pictureOver)
       }
       scene.ambient = el('div', 'scene-ambient', scene.world);
       scene.lamps.forEach(([x, y, r]) => FX.glow(scene.ambient, x, y, r, r * 0.8));
@@ -4674,7 +4637,7 @@
       el('span', 'si-now', thumb).textContent = 'NOW';
       const text = el('span', 'si-text', item);
       el('strong', '', text).textContent = scene.title;
-      el('small', '', text).textContent = scene.sub;
+      FX.fracText(el('small', '', text), scene.sub);
       item.setAttribute('aria-label', `${i === 0 ? 'Start screen' : 'Scene ' + i}: ${scene.title}`);
       item.addEventListener('click', () => {
         Sound.click();
@@ -4808,14 +4771,13 @@
     window.addEventListener('resize', fit);
     buildScenes();
     buildPanel();
-    Progress.build();
     wireUI();
     startParallax();
 
     const fill = $('#loader-fill');
     const label = $('#loader-text');
     const images = SCENES.flatMap(s => [s.bg, s.react]).filter(Boolean).concat(
-      ASSETS + 'start button.png', WALK_SHEET.src, SWIFTY.fly.src, SWIFTY.stand.src, ART.money, ART.book,
+      ASSETS + 'ui/start-button.png', WALK_SHEET.src, SWIFTY.fly.src, SWIFTY.stand.src, ART.money, ART.book,
       ASSETS + 'ui/sneakers.png', DOORWAY.src, STAND, ...Object.values(BEGIN_ART), ...SHOPPING_LIST.map(item => item.icon),
       ...Object.values(SHOP_ART), MONEY_NOTES, ...SHOPS.map(shop => shop.icon), ASSETS + 'boy stand and talk .png',
       ...Object.values(STREET_ART).flatMap(v => (typeof v === 'string' ? [v] : Object.values(v)))

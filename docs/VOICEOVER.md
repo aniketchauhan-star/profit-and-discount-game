@@ -41,6 +41,8 @@ Twelve other lines only changed their capital letters or apostrophe, so their wo
 
   The studio's 12 voice names are 6 Gemini voices (two names each), and only Puck, Charon and Fenrir are men's voices: one for each man or boy in the story. A new male character would have to share one.
 
+  **The father's clips came out in a woman's range** (about 240–270 Hz, higher than the Mac's Tara; a man speaks at about 85–155 Hz), so they sounded like a woman. `python3 tools/vo_deepen.py Father` gives them a man's voice: with the WORLD vocoder, the pitch × 0.52 and the voice's colour (its formants) × 0.85, the same length and loudness (vo002 now about 115 Hz). Each clip it has done is marked in the file, so running it again changes nothing; **clips remade in the studio need it again.** It needs numpy and pyworld. The shopkeeper's clips measure as high (about 250 Hz): `tools/vo_deepen.py Shopkeeper` would do the same for him. For a line with no clip, the device's voice takes a man's voice for a man's part from any language it has before a woman's (js/voice.js).
+
 - Format **.MP3** (the studio's files are 24 kHz, mono, 128 kbps); Text Column `text`, Filename Column `filename`, Start Row 1, Quantity = the number of rows, Concurrency **3 (Recommended)**. The download, **DOWNLOAD ALL (.ZIP)**, is `voiceovers_batch.zip`, holding `voiceovers/<filename>.mp3`.
 - Clip ids `vo001`, `vo002` … are numbered in the order a player first hears the lines (each question's wrong answer first, then the right one); `python3 tools/vo_build.py --renumber` keeps them so after lines are added or removed (see below).
 

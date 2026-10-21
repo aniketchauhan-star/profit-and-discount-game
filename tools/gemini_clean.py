@@ -3,7 +3,8 @@
 with the clip's story pictures from "Animation Video Prompts.md". It also runs on its own:
 
   python3 tools/gemini_clean.py SOURCE DEST --picture PICTURE [--end-picture PICTURE] [--trim FROM-TO] [--pingpong]
-                                [--cover X0,Y0,X1,Y1@FROM-TO ...] [--keep-camera]
+                                [--cover X0,Y0,X1,Y1@FROM-TO ...] [--keep-camera] [--framing ZOOM,DX,DY]
+                                [--star-from DX,DY]
 
 What it does to the clip:
   * The framing. Gemini shows the story picture about 2% closer than it is, and in some takes the camera keeps pushing
@@ -20,9 +21,16 @@ What it does to the clip:
   * --keep-camera: for a clip whose camera move is wanted (the camera moving in on the price tags, say). Its framing
     is left as Gemini made it; the camera is followed frame by frame, so that the sparkle is still covered with the
     spot of the picture that lies under it.
-  * The result is written like the game's other clips (H.264, no sound), at the clip's own size and frame rate:
-    Gemini's clips are 1280 x 720, and making them bigger would only make the files heavier (the game stretches every
-    clip to the screen). It is marked as sRGB, as Gemini marks it and as the pictures are: so marked, the browser shows
+  * --framing ZOOM,DX,DY: where to start looking for the picture in the clip (as the log prints it), for a take framed
+    further off than Gemini's usual 2% (outgoing.mp4, Screens 20-21, sits 15 px higher: 1.0226,0.6,-15). Without it,
+    only the zoom is searched widely, so a take that is also shifted is lined up wrongly, and its sparkle covered
+    with the wrong spot of the picture.
+  * --star-from DX,DY: the sparkle covered with the clip's own pixels from DX,DY away (on a 1280 x 720 frame), for a
+    take that drew the spot under it differently from the picture (outgoing.mp4: -70,0, the floor and the glass's base
+    just left of it; nothing passes over it).
+  * The result is written like the game's other clips (H.264, no sound), at the clip's own size and frame rate
+    (Gemini's clips are 1280 x 720; tools/enhance_clips.py then makes them 1920 x 1080: sharpened, as
+    tools/make_videos.py --import --gemini does by itself, or redrawn by Real-ESRGAN with --ai). It is marked as sRGB, as Gemini marks it and as the pictures are: so marked, the browser shows
     it in exactly the picture's colours (marked BT.709, or not marked, it shows a little lighter).
 
 A movement clip (one picture turning into the next, --end-picture) fills its border from its first picture, then from
@@ -174,7 +182,8 @@ def cover_box(out, pic, box, weight, u):
     out[Y0:Y1, X0:X1] = (pw + near) * m + win * (1 - m)
 
 
-def clean(src, dest, picture, end_picture=None, trim=None, pingpong=False, covers=(), keep_camera=False, log=print):
+def clean(src, dest, picture, end_picture=None, trim=None, pingpong=False, covers=(), keep_camera=False, log=print,
+          start=None, star_from=None):
     w, h, rate, fps, space = probe(src)
     u = w / 1280
     frames = read_frames(src, w, h, space)
@@ -185,9 +194,10 @@ def clean(src, dest, picture, end_picture=None, trim=None, pingpong=False, cover
     pics = [Image.open(p).convert('RGB') for p in filter(None, (picture, end_picture))]
     big = [np.asarray(p.resize((w, h), Image.LANCZOS), dtype=np.float32) for p in pics]
 
-    # The framing: measured on the first frame; through the clip as well if the last frame's differs.
+    # The framing: measured on the first frame (from `start`, if given); through the clip as well if the last frame's
+    # differs.
     framing = Framing(pics[0], w, h)
-    first = framing.fit(framing.small(frames[0]), framing.whole, (ZOOM, 0.0, 0.0), wide=True)
+    first = framing.fit(framing.small(frames[0]), framing.whole, start or (ZOOM, 0.0, 0.0), wide=not start)
     last = framing.fit(framing.small(frames[-1]), framing.edge, first[1:]) if not end_picture else first
     moving = abs(last[1] - first[1]) > 0.004 or abs(last[2] - first[2]) > 2 * u or abs(last[3] - first[3]) > 2 * u
     camera = None
@@ -260,7 +270,7 @@ def clean(src, dest, picture, end_picture=None, trim=None, pingpong=False, cover
             band[1::2, :] = False
             near = np.median(out[band] - pic[band], 0)
             out = out * wgt[..., None] + (pic + near) * (1 - wgt[..., None])
-        # The sparkle, covered with the picture.
+        # The sparkle, covered with the picture (or with the clip's own pixels beside it: star_from).
         cx, cy, r = (sx - w / 2 - dx) / s + w / 2, (sy - h / 2 - dy) / s + h / 2, sr / s
         box = (int(cx - 2.6 * r), int(cy - 2.6 * r), int(cx + 2.6 * r), int(cy + 2.6 * r))
         key = (box, round(cx, 1), round(cy, 1), round(r, 1))
@@ -269,9 +279,14 @@ def clean(src, dest, picture, end_picture=None, trim=None, pingpong=False, cover
             cache[key] = star_mask(cx, cy, r, box, u)
         soft, ring = cache[key]
         x0, y0, x1, y1 = box
-        win, pw = out[y0:y1, x0:x1], pic[y0:y1, x0:x1]
-        g, o = fit_colour(pw[ring], win[ring])
-        out[y0:y1, x0:x1] = (pw * np.clip(g, 0.7, 1.3) + o) * soft + win * (1 - soft)
+        win = out[y0:y1, x0:x1]
+        if star_from:
+            fx, fy = round(star_from[0] * u), round(star_from[1] * u)
+            out[y0:y1, x0:x1] = out[y0 + fy:y1 + fy, x0 + fx:x1 + fx] * soft + win * (1 - soft)
+        else:
+            pw = pic[y0:y1, x0:x1]
+            g, o = fit_colour(pw[ring], win[ring])
+            out[y0:y1, x0:x1] = (pw * np.clip(g, 0.7, 1.3) + o) * soft + win * (1 - soft)
         # Anything else to cover (in the clip's own pixels, at the clip's own times), fading in and out over 3 frames.
         for (bx0, by0, bx1, by1), t0, t1 in covers:
             f = skip + i
@@ -297,14 +312,19 @@ def main():
     ap.add_argument('--pingpong', action='store_true', help='forwards, then backwards (for a quiet loop)')
     ap.add_argument('--cover', action='append', default=[], help='X0,Y0,X1,Y1@FROM-TO: a box to cover with the picture, then')
     ap.add_argument('--keep-camera', action='store_true', help="keep Gemini's framing and camera move")
+    ap.add_argument('--framing', help='ZOOM,DX,DY: where to start looking for the picture in the clip')
+    ap.add_argument('--star-from', help="DX,DY: cover the sparkle with the clip's own pixels from this far away")
     a = ap.parse_args()
     trim = tuple(map(float, a.trim.split('-'))) if a.trim else None
+    start = tuple(map(float, a.framing.split(','))) if a.framing else None
+    star_from = tuple(map(float, a.star_from.split(','))) if a.star_from else None
     covers = []
     for c in a.cover:
         box, _, when = c.partition('@')
         covers.append((tuple(map(float, box.split(','))), *map(float, when.split('-'))))
     print(f'{Path(a.source).name} → {Path(a.dest).name}')
-    seconds = clean(a.source, a.dest, a.picture, a.end_picture, trim, a.pingpong, covers, a.keep_camera)
+    seconds = clean(a.source, a.dest, a.picture, a.end_picture, trim, a.pingpong, covers, a.keep_camera, start=start,
+                    star_from=star_from)
     print(f'  {seconds:.1f} s, {Path(a.dest).stat().st_size / 1e6:.1f} MB')
 
 
