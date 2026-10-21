@@ -4644,7 +4644,7 @@
       if (scene.ask) { // or Aniket's question, carried from the story, on top
         scene.askEl = el('div', 'scene-ask', scene.el);
         el('small', '', scene.askEl).textContent = scene.ask.who;
-        el('span', 'ask-text', scene.askEl).textContent = `“${scene.ask.text}”`;
+        el('span', 'ask-text', scene.askEl).textContent = scene.ask.text; // (no quote marks round it)
       }
       scene.ui = el('div', 'scene-ui', scene.el);           // on-screen things (the question card) that stay put
     });

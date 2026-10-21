@@ -3562,7 +3562,7 @@ kbd {
   border-radius: 4px;
   background: var(--teal);
 }
-.scene-ask { /* Aniket's question, carried from the story (screens 16, 26–34): a quote, with who asks it */
+.scene-ask { /* Aniket's question, carried from the story (screens 16, 26–34): his words, with who asks it */
   top: 106px;
   font-size: 46px;
   font-weight: 700;
