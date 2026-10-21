@@ -138,7 +138,7 @@
       play: playTitle,
     },
     {
-      id: 'home', title: 'Talking to Dad', sub: '“Dad, I want to buy a book and a new pair of sneakers…”',
+      id: 'home', title: 'Talking to Dad', sub: 'Dad, I want to buy a book and a new pair of sneakers…',
       bg: ASSETS + 'starting boy talking with father.png',
       kb: { origin: '50% 28%', from: 'scale(1.02)', to: 'scale(1.05) translate(-4px, 3px)' }, // a slow drift, both faces in view
       lamps: [[288, 360, 320]],    // the daylight through the open door
@@ -174,7 +174,7 @@
       play: playSee,
     },
     {
-      id: 'browse', title: 'An Interesting Book', sub: '“This book looks interesting!”',
+      id: 'browse', title: 'An Interesting Book', sub: 'This book looks interesting!',
       bg: ASSETS + 'aniket hold the book scene.png',
       kb: { origin: '54% 40%', from: 'scale(1.02)', to: 'scale(1.08)' },
       lamps: [[1065, 140, 300], [1570, 116, 300]],
@@ -184,7 +184,7 @@
       play: playBrowse,
     },
     {
-      id: 'ask', title: 'How Much?', sub: '“How much is this book?”',
+      id: 'ask', title: 'How Much?', sub: 'How much is this book?',
       bg: ASSETS + 'aniket give a book to shopkepper.png',
       kb: { origin: '50% 38%', from: 'scale(1.02)', to: 'scale(1.065) translate(-6px, 0)' },
       lamps: [[1472, 106, 330]],
@@ -222,7 +222,7 @@
       play: playLook,
     },
     {
-      id: 'shock', title: 'What Is This?', sub: '“₹1000? What is this?”',
+      id: 'shock', title: 'What Is This?', sub: '₹1000? What is this?',
       bg: ASSETS + 'shocked aniket.png',
       kb: { origin: '55% 80%', from: 'scale(1.02)', to: 'scale(1.065)' },
       lamps: [[1292, 128, 300]],
@@ -268,7 +268,7 @@
       play: playReveal,
     },
     {
-      id: 'discount', title: 'What Is a Discount?', sub: '“Discount? What does that mean?”',
+      id: 'discount', title: 'What Is a Discount?', sub: 'Discount? What does that mean?',
       bg: ASSETS + 'aniket give a book to shopkepper.png',
       react: PUZZLED, // fades in over the picture when he hears "discount" (see playDiscount)
       kb: { origin: '50% 46%', from: 'scale(1.02)', to: 'scale(1.065) translate(-6px, 0)' },
@@ -329,7 +329,7 @@
       play: playLeave,
     },
     {
-      id: 'sneakers', title: 'The Shoe Shop', sub: '“These sneakers look good!”',
+      id: 'sneakers', title: 'The Shoe Shop', sub: 'These sneakers look good!',
       bg: ASSETS + 'he saw a shoe.png', // Aniket at the stand, pointing at the sneakers: the picture his clips start on
       kb: { origin: '63% 66%', from: 'scale(1.02)', to: 'scale(1.07)' }, // eases in towards the price tags
       lamps: [[1740, 160, 260], [1740, 370, 260], [120, 60, 180]], // shelf lights, a ceiling light
@@ -356,7 +356,7 @@
       play: playDiscountTag,
     },
     {
-      id: 'confused', title: 'What Does 30% Mean?', sub: '“With 30% off, how much do I actually pay?”',
+      id: 'confused', title: 'What Does 30% Mean?', sub: 'With 30% off, how much do I actually pay?',
       bg: ASSETS + 'he is tinking to see the shoes.png',
       kb: { origin: '63% 66%', from: 'scale(1.02)', to: 'scale(1.07)' }, // as on screens 23–24
       lamps: [[1740, 160, 260], [1740, 370, 260], [120, 60, 180]],
@@ -373,7 +373,7 @@
       play: playOffMeans,
     },
     {
-      id: 'recall', title: 'Recall Percentages', sub: '“Let’s first recall how percentages work.”',
+      id: 'recall', title: 'Recall Percentages', sub: 'Let’s first recall how percentages work.',
       snap: ASSETS + 'he is tinking to see the shoes.png', snapFocus: [1300, 640, 2], ask: SNEAKER_ASK, swifty: true,
       sheet: 'panel', still: true, kb: null, origin: '50% 50%', lamps: [], dust: null,
       setup: setupGuide,
@@ -408,7 +408,7 @@
       play: playCheckpoint,
     },
     {
-      id: 'sneakerq', title: 'Back to the Sneakers', sub: '“Now, what is 30% of ₹1800?”',
+      id: 'sneakerq', title: 'Back to the Sneakers', sub: 'Now, what is 30% of ₹1800?',
       snap: ASSETS + 'he is tinking to see the shoes.png', snapFocus: [1300, 640, 2], ask: SNEAKER_ASK, swifty: true,
       sheet: 'panel', still: true, kb: null, origin: '50% 50%', lamps: [], dust: null,
       setup: setupGuide,
@@ -436,7 +436,7 @@
       play: playToPay,
     },
     {
-      id: 'final', title: 'Final Answer', sub: '“After a 30% discount, I will pay ₹1260.”',
+      id: 'final', title: 'Final Answer', sub: 'After a 30% discount, I will pay ₹1260.',
       bg: ASSETS + 'he saw a shoe.png', // the same view as screens 23–34: Aniket pointing at the tags
       kb: { origin: '63% 66%', from: 'scale(1.02)', to: 'scale(1.07)' },
       lamps: [[1740, 160, 260], [1740, 370, 260], [120, 60, 180]],
@@ -481,7 +481,7 @@
       play: playCheckpoint,
     },
     {
-      id: 'return', title: 'Back Home', sub: '“How was your shopping?”',
+      id: 'return', title: 'Back Home', sub: 'How was your shopping?',
       bg: ASSETS + 'boy return home .png',
       kb: { origin: '50% 30%', from: 'scale(1.02)', to: 'scale(1.05) translate(4px, 3px)' }, // a slow drift, both faces in view
       lamps: [[1030, 250, 300]],   // the daylight through the far window
@@ -489,7 +489,7 @@
       play: playReturn,
     },
     {
-      id: 'school', title: 'School Starts Soon', sub: '“Your new school session starts in a few days.”',
+      id: 'school', title: 'School Starts Soon', sub: 'Your new school session starts in a few days.',
       bg: ASSETS + 'boy and his father talking.png',
       kb: { origin: '60% 32%', from: 'scale(1.02)', to: 'scale(1.05) translate(-4px, 3px)' }, // a slow drift, both faces in view
       lamps: [[1062, 240, 260]],   // the daylight through the far doorway
@@ -505,7 +505,7 @@
       play: playList,
     },
     {
-      id: 'money', title: '₹5,000 to Spend', sub: '“Here’s ₹5,000.”',
+      id: 'money', title: '₹5,000 to Spend', sub: 'Here’s ₹5,000.',
       bg: ASSETS + 'father gave him money.png',
       kb: KB_TABLE, lamps: [[1856, 250, 300]], dust: [1100, 60, 1900, 640],
       shot: 'table', // the same view as screen 44, so the fade there only changes Aniket's hands
@@ -519,7 +519,7 @@
       play: playPocket,
     },
     {
-      id: 'deal', title: 'Find the Best Deals', sub: '“Then I’m definitely finding the best offers!”',
+      id: 'deal', title: 'Find the Best Deals', sub: 'Then I’m definitely finding the best offers!',
       bg: ASSETS + 'boy stand and talk .png',
       kb: { origin: '52% 30%', from: 'scale(1.02)', to: 'scale(1.05) translate(4px, 3px)' }, // a slow drift, both faces in view
       lamps: [[1520, 300, 300]],   // the sunny window behind Aniket
@@ -574,7 +574,7 @@
       play: playTwoAmounts,
     },
     {
-      id: 'homeagain', title: 'Back Home', sub: '“Did you get everything?”',
+      id: 'homeagain', title: 'Back Home', sub: 'Did you get everything?',
       bg: ASSETS + 'return home shopping list .png', // Aniket home with his shopping bag, his father at the table
       kb: { origin: '52% 30%', from: 'scale(1.02)', to: 'scale(1.05) translate(4px, 3px)' },
       lamps: [[1020, 270, 240]],   // the sunny window in the room behind them
@@ -3335,7 +3335,7 @@
     again: 'Check how much\nyou will actually pay.',
     percent: ['Find the discount first,', 'then subtract it from the marked price.'], // in two parts: one line of the bar each
     flat: 'Subtract the discount\nfrom the marked price.',
-    getat: '“Get at” tells you\nthe price you pay.',
+    getat: 'Get at tells you\nthe price you pay.',
     compare: 'Compare the final prices,\nnot just the discount\npercentages.',
     lowest: 'Buy where the Selling Price\nis the lowest.',
   };

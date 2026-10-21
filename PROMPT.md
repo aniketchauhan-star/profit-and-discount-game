@@ -537,7 +537,7 @@ After the story, the learner **plays**. Aniket has ₹5,000 and the school shopp
 - **Numbers:** 10%, 20%, 25% and 50% (30% only when the price makes it easy); marked prices in round amounts (₹500, ₹800, ₹1,000, ₹1,500, ₹1,600, ₹1,800, ₹2,000 …); never awkward numbers such as 17%, 18%, 35% or ₹1,349. The arithmetic is never the challenge: the challenge is **understand the offer → calculate the final price → compare → make the best buying decision**.
 - **Wrong answers** on an offer:
   1. The first wrong pick **shakes, turns red and is crossed out**, and Swifty says **"Check how much you will actually pay."**
-  2. The second is crossed out too, and Swifty gives **a hint about how**: for a percentage off, **"Find the discount first, then subtract it from the marked price."** (said in two halves, one bar line each); for an amount off, **"Subtract the discount from the marked price."**; for "get at" a price, **"“Get at” tells you the price you pay."**
+  2. The second is crossed out too, and Swifty gives **a hint about how**: for a percentage off, **"Find the discount first, then subtract it from the marked price."** (said in two halves, one bar line each); for an amount off, **"Subtract the discount from the marked price."**; for "get at" a price, **"Get at tells you the price you pay."**
   3. The **one answer left glows** (attention on the calculation) and the learner picks it to carry on.
   (A wrong shop when buying works the same way: see *Choosing where to buy*.)
   There is no losing: every item is bought at its best shop, so the totals always come out as below.
