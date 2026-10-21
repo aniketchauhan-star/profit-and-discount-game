@@ -3584,12 +3584,11 @@ kbd {
   border-radius: 4px;
   background: var(--teal);
 }
-.scene-ask { /* Aniket's question, carried from the story (screens 16, 26–34): his words, with who asks it */
-  top: 106px;
+.scene-ask { /* Aniket's question, carried from the story (screens 16, 25–33): his words, where they were under the "Aniket asks" label (taken out) */
+  top: 141px;
   font-size: 46px;
   font-weight: 700;
 }
-.scene-ask small { display: block; margin-bottom: 6px; color: var(--teal); font-size: 26px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; }
 .scene-ask .ask-answer { margin-left: 18px; color: var(--ok); font-weight: 800; }
 .scene-sheet--snap { box-shadow: none; } /* screen 8's panel comes in under the picture (game.js: snapUp) */
 /* The content: under the title, right of the snapshot (x 576–1824); on a screen where Swifty comes, clear of her
@@ -4062,6 +4061,21 @@ kbd {
 .is-v2 .pqp-panel { grid-template-columns: auto; }
 .is-v2 :is(.pqp-question, .pf-question) { font-size: 50px; }
 .is-v2 .pqp-answers { min-width: 0; min-height: 0; }
+/* Screens whose content uses more of the panel (game.js `fill`; the user's "remove the negative space", 2026-10-21,
+   tried on 16 and 31 first): the brief's largest text size (56) and bigger boxes, in all the room beside the photo */
+.is-v2.is-fill .mp-def.dd-card { width: 1120px; margin: 0; }
+.is-v2.is-fill .dd-card .mp-def-head { padding: 40px 64px 18px; font-size: 56px; }
+.is-v2.is-fill .mp-def-text.dd-text {
+  padding: 22px 64px 44px;
+  background-image: repeating-linear-gradient(to bottom, transparent 0 84px, var(--grid) 84px 86px, transparent 86px 88px);
+  font-size: 56px;
+  line-height: 88px;
+}
+.is-v2.is-fill .pqp-question { padding: 22px 56px 28px; font-size: 56px; }
+.is-v2.is-fill .pqp-side { gap: 48px; }
+.is-v2.is-fill .pqp-answers .pq-choices--stack { gap: 30px; min-width: 420px; }
+.is-v2.is-fill .pqp-answers .pq-choices--stack .pq-opt { height: 124px; font-size: 56px; }
+.is-v2.is-fill .pq-opt .q-chip { width: 84px; height: 84px; font-size: 44px; }
 /* Screen 27: the sneakers' card, sized to the room left of Swifty */
 .is-v2 .pc-photo { width: 640px; height: 280px; }
 /* Screen 34: the working, sized to the room left of Swifty */

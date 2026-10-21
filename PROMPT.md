@@ -24,7 +24,7 @@ A short animated **story game** for kids that runs in a web browser. It asks a f
   - **Swifty's bubbles** sit above her head, inside the panel (between stage x 1380 and 1848), their point straight down at her.
 - **Never an empty box:** a card, sheet, strip or box appears only with its first words: e.g. a worked sheet comes in with its first line, a checkpoint with its title, the Discount card with its heading, the sneakers card with their photo, the price card on Screen 14 with ₹1000 on it.
 - **Teaching screens** (8 after its answer, 11–13, 16–19, 26–34, 37–39 and the two new checkpoints) are on **one big cream panel that fills the screen** (a faint dot grid, rounded corners, a thin deep-teal border), with nothing behind it. Every one is laid out the same way (the brief's rule 5):
-  - **On top**, the screen's **title** (52 px, a short teal rule above it), or **Aniket's question**, carried from the story in his own words with who asks it, with no quote marks round it: "ANIKET WONDERS · Discount? What does that mean?" on Screen 16, and "ANIKET ASKS · With 30% off, how much do I actually pay?" on Screens 26–34, until Screen 34 answers it ("→ ₹1260 ✓" in green after it).
+  - **On top**, the screen's **title** (52 px, a short teal rule above it), or **Aniket's question**, carried from the story in his own words, with no quote marks round it and no label over it (no "Aniket asks": taken out on 2026-10-21): "Discount? What does that mean?" on Screen 16, and "With 30% off, how much do I actually pay?" on Screens 26–34, until Screen 34 answers it ("→ ₹1260 ✓" in green after it).
   - **On the left**, **the story picture it came from, as a small framed photo** (424 × 239 at stage x 96, y 228; a white 8 px frame, round corners, a soft shadow), **zoomed on what matters**: the book and its ₹1000 sticker (11–13), Aniket's puzzled face (16–18), the sneakers with their ₹1800 and 30% OFF tags (26–34, 37 and 38: the "small sneakers card" that keeps in view what all this maths is for).
   - **In the middle**, the content, big (stage x 576–1824; x 576–1340 on a screen where Swifty comes), in one of **five layouts**: **Concept** (11, 13, 26, 27: the new word or number, on a taped note, and one line of meaning), **Definition** (12, 16: a lined index card), **Worked example** (17, 18, 28, 29, 32, the working on 34, 37, 38: the working on graph paper, the answer circled in red pen), **Question** (8, 30, 31, 33, the start of 34: the question on its strip, the answers stacked under it) and **Summary / checkpoint** (19, 39 and the two new ones: cards and one formula on a sticky note).
   - **On the right**, **Swifty's corner**, only on a screen where she comes: she rises in from the bottom edge **standing on her three books** (red, blue, yellow), and goes back down with them when her part is done. On a screen without her, the content uses that room.
@@ -245,8 +245,9 @@ Cut both bird sheets the same way. Line up the flying frames on her body centre 
 
 ### Screen 16 — Discount definition
 (The answer to Aniket's question; the **Definition** layout.)
-- The puzzled picture **zooms in on Aniket's face and shrinks into the small photo**; **his thought, "Discount? What does that mean?", lifts out of where his cloud was and settles on top of the panel as its heading** ("ANIKET WONDERS" over it). The definition answers it below.
-- A **lined index card springs up** with its heading **Discount** (red), and **Swifty rises in on her books** (she introduces the new idea) and points at it.
+- The puzzled picture **zooms in on Aniket's face and shrinks into the small photo**; **his thought, "Discount? What does that mean?", lifts out of where his cloud was and settles on top of the panel as its heading**. The definition answers it below.
+- A **lined index card springs up** with its heading **Discount** (red); her voice introduces the new idea (she has no bubble here, so she doesn't come, and no corner is kept for her).
+- **The card uses the panel** (2026-10-21, tried here and on Screen 31 first, for the user's "remove the negative space"): 1120 px wide, in the middle of all the room beside the photo, its heading and words at 56 px (the brief's largest size).
 - The definition appears **word by word** while she reads it out (no bubble: the card is the text she reads):
   **"The reduction given on the marked price of an item is called a discount."**
   (Its lines follow the storyboard: "The reduction given on the / marked price of an item / is called a **discount.**")
@@ -322,7 +323,7 @@ Cut both bird sheets the same way. Line up the flying frames on her body centre 
 
 ### Screen 26 — What 30% OFF Means
 (The **Concept** layout.)
-- The shop **zooms in on the sneakers and their two tags, then shrinks into the small photo** on the left as the panel comes in round it. On top: **ANIKET ASKS** "**With 30% off, how much do I actually pay?**" (it stays on top until Screen 34 answers it).
+- The shop **zooms in on the sneakers and their two tags, then shrinks into the small photo** on the left as the panel comes in round it. On top, Aniket's question: "**With 30% off, how much do I actually pay?**" (it stays on top until Screen 34 answers it).
 - A gold ring lights up round the 30% OFF tag in the photo, and **the tag lifts off the stand and flies onto the panel**, where the red **30% OFF** tag ("30%" over "OFF", white letters) **lands like a stamp**.
 - **Swifty rises in on her books** (she introduces the new idea), waves, then points at it, and **reads it out** (no bubble: it is all written on the panel), in two parts: **"30% OFF means"** → the tag lights up, then **"means"** rises in beside it and **an arrow draws itself** under the word, pointing right. **"30% Discount."** → a **white card springs up** on the right of the arrow, line for line with the tag: **"30%"** over **"Discount"** ("Discount" in red, the discount's colour since Screens 14–15), lighting up as she says it.
 - About 3 seconds later it **dissolves into Screen 27**.
@@ -383,6 +384,7 @@ Cut both bird sheets the same way. Line up the flying frames on her body centre 
 ### Screen 31 — Back to the Sneakers
 (The **Question** layout.)
 - **The topic starts with Checkpoint 2's note:** **Percentage = Part ÷ Whole × 100** comes out of the notebook button and settles under the photo ("REMEMBER" over it).
+- **The question and its answers use the panel** (2026-10-21, tried here and on Screen 16 first): the question at 56 px, the answers 124 px tall at 56 px (at least 420 px wide), with more room between them.
 - **Swifty rises in on her books** (she asks the question), and the question springs up big, with the whole panel to itself (the sneakers are in the photo): **"Now, what is 30% of ₹1800?"**, and under it three big answers **stacked**: **A ₹360**, **B ₹540**, **C ₹720**.
 - She reads the question out (no bubble); as she says it, **the 30% OFF tag and then the ₹1800 tag light up in the photo**.
 - **Right (B ₹540):** green tick, chime, sparkles. Her bubble: **"Correct! 30% of ₹1800 is ₹540."**

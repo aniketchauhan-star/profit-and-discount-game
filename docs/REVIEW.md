@@ -35,7 +35,7 @@ The brief is `Bookstore Journey - Revamp Brief.docx` ("Changes for Screens 1–4
 | 18 | No Swifty | Done. |
 | 19 | Checkpoint 1 | Done. |
 | 20 | "D = MP − SP" on the picture | Done ("Discount = MP − SP", the checkpoint's own note). |
-| 22–25 | One movement; tags sharp; the question to the top on 26 until 34 | The question: done ("ANIKET ASKS", answered "→ ₹1260 ✓" on 34). The shoe shop is all video: on 22 Aniket points at the sneakers and talks (the picture his clips start on, instead of walking in), on 23 the camera moves in on the ₹1800 and 30% OFF tags, then his thinking loops on 24 and 25 and his two lines on 25. Not done: the movement from 24 to 25 (to make on Higgsfield, which takes an end frame). |
+| 22–25 | One movement; tags sharp; the question to the top on 26 until 34 | The question: done (answered "→ ₹1260 ✓" on 34; the "Aniket asks" label over it was taken out). The shoe shop is all video: on 22 Aniket points at the sneakers and talks (the picture his clips start on, instead of walking in), on 23 the camera moves in on the ₹1800 and 30% OFF tags, then his thinking loops on 24 and 25 and his two lines on 25. Not done: the movement from 24 to 25 (to make on Higgsfield, which takes an end frame). |
 | 26 | Photo; the tag flies; Swifty stays | Done. |
 | 27 | Checkpoint 1's card first; the bubble kept; a small sneakers card in a corner until 30 | Done. The "sneakers card" is the photo itself, zoomed on the sneakers and both tags, on every screen 26–34 (and 37–38). |
 | 28–29 | No Swifty, words lit as said; new Part / Whole colours; one question strip colour; 10 × 10 grid | Done (the grid on 29). |
@@ -82,7 +82,7 @@ The brief is `Bookstore Journey - Revamp Brief.docx` ("Changes for Screens 1–4
 |---|---|
 | Screen 2: still, or a little movement? | Kept still. |
 | Animation: AI-made video, or hand-made / rigged only? | Nothing made until it is decided (see *Still to do*). |
-| Which tablets and browsers? A size limit? | Not known. Bubble text is about 18 px on a 1024 px-wide tablet (small labels, such as "ANIKET ASKS", are 12–15 px there). The voice clips are Ogg Opus, and the device's voice reads them where that can't play (older Safari). The game is about 2 MB of voice plus the pictures. |
+| Which tablets and browsers? A size limit? | Not known. Bubble text is about 18 px on a 1024 px-wide tablet (small labels, such as "REMEMBER", are 12–15 px there). The voice clips are Ogg Opus, and the device's voice reads them where that can't play (older Safari). The game is about 2 MB of voice plus the pictures. |
 | When Swifty isn't needed: remove her, or keep her small and quiet? | Removed: she and her books rise in when needed and go back down after. |
 | Typing letter by letter, or the whole line with each word lit? | The whole line, each word lit (the brief's suggestion). Still to test with a few children. |
 | Bar models and 10 × 10 grids: does the content team agree? | Added (17, 29, 30, 32, 34) for the content team to check. |

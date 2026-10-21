@@ -113,8 +113,8 @@
 
   // Aniket's questions, carried from the story to the top of the teaching screens that answer them (the revamp, Part 2:
   // screen 16, and 26–34, where 34 answers it).
-  const DISCOUNT_ASK = { who: 'Aniket wonders', text: 'Discount? What does that mean?' };
-  const SNEAKER_ASK = { who: 'Aniket asks', text: 'With 30% off, how much do I actually pay?' };
+  const DISCOUNT_ASK = { text: 'Discount? What does that mean?' };
+  const SNEAKER_ASK = { text: 'With 30% off, how much do I actually pay?' };
 
   // Camera for screens with a card on the right (the question, the reduction): both characters
   // stay in view on the left. QUIZ_DRIFT is where its slow drift goes.
@@ -283,7 +283,7 @@
     },
     {
       id: 'discount-def', title: 'Discount Definition', sub: 'The reduction on the marked price',
-      snap: PUZZLED, snapFocus: [900, 520, 1.25], ask: DISCOUNT_ASK, swifty: true,
+      snap: PUZZLED, snapFocus: [900, 520, 1.25], ask: DISCOUNT_ASK, fill: true, // (Swifty has no bubble here: no corner kept for her)
       sheet: 'panel', still: true, kb: null, origin: '50% 50%', lamps: [], dust: null,
       play: playDiscountDef,
     },
@@ -401,7 +401,7 @@
     },
     {
       id: 'sneakerq', title: 'Back to the Sneakers', sub: 'Now, what is 30% of ₹1800?',
-      snap: ASSETS + 'he is tinking to see the shoes.png', snapFocus: [1300, 640, 2], ask: SNEAKER_ASK, swifty: true,
+      snap: ASSETS + 'he is tinking to see the shoes.png', snapFocus: [1300, 640, 2], ask: SNEAKER_ASK, swifty: true, fill: true,
       sheet: 'panel', still: true, kb: null, origin: '50% 50%', lamps: [], dust: null,
       setup: setupGuide,
       play: playSneakerQuestion,
@@ -4581,6 +4581,7 @@
       if (BAR_SCREENS.has(scene.id)) scene.el.classList.add('has-bar'); // Swifty speaks from the question bar
       // She comes on this screen: her corner is kept (also on screen 8, whose panel slides up over the picture).
       if (scene.v2 && scene.swifty) scene.el.classList.add('has-swifty');
+      if (scene.fill) scene.el.classList.add('is-fill'); // its content uses more of the panel (css: .is-fill)
       if (scene.sheet === 'panel') el('div', 'sheet-panel', scene.world); // one big panel filling the screen (Swifty's books come with her: see standFor)
       [scene.bg, scene.react].filter(Boolean).forEach((src, i) => { // the picture, and a reaction to fade in over it
         const img = el('img', (scene.backdrop ? 'scene-bg scene-bg--feather' : 'scene-bg') + (i ? ' scene-react' : ''), scene.world);
@@ -4606,8 +4607,7 @@
       if (scene.head) el('h2', 'scene-head', scene.el).textContent = scene.head; // the screen's title, on top
       if (scene.ask) { // or Aniket's question, carried from the story, on top
         scene.askEl = el('div', 'scene-ask', scene.el);
-        el('small', '', scene.askEl).textContent = scene.ask.who;
-        el('span', 'ask-text', scene.askEl).textContent = scene.ask.text; // (no quote marks round it)
+        el('span', 'ask-text', scene.askEl).textContent = scene.ask.text; // (no quote marks round it, and no "Aniket asks" over it)
       }
       scene.ui = el('div', 'scene-ui', scene.el);           // on-screen things (the question card) that stay put
     });
