@@ -3,7 +3,7 @@
 with the clip's story pictures from "Animation Video Prompts.md". It also runs on its own:
 
   python3 tools/gemini_clean.py SOURCE DEST --picture PICTURE [--end-picture PICTURE] [--trim FROM-TO] [--pingpong]
-                                [--cover X0,Y0,X1,Y1@FROM-TO ...]
+                                [--cover X0,Y0,X1,Y1@FROM-TO ...] [--keep-camera]
 
 What it does to the clip:
   * The framing. Gemini shows the story picture about 2% closer than it is, and in some takes the camera keeps pushing
@@ -17,6 +17,9 @@ What it does to the clip:
     wanders off its picture comes back to it, so it loops without a jump.
   * --cover X0,Y0,X1,Y1@FROM-TO: something else Gemini drew where only the picture's background is (a caption, say),
     covered the way the sparkle is, in that box (the clip's own pixels) during that time (seconds, before any trim).
+  * --keep-camera: for a clip whose camera move is wanted (the camera moving in on the price tags, say). Its framing
+    is left as Gemini made it; the camera is followed frame by frame, so that the sparkle is still covered with the
+    spot of the picture that lies under it.
   * The result is written like the game's other clips (H.264, no sound), at the clip's own size and frame rate:
     Gemini's clips are 1280 x 720, and making them bigger would only make the files heavier (the game stretches every
     clip to the screen). It is marked as sRGB, as Gemini marks it and as the pictures are: so marked, the browser shows
@@ -104,12 +107,12 @@ class Framing:
         e = np.abs(a * g + o - b).mean(1)
         return float(np.sort(e)[: int(len(e) * 0.7)].mean())               # the people moving don't count
 
-    def fit(self, f, mask, guess, wide=False):
+    def fit(self, f, mask, guess, wide=False, steps=((0.003, 3.0, 2), (0.001, 1.0, 2), (0.0004, 0.4, 1))):
         s0, x0, y0 = guess
         if wide:  # first, the zoom alone, over a wide range
             s0 = min(np.arange(0.97, 1.10, 0.004), key=lambda s: self.error(f, mask, s, 0, 0))
         best = (self.error(f, mask, s0, x0, y0), s0, x0, y0)
-        for ds, dd, n in ((0.003, 3.0, 2), (0.001, 1.0, 2), (0.0004, 0.4, 1)):
+        for ds, dd, n in steps:
             _, s0, x0, y0 = best
             for s in s0 + ds * np.arange(-n, n + 1):
                 for dx in x0 + dd * np.arange(-n, n + 1):
@@ -118,6 +121,21 @@ class Framing:
                         if e < best[0]:
                             best = (e, s, dx, dy)
         return best
+
+
+def follow_camera(framing, frames, first):
+    """Where the picture sits in every frame of a clip whose camera moves on purpose: fitted on every other frame,
+    each guess carried on from the two before it, and filled in between."""
+    n = len(frames)
+    at = list(range(0, n, 2)) + ([n - 1] if (n - 1) % 2 else [])
+    found = [np.array(first[1:])]
+    for i in at[1:]:
+        guess = 2 * found[-1] - found[-2] if len(found) > 1 else found[-1]
+        r = framing.fit(framing.small(frames[i]), framing.edge, tuple(guess),
+                        steps=((0.004, 3.0, 3), (0.001, 1.0, 2), (0.0004, 0.4, 1)))
+        found.append(np.array(r[1:]))
+    found = np.array(found)
+    return np.stack([np.interp(np.arange(n), at, found[:, k]) for k in range(3)], 1)
 
 
 def star_mask(cx, cy, r, box, u):
@@ -156,7 +174,7 @@ def cover_box(out, pic, box, weight, u):
     out[Y0:Y1, X0:X1] = (pw + near) * m + win * (1 - m)
 
 
-def clean(src, dest, picture, end_picture=None, trim=None, pingpong=False, covers=(), log=print):
+def clean(src, dest, picture, end_picture=None, trim=None, pingpong=False, covers=(), keep_camera=False, log=print):
     w, h, rate, fps, space = probe(src)
     u = w / 1280
     frames = read_frames(src, w, h, space)
@@ -172,7 +190,12 @@ def clean(src, dest, picture, end_picture=None, trim=None, pingpong=False, cover
     first = framing.fit(framing.small(frames[0]), framing.whole, (ZOOM, 0.0, 0.0), wide=True)
     last = framing.fit(framing.small(frames[-1]), framing.edge, first[1:]) if not end_picture else first
     moving = abs(last[1] - first[1]) > 0.004 or abs(last[2] - first[2]) > 2 * u or abs(last[3] - first[3]) > 2 * u
-    if moving:
+    camera = None
+    if keep_camera:
+        moving = False
+        camera = follow_camera(framing, frames, first)
+        log(f'  the camera, followed: zoom {camera[0, 0]:.3f} → {camera[-1, 0]:.3f}, '
+            f'shift {camera[-1, 1]:+.0f},{camera[-1, 2]:+.0f} px at the end')
         at = list(range(0, n, 6)) + ([n - 1] if (n - 1) % 6 else [])
         found, guess = [], first[1:]
         for i in at:
@@ -186,7 +209,8 @@ def clean(src, dest, picture, end_picture=None, trim=None, pingpong=False, cover
     else:
         geo = np.tile(np.array(first[1:]), (n, 1))
     log(f'  framing: zoom {first[1]:.4f}, shift {first[2]:+.1f},{first[3]:+.1f} px (fit {first[0]:.1f})'
-        + (f'; the camera moves, to zoom {geo[-1, 0]:.4f}, shift {geo[-1, 1]:+.1f},{geo[-1, 2]:+.1f} px' if moving else ''))
+        + (f'; the camera moves, to zoom {geo[-1, 0]:.4f}, shift {geo[-1, 1]:+.1f},{geo[-1, 2]:+.1f} px' if moving else '')
+        + ('; kept as it is (--keep-camera)' if keep_camera else ''))
 
     # The colours: if the first frame's are off the picture's, by the same in every part of it, that is taken off.
     s, dx, dy = geo[0]
@@ -212,10 +236,16 @@ def clean(src, dest, picture, end_picture=None, trim=None, pingpong=False, cover
     sx, sy, sr = STAR[0] * w, STAR[1] * h, STAR[2] * w
     cache = {}
     for i in order:
-        s, dx, dy = geo[i]
-        out = np.asarray(Image.fromarray(frames[i]).transform((w, h), Image.AFFINE, frame_coeffs(w, h, s, dx, dy),
-                                                              Image.BICUBIC), dtype=np.float32) + offset
-        if end_picture:  # the border, from the first picture, then the last
+        s, dx, dy = (1.0, 0.0, 0.0) if keep_camera else geo[i]
+        if keep_camera:
+            out = frames[i].astype(np.float32) + offset
+        else:
+            out = np.asarray(Image.fromarray(frames[i]).transform((w, h), Image.AFFINE, frame_coeffs(w, h, s, dx, dy),
+                                                                  Image.BICUBIC), dtype=np.float32) + offset
+        if camera is not None:  # the picture, where the moving camera has it in this frame
+            pic = np.asarray(pics[0].transform((w, h), Image.AFFINE, picture_coeffs(w, w, h, *pics[0].size, *camera[i]),
+                                               Image.BICUBIC), dtype=np.float32)
+        elif end_picture:  # the border, from the first picture, then the last
             t = np.clip((i / max(1, n - 1) - 0.25) / 0.5, 0, 1)
             pic = big[0] + (big[1] - big[0]) * (t * t * (3 - 2 * t))
         else:
@@ -225,7 +255,7 @@ def clean(src, dest, picture, end_picture=None, trim=None, pingpong=False, cover
         lo_y, hi_y = h / 2 - (h / 2 + dy) / s, h / 2 + (h / 2 - dy) / s
         m, fe = 2 * u, 11 * u
         wgt = np.outer(ramp(h, lo_y, hi_y, m, fe), ramp(w, lo_x, hi_x, m, fe))
-        if wgt.min() < 1:
+        if wgt.min() < 1 and not keep_camera:
             band = (wgt == 1) & ~(np.outer(ramp(h, lo_y, hi_y, m + 32 * u, fe), ramp(w, lo_x, hi_x, m + 32 * u, fe)) == 1)
             band[1::2, :] = False
             near = np.median(out[band] - pic[band], 0)
@@ -266,6 +296,7 @@ def main():
     ap.add_argument('--trim', help='FROM-TO, in seconds: keep only that part')
     ap.add_argument('--pingpong', action='store_true', help='forwards, then backwards (for a quiet loop)')
     ap.add_argument('--cover', action='append', default=[], help='X0,Y0,X1,Y1@FROM-TO: a box to cover with the picture, then')
+    ap.add_argument('--keep-camera', action='store_true', help="keep Gemini's framing and camera move")
     a = ap.parse_args()
     trim = tuple(map(float, a.trim.split('-'))) if a.trim else None
     covers = []
@@ -273,7 +304,7 @@ def main():
         box, _, when = c.partition('@')
         covers.append((tuple(map(float, box.split(','))), *map(float, when.split('-'))))
     print(f'{Path(a.source).name} → {Path(a.dest).name}')
-    seconds = clean(a.source, a.dest, a.picture, a.end_picture, trim, a.pingpong, covers)
+    seconds = clean(a.source, a.dest, a.picture, a.end_picture, trim, a.pingpong, covers, a.keep_camera)
     print(f'  {seconds:.1f} s, {Path(a.dest).stat().st_size / 1e6:.1f} MB')
 
 

@@ -101,7 +101,7 @@
     browse: [[630, 79, 903, 352], [888, 382, 1161, 639]],                                 // Aniket's head, the book
     ask: [[530, 164, 773, 406], [742, 482, 939, 694], [1288, 164, 1515, 406]],            // Aniket, the book, the shopkeeper
     shock: [[STICKER.shock.x - 106, STICKER.shock.y - 106, STICKER.shock.x + 106, STICKER.shock.y + 106], [1509, 133, 1812, 406]],
-    sneakers: [[348, 64, 576, 321], [1121, 427, 1485, 579], [1167, 518, 1379, 685]],     // Aniket, the sneakers, their tags
+    sneakers: [[436, 73, 664, 345], [1045, 446, 1540, 648], [1088, 679, 1406, 800]],     // Aniket, the sneakers and ₹1800, 30% OFF
     confused: [[342, 79, 600, 382], [1248, 558, 1444, 710], [1116, 701, 1452, 855]],     // Aniket, the ₹1800 tag, 30% OFF
     final: [[436, 73, 664, 345], [1224, 558, 1406, 648], [1088, 679, 1406, 800]],        // Aniket, the two tags
     return: [[373, 73, 600, 315], [1327, 194, 1600, 436]],                                // Aniket, his father
@@ -330,11 +330,11 @@
     },
     {
       id: 'sneakers', title: 'The Shoe Shop', sub: '“These sneakers look good!”',
-      bg: ASSETS + 'shoes shop enter.png',
-      kb: { origin: '68% 48%', from: 'scale(1.02)', to: 'scale(1.07) translate(-10px, 0)' }, // eases in towards the sneakers
-      lamps: [[1700, 180, 260], [1700, 380, 260], [175, 60, 200], [765, 66, 200]], // shelf lights, the mall's ceiling lights
+      bg: ASSETS + 'he saw a shoe.png', // Aniket at the stand, pointing at the sneakers: the picture his clips start on
+      kb: { origin: '63% 66%', from: 'scale(1.02)', to: 'scale(1.07)' }, // eases in towards the price tags
+      lamps: [[1740, 160, 260], [1740, 370, 260], [120, 60, 180]], // shelf lights, a ceiling light
       dust: [600, 40, 1900, 720],
-      exit: 'zoom', zoomOrigin: '66% 56%', // 22 → 23: the camera pushes in on the sneakers while fading
+      shot: 'point', // the same view as screen 23, so the change there is a plain dissolve
       play: playSneakers,
     },
     {
@@ -343,7 +343,7 @@
       kb: { origin: '63% 66%', from: 'scale(1.02)', to: 'scale(1.07)' }, // eases in towards the price tags
       lamps: [[1740, 160, 260], [1740, 370, 260], [120, 60, 180]], // shelf lights, a ceiling light
       dust: [600, 40, 1900, 720],
-      shot: 'stand', // the same view as screen 24, so the fade there only changes Aniket
+      shot: 'point', // the same view as screen 22; its clip then moves in on the tags
       play: playShoe,
     },
     {
@@ -2030,22 +2030,23 @@
     return note;
   }
 
-  // The blue sneakers on the stand in the shoe shop (stage px), for the light sweeping across them.
-  const SNEAKERS = [[1130, 525], [1205, 468], [1290, 446], [1462, 452], [1482, 545], [1470, 578], [1138, 572]];
-  const OFF_LABEL = { x: 1278, y: 636, w: 230, h: 104, round: 18 }; // the red 30% OFF label on the stand (stage px)
+  // The blue sneakers on the stand in the shoe shop, as Aniket points at them (stage px), for the light sweeping
+  // across them.
+  const SNEAKERS = [[1045, 600], [1070, 545], [1150, 500], [1230, 462], [1330, 470], [1400, 448], [1505, 452], [1540, 520],
+    [1540, 610], [1450, 640], [1150, 645], [1050, 630]];
 
-  // A new find: Aniket walks into a shoe shop in the mall, and a pair of blue sneakers on the stand catches
-  // his eye.
+  // A new find: in a shoe shop in the mall, a pair of blue sneakers on the stand catches Aniket's eye, and he points
+  // at them.
   async function playSneakers(ctx, scene) {
     const L = scene.layer;
-    FX.glow(L, 1305, 520, 460, 280, { cls: 'glow--book', delay: 0 });
+    FX.glow(L, 1290, 548, 560, 260, { cls: 'glow--book', delay: 0 });
     await ctx.wait(700);
     FX.shine(L, SNEAKERS, { duration: 1100, width: 160 });
     Sound.sparkle();
     await ctx.wait(800);
-    // Aniket's lines, one bubble at a time, in the space beside his face (the tail at his mouth).
+    // Aniket's lines, one bubble at a time, right of his face, above the sneakers (the tail at his mouth), as on 35.
     const say = async (text, id) => {
-      const line = FX.bubble(L, { anchor: [652, 248], corner: 'bl', tip: [606, 280], text, voice: 'boy', rotate: -1.5 });
+      const line = FX.bubble(L, { anchor: FINAL_LINE.anchor, corner: 'bl', tip: FINAL_LINE.tip, text, voice: 'boy', rotate: -1.5 });
       await line.show();
       await speak(ctx, line, id, 'boy');
       return line;
@@ -2055,7 +2056,7 @@
     await line.hide();
     await ctx.wait(250);
     // Then he notices the red 30% OFF label on the stand: it lights up as he asks about it.
-    FX.ring(L, OFF_LABEL);
+    FX.ring(L, OFF_TAG);
     Sound.sparkle();
     line = await say([{ t: 'What does ' }, { t: '30% OFF', em: true }, { t: '\nmean here?' }], 'sneakers-off');
     line.emphasize();
@@ -2067,8 +2068,14 @@
     ctx.advance(3000); // then a closer look
   }
 
-  // Nothing to say here: Aniket comes up to the stand and points at the sneakers' ₹1800 price tag.
+  // Nothing to say here: Aniket points at the sneakers, and the camera moves in on their ₹1800 price tag (the clip,
+  // s23-zoom); the screen waits for it to get there.
   async function playShoe(ctx) {
+    if (Clips.has('s23-zoom')) {
+      await ctx.wait(5000, { real: true });
+      ctx.advance(2000);
+      return;
+    }
     await ctx.wait(600);
     ctx.advance(2600);
   }
@@ -3637,9 +3644,7 @@
   }
 
   // Back home: Aniket comes in with his shopping bag and talks with his father, who sits at the table with his tea and
-  // the newspaper, one bubble at a time between them; when Aniket says "Yes!", the four things he bought pop up on the
-  // table, in front of the runner.
-  const HOME_ITEMS = [['uniform', 1425, 985, 140], ['shoes', 1560, 990, 96], ['bag', 1695, 995, 140], ['bottle', 1810, 1000, 138]]; // id, centre x, bottom, height
+  // the newspaper, one bubble at a time between them.
   async function playHomeAgain(ctx, scene) {
     const DAD = { anchor: [1300, 330], corner: 'br', tip: [1348, 398] };        // up-left of his head, the tail at his mouth
     const BOY = { anchor: [700, 255], corner: 'bl', tip: [620, 292] };          // up-right of his face, the tail at his mouth
@@ -3649,30 +3654,9 @@
       await line.hide();
       await ctx.wait(250);
     };
-    const items = HOME_ITEMS.map(([id, x, bottom, h]) => {
-      const img = Object.assign(el('img', 'home-item', scene.layer), { src: SHOPS.find(s => s.id === id).icon, alt: '', draggable: false });
-      Object.assign(img.style, { left: x + 'px', top: bottom - h + 'px', height: h + 'px', opacity: '0' });
-      return img;
-    });
     await ctx.wait(700);
     await say(Object.assign({ text: 'Did you get\neverything?' }, DAD), 'end-everything', 'dad');
-    const yes = sayOnPicture(ctx, scene, Object.assign({ text: 'Yes!' }, BOY), 'end-yes', 'boy');
-    yes.catch(() => {});
-    for (const img of items) { // the four things, on the table
-      await ctx.wait(220);
-      Sound.pop();
-      FX.reveal(img, [
-        { opacity: 0, transform: 'translate(-50%, 40px) scale(.5)' },
-        { opacity: 1, transform: 'translate(-50%, -10px) scale(1.06)', offset: 0.6 },
-        { opacity: 1, transform: 'translate(-50%, 0)' },
-      ], { duration: 520, easing: 'cubic-bezier(.2,.8,.3,1)' });
-    }
-    Sound.sparkle();
-    FX.twinkles(scene.layer, [[1370, 860], [1500, 900], [1630, 850], [1860, 860]]);
-    const line = await yes;
-    await ctx.wait(900);
-    await line.hide();
-    await ctx.wait(250);
+    await say(Object.assign({ text: 'Yes!' }, BOY), 'end-yes', 'boy');
     await say(Object.assign({ text: 'How much did\nyou spend?' }, DAD), 'end-spend', 'dad');
     await say(Object.assign({ text: rupees(TOTAL.pay) + '.' }, BOY), 'end-spent', 'boy');
     await say(Object.assign({ text: 'So you still have\n' + rupees(BUDGET - TOTAL.pay) + ' left!' }, DAD), 'end-left', 'dad');
@@ -3843,11 +3827,12 @@
       lines: { 'reveal-1': ['s14-shopkeeper-1', 's06-shopkeeper'], 'reveal-2': ['s14-shopkeeper-2', 's06-shopkeeper'], 'reveal-3': ['s14-shopkeeper-3', 's06-shopkeeper'] },
     },
     discount: { idle: 's06-idle', react: 's14-to-s15', after: 's15-idle' },
-    sneakers: { lines: { sneakers: 's22-aniket-1', 'sneakers-off': 's22-aniket-2', 'sneakers-discount': 's22-aniket-3' } },
-    shoe: { idle: 's23-idle' },
+    // (The shoe shop is all clips: Screen 22 and 35 share Aniket pointing (s23-idle) and his talking clips.)
+    sneakers: { idle: 's23-idle', lines: { sneakers: 's22-aniket-1', 'sneakers-off': 's22-aniket-2', 'sneakers-discount': 's22-aniket-3' } },
+    shoe: { idle: 's23-zoom', once: true },
     tag: { idle: 's24-idle' },
-    confused: { lines: { 'shoe-price': 's25-aniket-1', 'shoe-ask': 's25-aniket-2' } },
-    final: { lines: { 'final-1': 's35-aniket', 'final-2': 's35-aniket-2' } },
+    confused: { idle: 's25-idle', lines: { 'shoe-price': 's25-aniket-1', 'shoe-ask': 's25-aniket-2' } },
+    final: { idle: 's23-idle', lines: { 'final-1': 's22-aniket-1', 'final-2': 's22-aniket-3' } },
     boxed: { idle: 's36-box', once: true },
     return: { idle: 's40-idle', hold: true, lines: { 'home-ask': 's40-father-1', 'home-learnt': 's40-aniket', 'home-next': 's40-father-2' } },
     school: { idle: 's41-idle', lines: { 'school-soon': 's41-father-1', 'school-need': ['s41-father-2', 's41-father-1'] } },
@@ -3867,8 +3852,8 @@
   };
   // The movement clips, going forward from one screen to the next ("from>to").
   const CLIP_MOVES = {
-    'see>browse': 's04-to-s05', 'ask>pay': 's06-to-s07', 'look>shock': 's09-to-s10', 'sneakers>shoe': 's22-to-s23',
-    'shoe>tag': 's23-to-s24', 'tag>confused': 's24-to-s25', 'list>money': 's42-to-s43', 'money>pocket': 's43-to-s44',
+    'see>browse': 's04-to-s05', 'ask>pay': 's06-to-s07', 'look>shock': 's09-to-s10', 'tag>confused': 's24-to-s25',
+    'list>money': 's42-to-s43', 'money>pocket': 's43-to-s44',
   };
 
   const Clips = {

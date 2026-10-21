@@ -41,17 +41,8 @@ LOG = ROOT / 'tools' / 'video_log.jsonl'
 INDEX = ROOT / 'js' / 'video_clips.js'
 TODO = ROOT / 'Animation Video Prompts - Left to Make.md'
 # A clip to make again, and why (its first take didn't fit).
-_POINTING = ('Make it again, starting on "shoes shop enter.png": the first take started on "he saw a shoe.png" (Aniket '
-             'pointing), the wrong picture for Screen 22. (That take is in the game on Screen 35 instead.)')
 REDO = {
     's06-to-s07': "Make it again: the first take started on Screen 7's picture, so the book was never handed over.",
-    's22-aniket-1': _POINTING,
-    's22-aniket-2': _POINTING.replace(' (That take is in the game on Screen 35 instead.)', ''),
-    's22-aniket-3': _POINTING,
-    's22-to-s23': 'Make it again on Higgsfield, with both frames: the Gemini take started on the wrong picture and zoomed '
-                  'in on the sneakers.',
-    's23-to-s24': 'Make it again on Higgsfield, with both frames: in the Gemini take his hand ended at his side, not at '
-                  'his chin.',
     's24-to-s25': 'Make it again on Higgsfield, with both frames: in the Gemini take he crossed his arms instead.',
 }
 API = 'https://api.higgsfield.ai'

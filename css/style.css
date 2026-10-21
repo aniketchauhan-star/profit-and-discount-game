@@ -3356,8 +3356,6 @@ kbd {
 .ta-sum { margin-top: auto; padding: 8px 22px 2px; border-radius: 14px; background: rgba(255, 255, 255, .8); color: #1c2a4f; font-size: 32px; font-weight: 800; white-space: nowrap; }
 
 /* Back home: the four new things on the table */
-.home-item { position: absolute; transform: translateX(-50%); filter: drop-shadow(0 12px 8px rgba(70, 40, 15, .35)); }
-
 /* The mission's result */
 .ms-card {
   position: absolute;
