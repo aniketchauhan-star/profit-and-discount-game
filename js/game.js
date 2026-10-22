@@ -81,6 +81,9 @@
   // on her left and her speech bubbles above her head (kept between CORNER.bubbles). She stays there from
   // one screen to the next.
   const CORNER = { x: 1725, y: 910, s: 0.8, bubbles: [1380, 1848] }; // both feet on the top book; her bubbles stay on the panel's paper, clear of its edge
+  // On the shoe shop's picture with only the stand sharp (screens 23–27, standFocus), her bubbles keep clear of the
+  // sneakers (with the ₹1800 tag on them) and the 30% OFF tag (the user, 2026-10-22: her bubble was over the shoes).
+  const STAND_CLEAR = [[1036, 452, 1618, 692], [1124, 711, 1442, 844]];
 
   // The review's new look, tried first on screens 8–19 (`v2: true`; css: .is-v2): calmer dialogue boxes and panels, fewer
   // colours, and on a teaching screen the story picture it came from stays in view as a framed snapshot in the top-left
@@ -346,6 +349,7 @@
       kb: null, origin: '50% 50%', still: true,
       lamps: [[1740, 160, 260], [1740, 370, 260], [120, 60, 180]], dust: null,
       setup: standFocus, // (as 24–27: the sneakers and their tags sharp, the panel on the left: the user, 2026-10-22)
+      cornerClear: STAND_CLEAR, // (her bubbles keep clear of the sneakers and their tags)
       play: playCheck,
     },
     {
@@ -355,6 +359,7 @@
       kb: null, origin: '50% 50%', still: true,
       lamps: [[1740, 160, 260], [1740, 370, 260], [120, 60, 180]], dust: null,
       setup: standFocus, // (blurred but the sneakers and their tags, from the first frame)
+      cornerClear: STAND_CLEAR, // (her bubbles keep clear of the sneakers and their tags)
       play: playSneakerQuestion,
     },
     {
@@ -372,6 +377,7 @@
       kb: null, origin: '50% 50%', still: true,
       lamps: [[1740, 160, 260], [1740, 370, 260], [120, 60, 180]], dust: null,
       setup: standFocus, // (blurred but the sneakers and their tags, from the first frame)
+      cornerClear: STAND_CLEAR, // (her bubbles keep clear of the sneakers and their tags)
       play: playRepresent,
     },
     {
@@ -381,6 +387,7 @@
       kb: null, origin: '50% 50%', still: true,
       lamps: [[1740, 160, 260], [1740, 370, 260], [120, 60, 180]], dust: null,
       setup: standFocus, // (blurred but the sneakers and their tags, from the first frame)
+      cornerClear: STAND_CLEAR, // (her bubbles keep clear of the sneakers and their tags)
       play: playToPay,
     },
     {
@@ -1972,7 +1979,8 @@
       [bird.root, bird.stand].forEach(n => { n.style.visibility = 'hidden'; });
       scene.bird = bird;
     }
-    return swiftyTalk(ctx, scene.ui, bird, b => Object.assign(overHead(b, CORNER.bubbles), size ? { size } : {}));
+    return swiftyTalk(ctx, scene.ui, bird, b => Object.assign(overHead(b, CORNER.bubbles), size ? { size } : {},
+      scene.cornerClear ? { avoid: scene.cornerClear } : {}));
   }
 
   // She and her books rise in from the bottom edge and settle (for a bubble)…
