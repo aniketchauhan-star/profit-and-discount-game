@@ -2,7 +2,7 @@
 
 The brief is `Bookstore Journey - Revamp Brief.docx` ("Changes for Screens 1–46"), with the text spreadsheet `Bookstore Journey - All Text (Screens 1-46).xlsx`. This file says what was done for each of its points, what was decided where the brief left a question open, and what is still to do. `PROMPT.md` describes the game as it is now, screen by screen.
 
-**Screen numbers** here are the brief's. Screens 2, 4, 9, 24, 26 and 44 and the checkpoints on percentages and on the price after a discount were taken out on 2026-10-21 (the still screens at the user's request, the rest at the review meeting: `docs/MEETING-2026-10-21.md`), so the game has 53 screens: the brief's 1, 3, 5–8, 10–23, 25, 27–30, 31–35, 36–43 and 45–59 are the game's 1, 2, 3–6, 7–20, 21, 22–25, 26–30, 31–38 and 39–53.
+**Screen numbers** here are the brief's. Screens 2, 4, 9, 24, 26 and 44 and the checkpoints on percentages and on the price after a discount were taken out on 2026-10-21 (the still screens at the user's request, the rest at the review meeting: `docs/MEETING-2026-10-21.md`), and Screens 13 and 16 on 2026-10-22 (16's definition is on Screen 15 now), so the game has 51 screens: the brief's 1, 3, 5–8, 10–12, 14–15, 17–23, 25, 27–30, 31–35, 36–43 and 45–59 are the game's 1, 2, 3–6, 7–9, 10–11, 12–18, 19, 20–23, 24–28, 29–36 and 37–51.
 
 ## Part 1: rules for every screen
 
@@ -65,7 +65,7 @@ The brief is `Bookstore Journey - Revamp Brief.docx` ("Changes for Screens 1–4
 - **Every path, played:** every question answered right, then every question answered wrong first, plus wrong boxes in the drag and "Hear it again". The result is `Bookstore Journey - Lines for the language check.xlsx`, with screen, speaker, type, text, path, clip and the words that must not change.
 - **`Language Review Prompt.txt`:** the brief says it is in this folder, but it wasn't, so it was written: fill in the grade first.
 - **Next, for the team:** run it through ChatGPT, have the content team check every suggestion, change only what is needed, record all changed lines in one batch, run `vo_build.py --check`, and play the whole game again.
-- **The spreadsheet's other suggestions** ("Should change" and "Optional") are not made yet: they wait for the content team, as the brief says. For example: "article" → "item", "₹200 reduced" → "₹200 off", "We can write it in short." → "Let's write it in short.", "30% Discount." → "a 30% discount.", "1000 is the whole." → "and 1000 is the whole.", and Screen 8's full question.
+- **The spreadsheet's other suggestions** ("Should change" and "Optional") are not made yet (except "We can write it in short." → "Let’s write it in short.", made at the user's word on 2026-10-22): they wait for the content team, as the brief says. For example: "article" → "item", "₹200 reduced" → "₹200 off", "30% Discount." → "a 30% discount.", "1000 is the whole." → "and 1000 is the whole.", and Screen 8's full question.
 
 ## Small fixes
 

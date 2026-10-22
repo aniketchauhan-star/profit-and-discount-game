@@ -86,14 +86,12 @@
   // colours, and on a teaching screen the story picture it came from stays in view as a framed snapshot in the top-left
   // corner (SNAP; `snap`: that picture), with the screen's title beside it (`head`). Into such a screen the story picture
   // shrinks into the frame; out of it, the frame grows back into the next picture (see shrinkInto, growOut).
-  const SNAP = { x: 96, y: 116, w: 424, h: 239 }; // (top left, now that no title is over it)
+  const SNAP = { x: 96, y: 116, w: 600, h: 338 }; // (top left, now that no title is over it; big: the user, 2026-10-22)
   // Where a point of a story picture (stage px) is in its snapshot, zoomed on `focus` ([x, y, zoom]: see snapFocus).
   const inSnap = ({ x, y, r = 0 }, [fx, fy, z] = [STAGE_W / 2, STAGE_H / 2, 1]) => {
     const k = SNAP.w / STAGE_W;
     return { x: SNAP.x + fx * k + (x - fx) * k * z, y: SNAP.y + fy * k + (y - fy) * k * z, r: r * k * z };
   };
-  const SHOCK_FOCUS = [1000, 760, 1.8]; // screens 11–13: the snapshot of screen 10, zoomed on the book and its sticker
-  const SNAP_STICKER = inSnap(STICKER.shock, SHOCK_FOCUS); // the ₹1000 sticker, in that snapshot
 
   // Keep-clear areas on the story pictures (the revamp, rule 2): faces, prices, tags and the book, [left, top, right, bottom]
   // in the picture's px. A speech bubble on the picture moves around them (FX.bubble: avoid).
@@ -203,29 +201,23 @@
     },
     {
       id: 'mp', title: 'Marked Price', sub: '₹1000 is the price written on the book',
-      snap: ASSETS + 'shocked aniket.png', snapFocus: [1000, 760, 1.8], swifty: true,
-      sheet: 'panel', still: true, kb: null, origin: '50% 50%', lamps: [], dust: null,
-      setup: setupGuide,
+      // On the story picture (the user, 2026-10-22): the camera moves in on the book, everything blurs but its price tag,
+      // and Swifty comes in from the right to say what it is, on a panel (see setupMarked, playMarked).
+      bg: ASSETS + 'shocked aniket.png',
+      kb: null, origin: '55% 80%', still: true, // (the camera of screen 7, carried over: the same origin; no parallax)
+      lamps: [[1292, 128, 300]], dust: [150, 60, 1500, 760],
+      shot: 'cover',
+      setup: setupMarked,
       play: playMarked,
     },
     {
       id: 'mpdef', title: 'What Is Marked Price?', sub: 'The price printed on an article',
-      snap: ASSETS + 'shocked aniket.png', snapFocus: [1000, 760, 1.8],
-      sheet: 'panel', still: true, kb: null, origin: '50% 50%', lamps: [], dust: null,
-      setup: scene => setupPricePanel(scene, { definition: MP_DEFINITION }),
+      bg: ASSETS + 'shocked aniket.png', // (as screen 11: the same camera, blur and Swifty; the definition on the panel)
+      kb: null, origin: '55% 80%', still: true,
+      lamps: [[1292, 128, 300]], dust: [150, 60, 1500, 760],
+      shot: 'cover-tag',
+      setup: setupMpDef,
       play: playDefine,
-    },
-    {
-      id: 'compare', title: 'Compare MP and SP', sub: '₹1000 Marked Price, ₹800 Selling Price',
-      snap: ASSETS + 'shocked aniket.png', snapFocus: [1000, 760, 1.8], swifty: true,
-      sheet: 'panel', still: true, kb: null, origin: '50% 50%', lamps: [], dust: null,
-      setup: scene => setupPricePanel(scene, {
-        compare: {
-          top: { price: '₹1000', label: 'Marked Price', tone: 'yellow' },
-          bottom: { price: '₹800', label: 'Selling Price', tone: 'blue' },
-        },
-      }),
-      play: playCompare,
     },
     {
       id: 'reveal', title: 'You Got a ₹200 Discount', sub: 'The shopkeeper explains the reduction',
@@ -252,12 +244,6 @@
       play: playDiscount,
     },
     {
-      id: 'discount-def', title: 'Discount Definition', sub: 'The reduction on the marked price',
-      snap: PUZZLED, snapFocus: [651, 300, 2.4], // his puzzled face (no shopkeeper); Swifty has no bubble here: no corner kept for her
-      sheet: 'panel', still: true, kb: null, origin: '50% 50%', lamps: [], dust: null,
-      play: playDiscountDef,
-    },
-    {
       id: 'formula', title: 'The Discount Formula', sub: 'Marked Price − Selling Price = Discount',
       snap: PUZZLED, snapFocus: [900, 520, 1.25],
       sheet: 'panel', still: true, kb: null, origin: '50% 50%', lamps: [], dust: null,
@@ -268,7 +254,7 @@
       id: 'formula-reveal', title: 'Formula Reveal', sub: 'D = MP − SP',
       snap: PUZZLED, snapFocus: [900, 520, 1.25],
       sheet: 'panel', still: true, kb: null, origin: '50% 50%', lamps: [], dust: null,
-      setup: setupGuide,
+      setup: scene => scene.snapEl.getAnimations().forEach(a => a.cancel()), // (its photo back in the corner: see playFormulaReveal)
       play: playFormulaReveal,
     },
     {
@@ -337,23 +323,27 @@
     },
     {
       id: 'percentrule', title: 'Percentage Rule', sub: 'a is what percent of b?',
-      snap: ASSETS + 'he is tinking to see the shoes.png', snapFocus: [1300, 640, 2],
-      sheet: 'panel', still: true, kb: null, origin: '50% 50%', lamps: [], dust: null,
-      setup: setupGuide,
+      bg: ASSETS + 'he is tinking to see the shoes.png', // the shoe shop, the working on a small panel on it (practiceHost)
+      kb: null, origin: '50% 50%', still: true,
+      lamps: [[1740, 160, 260], [1740, 370, 260], [120, 60, 180]], dust: null,
+      setup: standFocus, // (blurred but the sneakers and their tags, from the first frame)
       play: playPercentRule,
     },
     {
       id: 'whatpercent', title: 'What Percent?', sub: '125 is what percent of 500?',
-      snap: ASSETS + 'he is tinking to see the shoes.png', snapFocus: [1300, 640, 2],
-      sheet: 'panel', still: true, kb: null, origin: '50% 50%', lamps: [], dust: null,
-      setup: setupGuide,
+      bg: ASSETS + 'he is tinking to see the shoes.png', // the shoe shop, the working on a small panel on it (practiceHost)
+      kb: null, origin: '50% 50%', still: true,
+      lamps: [[1740, 160, 260], [1740, 370, 260], [120, 60, 180]], dust: null,
+      setup: standFocus, // (blurred but the sneakers and their tags, from the first frame)
       play: playWhatPercent,
     },
     {
       id: 'check', title: 'Quick CFU', sub: '250 is what percent of 1000?',
-      snap: ASSETS + 'he is tinking to see the shoes.png', snapFocus: [1300, 640, 2], swifty: true,
-      sheet: 'panel', still: true, kb: null, origin: '50% 50%', lamps: [], dust: null,
-      setup: setupGuide,
+      swifty: true,
+      bg: ASSETS + 'he is tinking to see the shoes.png', // the shoe shop, the working on a small panel on it (practiceHost)
+      kb: null, origin: '50% 50%', still: true,
+      lamps: [[1740, 160, 260], [1740, 370, 260], [120, 60, 180]], dust: null,
+      setup: standFocus, // (blurred but the sneakers and their tags, from the first frame)
       play: playCheck,
     },
     {
@@ -938,9 +928,12 @@
     const showing = Clips.talk(SCENES[Game.index], id); // the speaker's talking clip, if this picture has one (see Clips)
     if (!showing) return Voice.say(id, text, who);
     // The voice starts as the clip comes on screen (at most 0.4 s later), so the lips move with the words from the start
-    // (the meeting of 2026-10-21: the movement came a little after the voice).
-    return Promise.race([showing, new Promise(r => setTimeout(r, 400))])
+    // (the meeting of 2026-10-21: the movement came a little after the voice). The line is done once the speaker is done
+    // in the clip too (the user, 2026-10-22: "no need to cut the video, play full video"): a natural pause, and the next
+    // line's clip never cuts this one short while its speaker still moves (see CLIP_REST).
+    const saying = Promise.race([showing, new Promise(r => setTimeout(r, 400))])
       .then(() => (ctx.alive() ? Voice.say(id, text, who) : Promise.reject(CANCELLED)));
+    return Promise.all([saying, showing.done]).then(([said]) => said);
   }
 
   async function speakPart(ctx, line, part, id, words, who, speaker) {
@@ -985,6 +978,13 @@
       // Types part `i` of the bubble while she says it; never quicker than `ms`.
       part(id, i, ms = 0) {
         return Promise.all([speakPart(ctx, line, i, id, line.parts[i], 'bird', bird), ctx.wait(ms)]);
+      },
+      // Her bubble goes; she stays (her voice reads on: see voice).
+      async hideLine() {
+        if (!line) return;
+        const old = line;
+        line = null;
+        await old.hide();
       },
       // Her bubble goes, and she goes with it (e.g. before her voice reads out something written on the screen).
       async clear() {
@@ -1061,17 +1061,24 @@
   const UNITS = ['.cn-note', '.cn-term', '.cn-meaning', '.cmp-box:not(.ws-box)', '.fm-book', '.fm-box', '.bm', '.fr-strip',
     '.fr-short', '.ck-say', '.ck-card', '.ck .f-note', '.def', '.mp-def', '.pf-question', '.pqp-question', '.pf-box',
     '.pf-sheet', '.ta-card', '.rk-card', '.tk-offer', '.qcard-back'].join(', ');
-  function dimOthers(nodes) {
+  let dimTurn = 0; // (a later line, or showAll, cancels a dimming still waiting)
+  function dimOthers(nodes, turn = ++dimTurn, tries = 16) {
     const scene = nodes.length ? nodes[0].closest('.scene') : null;
-    if (!scene) return;
+    if (!scene || turn !== dimTurn || !scene.classList.contains('is-active')) return;
     const focus = nodes.map(n => n.closest(UNITS)).filter(Boolean);
     if (!focus.length) return;
+    // only once what is being read is on the screen (e.g. a name that comes in as it is said): until then, nothing fades
+    if (!focus.some(f => parseFloat(getComputedStyle(f).opacity) > 0.5)) {
+      if (tries > 0) setTimeout(() => dimOthers(nodes, turn, tries - 1), 200);
+      return;
+    }
     scene.querySelectorAll(UNITS).forEach(u => {
       if (focus.some(f => f === u || f.contains(u) || u.contains(f))) u.classList.remove('is-dim');
       else if (u.style.opacity !== '0' && getComputedStyle(u).opacity !== '0') u.classList.add('is-dim');
     });
   }
   function showAll(scene) {
+    dimTurn++;
     scene.el.querySelectorAll('.is-dim').forEach(u => {
       u.classList.remove('is-dim');
       u.classList.add('is-undim'); // (it comes back softly)
@@ -1292,10 +1299,118 @@
     ctx.advance(NEXT_IN); // on by itself (no Next button of its own: see NEXT_IN)
   }
 
+  // The two definitions a wrong answer teaches: Cost Price, then Selling Price.
+  const CP_SP = scene => [
+    { title: 'Cost Price (CP)', tone: scene.v2 ? 'neutral' : 'blue', pictures: [ART.money, ART.book], text: 'Price at which an item is {bought}.', say: 'Cost Price. C P.' },
+    { title: 'Selling Price (SP)', tone: scene.v2 ? 'blue' : 'yellow', pictures: [ART.book, ART.money], text: 'Price at which an item is {sold}.', say: 'Selling Price. S P.' },
+  ];
+
+  // Lights the words of `marks` as `text` is said (see lightUp) and puts them out once it has been.
+  async function readLit(ctx, id, text, marks) {
+    const reading = lightUp(text, marks);
+    try {
+      await sayHere(ctx, id, text, 'bird');
+    } finally {
+      reading.timers.forEach(clearTimeout);
+      reading.cues.forEach(([, w]) => w.classList.remove('is-said'));
+      reading.lit.forEach(m => m.classList.remove('is-said'));
+    }
+  }
+
+  // A wrong answer in the revamp (the user, 2026-10-22): at once, Swifty pops up in the bottom-left corner of the picture
+  // to say "Not quite! The shopkeeper sold the book for ₹800.", and goes; then the picture blurs and dims behind, and the
+  // card makes way for a small panel with the Cost Price and Selling Price cards, read out one at a time. Then the picture
+  // clears, and a note over the money he hands over ties it to the story. 5 seconds later the story moves on.
+  const NOT_QUITE = { x: 220, y: 1066, s: 0.74 }; // her feet, at the picture's bottom-left edge
+  const ON_PANEL = { x: 220, y: 1040, s: 0.74 }; // …and on the panel, inside its edge
+  async function swiftyCorner(ctx, scene, id, text, { icon = null, at = NOT_QUITE } = {}) {
+    const { x, y, s } = at;
+    const bird = new FX.Bird(scene.ui, SWIFTY, { scale: s });
+    bird.place(x, y);
+    bird.root.classList.add('is-mirrored'); // (she points to her right, at her bubble)
+    bird.point();
+    const ms = reducedMotion ? 1 : 600;
+    Sound.chirp();
+    await FX.settle(bird.body.animate([{ transform: 'translateY(320px)' }, { transform: 'translateY(-8px)', offset: 0.75 }, { transform: 'none' }],
+      { duration: ms, easing: 'cubic-bezier(.2,.8,.3,1)' }));
+    const head = y - s * 300; // (level with her beak)
+    const line = FX.bubble(scene.ui, { anchor: [x + 176, head], corner: 'ml', tip: [x + 120, head + 6], text, icon, size: 46, voice: 'bird', within: [x + 176, 1500] });
+    await line.show();
+    try {
+      await speak(ctx, line, id, 'bird', bird);
+      bird.point();
+      await ctx.wait(700);
+      await line.hide();
+      await FX.settle(bird.body.animate([{ transform: 'none' }, { transform: 'translateY(320px)' }],
+        { duration: reducedMotion ? 1 : 450, easing: 'cubic-bezier(.5,0,.75,0)', fill: 'forwards' }));
+    } finally {
+      bird.root.remove();
+    }
+  }
+  async function answerWrongPop(ctx, scene, card) {
+    const ui = scene.ui;
+    card.lock();
+    await ctx.wait(700); // let the shake and buzz land first
+    Sound.duck(true);
+    // As soon as Cost Price is picked (the user, 2026-10-22), Swifty pops up in the bottom-left corner of the picture and
+    // says what happened here, and goes (vo007).
+    await swiftyCorner(ctx, scene, 'hint', [{ t: 'Not quite!' }, { t: '\nThe shopkeeper sold the book for ' }, { t: '₹800', em: true }, { t: '.' }], { icon: 'cross' });
+    // Then the picture blurs and dims, and the card makes way for the small panel; each card's name is read as it
+    // appears, then what it means.
+    const veil = el('div', 'pop-veil');
+    ui.insertBefore(veil, card.el);
+    void veil.offsetWidth; // (so it fades in)
+    veil.classList.add('is-on');
+    await ctx.wait(reducedMotion ? 60 : 500);
+    card.hide();
+    await ctx.wait(reducedMotion ? 60 : 380);
+    card.el.remove();
+    const items = CP_SP(scene);
+    const panel = el('div', 'pop-card pop-card--defs', ui);
+    const defs = FX.definitions(panel, { items });
+    FX.reveal(panel, [
+      { opacity: 0, transform: 'translateY(40px) scale(.92)' },
+      { opacity: 1, transform: 'translateY(-4px) scale(1.01)', offset: 0.7 },
+      { opacity: 1, transform: 'none' },
+    ], { duration: 600, easing: 'cubic-bezier(.2,.8,.3,1)' });
+    defs.open();
+    const part = (i, cls) => panel.querySelectorAll('.def')[i].querySelector(cls);
+    const titles = [];
+    await defs.fill(ctx, {
+      onTitle: i => { titles[i] = readLit(ctx, `def${i}-title`, items[i].say, [part(i, '.def-title')]); },
+      onText: i => titles[i].then(() => readLit(ctx, `def${i}-text`, items[i].text.replace(/[{}]/g, ''), [part(i, '.def-text')])),
+    });
+
+    await ctx.wait(900);
+
+    // Then the panel goes and the picture clears; what it means here comes on the picture, over the money he hands over
+    // (the user, 2026-10-22), the notes lit.
+    FX.settle(panel.animate([{ opacity: 1, transform: 'none' }, { opacity: 0, transform: 'translateY(24px) scale(.94)' }],
+      { duration: reducedMotion ? 1 : 420, easing: 'cubic-bezier(.5,0,.75,0)', fill: 'forwards' })).then(() => panel.remove());
+    veil.classList.remove('is-on');
+    scene.el.classList.remove('is-asking'); // (the right side no longer darkened for the card)
+    await ctx.wait(reducedMotion ? 60 : 700);
+    veil.remove();
+    const note = el('div', 'pic-note', scene.layer, { left: `${PAID_NOTE[0]}px`, top: `${PAID_NOTE[1]}px` });
+    [['Here, '], ['₹800', 'em'], [' is the shopkeeper’s '], ['selling price', 'stress'], ['.']]
+      .forEach(([t, cls]) => { el('span', cls || '', note).textContent = t; });
+    FX.glow(scene.layer, 978, 551, 420, 280, { cls: 'glow--money', delay: 0 });
+    FX.shine(scene.layer, MONEY, { duration: 900, width: 140 });
+    Sound.sparkle();
+    await FX.reveal(note, [{ opacity: 0, transform: 'translateY(16px) scale(.94)' }, { opacity: 1, transform: 'none' }],
+      { duration: 500, easing: 'cubic-bezier(.2,.8,.3,1)' });
+    await readLit(ctx, 'here', 'Here, ₹800 is the shopkeeper’s selling price.', [note]);
+    Sound.duck(false);
+    ctx.advance(NEXT_IN);
+  }
+  // (Where that note stands: its pointer just over the notes in his hand, between the two faces; picture px.)
+  const PAID_NOTE = [978, 468];
+
   // Wrong answer: the big panel slides up and the card comes to its middle; Swifty flies in to her stand and
   // gives a hint; then the card makes way for the Cost Price and Selling Price cards, which she reads out, and
   // she ties them back to the story. Then she flies off, and the story moves on (see the end).
   async function answerWrong(ctx, scene, card) {
+    if (scene.v2) return answerWrongPop(ctx, scene, card);
     const ui = scene.ui;
     card.lock();
     await ctx.wait(700); // let the shake and buzz land first
@@ -1314,10 +1429,7 @@
     // The card makes way for the definitions; her bubble goes, and she reads each card out (its words are on it).
     await talk.clear();
     bird.idle();
-    const items = [
-      { title: 'Cost Price (CP)', tone: scene.v2 ? 'neutral' : 'blue', pictures: [ART.money, ART.book], text: 'Price at which an item is {bought}.', say: 'Cost Price. C P.' },
-      { title: 'Selling Price (SP)', tone: scene.v2 ? 'blue' : 'yellow', pictures: [ART.book, ART.money], text: 'Price at which an item is {sold}.', say: 'Selling Price. S P.' },
-    ];
+    const items = CP_SP(scene);
     const defs = FX.definitions(ui, { items });
     const cardPart = (i, cls) => defs.el.querySelectorAll('.def')[i].querySelector(cls);
     const teach = (id, text, mark) => { // (the words on the card light up as they are said: see lightUp)
@@ -1378,33 +1490,123 @@
   // what the ₹1000 is, in her bubble; meanwhile the ₹1000 flies out of the sticker onto a taped note in the middle. Then
   // she says its name, with no bubble (it is written there: "Marked Price (MP)" comes in under the note as she says it),
   // and one line says what it means. She goes as the screen ends (screen 12 is read out without her).
+  // Screens 8 and 9 (the user, 2026-10-22: "focus on the image, then blur everything but the price tag, and Swifty comes
+  // from the right side and says it, in a panel"): the shocked picture, the camera on the book; everything blurs and dims
+  // but its ₹1000 sticker (a spotlight); Swifty slides in from the right on her books; and a panel in the middle says
+  // what it is (8: the ₹1000, Marked Price (MP), what it means; 9: the definition), read out by her.
+  // The sticker on screen: left of the middle, close enough that the picture still covers the whole screen (its right
+  // and bottom edges stay past the screen's), the panel and Swifty on its right. (The picture is drawn at twice the
+  // screen's size, so it stays sharp this close.)
+  const TAG_CAM = { face: [STICKER.shock.x, STICKER.shock.y], to: [470, 700], s: 2 };
+  function tagSpotlight(scene, cam, on) {
+    const [x, y] = cam.at([STICKER.shock.x, STICKER.shock.y]);
+    const spot = { x, y, r: STICKER.shock.r * TAG_CAM.s };
+    const veil = el('div', 'spot-veil');
+    [['--x', spot.x], ['--y', spot.y], ['--r', spot.r * 1.2]].forEach(([k, v]) => veil.style.setProperty(k, `${v}px`));
+    scene.ui.insertBefore(veil, scene.ui.firstChild); // (under the panel and Swifty: only the picture blurs)
+    if (on) veil.classList.add('is-on', 'is-instant');
+    return { veil, spot, on: () => veil.classList.add('is-on') };
+  }
+  // Swifty and her books slide in from the right edge (on): or are there already (carried over from the screen before).
+  async function swiftyFromRight(ctx, scene, already = false) {
+    const stand = standFor(scene);
+    const bird = new FX.Bird(scene.ui, SWIFTY, { scale: CORNER.s });
+    bird.place(CORNER.x, CORNER.y);
+    bird.shadowOn(true);
+    Object.assign(bird, { stand, here: true });
+    scene.bird = bird;
+    const talk = swiftyTalk(ctx, scene.ui, bird, b => overHead(b, CORNER.bubbles));
+    if (already) {
+      bird.point();
+      return talk;
+    }
+    const ms = reducedMotion ? 1 : 750;
+    const slide = d => [{ transform: `translateX(${d}px)`, opacity: 0 }, { transform: 'translateX(-10px)', opacity: 1, offset: 0.8 }, { transform: 'none', opacity: 1 }];
+    stand.animate(slide(420), { duration: ms, easing: 'cubic-bezier(.2,.8,.3,1)' });
+    bird.body.animate(slide(525), { duration: ms, easing: 'cubic-bezier(.2,.8,.3,1)' }); // (her body is drawn at 0.8)
+    Sound.chirp();
+    await ctx.wait(ms);
+    bird.wave();
+    return talk;
+  }
+  // The panel in the middle, between the sticker and Swifty.
+  function tagPanel(scene, cls = 'pop-card--tag') {
+    const card = el('div', `pop-card ${cls}`, scene.ui);
+    card.style.opacity = '0';
+    return {
+      card,
+      open: () => FX.reveal(card, [
+        { opacity: 0, transform: 'translateY(30px) scale(.92)' },
+        { opacity: 1, transform: 'translateY(-4px) scale(1.01)', offset: 0.7 },
+        { opacity: 1, transform: 'none' },
+      ], { duration: 600, easing: 'cubic-bezier(.2,.8,.3,1)' }),
+    };
+  }
+
+  function setupMarked(scene) {
+    // Coming from screen 7, the camera is where it was (it moves in on the book as the screen plays).
+    if (scene.startFrom && scene.startFrom !== 'none') scene.world.style.transform = scene.startFrom;
+    scene.panel = tagPanel(scene);
+    scene.concept = FX.concept(scene.panel.card, { value: '₹1000', term: 'Marked Price', abbr: '(MP)', meaning: 'The price written on an item.', tone: 'mp' });
+  }
+
   async function playMarked(ctx, scene) {
     const ui = scene.ui;
-    const c = FX.concept(ui, { value: '₹1000', term: 'Marked Price', abbr: '(MP)', meaning: 'The price written on an item.', tone: 'mp' });
-    await ctx.wait(300);
-    FX.ring(ui, { x: SNAP_STICKER.x, y: SNAP_STICKER.y, r: SNAP_STICKER.r * 1.15 }); // the sticker, in the snapshot
+    const c = scene.concept;
+    // The camera moves in on the book, then everything but its price tag blurs.
+    const cam = faceCamera(scene, TAG_CAM);
+    moveCamera(scene, cam.transform, reducedMotion ? 1 : 1500);
+    await ctx.wait(1600);
+    const light = tagSpotlight(scene, cam, false);
+    void light.veil.offsetWidth; // (so it fades in)
+    light.on();
+    FX.ring(ui, { x: light.spot.x, y: light.spot.y, r: light.spot.r * 1.05 });
     Sound.sparkle();
-    const talk = await cornerSwifty(ctx, scene); // she rises in on her books
-    await ctx.wait(200);
+    await ctx.wait(700);
+
+    // Swifty comes in from the right and says what the ₹1000 is; it lifts off the tag, and the panel springs up with it
+    // (never empty).
+    const talk = await swiftyFromRight(ctx, scene);
+    await ctx.wait(300);
     await talk.show([{ t: '₹1000', em: true }, { t: ' is the price written on the book.' }]);
     const saying = speak(ctx, talk.line, 'mp-line', 'bird', talk.bird);
     saying.catch(() => {}); // if the player leaves mid-line, the waits below report it
     await ctx.wait(900);
-    await flyFromSnap(ctx, scene, SNAP_STICKER, '₹1000', c.value); // the ₹1000 flies out of the sticker onto its note
+    await flyFromSnap(ctx, scene, light.spot, '₹1000', c.value);
+    scene.panel.open();
     c.showNote();
     await saying;
     await ctx.wait(700);
 
-    // Its name, as she says it (no bubble: it is written there), then what it means.
-    const naming = talk.read('mp-term', 'It is called the marked price (MP).', [c.term]); // (its words lit as they are said)
+    // Her bubble goes, and she goes with it, back out to the right (the user, 2026-10-22: she is there only with her
+    // bubble); then her voice says its name (it is written on the panel), and what it means comes in.
+    await swiftyAway(ctx, talk);
+    const reader = swiftyTalk(ctx, ui, null, null);
+    const naming = reader.voice('mp-term', 'It is called the marked price (MP).', [c.term]);
     naming.catch(() => {});
     await ctx.wait(1000);
     c.showTerm();
     await naming;
     await ctx.wait(300);
-    c.showMeaning();
+    c.showMeaning(); // (what she said in her bubble, in short)
     await ctx.wait(1200);
-    endWithSwifty(ctx, scene, talk); // then the definition
+    ctx.advance(NEXT_IN); // then the definition (her voice only)
+  }
+
+  // Swifty's bubble goes, and she and her books slide back out to the right (as she came: see swiftyFromRight).
+  async function swiftyAway(ctx, talk) {
+    const bird = talk.bird;
+    await talk.hideLine();
+    if (!bird || bird.gone) return;
+    const ms = reducedMotion ? 1 : 520;
+    bird.shadowOn(false); // (her shadow goes with her)
+    const out = d => [{ transform: 'none', opacity: 1 }, { transform: `translateX(${d}px)`, opacity: 0 }];
+    bird.stand.animate(out(420), { duration: ms, easing: 'cubic-bezier(.5,0,.75,0)', fill: 'forwards' });
+    bird.body.animate(out(525), { duration: ms, easing: 'cubic-bezier(.5,0,.75,0)', fill: 'forwards' });
+    await ctx.wait(ms);
+    bird.stand.remove();
+    bird.remove();
+    Object.assign(bird, { gone: true, here: false });
   }
 
   // Something on a story's snapshot (`spot`: its place there, see inSnap) flies onto the panel, landing on `to`: a copy of
@@ -1420,17 +1622,6 @@
     }
   }
 
-  // Screens 12 and 13 carry on from the price panel before them. Their setup runs before the cross-fade
-  // starts, so (coming from the screen before) the book and Swifty on her stand are already in place: only
-  // the right side visibly changes during the fade.
-  const PANEL_FLOW = ['mp', 'mpdef', 'compare'];
-
-  function setupPricePanel(scene, side) {
-    scene.mp = FX.pricePanel(scene.ui, Object.assign({ price: '₹1000', term: 'Marked Price', abbr: '(MP)', sheet: true, pin: scene.snap ? SNAP_STICKER : null }, side));
-    scene.carried = PANEL_FLOW.indexOf(scene.cameFrom) === PANEL_FLOW.indexOf(scene.id) - 1;
-    scene.mp.showNow(); // (the revamp: the panel has no frame, and the book is the snapshot: nothing to bring in)
-  }
-
   // The Marked Price definition (the revamp's Definition layout): on a lined index card in the middle, the snapshot beside
   // it. Swifty isn't here: her voice reads it on its own, the words appearing as she says them; "marked" and "printed"
   // light up the sticker in the snapshot.
@@ -1443,34 +1634,35 @@
     return seconds ? { seconds, lead: term.length + (/[.,]\s*$/.test(term) ? 3 : 0) } : null;
   }
 
-  async function playDefine(ctx, scene) {
-    await ctx.wait(scene.carried ? 450 : 300); // the screen before finishes fading away first
-    await scene.mp.define(ctx, {
-      voice: readAlong('Marked Price. ', MP_DEFINITION),
-      onRead: () => sayHere(ctx, 'mp-def', 'Marked Price. ' + MP_DEFINITION, 'bird'),
-      onMarked: () => scene.mp.highlight(),
-    });
-    ctx.advance(NEXT_IN); // then compare it with the Selling Price
+  // Screen 9: the same picture, camera and blur as screen 8 (set at once: it carries straight on); the definition comes on
+  // the panel, its words appearing as her voice reads it (no Swifty); "marked" and "printed" light up the price tag.
+  function setupMpDef(scene) {
+    const cam = faceCamera(scene, TAG_CAM);
+    scene.world.style.transform = cam.transform;
+    scene.light = tagSpotlight(scene, cam, true);
+    scene.panel = tagPanel(scene, 'pop-card--tag pop-card--wide'); // (wider: no Swifty here)
+    scene.def = FX.definitionCard(scene.panel.card, { term: 'Marked Price (MP)', text: MP_DEFINITION });
+    scene.def.card.classList.add('is-mp');
   }
 
-  // Compare MP and SP: ₹1000 Marked Price, an arrow growing down, ₹800 Selling Price, on taped notes. Her voice reads each
-  // (no bubble: the notes say it), each note lighting up; then Swifty rises in on her books to ask why the Selling Price
-  // is less, in her bubble (a question to think about), and goes as the screen ends.
-  async function playCompare(ctx, scene) {
-    const reader = swiftyTalk(ctx, scene.ui, null, null); // her voice on its own
-    await ctx.wait(scene.carried ? 450 : 300);
-    const { top, bottom } = scene.mp.boxes;
-    await scene.mp.compare(ctx, {
-      onTop: () => {
-        scene.mp.highlight(); // the ₹1000 on the book ↔ the Marked Price
-        return reader.read('cmp-mp', 'The marked price is ₹1000.', [top]);
+  async function playDefine(ctx, scene) {
+    await ctx.wait(500); // (Swifty isn't here: her voice reads it, the user, 2026-10-22)
+    scene.panel.open();
+    scene.def.open();
+    await ctx.wait(300);
+    let ringed = false;
+    await scene.def.define(ctx, {
+      voice: readAlong('Marked Price. ', MP_DEFINITION),
+      onRead: () => sayHere(ctx, 'mp-def', 'Marked Price. ' + MP_DEFINITION, 'bird'),
+      onMarked: () => {
+        if (ringed) return;
+        ringed = true;
+        const { spot } = scene.light;
+        FX.ring(scene.ui, { x: spot.x, y: spot.y, r: spot.r * 1.05 }); // the price tag ↔ "marked or printed"
+        Sound.sparkle();
       },
-      onBottom: () => reader.read('cmp-sp', 'But the book was sold for ₹800. That is the selling price.', [bottom]),
     });
-    await ctx.wait(400);
-    const talk = await cornerSwifty(ctx, scene); // she comes to ask
-    await talk.say('cmp-why', 'Why is the selling price\nless than the marked price?');
-    endWithSwifty(ctx, scene, talk); // the shopkeeper explains
+    ctx.advance(NEXT_IN); // then the shopkeeper explains the ₹200 (the compare screen was taken out on 2026-10-22)
   }
 
   // Back at the counter, the shopkeeper explains, one part at a time; as he says each price, it lifts out of his
@@ -1618,7 +1810,28 @@
     await wondering.show();
     await speak(ctx, wondering, 'disc-2', 'boy');
     wondering.emphasize();
-    ctx.advance(3000); // Swifty explains
+    await ctx.wait(1200);
+
+    // Then the answer, on this screen (the user, 2026-10-22: what screen 13 showed, after his thought): his thought goes,
+    // the picture blurs and dims, and the definition comes on a panel in the middle of the screen, its words appearing as
+    // her voice reads it (Swifty isn't there: "only voiceover", the user).
+    await wondering.hide();
+    const veil = el('div', 'pop-veil');
+    scene.ui.insertBefore(veil, scene.ui.firstChild); // (under the panel)
+    void veil.offsetWidth; // (so it fades in)
+    veil.classList.add('is-on');
+    await ctx.wait(reducedMotion ? 60 : 700);
+    const panel = tagPanel(scene, 'pop-card--def');
+    const card = FX.definitionCard(panel.card, { term: 'Discount', text: DISCOUNT_DEFINITION });
+    panel.open();
+    card.open(); // (with its heading on it: never empty)
+    await ctx.wait(400);
+    await card.define(ctx, {
+      voice: readAlong('Discount. ', DISCOUNT_DEFINITION),
+      onRead: () => sayHere(ctx, 'ddef', 'Discount. ' + DISCOUNT_DEFINITION, 'bird'),
+    });
+    Sound.ding();
+    ctx.advance(NEXT_IN); // then the formula
   }
 
   // Aniket's thought: a cloud above and to the right of his head, its puffs rising from the top of his hair (`tip`: the
@@ -1650,34 +1863,9 @@
       { duration: ms, easing: 'cubic-bezier(.65,0,.35,1)', fill: 'forwards' });
   }
 
-  // The definition of a discount, the answer to Aniket's question, on the sheet that slides up over the counter.
-  // The definition card springs up, and Swifty flies in to her stand (as on every teaching screen), points at the
-  // card and reads it out while the words appear.
+  // The definition of a discount, the answer to Aniket's question (it comes on his screen, after his thought: see
+  // playDiscount).
   const DISCOUNT_DEFINITION = 'The {reduction} given on the {marked price} of an item is called a *discount.*';
-
-
-  async function playDiscountDef(ctx, scene) {
-    const ui = scene.ui;
-    const card = FX.definitionCard(ui, { term: 'Discount', text: DISCOUNT_DEFINITION });
-    await ctx.wait(500);
-    const arriving = cornerSwifty(ctx, scene); // she rises in on her books: she introduces the new idea
-    arriving.catch(() => {}); // if the player leaves meanwhile, the await below reports it
-    await ctx.wait(400);
-    card.open(); // the card comes in with its heading on it (it never waits empty), and she reads it out
-    const talk = await arriving;
-    const { bird } = talk;
-    bird.point();
-    await ctx.wait(300);
-    await card.define(ctx, {
-      voice: readAlong('Discount. ', DISCOUNT_DEFINITION),
-      onRead: () => {
-        bird.talk();
-        return sayHere(ctx, 'ddef', 'Discount. ' + DISCOUNT_DEFINITION, 'bird').then(() => bird.point());
-      },
-    });
-    Sound.ding();
-    endWithSwifty(ctx, scene, talk); // then the formula (without her)
-  }
 
   // The discount formula (Swifty isn't here: a worked example, her voice on its own). The book, then the sum built one piece
   // at a time with the amounts only: the ₹1000 lifts off the book's sticker into the first box, then − ₹800, then = ₹200.
@@ -1852,6 +2040,16 @@
     ctx.advance(ms);
   }
 
+  // Screen 13's pictures over the prices: 16:9, centred on the term, just above the formula's strip.
+  const PAY_FOCUS = [990, 500, 1.5]; // the notes handed over, both faces in view (aniket give money to shopkeeper.png)
+  function overTerm(term) {
+    const t = stageRect(term);
+    const strip = stageRect(term.closest('.fr-strip'));
+    const width = 440;
+    const height = width * 9 / 16;
+    return { left: t.left + t.width / 2 - width / 2, top: strip.top - 30 - height, width, height };
+  }
+
   // The formula (Swifty isn't here: her voice on its own): first in words, written part by part as it is said; then the
   // first letters of each term light up and fly down to make the short form, D = MP − SP, on a yellow sticky note, which is
   // read out, each part lighting up as it is said.
@@ -1869,23 +2067,35 @@
     fr.open();
     await ctx.wait(700);
 
-    // In words, one part at a time.
+    // In words, one part at a time; a picture comes over each price as it is said (the user, 2026-10-22): the photo of the
+    // counter (the book Aniket holds) glides from the corner over "Marked Price", and Aniket paying comes over "Selling
+    // Price".
     fr.term(0);
     await reader.read('fr-1', 'Discount', [fr.longTerms[0]], 700);
     fr.op(0);
     await ctx.wait(300);
     fr.term(1);
+    const mp = overTerm(fr.longTerms[1]);
+    scene.snapEl.style.transformOrigin = '0 0';
+    FX.settle(scene.snapEl.animate([{ transform: 'none' }, { transform: `translate(${mp.left - SNAP.x}px, ${mp.top - SNAP.y}px) scale(${mp.width / SNAP.w})` }],
+      { duration: reducedMotion ? 1 : 900, easing: 'cubic-bezier(.45,0,.3,1)', fill: 'forwards' }));
     await reader.read('fr-2', 'equals Marked Price,', [fr.longTerms[1]], 900);
     fr.op(1);
     await ctx.wait(300);
     fr.term(2);
+    const sp = overTerm(fr.longTerms[2]);
+    const pay = el('div', 'scene-snap', scene.ui, { left: `${sp.left}px`, top: `${sp.top}px`, width: `${sp.width}px`, height: `${sp.height}px` });
+    Object.assign(el('img', '', pay), { src: ASSETS + 'aniket give money to shopkeeper.png', alt: '', draggable: false });
+    focusOn(pay, PAY_FOCUS);
+    Sound.bloop();
+    FX.reveal(pay, [{ opacity: 0, transform: 'translateY(24px) scale(.92)' }, { opacity: 1, transform: 'none' }], { duration: 600, easing: 'cubic-bezier(.2,.8,.3,1)' });
     await reader.read('fr-3', 'minus Selling Price.', [fr.longTerms[2]], 900);
     await ctx.wait(600);
 
-    // In short: each term's first letters fly down onto the sticky note (which comes in as the first ones go).
-    const short = reader.read('fr-4', 'We can write it in short.', [], 900);
-    short.catch(() => {});
-    await short;
+    // In short: Swifty pops up in the bottom-left corner to say so, in her bubble, and goes (the user, 2026-10-22: its words
+    // on screen, as with her "Not quite!"); then each term's first letters fly down onto the sticky note (which comes in as
+    // the first ones go).
+    await swiftyCorner(ctx, scene, 'fr-4', 'Let’s write it in short.', { at: ON_PANEL });
     const letters = ['D for Discount,', 'MP for Marked Price,', 'SP for Selling Price.']; // as recorded
     for (let i = 0; i < 3; i++) {
       if (i) {
@@ -2111,55 +2321,45 @@
     await ctx.wait(1200);
     await ask.hide();
 
-    // What 30% OFF means, right here (the meeting of 2026-10-21: no screen of its own): the shop blurs behind a pop-up
-    // for a few seconds; the tag lifts off the stand into it and lands like a stamp, and her voice reads it out as
-    // "means", its arrow and the "30% Discount" card come in. Then it closes, and the story goes on.
-    const pop = popUp(scene);
-    const m = FX.meansPanel(pop.card, { tag: SNEAKER_CARD.off, card: [{ t: '30%' }, { t: 'Discount', cls: 'tone-d' }] });
+    // What 30% OFF means, right here (the user, 2026-10-22, as on screen 8: "zoom to the shoes, Swifty comes from the right
+    // side, blur the image, then show 30% OFF; it is Swifty's statement"): the camera moves in on the sneakers and their
+    // tags; Swifty slides in from the right; the picture blurs, and as she says "30% OFF means 30% Discount." in her
+    // bubble, the tag lifts off the stand onto a panel and lands like a stamp, then "means" and its arrow, then the "30%
+    // Discount" card. Then her bubble goes, she goes with it, and the story goes on.
+    const cam = faceCamera(scene, SHOES_CAM);
+    moveCamera(scene, cam.transform, reducedMotion ? 1 : 1500);
+    await ctx.wait(1600);
+    const talk = await swiftyFromRight(ctx, scene);
+    const veil = el('div', 'pop-veil');
+    scene.ui.insertBefore(veil, scene.ui.firstChild); // (under the panel and Swifty)
+    void veil.offsetWidth; // (so it fades in)
+    veil.classList.add('is-on');
+    await ctx.wait(reducedMotion ? 60 : 700);
+    const panel = tagPanel(scene, 'pop-card--means');
+    const m = FX.meansPanel(panel.card, { tag: SNEAKER_CARD.off, card: [{ t: '30%' }, { t: 'Discount', cls: 'tone-d' }] });
+    await talk.show([{ t: '30% OFF', em: true }, { t: ' means', end: true }, { t: '\n30% ' }, { t: 'Discount.', cls: 'key' }]);
     const tag = stageRect(scene.layer.querySelector('.spot-ring') || scene.layer);
-    const flying = flyFromSnap(ctx, scene, { x: (tag.left + tag.right) / 2, y: (tag.top + tag.bottom) / 2 }, '30% OFF', m.tagEl);
-    flying.catch(() => {}); // (if the player leaves meanwhile, the waits below report it)
-    await pop.open(ctx); // (the tag lands as the card has come up: it is never empty for long)
+    const saying = talk.part('om-1', 0, 600);
+    saying.catch(() => {}); // (if the player leaves meanwhile, the waits below report it)
+    await flyFromSnap(ctx, scene, { x: (tag.left + tag.right) / 2, y: (tag.top + tag.bottom) / 2 }, '30% OFF', m.tagEl);
+    panel.open(); // (it springs up as the tag lands on it: never empty)
     m.open();
-    await flying;
     await m.stamp();
-    const voice = swiftyTalk(ctx, pop.card, null, null); // her voice on its own: the words are in the pop-up
-    await readWith(ctx, voice, 'om-1', '30% OFF means', 1000, () => m.means(), [['30% OFF', m.tagEl]]);
-    await readWith(ctx, voice, 'om-2', '30% Discount.', 0, () => m.card());
+    m.means();
+    await saying;
+    const saying2 = talk.part('om-2', 1, 600);
+    saying2.catch(() => {});
+    await ctx.wait(300);
+    m.card();
+    await saying2;
     m.cardEl.classList.add('is-said');
     await ctx.wait(1400);
     m.cardEl.classList.remove('is-said');
-    await pop.close(ctx);
-    ctx.advance(1500); // then the sneakers, and what we need to work it out
+    await swiftyAway(ctx, talk);
+    ctx.advance(NEXT_IN); // then the sneakers, and what we need to work it out
   }
-
-  // A pop-up on a story screen (the meeting of 2026-10-21): the picture blurs and dims behind it while it teaches, then
-  // it closes and the picture is clear again. Build what it shows in `card`.
-  function popUp(scene) {
-    const veil = el('div', 'pop-veil', scene.ui);
-    const card = el('div', 'pop-card', scene.ui);
-    card.style.opacity = '0';
-    return {
-      card,
-      async open(ctx) {
-        veil.classList.add('is-on');
-        await ctx.wait(reducedMotion ? 1 : 350);
-        await FX.reveal(card, [
-          { opacity: 0, transform: 'translateY(40px) scale(.9)' },
-          { opacity: 1, transform: 'translateY(-4px) scale(1.01)', offset: 0.7 },
-          { opacity: 1, transform: 'none' },
-        ], { duration: 600, easing: 'cubic-bezier(.2,.8,.3,1)' });
-      },
-      async close(ctx) {
-        FX.settle(card.animate([{ opacity: 1, transform: 'none' }, { opacity: 0, transform: 'translateY(24px) scale(.94)' }],
-          { duration: reducedMotion ? 1 : 420, easing: 'cubic-bezier(.5,0,.75,0)', fill: 'forwards' }));
-        veil.classList.remove('is-on');
-        await ctx.wait(reducedMotion ? 1 : 650);
-        card.remove();
-        veil.remove();
-      },
-    };
-  }
+  // The camera on the sneakers and their two tags (the picture's px), and where they come on screen, how close.
+  const SHOES_CAM = { face: [1300, 650], to: [1000, 560], s: 1.5 };
 
   const SNEAKER_CARD = { photo: ASSETS + 'ui/sneakers.png', price: '₹1800', off: ['30%', 'OFF'], knot: [60, 49] };
 
@@ -2355,9 +2555,28 @@
     letters: true,
   };
 
+  // Screens 21–23 (the user, 2026-10-22: "remove the panel, show it in the image; a small panel on the image of the shoes"):
+  // on the shoe shop's picture, the working on a small panel on its left, the sneakers and their tags in view on its right.
+  const practiceHost = scene => el('div', 'practice-host', scene.ui);
+
+  // The picture blurs and dims but the stand with the sneakers and their two tags, the point of all this maths (the user,
+  // 2026-10-22: "blur the image, focus on shoes and discount"): a soft-edged window in the veil (its mask: an SVG).
+  const STAND_FOCUS = { x: 1040, y: 425, w: 610, h: 450, round: 70, soft: 22 }; // the picture's stage px
+  function standFocus(scene) {
+    const { x, y, w, h, round: r, soft } = STAND_FOCUS;
+    const hole = `M${x + r} ${y}H${x + w - r}A${r} ${r} 0 0 1 ${x + w} ${y + r}V${y + h - r}A${r} ${r} 0 0 1 ${x + w - r} ${y + h}` +
+      `H${x + r}A${r} ${r} 0 0 1 ${x} ${y + h - r}V${y + r}A${r} ${r} 0 0 1 ${x + r} ${y}Z`;
+    const svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080"><filter id="s" filterUnits="userSpaceOnUse" ' +
+      `x="-300" y="-300" width="2520" height="1680"><feGaussianBlur stdDeviation="${soft}"/></filter>` +
+      `<path filter="url(#s)" fill-rule="evenodd" d="M-200 -200H2120V1280H-200Z ${hole}"/></svg>`;
+    const veil = el('div', 'spot-veil is-on is-instant', scene.ui);
+    const mask = `url("data:image/svg+xml,${encodeURIComponent(svg)}")`;
+    Object.assign(veil.style, { webkitMaskImage: mask, maskImage: mask, webkitMaskSize: '100% 100%', maskSize: '100% 100%', webkitMaskRepeat: 'no-repeat', maskRepeat: 'no-repeat' });
+  }
+
   async function playPercentRule(ctx, scene) {
     const voice = swiftyTalk(ctx, scene.ui, null, null);
-    const f = FX.percentFormula(scene.ui, PERCENT_RULE);
+    const f = FX.percentFormula(practiceHost(scene), PERCENT_RULE);
     await percentStart(ctx, f, 'a is what percent of b?', ['a', 'b'], voice);
     await percentRule(ctx, voice, f);
     // The last line, (a / b × 100)%: the answer is a percentage.
@@ -2381,8 +2600,8 @@
 
   async function playWhatPercent(ctx, scene) {
     const voice = swiftyTalk(ctx, scene.ui, null, null);
-    const f = FX.percentFormula(scene.ui, WHAT_PERCENT);
-    const grid = FX.grid100(f.panel, { shade: 25, label: '25 out of 100 = 25%' }); // beside the working (css .pf-panel .g100)
+    const f = FX.percentFormula(practiceHost(scene), WHAT_PERCENT);
+    const grid = FX.grid100(f.panel, { shade: 25, label: '25 out of 100 = 25%' }); // under the working (css .practice-host .g100)
     await percentStart(ctx, f, '125 is what percent of 500?', ['125', '500'], voice);
     await percentRule(ctx, voice, f);
     await voice.read('wp-work', '125 ÷ 500 × 100', [], 600);
@@ -2406,8 +2625,8 @@
   const CHECK_SUM = [{ t: '250', cls: 'tone-part' }, { t: ' ÷ ' }, { t: '1000', cls: 'tone-whole' }, { t: ' × 100 = ' }, { t: '25%', em: true }, { t: '.' }];
 
   async function playCheck(ctx, scene) {
-    const q = FX.questionPanel(scene.ui, CHECK);
-    const grid = FX.grid100(q.slot, { shade: 25, label: '25 out of 100 = 25%' }); // under the answers (after the hint)
+    const q = FX.questionPanel(practiceHost(scene), CHECK);
+    const grid = FX.grid100(q.slot, { shade: 25, label: '25 out of 100 = 25%' }); // under the answers, at the end
     await ctx.wait(450); // the formula finishes fading away first
     const arriving = cornerSwifty(ctx, scene); // she rises in as the panel opens: she asks the question
     arriving.catch(() => {});
@@ -2452,7 +2671,6 @@
       // Both ways: "So, 250 is 25% of 1000." while the grid shows 25 of 100 (where the hint was, if there was one).
       async so(answers) {
         scene.ui.querySelectorAll('.remember').forEach(n => FX.settle(n.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 300, fill: 'forwards' })).then(() => n.remove()));
-        q.panel.classList.add('has-grid'); // (the question and answers move up to make room: css .has-grid)
         grid.open();
         const filling = grid.fill(ctx);
         filling.catch(() => {});
@@ -3867,6 +4085,15 @@
   };
   // The movement clips, going forward from one screen to the next ("from>to").
   const CLIP_FADE = 400; // ms: a clip fades in over the one before (css .scene-clip)
+  // A talking clip plays until its speaker's lips have stopped for good (the seconds here, measured on the speaker's face
+  // in each clip: frame to frame, the last movement) before the next line comes in; from there its face is still, so the
+  // next clip takes over with no cut to see. A clip not listed here (the Gemini ones, whose people go on moving to their
+  // last frame) plays to its end first (the user, 2026-10-22: "no need to cut the video, play full video"). Measure a new
+  // take again (tools/clip_rest.py).
+  const CLIP_REST = {
+    's01-aniket-1': 4.5, 's01-aniket-2': 1.42, 's01-father': 3.58, 's05-aniket': 2.5, 's06-aniket': 1.83, 's06-shopkeeper': 2.67,
+    's22-aniket-3': 3.83,
+  };
   const CLIP_MOVES = {
     'ask>pay': 's06-to-s07',
     'list>money': 's42-to-s43',
@@ -3904,7 +4131,7 @@
     // first clip of a screen that carries straight on from the one before, e.g. Aniket walking out: 20 → 21).
     // A loop never jumps where it starts again (the user, 2026-10-21: "seamless, no atka atka"): just before its end,
     // a copy of it starts and fades in over it (CLIP_FADE), and so on, the two taking turns.
-    play(scene, name, { loop = false, onShow = null, instant = false, onEnding = null } = {}) {
+    play(scene, name, { loop = false, onShow = null, instant = false, onEnding = null, restAt = null, onRest = null } = {}) {
       if (!scene.clipBox || !Clips.has(name)) return Promise.resolve(false);
       let v = Clips.video(scene, name);
       if (v.classList.contains('is-on')) v = Clips.video(scene, name, name + ' again'); // said again while it shows: a copy fades in over it
@@ -3930,6 +4157,15 @@
       };
       // Just before its end: a loop starts again (a copy, fading in over it); `onEnding` (e.g. back to the quiet loop) is
       // called, so what comes next fades in while this one still moves, and nothing waits on a still last frame.
+      if (onRest && restAt !== null) { // (its speaker's lips have stopped: see CLIP_REST)
+        const rest = () => {
+          if (scene.clipTurn !== turn || v.currentTime >= restAt) {
+            v.removeEventListener('timeupdate', rest);
+            if (scene.clipTurn === turn) onRest();
+          }
+        };
+        v.addEventListener('timeupdate', rest);
+      }
       const ending = loop ? () => Clips.play(scene, name, { loop: true }) : onEnding;
       if (ending) {
         const near = () => {
@@ -3998,16 +4234,25 @@
     },
 
     // A line is said: its talking clip plays with it, then the quiet loop again. Returns a promise that resolves as the
-    // clip comes on screen (so the voice can start with the lips: see sayHere), or null without a clip.
+    // clip comes on screen (so the voice can start with the lips: see sayHere), and its `done` one once the speaker is
+    // done in it (see CLIP_REST); or null without a clip.
     talk(scene, id) {
       const plan = scene && CLIPS[scene.id];
       if (!plan || !plan.lines || !(id in plan.lines) || plan.lines[id] === '') return null;
       const name = Clips.first(plan.lines[id]);
       if (!name) return null;
-      return new Promise(resolve => {
+      let rested = null;
+      const done = new Promise(r => { rested = r; });
+      let on = false;
+      const shown = new Promise(resolve => {
         const back = () => { if (SCENES[Game.index] === scene) Clips.idle(scene); }; // (the quiet loop, as it ends)
-        Clips.play(scene, name, { onShow: resolve, onEnding: back }).then(resolve);
+        const show = () => { on = true; resolve(); };
+        Clips.play(scene, name, { onShow: show, onEnding: back, restAt: CLIP_REST[name] ?? null, onRest: rested })
+          .then(() => { resolve(); rested(); });
       });
+      setTimeout(() => { if (!on) rested(); }, 1500); // (a clip that doesn't play at all holds no line up)
+      shown.done = done; // (its speaker done: lips still, or the clip at its end; see CLIP_REST, sayHere)
+      return shown;
     },
 
     // A reaction (screen 15: Aniket's face turns puzzled): its clip, then the loop after it. Without one, the clips make
@@ -4230,8 +4475,8 @@
   // worked out → what ₹540 is → the amount to pay → the final answer; and 540 as a percent of 1800 → the discount
   // percentage → the summary.
   // Every other change is a straight cut.
-  const FADES = [['home', 'outside'], ['return', 'school'], ['school', 'list'], ['list', 'money'], ['money', 'deal'], ['deal', 'begin'], ['begin', 'shops'], ['shops', 'uniform'], ['shops', 'shoes'], ['shops', 'bag'], ['shops', 'bottle'], ['shops', 'complete'], ['uniform', 'complete'], ['shoes', 'complete'], ['bag', 'complete'], ['bottle', 'complete'], ['complete', 'receipt'], ['homeagain', 'mission'], ['outside', 'browse'], ['browse', 'ask'], ['leave', 'sneakers'], ['sneakers', 'shoe'], ['shoe', 'confused'], ['final', 'boxed']];
-  const FORWARD_FADES = [['mp', 'mpdef'], ['mpdef', 'compare'], ['discount-def', 'formula'], ['formula', 'formula-reveal'], ['formula-reveal', 'summary'], ['recall', 'percentrule'], ['percentrule', 'whatpercent'],
+  const FADES = [['home', 'outside'], ['return', 'school'], ['school', 'list'], ['list', 'money'], ['money', 'deal'], ['deal', 'begin'], ['begin', 'shops'], ['shops', 'uniform'], ['shops', 'shoes'], ['shops', 'bag'], ['shops', 'bottle'], ['shops', 'complete'], ['uniform', 'complete'], ['shoes', 'complete'], ['bag', 'complete'], ['bottle', 'complete'], ['complete', 'receipt'], ['homeagain', 'mission'], ['mpdef', 'reveal'], ['outside', 'browse'], ['browse', 'ask'], ['leave', 'sneakers'], ['sneakers', 'shoe'], ['shoe', 'confused'], ['final', 'boxed']];
+  const FORWARD_FADES = [['mp', 'mpdef'], ['formula', 'formula-reveal'], ['formula-reveal', 'summary'], ['recall', 'percentrule'], ['percentrule', 'whatpercent'],
     ['whatpercent', 'check'], ['check', 'sneakerq'], ['sneakerq', 'thirty'], ['thirty', 'represent'], ['represent', 'topay'], ['topay', 'final'], ['pctofmp', 'discountpct'], ['discountpct', 'sneakersum'], ['left', 'two'], ['recap', 'takeaway']];
   const FADE_MS = 1200; // not stretched by PACE: changing screens stays brisk
   const SLIDE_MS = 950;  // a sheet sliding up over a story picture (see slide)
@@ -4384,11 +4629,11 @@
   // underneath; then the new screen's own snapshot, the same picture, takes its place.
   const SNAP_MS = 1100;
   const SNAP_EASE = 'cubic-bezier(.65,0,.25,1)';
-  const snapFrames = (grow = false) => {
-    const k = SNAP.w / STAGE_W;
+  const snapFrames = (grow = false, rect = SNAP) => { // (rect: the frame, 16:9)
+    const k = rect.w / STAGE_W;
     const big = { transform: 'none', borderRadius: '0px', boxShadow: '0 0 0 0 rgba(255, 255, 255, 0), 0 0 0 0 rgba(27, 42, 51, 0)' };
     const small = {
-      transform: `translate(${SNAP.x}px, ${SNAP.y}px) scale(${k})`,
+      transform: `translate(${rect.x}px, ${rect.y}px) scale(${k})`,
       borderRadius: `${22 / k}px`, // 22 px, 8 px and so on once it is scaled down
       boxShadow: `0 0 0 ${8 / k}px #fff, 0 ${16 / k}px ${36 / k}px rgba(27, 42, 51, .22)`,
     };

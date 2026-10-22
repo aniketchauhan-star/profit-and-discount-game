@@ -256,18 +256,20 @@
   function lineText(host, o, { wrap = false, max = Infinity } = {}) {
     const size = o.size || 34;
     const box = el('div', wrap ? 'b-text b-text--wrap' : 'b-text', host, { fontSize: px(size) });
+    const icon = o.icon ? el('span', 'b-icon', box) : null; // (before the words: ✗ or ✓)
+    if (icon) icon.innerHTML = o.icon === 'cross' ? ICON_CROSS : ICON_CHECK;
     const letters = buildLetters(box, wrap ? softBreaks(o.text) : o.text);
     if (wrap) {
       const cs = getComputedStyle(box);
       const padX = parseFloat(cs.paddingLeft) + parseFloat(cs.paddingRight);
-      const words = [...box.querySelectorAll('.b-word, .em, .key')]; // (an .em or .key never breaks inside)
+      const words = [...box.querySelectorAll('.b-icon, .b-word, .em, .key')]; // (an .em or .key never breaks inside)
       // Lays the words out at this width of text: how many lines, and the longest (in layout px: the words' offsets
       // are measured from the box, so the stage's scale doesn't count).
       const layout = width => {
         box.style.width = px(width + padX);
         const lines = new Map();
         words.forEach(word => {
-          const top = Math.round(word.offsetTop / 4);
+          const top = Math.round((word === icon && words[1] ? words[1] : word).offsetTop / 4); // (the icon is on the first word's line)
           const [l, r] = lines.get(top) || [Infinity, -Infinity];
           lines.set(top, [Math.min(l, word.offsetLeft), Math.max(r, word.offsetLeft + word.offsetWidth)]);
         });
@@ -783,13 +785,13 @@
         ], { duration: reducedMotion ? 1 : T(360), easing: 'cubic-bezier(.5,0,.75,0)', fill: 'forwards' }));
       },
       // Turns the card over to show the result, e.g. "Correct!" and why. `wide`: it turns over wider (css .is-wide),
-      // as tall as what is on it, so the reason runs in full lines.
-      async flip({ title, text, wide = false }) {
-        const back = el('div', 'qcard-back', card);
+      // as tall as what is on it, so the reason runs in full lines. `wrong`: "Not quite!", in grey, with a ✗.
+      async flip({ title, text, wide = false, wrong = false }) {
+        const back = el('div', wrong ? 'qcard-back is-wrong' : 'qcard-back', card);
         back.setAttribute('role', 'status');
         const head = el('div', 'qback-head', back);
         const tick = el('span', 'qback-tick', head);
-        tick.innerHTML = ICON_CHECK;
+        tick.innerHTML = wrong ? ICON_CROSS : ICON_CHECK;
         el('span', 'qback-title', head).textContent = title;
         const body = richText(el('div', 'qback-text', back), text);
         back.style.visibility = 'hidden';
@@ -828,7 +830,7 @@
           { transform: 'scale(1.25) rotate(8deg)', offset: 0.65 },
           { transform: 'none' },
         ], { duration: T(520), delay: T(330), easing: 'cubic-bezier(.2,.8,.3,1)' });
-        setTimeout(() => Sound.ding(), T(380));
+        if (!wrong) setTimeout(() => Sound.ding(), T(380));
         reveal(body, [{ opacity: 0, transform: 'translateY(26px)' }, { opacity: 1, transform: 'none' }], {
           duration: T(600), delay: T(480), easing: 'cubic-bezier(.25,.1,.25,1)',
         });
@@ -3048,12 +3050,7 @@
         await Promise.all(fold.map(settle));
         panel.style.columnGap = '0px';
         fold[1].cancel();
-        column.remove();
-        const size = getComputedStyle(sheet).fontSize;
-        const grow = sheet.animate([{ fontSize: size }, { fontSize: '58px' }], GLIDE);
-        await settle(grow);
-        sheet.style.fontSize = '58px';
-        grow.cancel();
+        column.remove(); // (the sheet keeps its size: it already fills the room under the photo)
       },
       // A word of the rule dissolves into another: 'part' (over the line), 'whole' (under it) or 'label'
       // ("Percentage"), e.g. rename('part', 'Discount', 'tone-d'); the part's (or the whole's) amounts, in the
