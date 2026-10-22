@@ -315,10 +315,12 @@
     },
     {
       id: 'recall', title: 'Recall Percentages', sub: 'Let’s first recall how percentages work.',
-      swifty: true, // (no small photo: the sneakers are big in the middle, the shop's picture shrinks into them)
-      sheet: 'panel', still: true, kb: null, origin: '50% 50%', lamps: [], dust: null,
+      swifty: true,
+      bg: ASSETS + 'he is tinking to see the shoes.png', // the shop as screen 19 ends: the camera on the sneakers, the rest blurred
+      kb: null, origin: '63% 66%', still: true, // (screen 19's camera origin, so the same view: a seamless cut)
+      lamps: [[1740, 160, 260], [1740, 370, 260], [120, 60, 180]], dust: null,
+      shot: 'stand',
       setup: setupRecall,
-      snapInto: scene => scene.into,
       play: playRecall,
     },
     {
@@ -326,7 +328,7 @@
       bg: ASSETS + 'he is tinking to see the shoes.png', // the shoe shop, the working on a small panel on it (practiceHost)
       kb: null, origin: '50% 50%', still: true,
       lamps: [[1740, 160, 260], [1740, 370, 260], [120, 60, 180]], dust: null,
-      setup: standFocus, // (blurred but the sneakers and their tags, from the first frame)
+      setup: setupPracticeStart, // (from screen 20 it begins on 20's view, then blurs all and eases out: see zoomOutOfShoes)
       play: playPercentRule,
     },
     {
@@ -334,7 +336,7 @@
       bg: ASSETS + 'he is tinking to see the shoes.png', // the shoe shop, the working on a small panel on it (practiceHost)
       kb: null, origin: '50% 50%', still: true,
       lamps: [[1740, 160, 260], [1740, 370, 260], [120, 60, 180]], dust: null,
-      setup: standFocus, // (blurred but the sneakers and their tags, from the first frame)
+      setup: allBlur, // (the whole picture blurred, the panel in the middle: the user, 2026-10-22)
       play: playWhatPercent,
     },
     {
@@ -343,35 +345,42 @@
       bg: ASSETS + 'he is tinking to see the shoes.png', // the shoe shop, the working on a small panel on it (practiceHost)
       kb: null, origin: '50% 50%', still: true,
       lamps: [[1740, 160, 260], [1740, 370, 260], [120, 60, 180]], dust: null,
-      setup: standFocus, // (blurred but the sneakers and their tags, from the first frame)
+      setup: allBlur, // (the whole picture blurred, the panel in the middle: the user, 2026-10-22)
       play: playCheck,
     },
     {
       id: 'sneakerq', title: 'Back to the Sneakers', sub: 'Now, what is 30% of ₹1800?',
-      snap: ASSETS + 'he is tinking to see the shoes.png', snapFocus: [1300, 640, 2], swifty: true,
-      sheet: 'panel', still: true, kb: null, origin: '50% 50%', lamps: [], dust: null,
-      setup: setupGuide,
+      swifty: true,
+      bg: ASSETS + 'he is tinking to see the shoes.png', // the shoe shop, the working on a small panel on it (practiceHost)
+      kb: null, origin: '50% 50%', still: true,
+      lamps: [[1740, 160, 260], [1740, 370, 260], [120, 60, 180]], dust: null,
+      setup: standFocus, // (blurred but the sneakers and their tags, from the first frame)
       play: playSneakerQuestion,
     },
     {
       id: 'thirty', title: 'Calculate 30% of ₹1800', sub: '30/100 × 1800 = ₹540',
-      snap: ASSETS + 'he is tinking to see the shoes.png', snapFocus: [1300, 640, 2],
-      sheet: 'panel', still: true, kb: null, origin: '50% 50%', lamps: [], dust: null,
-      setup: setupGuide,
+      bg: ASSETS + 'he is tinking to see the shoes.png', // the shoe shop, the working on a small panel on it (practiceHost)
+      kb: null, origin: '50% 50%', still: true,
+      lamps: [[1740, 160, 260], [1740, 370, 260], [120, 60, 180]], dust: null,
+      setup: standFocus, // (blurred but the sneakers and their tags, from the first frame)
       play: playThirty,
     },
     {
       id: 'represent', title: 'What Does ₹540 Represent?', sub: 'Marked Price, Selling Price or Discount?',
-      snap: ASSETS + 'he is tinking to see the shoes.png', snapFocus: [1300, 640, 2], swifty: true,
-      sheet: 'panel', still: true, kb: null, origin: '50% 50%', lamps: [], dust: null,
-      setup: setupGuide,
+      swifty: true,
+      bg: ASSETS + 'he is tinking to see the shoes.png', // the shoe shop, the working on a small panel on it (practiceHost)
+      kb: null, origin: '50% 50%', still: true,
+      lamps: [[1740, 160, 260], [1740, 370, 260], [120, 60, 180]], dust: null,
+      setup: standFocus, // (blurred but the sneakers and their tags, from the first frame)
       play: playRepresent,
     },
     {
       id: 'topay', title: 'The Amount to Pay', sub: 'SP = MP − Discount = ₹1260',
-      snap: ASSETS + 'he is tinking to see the shoes.png', snapFocus: [1300, 640, 2], swifty: true,
-      sheet: 'panel', still: true, kb: null, origin: '50% 50%', lamps: [], dust: null,
-      setup: setupGuide,
+      swifty: true,
+      bg: ASSETS + 'he is tinking to see the shoes.png', // the shoe shop, the question and the working on a small panel on it (practiceHost)
+      kb: null, origin: '50% 50%', still: true,
+      lamps: [[1740, 160, 260], [1740, 370, 260], [120, 60, 180]], dust: null,
+      setup: standFocus, // (blurred but the sneakers and their tags, from the first frame)
       play: playToPay,
     },
     {
@@ -398,20 +407,6 @@
       sheet: 'panel', still: true, kb: null, origin: '50% 50%', lamps: [], dust: null,
       setup: setupGuide,
       play: playPercentOfMP,
-    },
-    {
-      id: 'discountpct', title: 'Discount Percentage', sub: 'Discount % = Discount ÷ Marked Price × 100',
-      snap: ASSETS + 'he is tinking to see the shoes.png', snapFocus: [1300, 640, 2],
-      sheet: 'panel', still: true, kb: null, origin: '50% 50%', lamps: [], dust: null,
-      setup: setupGuide,
-      play: playDiscountPercent,
-    },
-    {
-      id: 'sneakersum', title: 'Checkpoint 4', sub: 'Discount % = Discount ÷ MP × 100',
-      checkpoint: 4, swifty: true,
-      sheet: 'panel', still: true, kb: null, origin: '50% 50%', lamps: [], dust: null,
-      setup: setupGuide,
-      play: playCheckpoint,
     },
     {
       id: 'return', title: 'Back Home', sub: 'How was your shopping?',
@@ -2142,17 +2137,6 @@
       note: [{ t: 'Discount', tone: 'd' }, { t: '=' }, { t: 'MP', tone: 'mp' }, { t: '−' }, { t: 'SP', tone: 'sp' }],
       sayNote: ['And remember the formula: Discount = MP − SP!'],
     },
-    4: {
-      topic: 'Discount %', title: 'Let’s sum up the sneakers!',
-      cards: [
-        { term: 'Marked Price', tone: 'mp', value: '₹1800', text: 'on the tag', say: ['Marked Price: ₹1800.'] },
-        { term: 'Discount', tone: 'd', value: '₹540', text: '30% of the marked price', say: ['Discount: 30%,', 'which is ₹540.'] },
-        { term: 'Selling Price', tone: 'sp', value: '₹1260', text: 'what Aniket pays', say: ['Selling Price: ₹1260.'] },
-      ],
-      note: [{ t: 'Discount %', tone: 'd' }, { t: '=' }, { t: 'Discount', tone: 'd' }, { t: '÷' }, { t: 'MP', tone: 'mp' }, { t: '× 100' }],
-      sayNote: ['and Discount % = Discount ÷ MP × 100.'],
-      end: ['ss-end', 'Now you can work out any discount!'],
-    },
   };
 
   async function playCheckpoint(ctx, scene) {
@@ -2321,45 +2305,32 @@
     await ctx.wait(1200);
     await ask.hide();
 
-    // What 30% OFF means, right here (the user, 2026-10-22, as on screen 8: "zoom to the shoes, Swifty comes from the right
-    // side, blur the image, then show 30% OFF; it is Swifty's statement"): the camera moves in on the sneakers and their
-    // tags; Swifty slides in from the right; the picture blurs, and as she says "30% OFF means 30% Discount." in her
-    // bubble, the tag lifts off the stand onto a panel and lands like a stamp, then "means" and its arrow, then the "30%
-    // Discount" card. Then her bubble goes, she goes with it, and the story goes on.
+    // What 30% OFF means (the user, 2026-10-22: "show only the shoes and the discount, and Swifty comes and says it"; no
+    // panel): the camera moves in on the sneakers and their tags, everything else blurs, and Swifty slides in from the
+    // right and says "30% OFF means 30% Discount." in her bubble (the 30% OFF tag is still lit); then she goes with it.
     const cam = faceCamera(scene, SHOES_CAM);
     moveCamera(scene, cam.transform, reducedMotion ? 1 : 1500);
     await ctx.wait(1600);
+    shoesFocus(scene, cam, { instant: false });
+    await ctx.wait(reducedMotion ? 60 : 800);
     const talk = await swiftyFromRight(ctx, scene);
-    const veil = el('div', 'pop-veil');
-    scene.ui.insertBefore(veil, scene.ui.firstChild); // (under the panel and Swifty)
-    void veil.offsetWidth; // (so it fades in)
-    veil.classList.add('is-on');
-    await ctx.wait(reducedMotion ? 60 : 700);
-    const panel = tagPanel(scene, 'pop-card--means');
-    const m = FX.meansPanel(panel.card, { tag: SNEAKER_CARD.off, card: [{ t: '30%' }, { t: 'Discount', cls: 'tone-d' }] });
+    await ctx.wait(200);
     await talk.show([{ t: '30% OFF', em: true }, { t: ' means', end: true }, { t: '\n30% ' }, { t: 'Discount.', cls: 'key' }]);
-    const tag = stageRect(scene.layer.querySelector('.spot-ring') || scene.layer);
-    const saying = talk.part('om-1', 0, 600);
-    saying.catch(() => {}); // (if the player leaves meanwhile, the waits below report it)
-    await flyFromSnap(ctx, scene, { x: (tag.left + tag.right) / 2, y: (tag.top + tag.bottom) / 2 }, '30% OFF', m.tagEl);
-    panel.open(); // (it springs up as the tag lands on it: never empty)
-    m.open();
-    await m.stamp();
-    m.means();
-    await saying;
-    const saying2 = talk.part('om-2', 1, 600);
-    saying2.catch(() => {});
-    await ctx.wait(300);
-    m.card();
-    await saying2;
-    m.cardEl.classList.add('is-said');
+    await talk.part('om-1', 0, 600);
+    await talk.part('om-2', 1, 600);
+    talk.line.emphasize();
     await ctx.wait(1400);
-    m.cardEl.classList.remove('is-said');
     await swiftyAway(ctx, talk);
     ctx.advance(NEXT_IN); // then the sneakers, and what we need to work it out
   }
   // The camera on the sneakers and their two tags (the picture's px), and where they come on screen, how close.
   const SHOES_CAM = { face: [1300, 650], to: [1000, 560], s: 1.5 };
+  // The sharp window round the sneakers and their tags, as the camera `cam` shows them (screens 19 and 20).
+  function shoesFocus(scene, cam, opts) {
+    const [x0, y0] = cam.at([STAND_FOCUS.x, STAND_FOCUS.y]);
+    const [x1, y1] = cam.at([STAND_FOCUS.x + STAND_FOCUS.w, STAND_FOCUS.y + STAND_FOCUS.h]);
+    return standFocus(scene, { x: x0, y: y0, w: x1 - x0, h: y1 - y0, round: STAND_FOCUS.round * SHOES_CAM.s, soft: STAND_FOCUS.soft }, opts);
+  }
 
   const SNEAKER_CARD = { photo: ASSETS + 'ui/sneakers.png', price: '₹1800', off: ['30%', 'OFF'], knot: [60, 49] };
 
@@ -2367,10 +2338,8 @@
   // the "small sneakers card" the brief keeps in a corner: what all this maths is for), and Aniket's question is on top
   // until screen 34 answers it.
   const SHOP_FOCUS = [1300, 640, 2];
-  const SNAP_OFF = inSnap({ x: THINKING_OFF_TAG.x, y: THINKING_OFF_TAG.y }, SHOP_FOCUS);   // the 30% OFF tag, in the snapshot
-  const SNAP_PRICE = inSnap({ x: PRICE_CARD.x, y: PRICE_CARD.y }, SHOP_FOCUS);           // the ₹1800 tag, in the snapshot
-  // A gold ring round one of the two tags in the snapshot.
-  const ringSnap = (scene, spot, [w, h]) => FX.ring(scene.ui, { x: spot.x, y: spot.y, w: w * (SNAP.w / STAGE_W) * SHOP_FOCUS[2] + 10, h: h * (SNAP.w / STAGE_W) * SHOP_FOCUS[2] + 10, round: 12 });
+  // A gold ring round one of the two tags, on the shop's picture (screens 24 and 26 are on it: the user, 2026-10-22).
+  const ringTag = (scene, tag) => FX.ring(scene.ui, { x: tag.x, y: tag.y, w: tag.w + 16, h: tag.h + 16, round: tag.round || 16 });
 
   // A line read out while something happens on the panel `ms` into it (`at`).
   async function readWith(ctx, talk, id, text, ms, at, cues = []) {
@@ -2384,56 +2353,30 @@
 
   // The link to percentages: the sneakers' card (photo, price tag, 30% OFF tag); and Swifty says what comes next in her
   // bubble (a line linking two topics). Then she goes (28–29 are worked without her).
-  // Screen 22 (the user, 2026-10-21: one picture, not two): the sneakers' photo, big in the middle of the panel; coming
-  // from the shop, its picture shrinks into the photo's place (see shrinkInto: `into`), zoomed on the part it shows.
-  // Then the ₹1800 tag, then the 30% OFF, one after the other.
-  const SNEAKER_PART = { x: 907.5, y: 342, w: 833, h: 364 }; // what ui/sneakers.png shows of the shop's picture (stage px, measured)
+  // Screen 20 (the user, 2026-10-22: "like 19: only this dialogue, the rest blurred, only the shoes visible"): the shop as
+  // screen 19 ends, the camera on the sneakers and their tags and everything else blurred; Swifty slides in from the
+  // right and says what comes next in her bubble, the 30% OFF tag lit as she says "discount amount"; then she goes.
   function setupRecall(scene) {
-    const card = FX.productCard(scene.ui, SNEAKER_CARD);
-    scene.card = card;
-    scene.into = {
-      el: card.photo,
-      part: SNEAKER_PART,
-      round: 14,
-      show() { // (under the shrinking picture, which melts into it)
-        card.panel.style.opacity = '';
-        card.photo.style.opacity = '';
-      },
-      done: () => {},
-    };
-    scene.snapped = new Promise(resolve => { scene.into.done = resolve; });
+    const cam = faceCamera(scene, SHOES_CAM);
+    scene.world.style.transform = cam.transform;
+    shoesFocus(scene, cam);
   }
 
   async function playRecall(ctx, scene) {
-    const card = scene.card;
-    if (scene.cameFrom === 'confused' && !reducedMotion && card.photo.style.opacity === '') {
-      await Promise.race([scene.snapped, ctx.wait(1500)]); // the shop's picture is in the photo's place
-    } else {
-      await ctx.wait(300);
-      card.open();
-      await card.showPhoto(); // with the card, so it is never empty
-    }
-    await ctx.wait(700);
-    await card.showPrice();
-    await ctx.wait(800);
-    await card.showOff();
-    await ctx.wait(500);
-    const talk = await cornerSwifty(ctx, scene);
-    const bird = talk.bird;
-    bird.wave();
     await ctx.wait(400);
-    bird.point();
+    const talk = await swiftyFromRight(ctx, scene);
     await ctx.wait(200);
     await talk.show([
       { t: 'To find the ' }, { t: 'discount amount', cls: 'key' }, { t: ',', end: true },
       { t: ' let’s first recall how ' }, { t: 'percentages', cls: 'key' }, { t: ' work.' },
     ]);
-    card.ping(card.offTag); // the discount
+    FX.ring(scene.layer, THINKING_OFF_TAG); // the discount (on the picture: it moves with the camera)
+    Sound.sparkle();
     await talk.part('recall-1', 0, 600);
-    card.ping(card.percent); // the 30%
     await talk.part('recall-2', 1, 600);
-    bird.point();
-    endWithSwifty(ctx, scene, talk); // then the rule (without her)
+    await ctx.wait(1200);
+    await swiftyAway(ctx, talk);
+    ctx.advance(NEXT_IN); // then the rule
   }
 
   // The answers to a question: they slide in under it, stacked, while Swifty points at them. Then she explains: right()
@@ -2495,8 +2438,9 @@
   async function percentStart(ctx, f, ask, [part, whole], talk) {
     await ctx.wait(450); // the panel before finishes fading away first
     f.open();
+    const asked = f.showQuestion(); // (with the panel: it is never empty)
     await ctx.wait(600);
-    await f.showQuestion();
+    await asked;
     await ctx.wait(300);
     const strip = f.el.querySelector('.pf-question');
     await talk.read('wp-ask', ask, [strip], 1400);
@@ -2555,26 +2499,114 @@
     letters: true,
   };
 
-  // Screens 21–23 (the user, 2026-10-22: "remove the panel, show it in the image; a small panel on the image of the shoes"):
-  // on the shoe shop's picture, the working on a small panel on its left, the sneakers and their tags in view on its right.
-  const practiceHost = scene => el('div', 'practice-host', scene.ui);
+  // Screens 21–27 (the user, 2026-10-22: "remove the panel, show it in the image; a small panel on the image of the shoes"):
+  // on the shoe shop's picture, the working on a small panel on it.
+  const practiceHost = scene => growPapers(el('div', 'practice-host', scene.ui));
+  // Such a panel comes in with what is first on it (never empty).
+  const panelIn = node => FX.reveal(node, [{ opacity: 0, transform: 'translateY(30px) scale(.94)' }, { opacity: 1, transform: 'none' }],
+    { duration: 500, easing: 'cubic-bezier(.2,.8,.3,1)' });
 
-  // The picture blurs and dims but the stand with the sneakers and their two tags, the point of all this maths (the user,
+  // And its paper grows down as what is on it comes in: it reaches just below the lowest piece showing (a piece still to
+  // come has opacity 0 set on it, or on a box round it), so no empty paper waits under the question for the answers.
+  // (css .practice-host .is-growing: the paper is drawn behind the panel's content, --grown tall)
+  function growPapers(host) {
+    const papers = () => [...host.querySelectorAll('.pf-panel, .qp-panel, .pqp-panel, .ws-panel')]
+      .map(n => (n.classList.contains('ws-panel') ? n.parentElement : n)); // (a worked sheet's paper is the box round it)
+    const waiting = (node, paper) => {
+      for (let n = node; n && n !== paper; n = n.parentElement) if (n.style.opacity === '0') return true;
+      return false;
+    };
+    const painted = node => {
+      if ([...node.childNodes].some(c => c.nodeType === 3 && c.textContent.trim()) || /^(IMG|CANVAS|BUTTON)$/.test(node.tagName)) return true;
+      const cs = getComputedStyle(node);
+      return cs.backgroundImage !== 'none' || !/^(transparent|rgba\(.*,\s*0\))$/.test(cs.backgroundColor) || parseFloat(cs.borderTopWidth) > 0;
+    };
+    const bottom = (node, paper) => { // where it ends on the paper, as laid out (not where a moving piece is for a moment)
+      let y = node.offsetHeight;
+      for (let n = node; n !== paper; n = n.offsetParent) {
+        if (!n || !n.offsetParent) return 0; // (not shown at all)
+        y += n.offsetTop + (n.offsetParent === paper ? 0 : n.offsetParent.clientTop);
+      }
+      return y;
+    };
+    const fit = paper => {
+      paper.classList.add('is-growing');
+      let low = 0;
+      for (const node of paper.querySelectorAll('*')) {
+        if (node instanceof HTMLElement && !waiting(node, paper) && painted(node)) low = Math.max(low, bottom(node, paper));
+      }
+      const h = low ? Math.ceil(low + parseFloat(getComputedStyle(paper).paddingBottom)) : 0;
+      const was = paper.style.getPropertyValue('--grown');
+      if (was === h + 'px') return;
+      if (!parseFloat(was)) { // its first piece: the paper is that size at once (it springs up with it)
+        paper.classList.add('is-instant');
+        requestAnimationFrame(() => requestAnimationFrame(() => paper.classList.remove('is-instant')));
+      }
+      paper.style.setProperty('--grown', h + 'px');
+    };
+    new MutationObserver(() => papers().forEach(fit))
+      .observe(host, { subtree: true, childList: true, attributes: true, attributeFilter: ['style'] });
+    return host;
+  }
+
+  // Screens 21–23: the whole picture blurs and dims behind the panel in the middle (the user, 2026-10-22).
+  function allBlur(scene, { instant = true } = {}) {
+    const veil = el('div', instant ? 'spot-veil is-on is-instant' : 'spot-veil', null);
+    scene.ui.insertBefore(veil, scene.ui.firstChild); // (under everything on the screen: only the picture blurs)
+    Object.assign(veil.style, { webkitMaskImage: 'none', maskImage: 'none' });
+    if (!instant) {
+      void veil.offsetWidth; // (so it fades in)
+      veil.classList.add('is-on');
+    }
+    return veil;
+  }
+
+  // Screen 21, coming from screen 20: it begins on 20's view (the camera on the sneakers, only they sharp), so the change
+  // is seamless; then everything blurs as the camera eases back out (zoomOutOfShoes), and the panel comes in.
+  function setupPracticeStart(scene) {
+    if (scene.cameFrom !== 'recall' || reducedMotion) {
+      allBlur(scene);
+      return;
+    }
+    const cam = faceCamera(scene, SHOES_CAM);
+    scene.world.style.transform = cam.transform;
+    scene.shoesView = shoesFocus(scene, cam);
+  }
+  async function zoomOutOfShoes(ctx, scene) {
+    const spot = scene.shoesView;
+    if (!spot) return;
+    scene.shoesView = null;
+    allBlur(scene, { instant: false });
+    spot.classList.remove('is-instant', 'is-on'); // (it fades out as the whole blur fades in)
+    await ctx.wait(500);
+    moveCamera(scene, 'none', 1300);
+    await ctx.wait(1300);
+    spot.remove();
+  }
+
+  // Screens 24–26: the picture blurs and dims but the stand with the sneakers and their two tags, the point of all this maths (the user,
   // 2026-10-22: "blur the image, focus on shoes and discount"): a soft-edged window in the veil (its mask: an SVG).
   const STAND_FOCUS = { x: 1040, y: 425, w: 610, h: 450, round: 70, soft: 22 }; // the picture's stage px
-  function standFocus(scene) {
-    const { x, y, w, h, round: r, soft } = STAND_FOCUS;
+  function standFocus(scene, rect = STAND_FOCUS, { instant = true } = {}) { // (rect: on screen, when the camera has moved)
+    const { x, y, w, h, round: r, soft } = rect;
     const hole = `M${x + r} ${y}H${x + w - r}A${r} ${r} 0 0 1 ${x + w} ${y + r}V${y + h - r}A${r} ${r} 0 0 1 ${x + w - r} ${y + h}` +
       `H${x + r}A${r} ${r} 0 0 1 ${x} ${y + h - r}V${y + r}A${r} ${r} 0 0 1 ${x + r} ${y}Z`;
     const svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080"><filter id="s" filterUnits="userSpaceOnUse" ' +
       `x="-300" y="-300" width="2520" height="1680"><feGaussianBlur stdDeviation="${soft}"/></filter>` +
       `<path filter="url(#s)" fill-rule="evenodd" d="M-200 -200H2120V1280H-200Z ${hole}"/></svg>`;
-    const veil = el('div', 'spot-veil is-on is-instant', scene.ui);
+    const veil = el('div', instant ? 'spot-veil is-on is-instant' : 'spot-veil', null);
+    scene.ui.insertBefore(veil, scene.ui.firstChild); // (under everything on the screen: only the picture blurs)
     const mask = `url("data:image/svg+xml,${encodeURIComponent(svg)}")`;
     Object.assign(veil.style, { webkitMaskImage: mask, maskImage: mask, webkitMaskSize: '100% 100%', maskSize: '100% 100%', webkitMaskRepeat: 'no-repeat', maskRepeat: 'no-repeat' });
+    if (!instant) {
+      void veil.offsetWidth; // (so it fades in)
+      veil.classList.add('is-on');
+    }
+    return veil;
   }
 
   async function playPercentRule(ctx, scene) {
+    await zoomOutOfShoes(ctx, scene); // (from screen 20)
     const voice = swiftyTalk(ctx, scene.ui, null, null);
     const f = FX.percentFormula(practiceHost(scene), PERCENT_RULE);
     await percentStart(ctx, f, 'a is what percent of b?', ['a', 'b'], voice);
@@ -2631,8 +2663,9 @@
     const arriving = cornerSwifty(ctx, scene); // she rises in as the panel opens: she asks the question
     arriving.catch(() => {});
     q.open();
+    const asked = q.showQuestion(); // (with the panel: it is never empty)
     await ctx.wait(600);
-    await q.showQuestion();
+    await asked;
     const talk = await arriving;
     await ctx.wait(300);
     await talk.read('cfu-ask', '250 is what percent of 1000?', [scene.ui.querySelector('.pf-question')], 1400);
@@ -2701,21 +2734,22 @@
   // "What is 30% of ₹1800?" (the sneakers are in the snapshot: their two tags light up there as it is read) and three
   // answers. Swifty asks it and reacts; 3 seconds after her answer the next screen works it out.
   async function playSneakerQuestion(ctx, scene) {
-    const pq = FX.productQuestion(scene.ui, Object.assign({ question: 'Now, what is\n30% of ₹1800?' }, SNEAKER_CARD));
+    const pq = FX.productQuestion(practiceHost(scene), Object.assign({ question: 'Now, what is\n30% of ₹1800?' }, SNEAKER_CARD));
     await ctx.wait(450); // the screen before finishes fading away first
     const arriving = cornerSwifty(ctx, scene); // she asks the question
     arriving.catch(() => {});
     pq.open();
+    const asked = pq.showQuestion(); // (with the panel: it is never empty)
     await ctx.wait(500);
     const talk = await arriving;
-    await pq.showQuestion();
+    await asked;
     await ctx.wait(300);
     const asking = talk.read('mq-ask', 'Now, what is 30% of ₹1800?', [scene.ui.querySelector('.pqp-question')], 1500);
     asking.catch(() => {});
     await ctx.wait(900);
-    ringSnap(scene, SNAP_OFF, [THINKING_OFF_TAG.w, THINKING_OFF_TAG.h]);
+    ringTag(scene, THINKING_OFF_TAG);
     await ctx.wait(500);
-    ringSnap(scene, SNAP_PRICE, [PRICE_CARD.w, PRICE_CARD.h]);
+    ringTag(scene, PRICE_CARD);
     await asking;
     await ctx.wait(400);
 
@@ -2765,13 +2799,13 @@
 
   async function playThirty(ctx, scene) {
     const voice = swiftyTalk(ctx, scene.ui, null, null);
-    const w = FX.workedSheet(scene.ui, THIRTY_SHEET);
+    const w = FX.workedSheet(practiceHost(scene), THIRTY_SHEET);
     const bar = FX.barModel(w.el, { total: { value: '₹1800', label: 'Marked Price', tone: 'mp' }, tenths: { each: '₹180', shade: 3, label: '3 parts = 30% = ₹540', tone: 'd' } });
+    w.el.style.opacity = '0'; // (the small panel comes in with its first line: never empty)
     await ctx.wait(450); // the question finishes fading away first
     w.open();
-    await ctx.wait(700);
     // 30% = 30/100
-    await readWith(ctx, voice, 'th-1', '30% means', 200, () => w.write(0));
+    await readWith(ctx, voice, 'th-1', '30% means', 200, () => { panelIn(w.el); return w.write(0); });
     await readWith(ctx, voice, 'th-2', '30 out of 100.', 300, () => w.part(0, 0));
     await ctx.wait(400);
     // 30% of ₹1800 = 30/100 × 1800
@@ -2802,13 +2836,14 @@
   // What does ₹540 represent? The question, and three answers: Marked Price, Selling Price or Discount. Swifty asks and
   // reacts: it is the money taken off ₹1800, the Discount (the 30% OFF tag lights up in the snapshot). She stays for 34.
   async function playRepresent(ctx, scene) {
-    const pq = FX.productQuestion(scene.ui, Object.assign({ question: 'What does ₹540\nrepresent here?' }, SNEAKER_CARD));
+    const pq = FX.productQuestion(practiceHost(scene), Object.assign({ question: 'What does ₹540\nrepresent here?' }, SNEAKER_CARD));
     await ctx.wait(450); // the working finishes fading away first
     pq.open();
+    const asked = pq.showQuestion(); // (with the panel: it is never empty)
     await ctx.wait(500);
     const arriving = cornerSwifty(ctx, scene); // she rises in as the question appears
     arriving.catch(() => {});
-    await pq.showQuestion();
+    await asked;
     const talk = await arriving;
     await ctx.wait(300);
     await talk.read('rp-ask', 'What does ₹540 represent here?', [scene.ui.querySelector('.pqp-question')], 1400);
@@ -2822,13 +2857,13 @@
       async right() {
         await talk.show([{ t: 'Correct!', cls: 'stress', end: true }, ...why]);
         await talk.part('rp-right-1', 0, 600);
-        await partWith(ctx, talk, 'rp-right-2', 1, 900, () => ringSnap(scene, SNAP_OFF, [THINKING_OFF_TAG.w, THINKING_OFF_TAG.h]));
+        await partWith(ctx, talk, 'rp-right-2', 1, 900, () => ringTag(scene, THINKING_OFF_TAG));
       },
       // Wrong: "Not quite! ₹540 is the money taken off ₹1800." (then the right answer lights up)
       async wrong(answers) {
         await talk.show([{ t: 'Not quite!', end: true }, ...why]);
         await talk.part('rp-wrong-1', 0, 600);
-        await partWith(ctx, talk, 'rp-wrong-2', 1, 900, () => ringSnap(scene, SNAP_OFF, [THINKING_OFF_TAG.w, THINKING_OFF_TAG.h]));
+        await partWith(ctx, talk, 'rp-wrong-2', 1, 900, () => ringTag(scene, THINKING_OFF_TAG));
         answers.show(2);
       },
       // Both ways: "That's the Discount!" (no bubble: the right answer, lit, says it)
@@ -2875,10 +2910,9 @@
 
     // The question: she reads it out (its words are on the panel). The rule is its hint, which shows only after a wrong
     // answer (the meeting of 2026-10-21).
-    const pq = FX.productQuestion(scene.ui, Object.assign({ question: 'What will be the\nSelling Price?', hint: PAY_HINT }, SNEAKER_CARD));
+    const pq = FX.productQuestion(practiceHost(scene), Object.assign({ question: 'What will be the\nSelling Price?', hint: PAY_HINT }, SNEAKER_CARD));
     pq.open();
-    await ctx.wait(500);
-    await pq.showQuestion();
+    await pq.showQuestion(); // (with the panel: it is never empty)
     await ctx.wait(300);
     await talk.read('pay-ask', 'What will be the Selling Price?', [scene.ui.querySelector('.pqp-question')], 1400);
     bird.point();
@@ -2919,10 +2953,12 @@
     await ctx.wait(800);
     await talk.clear();
     await FX.settle(question.el.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 600, easing: 'ease-in', fill: 'forwards' }));
+    const host = question.el.parentElement; // (the small panel's place, on the picture)
     question.el.remove();
-    const w = FX.workedSheet(scene.ui, PAY_SHEET);
+    const w = FX.workedSheet(host, PAY_SHEET);
+    w.el.style.opacity = '0'; // (the small panel comes in with its first box: never empty)
     w.open();
-    await ctx.wait(600);
+    panelIn(w.el);
     await w.box(0);
     await ctx.wait(300);
     await w.box(1);
@@ -3115,61 +3151,7 @@
 
     // The rule for the discount percentage, read out (it is written on the sheet).
     await readWith(ctx, voice, 'po-rule', 'So, Discount % = Discount ÷ Marked Price × 100.', 500, () => f.rename('label', 'Discount %'));
-    ctx.advance(NEXT_IN); // then what the discount percentage tells us
-  }
-
-  // Discount percentage (Swifty isn't here: her voice on its own). A worked sheet on graph paper: as her voice says what
-  // discount percentage tells us, the rule Discount % = Discount / Marked Price × 100 is written in on the rule band; then
-  // the sneakers' discount, 540, and marked price, 1800, go into it, and = 30% lands, circled: the 30% off on the tag.
-  const DISCOUNT_PERCENT_SHEET = {
-    big: true,
-    rows: [
-      {
-        label: [{ t: 'Discount %', cls: 'tone-d' }], band: 'yellow', // (the revamp: every rule band looks the same)
-        parts: [{ frac: ['Discount', 'Marked Price'], top: 'tone-d', bottom: 'tone-mp' }, { t: '× 100' }],
-      },
-      { parts: [{ frac: ['540', '1800'], top: 'tone-d', bottom: 'tone-mp', split: true }, { t: '× 100' }] },
-      { parts: [{ answer: '30%' }] },
-    ],
-  };
-
-  async function playDiscountPercent(ctx, scene) {
-    const voice = swiftyTalk(ctx, scene.ui, null, null);
-    await ctx.wait(450); // the working before finishes fading away first
-    const w = FX.workedSheet(scene.ui, DISCOUNT_PERCENT_SHEET);
-    w.open();
-    await ctx.wait(500);
-
-    // What discount percentage tells us: the rule is written in as it is said.
-    await readWith(ctx, voice, 'dp-1', 'Discount percentage tells us what percent', 300, () => w.write(0));
-    let writing = null;
-    await readWith(ctx, voice, 'dp-2', 'of the marked price is taken off.', 300, () => { writing = w.part(0, 0).then(() => w.part(0, 1)); });
-    await writing;
-    await ctx.wait(500);
-
-    // The sneakers' numbers go into it: each comes in under its word.
-    const words = w.rows[0].parts[0];
-    const sum = w.rows[1].parts[0];
-    await w.write(1);
-    await w.part(1, 0); // the fraction bar
-    await readWith(ctx, voice, 'dp-3', 'The discount is ₹540,', 700, () => {
-      w.ping(words.querySelector('.pf-num'));
-      w.show(sum.querySelector('.pf-num'));
-    });
-    await readWith(ctx, voice, 'dp-4', 'and the marked price is ₹1800.', 1100, () => {
-      w.ping(words.querySelector('.pf-den'));
-      w.show(sum.querySelector('.pf-den'));
-    });
-    await w.part(1, 1); // × 100
-    await ctx.wait(500);
-
-    // Work it out: = 30%, the 30% off on the tag.
-    await voice.read('dp-5', '540 ÷ 1800 × 100', [], 600);
-    await w.write(2);
-    await readWith(ctx, voice, 'dp-6', '= 30%.', 350, () => w.answer(2));
-    w.mark(2);
-    await voice.read('dp-7', 'That’s the 30% off on the tag!', [], 700);
-    ctx.advance(NEXT_IN); // then the last checkpoint
+    ctx.advance(NEXT_IN); // then back home (the discount percentage's screen and its checkpoint were taken out on 2026-10-22)
   }
 
   // Back home: his father asks how the shopping went, Aniket says what he learnt, and his father hints at another
@@ -4476,8 +4458,8 @@
   // percentage → the summary.
   // Every other change is a straight cut.
   const FADES = [['home', 'outside'], ['return', 'school'], ['school', 'list'], ['list', 'money'], ['money', 'deal'], ['deal', 'begin'], ['begin', 'shops'], ['shops', 'uniform'], ['shops', 'shoes'], ['shops', 'bag'], ['shops', 'bottle'], ['shops', 'complete'], ['uniform', 'complete'], ['shoes', 'complete'], ['bag', 'complete'], ['bottle', 'complete'], ['complete', 'receipt'], ['homeagain', 'mission'], ['mpdef', 'reveal'], ['outside', 'browse'], ['browse', 'ask'], ['leave', 'sneakers'], ['sneakers', 'shoe'], ['shoe', 'confused'], ['final', 'boxed']];
-  const FORWARD_FADES = [['mp', 'mpdef'], ['formula', 'formula-reveal'], ['formula-reveal', 'summary'], ['recall', 'percentrule'], ['percentrule', 'whatpercent'],
-    ['whatpercent', 'check'], ['check', 'sneakerq'], ['sneakerq', 'thirty'], ['thirty', 'represent'], ['represent', 'topay'], ['topay', 'final'], ['pctofmp', 'discountpct'], ['discountpct', 'sneakersum'], ['left', 'two'], ['recap', 'takeaway']];
+  const FORWARD_FADES = [['mp', 'mpdef'], ['formula', 'formula-reveal'], ['formula-reveal', 'summary'], ['percentrule', 'whatpercent'],
+    ['whatpercent', 'check'], ['check', 'sneakerq'], ['sneakerq', 'thirty'], ['thirty', 'represent'], ['represent', 'topay'], ['topay', 'final'], ['left', 'two'], ['recap', 'takeaway']];
   const FADE_MS = 1200; // not stretched by PACE: changing screens stays brisk
   const SLIDE_MS = 950;  // a sheet sliding up over a story picture (see slide)
   const fadesBetween = (a, b) =>
@@ -4565,7 +4547,7 @@
 
     if (sheet) {
       const framed = x => !!x.snapEl || (x.v2 && x.el.classList.contains('has-sheet')); // (screen 8: see snapUp)
-      if ((to.snapEl || to.snapInto) && !onSheet(from)) shrinkInto(from, to); // the revamp: the picture shrinks into the frame
+      if (to.snapEl && !onSheet(from)) shrinkInto(from, to); // the revamp: the picture shrinks into the frame
       else if (framed(from) && !onSheet(to)) growOut(from, to); // …and grows back out of it
       else slide(from, to);
       return;
@@ -4595,6 +4577,9 @@
       from.el.style.transitionDuration = FADE_MS + 'ms'; // drift for as long as the fade lasts
       from.el.classList.add('is-leaving');
     }
+    // The shop picture with only the sneakers sharp (screens 24–27) going into a different picture: it blurs all over as
+    // the next one comes in, so the two stands don't show double in the dissolve.
+    if (from.bg !== to.bg && from.ui.querySelector('.spot-veil')) allBlur(from, { instant: false }).style.transitionDuration = '400ms';
     Game.leaving = from;
     Game.startTimer = setTimeout(() => run(to), FADE_MS * 0.45); // first beats land as the fade ends
     Game.fadeTimer = setTimeout(settleTransition, FADE_MS);
@@ -4648,32 +4633,12 @@
     const camera = cs.transform === 'none' ? new DOMMatrix() : new DOMMatrix(cs.transform);
     const [ox, oy] = cs.transformOrigin.split(' ').map(parseFloat);
     const now = new DOMMatrix().translate(ox, oy).multiply(camera).translate(-ox, -oy);
+    const same = [from.bg, from.react].includes(to.snap); // the snapshot is of this very picture (or of its reaction)
+    const [fx, fy, z] = same && to.snapFocus ? to.snapFocus : [STAGE_W / 2, STAGE_H / 2, 1];
+    const zoomed = new DOMMatrix().translate(fx, fy).scale(z).translate(-fx, -fy);
     activate(to, 'continue', null);
-    const into = to.snapInto ? to.snapInto(to) : null; // (screen 22: its own big photo, built by its setup)
-    const same = !into && [from.bg, from.react].includes(to.snap); // the snapshot is of this very picture (or of its reaction)
-    let zoomed, frames;
-    if (into) {
-      // Zoomed on the part of the picture that photo shows (into.part, stage px), filling the width, and cut to the
-      // photo's shape as it shrinks into its place.
-      const r = stageRect(into.el);
-      const { x, y, w, h } = into.part;
-      const z = STAGE_W / w;
-      const fx = (x * z) / (z - 1);
-      const fy = ((y + h / 2) * z - STAGE_H / 2) / (z - 1);
-      zoomed = new DOMMatrix().translate(fx, fy).scale(z).translate(-fx, -fy);
-      const k = r.width / STAGE_W;
-      const cut = (STAGE_H - h * z) / 2; // off its top and bottom (unscaled px)
-      frames = [
-        { transform: 'none', clipPath: 'inset(0px 0px 0px 0px round 0px)' },
-        { transform: `translate(${r.left}px, ${r.top - cut * k}px) scale(${k})`, clipPath: `inset(${cut}px 0px ${cut}px 0px round ${into.round / k}px)` },
-      ];
-    } else {
-      const [fx, fy, z] = same && to.snapFocus ? to.snapFocus : [STAGE_W / 2, STAGE_H / 2, 1];
-      zoomed = new DOMMatrix().translate(fx, fy).scale(z).translate(-fx, -fy);
-      frames = snapFrames();
-      to.snapEl.style.opacity = '0';
-    }
     to.el.style.zIndex = 1;
+    to.snapEl.style.opacity = '0';
     from.el.style.zIndex = 3;
     from.el.style.transformOrigin = '0 0';
     from.el.classList.add('is-snapping');
@@ -4688,18 +4653,13 @@
         { duration: ms, easing: 'ease-in-out', fill: 'forwards' }),
       ...[from.layer, from.ui].map(n => n.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 300, fill: 'forwards' })),
     ];
-    const [big, small] = frames;
+    const [big, small] = snapFrames();
     Game.fadeAnim = from.el.animate([big, Object.assign({}, big, { offset: 0.36 }), small], { duration: ms, easing: SNAP_EASE, fill: 'forwards' });
-    if (into) { // in its place, the picture melts into the photo under it
-      into.show();
-      from.snapAnims.push(from.el.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 420, delay: ms - 420, fill: 'forwards' }));
-    }
     Game.leaving = from;
     Game.startTimer = setTimeout(() => run(to), ms * 0.7);
     Game.fadeTimer = setTimeout(() => {
       settleTransition();
-      if (into) into.done();
-      else if (!same && to.snapEl) to.snapEl.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 450 }); // (another picture)
+      if (!same && to.snapEl) to.snapEl.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 450 }); // (another picture)
     }, ms);
   }
 

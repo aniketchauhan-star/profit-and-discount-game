@@ -2,7 +2,7 @@
 
 The brief is `Bookstore Journey - Revamp Brief.docx` ("Changes for Screens 1–46"), with the text spreadsheet `Bookstore Journey - All Text (Screens 1-46).xlsx`. This file says what was done for each of its points, what was decided where the brief left a question open, and what is still to do. `PROMPT.md` describes the game as it is now, screen by screen.
 
-**Screen numbers** here are the brief's. Screens 2, 4, 9, 24, 26 and 44 and the checkpoints on percentages and on the price after a discount were taken out on 2026-10-21 (the still screens at the user's request, the rest at the review meeting: `docs/MEETING-2026-10-21.md`), and Screens 13 and 16 on 2026-10-22 (16's definition is on Screen 15 now), so the game has 51 screens: the brief's 1, 3, 5–8, 10–12, 14–15, 17–23, 25, 27–30, 31–35, 36–43 and 45–59 are the game's 1, 2, 3–6, 7–9, 10–11, 12–18, 19, 20–23, 24–28, 29–36 and 37–51.
+**Screen numbers** here are the brief's. Screens 2, 4, 9, 24, 26 and 44 and the checkpoints on percentages and on the price after a discount were taken out on 2026-10-21 (the still screens at the user's request, the rest at the review meeting: `docs/MEETING-2026-10-21.md`), and Screens 13, 16, 38 and 39 on 2026-10-22 (16's definition is on Screen 15 now), so the game has 49 screens: the brief's 1, 3, 5–8, 10–12, 14–15, 17–23, 25, 27–30, 31–35, 36–37, 40–43 and 45–59 are the game's 1, 2, 3–6, 7–9, 10–11, 12–18, 19, 20–23, 24–28, 29–30, 31–34 and 35–49.
 
 ## Part 1: rules for every screen
 

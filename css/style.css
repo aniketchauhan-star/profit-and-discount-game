@@ -4009,31 +4009,29 @@ kbd {
 .is-v2 .mn-card { padding: 24px 40px 12px; font-size: 88px; }
 .is-v2 .mn-word { font-size: 52px; }
 .is-v2 .mn-arrow { width: 140px; }
-/* Checkpoints: centred on the panel and big, using its room (the meeting of 2026-10-21); clear of Swifty's corner on
-   the one where she comes with a bubble */
-.ck { display: flex; flex-direction: column; justify-content: center; gap: 40px; padding: 116px 120px 96px; }
-.has-swifty .ck { padding-right: 520px; }
+/* Checkpoints: centred on the panel and big, filling its room (the meeting of 2026-10-21; the user, 2026-10-22: "these
+   things should cover the empty space"); Swifty doesn't come on either */
+.ck { display: flex; flex-direction: column; justify-content: center; gap: 40px; padding: 116px 96px 64px; }
 .ck-head, .ck-body { position: relative; left: auto; top: auto; }
 .ck-head { display: none; } /* no topic heading over the cards (the user, 2026-10-22: "remove this text") */
-.ck-body { width: 100%; gap: 44px; }
+.ck-body { width: 100%; gap: 40px; }
 .ck-title { font-size: 64px; }
-.ck-say { font-size: 46px; }
+.ck-say { font-size: 58px; }
 /* Its cards one under the other, each a wide index card with its words in one line (the user, 2026-10-21: "the lines
    should be written in a full line"): the term in its colour, the red margin line, its amount, what it means */
-.ck-cards { flex-direction: column; gap: 26px; }
+.ck-cards { flex-direction: column; gap: 30px; }
 .ck-card {
   display: grid;
-  grid-template-columns: 410px auto 1fr;
+  grid-template-columns: 500px auto 1fr;
   align-items: center;
-  padding: 24px 48px 22px 44px;
+  padding: 36px 52px 32px 52px;
   background-image: none;
 }
-.has-swifty .ck-card { grid-template-columns: 380px auto 1fr; }
-.ck-term { align-self: stretch; display: flex; align-items: center; padding: 0 30px 0 0; border-bottom: 0; border-right: 3px solid var(--margin); font-size: 56px; }
-.ck-value { margin: 0 0 0 34px; font-size: 64px; }
-.ck-text { margin: 0 0 0 34px; font-size: 48px; line-height: 1.2; }
-/* A checkpoint's text in four sizes only (the brief's rule 5): 46–48 text, 56 terms, 64 the title, amounts and formula */
-.ck .f-note { font-size: 64px; }
+.ck-term { align-self: stretch; display: flex; align-items: center; padding: 0 36px 0 0; border-bottom: 0; border-right: 3px solid var(--margin); font-size: 72px; }
+.ck-value { margin: 0 0 0 44px; font-size: 88px; }
+.ck-text { margin: 0 0 0 44px; font-size: 58px; line-height: 1.2; }
+/* A checkpoint's text in four sizes only (the brief's rule 5): 58 text, 72 terms, 88 the amounts and the formula */
+.ck .f-note { gap: 24px; padding: 34px 52px 24px; font-size: 88px; }
 
 /* The line log (js/linelog.js, only with ?log= in the address): what it is doing, bottom left, outside the stage */
 .dev-log {
@@ -4121,13 +4119,6 @@ kbd {
 .is-v2 .fr-strip { gap: 26px; padding: 30px 64px 26px; font-size: 74px; }
 .is-v2 .fr-short { gap: 36px; padding: 40px 84px 26px; font-size: 168px; }
 
-/* Screen 22: one picture (the user, 2026-10-21: "no need to show the two images"): the sneakers big in the middle of the
-   panel, left of Swifty's corner (game.js setupRecall: the shop's picture shrinks into the photo), then the ₹1800 tag,
-   then the 30% OFF */
-.is-v2 .pc-panel { gap: 40px; }
-.is-v2 .pc-panel .pc-photo { width: 1110px; height: 485px; }
-.is-v2 .pc-panel .pc-hang { font-size: 92px; }
-.is-v2 .pc-panel .pc-off { padding: 26px 46px 14px; font-size: 90px; }
 
 /* Colours that stand out on the cream panel (the user, 2026-10-21: "it should properly fully visible in this panel"):
    every note and box has a firm tint and an edge in its own colour (at least 3:1 against the panel), a white card a soft
@@ -4193,8 +4184,6 @@ kbd {
 .is-v2[data-scene="topay"] .ws-panel ~ .bm { width: 1000px; }
 .is-v2[data-scene="topay"] .ws-panel ~ .bm .bm-seg b { font-size: 50px; }
 .is-v2[data-scene="topay"] .ws-panel ~ .bm .bm-seg small { font-size: 28px; }
-/* Screen 33: the working alone, big */
-.is-v2[data-scene="discountpct"] .ws-sheet--big { font-size: 66px; }
 
 /* The end of the game (screens 48, 49, 52 and 53, in the shopping game's own look), bigger in the room left of Swifty's
    corner (the user, 2026-10-21: "use the negative space"). 48: the two amounts side by side, the working under them. */
@@ -4247,7 +4236,6 @@ kbd {
 /* …filling the room under the photo, left of Swifty's corner (x 96–1340, where she comes with her bubbles), the question's
    strip and the answers as wide (the user, 2026-10-22: "this option give to many space, please fill the negative space with
    options"), the hint after a wrong answer under them */
-.is-v2:is([data-scene="sneakerq"], [data-scene="represent"], [data-scene="topay"]) .mp:is(:has(> .qp-panel), :has(> .pqp-panel)) { place-items: start; padding: 494px 580px 56px 96px; }
 .is-v2 :is(.qp-panel, .pqp-side) { width: 1244px; gap: 36px; }
 .is-v2 :is(.qp-panel, .pqp-side) > :is(.pf-question, .pqp-question) { width: 100%; padding: 22px 30px 28px; font-size: 76px; text-align: center; }
 .is-v2 :is(.qp-answers, .pqp-answers) { width: 100%; min-height: 200px; }
@@ -4265,7 +4253,6 @@ kbd {
 .is-v2[data-scene="topay"] .pqp-answers .pq-opt { height: 100px; }
 .is-v2[data-scene="topay"] .pqp-answers { min-height: 336px; }
 .is-v2:is([data-scene="represent"], [data-scene="topay"]) .pqp-question { font-size: 70px; }
-.is-v2[data-scene="sneakerq"] .pqp-answers .pq-opt { height: 230px; }
 /* 23, 24 and 32: the question's strip as wide as what is under it; 32 in the middle of the panel too (Swifty has no
    bubble there, so her corner isn't kept) */
 .is-v2 .pf-panel > .pf-question { justify-self: stretch; text-align: center; }
@@ -4319,7 +4306,6 @@ kbd {
 .is-v2[data-scene="topay"] .ws-panel ~ .bm { gap: 12px; }
 .is-v2[data-scene="topay"] .ws-panel ~ .bm .bm-total { font-size: 38px; }
 .is-v2[data-scene="topay"] .ws-panel ~ .bm .bm-bar { height: 96px; }
-.is-v2[data-scene="discountpct"] .ws-sheet--big { font-size: 60px; } /* 33 */
 .is-v2[data-scene="topay"] .ws-panel ~ .bm .bm-bar { height: 84px; }
 .q-slot .remember .f-note--small { font-size: 36px; } /* (in the room right of the photo, x 736–1340) */
 .is-v2[data-scene="topay"] .ws-sheet { font-size: 40px; }
@@ -4387,10 +4373,6 @@ kbd {
 .is-v2 .pop-card--tag.pop-card--wide { left: 1290px; } /* (screen 9: no Swifty, so the room right of the tag is all its) */
 .is-v2 .pop-card--tag.pop-card--wide :is(.mp-def, .mp-def.dd-card) { width: 920px; }
 
-/* Screen 19 (game.js playConfused; the user, 2026-10-22): what 30% OFF means, on a panel over the blurred, zoomed-in shop,
-   left of Swifty (she slides in from the right and says it in her bubble) */
-.is-v2 .pop-card--means { left: 740px; top: 560px; padding: 56px 64px; }
-
 /* Screens 21, 22 and 23 (game.js practiceHost; the user, 2026-10-22: "remove the panel, show it in the image; a small panel
    on the image of the shoes"): the shoe shop's picture, sharp (no blur on these: the user, 2026-10-21), and the working on
    a small panel on its left; the sneakers and their tags stay in view on its right (and Swifty's corner, on 23) */
@@ -4415,3 +4397,51 @@ kbd {
 .is-v2 .practice-host .qp-answers .pq-opt .q-chip { width: 80px; height: 80px; font-size: 42px; }
 .is-v2 .practice-host .qp-panel > .q-slot { position: static; translate: none; margin: 0; min-height: 0; }
 .is-v2 .practice-host .q-slot .g100 { flex-direction: row; gap: 30px; }
+
+/* Screens 24, 25 and 26 (the user, 2026-10-22: "show the image, not the panel, the shoes only, the rest blurred, and show
+   the options"): as 21–23, on the shoe shop's picture, blurred but the sneakers and their tags, on a small panel on the
+   left: 24 and 26 the question and its answers (24 in a row, 26 one under another), 25 the working and the bar under it */
+.is-v2 .practice-host .pqp-panel { padding: 34px 44px 40px; border-radius: 32px; background: var(--paper); box-shadow: 0 24px 60px var(--deep-45); pointer-events: auto; }
+.is-v2 .practice-host .pqp-side { width: 920px; gap: 28px; }
+.is-v2 .practice-host .pqp-side > .pqp-question { width: 100%; padding: 16px 24px 20px; font-size: 54px; white-space: nowrap; }
+.is-v2 .practice-host .pqp-answers { min-height: 140px; }
+.is-v2 .practice-host .pqp-answers .pq-opt { width: 286px !important; height: 140px; padding: 0 26px 0 16px; font-size: 60px; }
+.is-v2 .practice-host .pqp-answers .pq-opt .q-chip { width: 80px; height: 80px; font-size: 42px; }
+.is-v2 .practice-host .pqp-side > :is(.q-slot, .pqp-hint) { position: static; translate: none; margin: 0; min-height: 0; }
+.is-v2 .practice-host .pqp-hint { padding: 14px 28px 10px; font-size: 40px; }
+.is-v2:is([data-scene="represent"], [data-scene="topay"]) .practice-host .pqp-answers { min-height: 336px; }
+.is-v2:is([data-scene="represent"], [data-scene="topay"]) .practice-host .pqp-answers .pq-choices { gap: 18px; }
+.is-v2:is([data-scene="represent"], [data-scene="topay"]) .practice-host .pqp-answers .pq-opt { width: 100% !important; height: 100px; font-size: 56px; }
+.is-v2:is([data-scene="represent"], [data-scene="topay"]) .practice-host .pqp-question { font-size: 54px; }
+/* 25 and 27: the working (and the bar under it) on the small panel itself */
+.is-v2 .practice-host .mp:has(> .ws-panel) { display: flex; flex-direction: column; align-items: center; gap: 30px; padding: 34px 44px 40px; border-radius: 32px; background: var(--paper); box-shadow: 0 24px 60px var(--deep-45); pointer-events: auto; }
+.is-v2[data-scene="thirty"] .practice-host .ws-sheet { font-size: 46px; }
+.is-v2 .practice-host .ws-panel ~ .bm { width: 860px; }
+
+/* Screens 21, 22 and 23 (game.js allBlur; the user, 2026-10-22: "the panel in the middle of the image, all the image
+   blurred, the panel slightly bigger"): the whole picture blurred and dimmed, the panel bigger in the middle (on 23, the
+   middle of the room left of Swifty's corner, so it stays clear of her bubbles, which start at x 1380) */
+.is-v2:is([data-scene="percentrule"], [data-scene="whatpercent"]) .practice-host { left: 0; width: 1920px; }
+.is-v2[data-scene="check"] .practice-host { left: 0; width: 1364px; }
+.is-v2:is([data-scene="percentrule"], [data-scene="whatpercent"]) .practice-host .pf-panel { column-gap: 56px; row-gap: 30px; padding: 44px 56px 50px; }
+.is-v2:is([data-scene="percentrule"], [data-scene="whatpercent"]) .practice-host .pf-question { font-size: 58px; }
+.is-v2:is([data-scene="percentrule"], [data-scene="whatpercent"]) .practice-host .pf-box { font-size: 54px; }
+.is-v2:is([data-scene="percentrule"], [data-scene="whatpercent"]) .practice-host .pf-sheet { font-size: 48px; }
+.is-v2[data-scene="whatpercent"] .practice-host .pf-panel:has(.g100) { grid-template-columns: auto auto auto; }
+.is-v2[data-scene="whatpercent"] .practice-host .pf-panel .g100 { grid-row: 2; grid-column: 3; flex-direction: column; gap: 16px; }
+.is-v2[data-scene="whatpercent"] .practice-host .g100-grid { grid-template-columns: repeat(10, 26px); gap: 4px; padding: 10px; }
+.is-v2[data-scene="whatpercent"] .practice-host .g100-cell { width: 26px; height: 26px; }
+.is-v2[data-scene="whatpercent"] .practice-host .g100-label { font-size: 42px; }
+.is-v2[data-scene="check"] .practice-host .qp-panel { width: 1100px; gap: 32px; padding: 44px 56px 50px; }
+.is-v2[data-scene="check"] .practice-host .qp-panel > .pf-question { font-size: 62px; }
+.is-v2[data-scene="check"] .practice-host .qp-answers { min-height: 160px; }
+.is-v2[data-scene="check"] .practice-host .qp-answers .pq-opt { width: 300px !important; height: 160px; font-size: 72px; }
+.is-v2[data-scene="check"] .practice-host .qp-answers .pq-opt .q-chip { width: 92px; height: 92px; font-size: 48px; }
+
+/* 2026-10-22: a small panel's paper grows down as what is on it comes in (game.js growPapers): it is drawn behind the
+   panel's content, as tall as --grown, so no empty paper waits under the question for the answers. */
+.is-v2 .practice-host .is-growing:is(.pf-panel, .qp-panel, .pqp-panel, .mp) { position: relative; isolation: isolate; background: none; box-shadow: none; }
+.is-v2 .practice-host .is-growing::before { content: ''; position: absolute; z-index: -1; left: 0; right: 0; top: 0; height: var(--grown, 100%); border-radius: inherit; background: var(--paper); box-shadow: 0 24px 60px var(--deep-45); transition: height .45s cubic-bezier(.2,.8,.3,1); }
+.is-v2 .practice-host .is-growing.is-instant::before { transition: none; }
+/* (screen 27's bar on the picture has the room its amounts need: they no longer touch its top) */
+.is-v2[data-scene="topay"] .practice-host .ws-panel ~ .bm .bm-bar { height: 112px; }
