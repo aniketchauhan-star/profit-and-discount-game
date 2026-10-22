@@ -345,7 +345,7 @@
       bg: ASSETS + 'he is tinking to see the shoes.png', // the shoe shop, the working on a small panel on it (practiceHost)
       kb: null, origin: '50% 50%', still: true,
       lamps: [[1740, 160, 260], [1740, 370, 260], [120, 60, 180]], dust: null,
-      setup: allBlur, // (the whole picture blurred, the panel in the middle: the user, 2026-10-22)
+      setup: standFocus, // (as 24–27: the sneakers and their tags sharp, the panel on the left: the user, 2026-10-22)
       play: playCheck,
     },
     {

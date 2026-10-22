@@ -4418,11 +4418,10 @@ kbd {
 .is-v2[data-scene="thirty"] .practice-host .ws-sheet { font-size: 46px; }
 .is-v2 .practice-host .ws-panel ~ .bm { width: 860px; }
 
-/* Screens 21, 22 and 23 (game.js allBlur; the user, 2026-10-22: "the panel in the middle of the image, all the image
-   blurred, the panel slightly bigger"): the whole picture blurred and dimmed, the panel bigger in the middle (on 23, the
-   middle of the room left of Swifty's corner, so it stays clear of her bubbles, which start at x 1380) */
+/* Screens 21 and 22 (game.js allBlur; the user, 2026-10-22: "the panel in the middle of the image, all the image
+   blurred, the panel slightly bigger"): the whole picture blurred and dimmed, the panel bigger in the middle. (23 was
+   too, until the user asked for it as 24–27: "focus on shoes and this left side": the panel on the left, as theirs.) */
 .is-v2:is([data-scene="percentrule"], [data-scene="whatpercent"]) .practice-host { left: 0; width: 1920px; }
-.is-v2[data-scene="check"] .practice-host { left: 0; width: 1364px; }
 .is-v2:is([data-scene="percentrule"], [data-scene="whatpercent"]) .practice-host .pf-panel { column-gap: 56px; row-gap: 30px; padding: 44px 56px 50px; }
 .is-v2:is([data-scene="percentrule"], [data-scene="whatpercent"]) .practice-host .pf-question { font-size: 58px; }
 .is-v2:is([data-scene="percentrule"], [data-scene="whatpercent"]) .practice-host .pf-box { font-size: 54px; }
@@ -4432,11 +4431,6 @@ kbd {
 .is-v2[data-scene="whatpercent"] .practice-host .g100-grid { grid-template-columns: repeat(10, 26px); gap: 4px; padding: 10px; }
 .is-v2[data-scene="whatpercent"] .practice-host .g100-cell { width: 26px; height: 26px; }
 .is-v2[data-scene="whatpercent"] .practice-host .g100-label { font-size: 42px; }
-.is-v2[data-scene="check"] .practice-host .qp-panel { width: 1100px; gap: 32px; padding: 44px 56px 50px; }
-.is-v2[data-scene="check"] .practice-host .qp-panel > .pf-question { font-size: 62px; }
-.is-v2[data-scene="check"] .practice-host .qp-answers { min-height: 160px; }
-.is-v2[data-scene="check"] .practice-host .qp-answers .pq-opt { width: 300px !important; height: 160px; font-size: 72px; }
-.is-v2[data-scene="check"] .practice-host .qp-answers .pq-opt .q-chip { width: 92px; height: 92px; font-size: 48px; }
 
 /* 2026-10-22: a small panel's paper grows down as what is on it comes in (game.js growPapers): it is drawn behind the
    panel's content, as tall as --grown, so no empty paper waits under the question for the answers. */
