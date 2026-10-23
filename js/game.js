@@ -334,7 +334,6 @@
       kb: null, origin: '50% 50%', still: true,
       lamps: [[1740, 160, 260], [1740, 370, 260], [120, 60, 180]], dust: null,
       setup: standFocus,
-      cornerClear: STAND_CLEAR, // (her bubbles keep clear of the sneakers and their tags)
       play: playSneakerCard,
     },
     {
@@ -1246,6 +1245,52 @@
     }
   }
 
+  // A wrong answer's hint, as her voice alone (the user, 2026-10-23: "remove this speech bubble and the book, no need
+  // of this, only voice", wherever a hint came that way): its words are written on a strip on the card or panel (`host`),
+  // an ✗ before them, and each word lights up as it is said. The strip opens in its place (the card or panel growing
+  // smoothly to make room); a later hint changes its words. `parts`: its lines as she says them, each a list of segments
+  // ({ t, em, cls }), in a span each (so a word said twice lights up in the right part). Returns { el, parts }.
+  const CROSS_SVG = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>';
+  const plainOf = segments => segments.map(seg => seg.t).join('').replace(/\s+/g, ' ').trim();
+  function hintStrip(host, parts, { first = false } = {}) {
+    let strip = host.querySelector(':scope > .hint-strip');
+    const fresh = !strip;
+    if (fresh) {
+      strip = el('div', 'hint-strip');
+      if (first) host.prepend(strip);
+      else host.appendChild(strip);
+    }
+    strip.replaceChildren();
+    el('span', 'hs-chip', strip).innerHTML = CROSS_SVG;
+    const words = el('span', 'hs-text', strip);
+    const spans = parts.map((segments, k) => {
+      const span = el('span', 'hs-part', words);
+      segments.forEach(seg => {
+        const t = (k && !seg.t.startsWith(' ') && span.childNodes.length === 0 ? ' ' : '') + seg.t;
+        if (seg.em || seg.cls) el('span', seg.em ? 'em' : seg.cls, span).textContent = t;
+        else span.appendChild(document.createTextNode(t));
+      });
+      return span;
+    });
+    strip.setAttribute('role', 'status');
+    Sound.pop();
+    if (fresh && !reducedMotion) { // it opens: its room grows from nothing, then its words fade in
+      const cs = getComputedStyle(strip);
+      const to = { height: `${strip.offsetHeight}px`, marginTop: cs.marginTop, paddingTop: cs.paddingTop, paddingBottom: cs.paddingBottom };
+      strip.style.overflow = 'hidden';
+      FX.settle(strip.animate([{ height: '0px', marginTop: '0px', paddingTop: '0px', paddingBottom: '0px', opacity: 0 }, Object.assign({ opacity: 1 }, to)],
+        { duration: 420, easing: 'cubic-bezier(.2,.8,.3,1)' })).then(() => { strip.style.overflow = ''; });
+    } else if (!reducedMotion) {
+      replayPing(strip);
+    }
+    return { el: strip, parts: spans };
+  }
+  const replayPing = node => node.animate([{ transform: 'scale(1)' }, { transform: 'scale(1.03)', offset: 0.4 }, { transform: 'none' }], { duration: 380, easing: 'ease-out' });
+  // A hint's strip goes (the screen has moved on from it).
+  const dropHints = host => host.querySelectorAll('.hint-strip').forEach(n => {
+    FX.settle(n.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 250, fill: 'forwards' })).then(() => n.remove());
+  });
+
   // A wrong answer in the revamp (the user, 2026-10-22): at once, Swifty pops up in the bottom-left corner of the picture
   // to say "Not quite! The shopkeeper sold the book for ₹800.", and goes; then the picture blurs and dims behind, and the
   // card makes way for a small panel with the Cost Price and Selling Price cards, read out one at a time. Then the picture
@@ -1437,13 +1482,12 @@
   }
 
   // A question card on a story picture (the user's doc, 2026-10-23: "the CFU comes in card form"): it swings in with its
-  // question and answers. A wrong answer brings Swifty up with a hint in her bubble (in the picture's bottom-left corner,
-  // or on her books in the bottom-right one: `hintAt`), and the player tries again; the right one turns the card over in
-  // the middle of the screen, wide, the picture blurring behind it, and her voice reads why. 5 seconds later the story
-  // moves on (NEXT_IN).
+  // question and answers. A wrong answer brings a hint, written on the card under the answers and read by her voice (no
+  // Swifty, no bubble: the user, 2026-10-23), and the player tries again; the right one turns the card over in the middle
+  // of the screen, wide, the picture blurring behind it, and her voice reads why. 5 seconds later the story moves on.
   //  lines, options: the card's (see FX.question); title, why: its back; said: what her voice reads then (as recorded);
-  //  hint: her bubble's words after a wrong answer; onHint(): what lights up meanwhile; id: names her lines.
-  async function cardQuestion(ctx, scene, { id, lines, options, title = 'Correct!', why, said, hint, hintAt = 'left', onHint = null, fromLeft = false }) {
+  //  hint: the hint's words (segments, as recorded); onHint(): what lights up meanwhile; id: names her lines.
+  async function cardQuestion(ctx, scene, { id, lines, options, title = 'Correct!', why, said, hint, onHint = null, fromLeft = false }) {
     const card = FX.question(scene.ui, {
       lines,
       options,
@@ -1457,20 +1501,15 @@
       card.lock();
       await ctx.wait(700); // let the shake and buzz land first
       if (onHint) onHint();
-      if (hintAt === 'left') {
-        await swiftyCorner(ctx, scene, `${id}-hint`, hint, { icon: 'cross' });
-      } else {
-        const talk = await cornerSwifty(ctx, scene);
-        talk.bird.point();
-        await talk.say(`${id}-hint`, hint, 600);
-        await ctx.wait(900);
-        await talk.clear(); // (she goes with her bubble)
-      }
+      const strip = hintStrip(card.card, [hint]);
+      await ctx.wait(reducedMotion ? 60 : 450);
+      await readLit(ctx, `${id}-hint`, plainOf(hint), strip.parts);
       card.unlock(); // another try (the wrong answer stays crossed out)
     }
     async function right(button) {
       const [x, y] = stagePoint(button);
       FX.burst(scene.ui, x, y, { count: 18, dist: [110, 230], size: [14, 28] });
+      dropHints(card.card); // (the hint goes before the card turns over)
       // what a hint lit up goes (it would be over the card in the middle)
       scene.ui.querySelectorAll('.spot-ring').forEach(ring => {
         FX.settle(ring.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 300, fill: 'forwards' })).then(() => ring.remove());
@@ -1507,8 +1546,7 @@
       options: [{ label: '₹800' }, { label: '₹1000', correct: true }],
       why: 'The price printed on the book, {₹1000}, is its *marked price*.',
       said: 'Correct! The price printed on the book, ₹1000, is its marked price.',
-      hint: [{ t: 'Not quite!' }, { t: '\nCheck the price printed on the book.' }],
-      hintAt: 'corner', // (the card is in the middle, the tag on its left)
+      hint: [{ t: 'Not quite! Check the price printed on the book.' }],
       onHint: () => { // the price on the book lights up
         FX.ring(scene.ui, { x: spot.x, y: spot.y, r: spot.r * 1.05 });
         Sound.sparkle();
@@ -1544,7 +1582,7 @@
       title: 'Yes!',
       why: 'Aniket paid {₹200} less than the *marked price*.',
       said: 'Yes! Aniket paid ₹200 less than the marked price.',
-      hint: [{ t: 'Not quite!' }, { t: '\n' }, { t: '₹800', em: true }, { t: ' is the shopkeeper’s selling price.' }],
+      hint: [{ t: 'Not quite! ' }, { t: '₹800', em: true }, { t: ' is the shopkeeper’s ' }, { t: 'selling price', cls: 'tone-sp' }, { t: '.' }],
     });
   }
 
@@ -2025,15 +2063,18 @@
     return note;
   }
 
-  // A first wrong answer, with a second try: "Not quite! Try again!" in her bubble; between the two, what to remember
-  // comes in (`show` brings it in and returns it) and her voice reads it out, her bubble staying up.
-  async function tryAgain(ctx, talk, id, show, lines) {
-    await talk.show([{ t: 'Not quite!', end: true }, { t: '\nTry again!' }]);
-    await talk.part(`${id}-1`, 0, 300);
+  // A first wrong answer, with a second try: "Not quite! Try again!" on a hint strip under the answers (`host`), her voice
+  // alone (no bubble: the user, 2026-10-23); between the two, what to remember comes in under it (`show` brings it in and
+  // returns it) and her voice reads it out.
+  async function tryAgain(ctx, talk, id, show, lines, host) {
+    await talk.clear();
+    const strip = hintStrip(host, [[{ t: 'Not quite!' }], [{ t: 'Try again!' }]], { first: true });
+    await ctx.wait(reducedMotion ? 60 : 450);
+    await readLit(ctx, `${id}-1`, 'Not quite!', [strip.parts[0]]);
     const lit = show();
     await ctx.wait(450);
     for (const [k, line] of lines.entries()) await talk.voice(`${id}-r${k}`, line, [lit], 250);
-    await talk.part(`${id}-2`, 1, 300);
+    await readLit(ctx, `${id}-2`, 'Try again!', [strip.parts[1]]);
   }
 
   // The blue sneakers on the stand in the shoe shop, as Aniket points at them (stage px), for the light sweeping
@@ -2123,8 +2164,7 @@
       options: [{ label: '30%' }, { label: '₹1800', correct: true }, { label: '₹1830' }],
       why: '{₹1800} is the price tagged on the sneakers: their *marked price*.',
       said: 'Correct! ₹1800 is the price tagged on the sneakers: their marked price.',
-      hint: [{ t: 'Not quite!' }, { t: ' Check the price tagged on the sneakers.' }],
-      hintAt: 'corner', // (on her books, bottom right: the card is on the left)
+      hint: [{ t: 'Not quite! Check the price tagged on the sneakers.' }],
       fromLeft: true,
       onHint: () => { // the price card on the sneakers lights up
         FX.ring(scene.ui, PRICE_CARD);
@@ -2527,7 +2567,7 @@
       options: [{ label: '20%' }, { label: '25%', correct: true }, { label: '50%' }],
       stack: true,
       // A first wrong answer: what to remember (the percentage formula), and a second try.
-      hint: () => tryAgain(ctx, talk, 'cfu-hint', () => rememberBox(scene, PERCENT_HINT.note), PERCENT_HINT.say),
+      hint: () => tryAgain(ctx, talk, 'cfu-hint', () => rememberBox(scene, PERCENT_HINT.note), PERCENT_HINT.say, q.slot),
       // Right: "Correct! 250 ÷ 1000 × 100 = 25%." (the part and the whole take their colours as she says them)
       async right() {
         await talk.show([{ t: 'Correct!', cls: 'stress', end: true }, { t: '\n' }, ...CHECK_SUM]);
@@ -2540,22 +2580,32 @@
         q.tag('whole');
         await saying;
       },
-      // Wrong: "Not quite! 250 is the part, 1000 is the whole. 250 ÷ 1000 × 100 = 25%." (then the right answer lights up)
+      // Wrong (again): "Not quite! 250 is the part, 1000 is the whole. 250 ÷ 1000 × 100 = 25%." on the hint strip, her voice
+      // alone, in place of "Try again!" and what to remember (the part and the whole take their colours in the question as
+      // she names them; then the right answer lights up).
       async wrong(answers) {
-        await talk.show([
-          { t: 'Not quite!', end: true },
-          { t: '\n' }, { t: '250', cls: 'tone-part' }, { t: ' is the ' }, { t: 'part', cls: 'tone-part' }, { t: ',', end: true },
-          { t: '\n' }, { t: '1000', cls: 'tone-whole' }, { t: ' is the ' }, { t: 'whole', cls: 'tone-whole' }, { t: '.', end: true },
-          { t: '\n' }, ...CHECK_SUM,
-        ]);
-        await talk.part('cfu-wrong-1', 0, 600);
-        await partWith(ctx, talk, 'cfu-wrong-2', 1, 300, () => q.tag('part'));
-        await partWith(ctx, talk, 'cfu-wrong-3', 2, 300, () => q.tag('whole'));
-        await partWith(ctx, talk, 'cfu-wrong-4', 3, 1900, () => answers.show(1));
+        await talk.clear();
+        scene.ui.querySelectorAll('.remember').forEach(n => FX.settle(n.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 300, fill: 'forwards' })).then(() => n.remove()));
+        const strip = hintStrip(q.slot, [
+          [{ t: 'Not quite!' }],
+          [{ t: '250', cls: 'tone-part' }, { t: ' is the ' }, { t: 'part', cls: 'tone-part' }, { t: ',' }],
+          [{ t: '1000', cls: 'tone-whole' }, { t: ' is the ' }, { t: 'whole', cls: 'tone-whole' }, { t: '.' }],
+          CHECK_SUM,
+        ], { first: true });
+        const read = (k, line, ms, at) => {
+          const saying = readLit(ctx, `cfu-wrong-${k + 1}`, line, [strip.parts[k]]);
+          if (at) ctx.wait(ms).then(at, () => {});
+          return saying;
+        };
+        await read(0, 'Not quite!');
+        await read(1, '250 is the part,', 300, () => q.tag('part'));
+        await read(2, '1000 is the whole.', 300, () => q.tag('whole'));
+        await read(3, '250 ÷ 1000 × 100 = 25%.', 1900, () => answers.show(1));
       },
       // Both ways: "So, 250 is 25% of 1000." while the grid shows 25 of 100 (where the hint was, if there was one).
       async so(answers) {
         scene.ui.querySelectorAll('.remember').forEach(n => FX.settle(n.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 300, fill: 'forwards' })).then(() => n.remove()));
+        dropHints(q.slot);
         grid.open();
         const filling = grid.fill(ctx);
         filling.catch(() => {});
@@ -2644,11 +2694,12 @@
       { parts: [{ answer: '₹1260' }] },
     ],
   };
-  // Swifty's hint when an amount is dropped on the wrong box: what that box is for (the MP box, the Discount box).
+  // The hint when an amount is dropped on the wrong box: what that box is for (the MP box, the Discount box), on a hint
+  // strip under the working, her voice alone.
   const PAY_HINTS = [
-    ['pay-wrong-mp', [{ t: 'Not quite!' }, { t: '\nThe ' }, { t: 'MP', cls: 'tone-mp' }, { t: ' box is for\nthe ' }, { t: 'marked price', cls: 'tone-mp' },
+    ['pay-wrong-mp', [{ t: 'Not quite! The ' }, { t: 'MP', cls: 'tone-mp' }, { t: ' box is for the ' }, { t: 'marked price', cls: 'tone-mp' },
       { t: ', ' }, { t: '₹1800', em: true }, { t: '.' }]],
-    ['pay-wrong-d', [{ t: 'Not quite!' }, { t: '\nThe ' }, { t: 'Discount', cls: 'tone-d' }, { t: ' box is for\nthe ' }, { t: 'discount', cls: 'tone-d' },
+    ['pay-wrong-d', [{ t: 'Not quite! The ' }, { t: 'Discount', cls: 'tone-d' }, { t: ' box is for the ' }, { t: 'discount', cls: 'tone-d' },
       { t: ', ' }, { t: '₹540', em: true }, { t: '.' }]],
   ];
 
@@ -2680,9 +2731,12 @@
       async right() {
         await talk.say('pay-right', [{ t: 'Correct!', cls: 'stress' }], 600);
       },
-      // Wrong: "Not quite!" (then the right answer lights up)
+      // Wrong: "Not quite!" on a hint strip under the answers, her voice alone (then the right answer lights up)
       async wrong(answers) {
-        await talk.say('pay-wrong', 'Not quite!', 600);
+        await talk.clear();
+        const strip = hintStrip(pq.slot, [[{ t: 'Not quite!' }]]);
+        await ctx.wait(reducedMotion ? 60 : 450);
+        await readLit(ctx, 'pay-wrong', 'Not quite!', strip.parts);
         answers.show(1);
         await ctx.wait(900);
       },
@@ -2747,15 +2801,19 @@
         bird.wave();
       },
       onWrong(n, m) {
-        if (hinting || !ctx.alive()) return; // she is still giving the last hint
+        if (hinting || !ctx.alive()) return; // the last hint is still being read
         const [id, text] = PAY_HINTS[m];
-        hinting = talk.say(id, text)
-          .then(() => bird.point())
+        hinting = (async () => {
+          await talk.clear(); // (her "Your turn!" goes, and she with it: the hint is her voice alone)
+          const strip = hintStrip(w.el, [text]);
+          await readLit(ctx, id, plainOf(text), strip.parts);
+        })()
           .catch(err => { if (err !== CANCELLED) console.error(err); })
           .finally(() => { hinting = null; });
       },
     });
     if (hinting) await hinting;
+    dropHints(w.el);
     await ctx.wait(500);
 
     // ₹1800 − ₹540 = ₹1260 (her voice; the working says it).

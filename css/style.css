@@ -4466,3 +4466,18 @@ kbd {
 .is-v2 .pop-card--mp .cn-value { font-size: 150px; }
 .is-v2 .pop-card--mp .cn-term { font-size: 84px; }
 .is-v2 .pop-card--mp .cn-meaning { font-size: 54px; line-height: 1.3; white-space: normal; text-wrap: pretty; }
+
+/* A wrong answer's hint, her voice alone (game.js hintStrip; the user, 2026-10-23: "remove this speech bubble and the
+   book, only voice"): its words on a grey strip, an ✗ before them, on the question card (under its answers), on the
+   practice panels (under the answers) and under the working on screen 27. Its words light up as they are said. */
+.is-v2 .hint-strip { display: flex; align-items: center; gap: 16px; margin-top: 24px; padding: 14px 26px 16px 16px; border-radius: 20px;
+  background: var(--muted-tint); box-shadow: inset 0 0 0 3px var(--muted); color: var(--ink); font-size: 36px; font-weight: 700;
+  line-height: 1.25; text-align: left; text-wrap: pretty; }
+.is-v2 .hint-strip .hs-chip { flex: none; display: grid; place-items: center; width: 52px; height: 52px; border-radius: 50%; background: var(--muted); }
+.is-v2 .hint-strip .hs-chip svg { width: 28px; height: 28px; fill: none; stroke: var(--white); stroke-width: 4; stroke-linecap: round; }
+.is-v2 .hint-strip .em { font-weight: 800; }
+.is-v2 .practice-host .hint-strip { margin-top: 0; font-size: 40px; }
+.is-v2 .practice-host .mp:has(> .ws-panel) > .hint-strip { align-self: stretch; }
+/* (in the slot under a practice question's answers, the strip has its own row, and what to remember comes under it) */
+.is-v2 .q-slot > .hint-strip { grid-area: 1 / 1; }
+.is-v2 .q-slot:has(> .hint-strip) > .remember { grid-area: 2 / 1; margin-top: 18px; }
