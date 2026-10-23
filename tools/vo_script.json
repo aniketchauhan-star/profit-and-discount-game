@@ -1114,5 +1114,209 @@
     "line": "Let’s write it in short.",
     "spoken": "Let’s write it in short.",
     "speaker": "Swifty"
+  },
+  {
+    "id": "vo165",
+    "line": "Wow! Rohan’s birthday party is tonight!",
+    "spoken": "Wow! Rohan's birthday party is tonight!",
+    "speaker": "Aniket"
+  },
+  {
+    "id": "vo166",
+    "line": "I need a new outfit for the party!",
+    "spoken": "I need a new outfit for the party!",
+    "speaker": "Aniket"
+  },
+  {
+    "id": "vo167",
+    "line": "The mall! Let’s go shopping!",
+    "spoken": "The mall! Let's go shopping!",
+    "speaker": "Aniket"
+  },
+  {
+    "id": "vo168",
+    "line": "Use the arrows to walk into a shop!",
+    "spoken": "Use the arrows to walk into a shop!",
+    "speaker": "Swifty"
+  },
+  {
+    "id": "vo169",
+    "line": "This shirt is ₹1,500, with 20% off.",
+    "spoken": "This shirt is one thousand five hundred rupees, with twenty percent off.",
+    "speaker": "Swifty"
+  },
+  {
+    "id": "vo170",
+    "line": "What is the sale price of this shirt?",
+    "spoken": "What is the sale price of this shirt?",
+    "speaker": "Swifty"
+  },
+  {
+    "id": "vo171",
+    "line": "Not quite! Find the 20% discount first. 20% of ₹1,500 = ₹300.",
+    "spoken": "Not quite! Find the twenty percent discount first. twenty percent of one thousand five hundred rupees is three hundred rupees.",
+    "speaker": "Swifty"
+  },
+  {
+    "id": "vo172",
+    "line": "Great! The sale price is ₹1,200. Do you want to buy this shirt?",
+    "spoken": "Great! The sale price is one thousand two hundred rupees. Do you want to buy this shirt?",
+    "speaker": "Swifty"
+  },
+  {
+    "id": "vo173",
+    "line": "Great! You bought the shirt!",
+    "spoken": "Great! You bought the shirt!",
+    "speaker": "Swifty"
+  },
+  {
+    "id": "vo174",
+    "line": "You bought this shirt already!",
+    "spoken": "You bought this shirt already!",
+    "speaker": "Swifty"
+  },
+  {
+    "id": "vo175",
+    "line": "This bottomwear is ₹1,200, with 10% off.",
+    "spoken": "This bottomwear is one thousand two hundred rupees, with ten percent off.",
+    "speaker": "Swifty"
+  },
+  {
+    "id": "vo176",
+    "line": "What is the sale price of this bottomwear?",
+    "spoken": "What is the sale price of this bottomwear?",
+    "speaker": "Swifty"
+  },
+  {
+    "id": "vo177",
+    "line": "Not quite! Find the 10% discount first. 10% of ₹1,200 = ₹120.",
+    "spoken": "Not quite! Find the ten percent discount first. ten percent of one thousand two hundred rupees is one hundred and twenty rupees.",
+    "speaker": "Swifty"
+  },
+  {
+    "id": "vo178",
+    "line": "Great! The sale price is ₹1,080. Do you want to buy this bottomwear?",
+    "spoken": "Great! The sale price is one thousand eighty rupees. Do you want to buy this bottomwear?",
+    "speaker": "Swifty"
+  },
+  {
+    "id": "vo179",
+    "line": "Great! You bought the bottomwear!",
+    "spoken": "Great! You bought the bottomwear!",
+    "speaker": "Swifty"
+  },
+  {
+    "id": "vo180",
+    "line": "You bought this bottomwear already!",
+    "spoken": "You bought this bottomwear already!",
+    "speaker": "Swifty"
+  },
+  {
+    "id": "vo181",
+    "line": "This watch is ₹1,000, with 20% off.",
+    "spoken": "This watch is one thousand rupees, with twenty percent off.",
+    "speaker": "Swifty"
+  },
+  {
+    "id": "vo182",
+    "line": "What is the sale price of this watch?",
+    "spoken": "What is the sale price of this watch?",
+    "speaker": "Swifty"
+  },
+  {
+    "id": "vo183",
+    "line": "Not quite! Find the 20% discount first. 20% of ₹1,000 = ₹200.",
+    "spoken": "Not quite! Find the twenty percent discount first. twenty percent of one thousand rupees is two hundred rupees.",
+    "speaker": "Swifty"
+  },
+  {
+    "id": "vo184",
+    "line": "Great! The sale price is ₹800. Do you want to buy this watch?",
+    "spoken": "Great! The sale price is eight hundred rupees. Do you want to buy this watch?",
+    "speaker": "Swifty"
+  },
+  {
+    "id": "vo185",
+    "line": "Great! You bought the watch!",
+    "spoken": "Great! You bought the watch!",
+    "speaker": "Swifty"
+  },
+  {
+    "id": "vo186",
+    "line": "You bought this watch already!",
+    "spoken": "You bought this watch already!",
+    "speaker": "Swifty"
+  },
+  {
+    "id": "vo187",
+    "line": "These sunglasses are ₹800, with 20% off.",
+    "spoken": "These sunglasses are eight hundred rupees, with twenty percent off.",
+    "speaker": "Swifty"
+  },
+  {
+    "id": "vo188",
+    "line": "What is the sale price of these sunglasses?",
+    "spoken": "What is the sale price of these sunglasses?",
+    "speaker": "Swifty"
+  },
+  {
+    "id": "vo189",
+    "line": "Not quite! Find the 20% discount first. 20% of ₹800 = ₹160.",
+    "spoken": "Not quite! Find the twenty percent discount first. twenty percent of eight hundred rupees is one hundred and sixty rupees.",
+    "speaker": "Swifty"
+  },
+  {
+    "id": "vo190",
+    "line": "Great! The sale price is ₹640. Do you want to buy these sunglasses?",
+    "spoken": "Great! The sale price is six hundred and forty rupees. Do you want to buy these sunglasses?",
+    "speaker": "Swifty"
+  },
+  {
+    "id": "vo191",
+    "line": "Great! You bought the sunglasses!",
+    "spoken": "Great! You bought the sunglasses!",
+    "speaker": "Swifty"
+  },
+  {
+    "id": "vo192",
+    "line": "You bought these sunglasses already!",
+    "spoken": "You bought these sunglasses already!",
+    "speaker": "Swifty"
+  },
+  {
+    "id": "vo193",
+    "line": "Take your time and look around!",
+    "spoken": "Take your time and look around!",
+    "speaker": "Swifty"
+  },
+  {
+    "id": "vo194",
+    "line": "Total amount: ₹3,720.",
+    "spoken": "Total amount: three thousand seven hundred and twenty rupees.",
+    "speaker": "Swifty"
+  },
+  {
+    "id": "vo195",
+    "line": "Money left: ₹1,280.",
+    "spoken": "Money left: one thousand two hundred and eighty rupees.",
+    "speaker": "Swifty"
+  },
+  {
+    "id": "vo196",
+    "line": "Wow! You found the best deals for the party!",
+    "spoken": "Wow! You found the best deals for the party!",
+    "speaker": "Swifty"
+  },
+  {
+    "id": "vo197",
+    "line": "You have successfully helped Aniket get ready for the party!",
+    "spoken": "You have successfully helped Aniket get ready for the party!",
+    "speaker": "Swifty"
+  },
+  {
+    "id": "vo198",
+    "line": "Wow! You did it!",
+    "spoken": "Wow! You did it!",
+    "speaker": "Swifty"
   }
 ]

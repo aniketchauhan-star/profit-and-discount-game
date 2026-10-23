@@ -5036,9 +5036,544 @@
     }
   }
 
+  // ---------- Party Prep (screens 32–51: the user's designs of 2026-10-23) ----------
+  // Rohan's party: Aniket buys a party shirt, bottomwear, a watch and sunglasses at Sky Mall with ₹5,000. These are its
+  // pieces, drawn as in the designs: the bar on top (the wallet, Party Prep and the shopping bag), the cards with a
+  // question about a sale price (Check), its working out (Buy / Keep Looking), what was bought, the shopping list, the
+  // party look's prices, and Mission Complete. All in stage px; where each sits is in css (.is-party, by screen).
+
+  const inr = n => '₹' + Math.round(n).toLocaleString('en-IN'); // ₹1,500 (as the designs write amounts)
+  const PARTY_EASE = 'cubic-bezier(.2,.8,.3,1)';
+  const springIn = (node, ms = 560) => reveal(node, [
+    { opacity: 0, transform: 'translateY(40px) scale(.92)' },
+    { opacity: 1, transform: 'translateY(-6px) scale(1.01)', offset: 0.7 },
+    { opacity: 1, transform: 'none' },
+  ], { duration: T(ms), easing: PARTY_EASE });
+  const popIn = (node, ms = 420) => reveal(node, [
+    { opacity: 0, transform: 'scale(.5)' }, { opacity: 1, transform: 'scale(1.1)', offset: 0.65 }, { opacity: 1, transform: 'none' },
+  ], { duration: T(ms), easing: PARTY_EASE });
+  const nudge = node => node.animate([{ transform: 'none' }, { transform: 'scale(1.08)', offset: 0.4 }, { transform: 'none' }],
+    { duration: 420, easing: 'ease-out' });
+  const PARTY_ICONS = {
+    next: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>',
+    cart: '<svg viewBox="0 0 32 32" aria-hidden="true"><path d="M3 5h4l3.5 15h14L28 9H9"/><circle cx="12" cy="26" r="2.4"/><circle cx="23" cy="26" r="2.4"/></svg>',
+    search: '<svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="13" cy="13" r="8.5"/><path d="M19.5 19.5L28 28"/></svg>',
+    bulb: '<svg viewBox="0 0 40 40" aria-hidden="true"><path class="pb-glass" d="M20 5a11 11 0 0 0-6.5 19.9c1.2.9 1.9 2.3 1.9 3.8V30h9.2v-1.3c0-1.5.7-2.9 1.9-3.8A11 11 0 0 0 20 5z"/><path class="pb-base" d="M15.4 31.5h9.2M16.4 35h7.2"/><path class="pb-ray" d="M20 0.5v2.5M5 7l2 1.8M35 7l-2 1.8M1.5 18h2.6M35.9 18h2.6"/></svg>',
+    star: '<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M24 3.5l6.2 13 14.2 1.8-10.5 9.8 2.7 14.1L24 35.3l-12.6 6.9 2.7-14.1L3.6 18.3l14.2-1.8z"/></svg>',
+    up: '<svg viewBox="0 0 40 40" aria-hidden="true"><path d="M20 30V12M11 20l9-9 9 9"/></svg>',
+  };
+
+  /**
+   * The bar on top of the mall and its shops: the wallet (its money, counting down as he pays) and the shopping list (a
+   * slot for each thing to buy, its picture, ticked once bought). count(to) counts the money; tick(i) ticks a slot.
+   *  wallet: the wallet's picture;  items [{ icon, name, done }];  money
+   */
+  function partyHud(parent, { wallet, items, money }) {
+    const root = el('div', 'ph', parent);
+    const purse = el('div', 'ph-wallet', root);
+    Object.assign(el('img', 'ph-wallet-icon', purse), { src: wallet, alt: '' });
+    const amount = el('span', 'ph-amount', purse);
+    amount.textContent = inr(money);
+    purse.setAttribute('aria-label', `Wallet: ${inr(money)}`);
+    const list = el('div', 'ph-list', root);
+    el('span', 'ph-list-title', list).textContent = 'Shopping List';
+    const row = el('div', 'ph-slots', list);
+    const slots = items.map(it => {
+      const slot = el('i', it.done ? 'ph-slot is-done' : 'ph-slot', row);
+      Object.assign(el('img', '', slot), { src: it.icon, alt: '' });
+      el('b', 'ph-tick', slot).innerHTML = ICON_CHECK;
+      slot.setAttribute('aria-label', `${it.name}${it.done ? ': bought' : ''}`);
+      return slot;
+    });
+    let shown = money;
+    return {
+      el: root,
+      purse,
+      slots,
+      // The money counts to `to` (a purchase: down), the wallet pulsing as it does.
+      async count(to, ms = 1100) {
+        const from = shown;
+        shown = to;
+        purse.setAttribute('aria-label', `Wallet: ${inr(to)}`);
+        if (reducedMotion) {
+          amount.textContent = inr(to);
+          return;
+        }
+        nudge(purse);
+        const t0 = performance.now();
+        await new Promise(resolve => {
+          const step = now => {
+            const t = Math.min(1, (now - t0) / ms);
+            amount.textContent = inr(from + (to - from) * (1 - Math.pow(1 - t, 3)));
+            if (t < 1 && amount.isConnected) requestAnimationFrame(step);
+            else resolve();
+          };
+          requestAnimationFrame(step);
+        });
+        amount.textContent = inr(to);
+      },
+      tick(i) {
+        const slot = slots[i];
+        if (!slot || slot.classList.contains('is-done')) return;
+        slot.classList.add('is-done');
+        popIn(slot.querySelector('.ph-tick'), 460);
+        Sound.correct();
+      },
+    };
+  }
+
+  /**
+   * Four arrow buttons (up, down, left, right), to walk with: press and hold one (or two, for a diagonal) with the mouse or
+   * a finger; the arrow keys and W A S D press them too (the button lights up). value() is where they point, { x, y }
+   * (length 1 while one is held, 0 when none is). destroy() takes them away.
+   */
+  const PAD_ARROW = '<svg viewBox="0 0 40 40" aria-hidden="true"><path d="M20 8.5c1 0 1.9.5 2.5 1.3l10.2 14.6c1.4 2-.1 4.6-2.5 4.6H9.8c-2.4 0-3.9-2.6-2.5-4.6L17.5 9.8c.6-.8 1.5-1.3 2.5-1.3z"/></svg>';
+  function arrowPad(parent, { cls = '' } = {}) {
+    const pad = el('div', classes('apad', cls), parent);
+    pad.setAttribute('role', 'group');
+    pad.setAttribute('aria-label', 'Arrows: press and hold to walk, or use the arrow keys');
+    const WAYS = { up: [0, -1], down: [0, 1], left: [-1, 0], right: [1, 0] };
+    const KEY = { ArrowUp: 'up', w: 'up', W: 'up', ArrowDown: 'down', s: 'down', S: 'down', ArrowLeft: 'left', a: 'left', A: 'left', ArrowRight: 'right', d: 'right', D: 'right' };
+    const pointers = new Map(); // pointer id → the way its button goes
+    const keys = new Set();
+    const buttons = {};
+    const held = () => new Set([...pointers.values(), ...keys]);
+    const sync = () => {
+      const h = held();
+      Object.entries(buttons).forEach(([way, b]) => b.classList.toggle('is-down', h.has(way)));
+    };
+    Object.keys(WAYS).forEach(way => {
+      const b = el('button', `apad-btn apad-btn--${way}`, pad);
+      b.type = 'button';
+      b.setAttribute('aria-label', `Walk ${way}`);
+      b.innerHTML = PAD_ARROW;
+      b.addEventListener('pointerdown', e => {
+        e.preventDefault();
+        try { b.setPointerCapture(e.pointerId); } catch (err) { /* not capturable */ }
+        pointers.set(e.pointerId, way);
+        sync();
+      });
+      const lift = e => {
+        if (pointers.get(e.pointerId) !== way) return;
+        pointers.delete(e.pointerId);
+        sync();
+      };
+      ['pointerup', 'pointercancel', 'lostpointercapture'].forEach(type => b.addEventListener(type, lift));
+      b.addEventListener('contextmenu', e => e.preventDefault()); // (a long press on a tablet)
+      buttons[way] = b;
+    });
+    const keyDown = e => {
+      const way = KEY[e.key];
+      if (!way || e.altKey || e.ctrlKey || e.metaKey) return;
+      e.preventDefault();
+      keys.add(way);
+      sync();
+    };
+    const keyUp = e => {
+      const way = KEY[e.key];
+      if (!way) return;
+      keys.delete(way);
+      sync();
+    };
+    const blur = () => {
+      keys.clear();
+      pointers.clear();
+      sync();
+    };
+    window.addEventListener('keydown', keyDown);
+    window.addEventListener('keyup', keyUp);
+    window.addEventListener('blur', blur);
+    return {
+      el: pad,
+      value() {
+        let x = 0;
+        let y = 0;
+        held().forEach(way => { x += WAYS[way][0]; y += WAYS[way][1]; });
+        const n = Math.hypot(x, y);
+        return n ? { x: x / n, y: y / n } : { x: 0, y: 0 };
+      },
+      destroy() {
+        window.removeEventListener('keydown', keyDown);
+        window.removeEventListener('keyup', keyUp);
+        window.removeEventListener('blur', blur);
+        pad.remove();
+      },
+    };
+  }
+
+  /**
+   * Aniket seen from above (the mall's map): his walk in four ways, from a strip of frames (sheet: { src, frameW, frameH,
+   * anchorX, anchorY (the point between his feet), rows: { down, up, left, right }, frames: { down: n, … }, stand:
+   * { down: [row, col], up, right } (left: right, mirrored) }), drawn `scale` times as big. place(x, y) puts the point
+   * between his feet there; walk(way, dist) turns him that way and plays his steps (a frame every `per` px he goes: a
+   * number, or one for each way, so that a cycle of his steps covers the ground it should and his feet don't slide);
+   * stand(way) is his standing pose.
+   */
+  class TopWalker {
+    constructor(parent, sheet, { scale = 0.6, per = 9 } = {}) {
+      this.sheet = sheet;
+      this.scale = scale;
+      this.per = per;
+      this.root = el('div', 'tw', parent);
+      el('div', 'tw-shadow', this.root);
+      this.body = el('div', 'tw-body', this.root, {
+        width: px(sheet.frameW), height: px(sheet.frameH), left: px(-sheet.anchorX), top: px(-sheet.anchorY),
+        backgroundImage: `url("${sheet.src}")`, transformOrigin: `${sheet.anchorX}px ${sheet.anchorY}px`,
+      });
+      this.way = 'up';
+      this.phase = 0;
+      this.x = 0;
+      this.y = 0;
+      this.stand('up');
+    }
+
+    place(x, y) {
+      this.x = x;
+      this.y = y;
+      this.root.style.transform = `translate(${num(x)}px, ${num(y)}px) scale(${this.scale})`;
+      this.root.style.zIndex = String(Math.round(y)); // (lower on the floor: in front)
+    }
+
+    _frame(row, col, mirror = false) {
+      const s = this.sheet;
+      this.body.style.backgroundPosition = `${-col * s.frameW}px ${-row * s.frameH}px`;
+      this.body.style.transform = mirror ? 'scaleX(-1)' : '';
+    }
+
+    walk(way, dist) {
+      if (way !== this.way) {
+        this.way = way;
+        this.phase = 0;
+      }
+      const n = this.sheet.frames[way];
+      const per = typeof this.per === 'number' ? this.per : this.per[way];
+      this.phase = (this.phase + dist / per) % n;
+      this._frame(this.sheet.rows[way], Math.floor(this.phase));
+    }
+
+    stand(way = this.way) {
+      this.way = way;
+      const [row, col] = this.sheet.stand[way === 'left' ? 'right' : way];
+      this._frame(row, col, way === 'left');
+    }
+  }
+
+
+  /**
+   * A question about a sale price, on a cream card with a gold edge (as in the designs): the question, four amounts
+   * (two by two) and Check. The player picks an amount (it turns green), then presses Check: answer() resolves with
+   * its index. wrong(i, { tip, sum }) crosses it out, puts "Not quite!" on top and a hint (a bulb, `tip`, and the sum
+   * that gives the discount) under the question; the amounts left can be picked again. right(i) ticks it.
+   *  question;  options: the amounts;  tag: optional { icon, price, off } (the item and its tags, on the card's left)
+   */
+  function shopQuestion(parent, { question, options, tag = null }) {
+    const root = el('div', 'pq2', parent);
+    const card = el('div', tag ? 'pq2-card pq2-card--tag' : 'pq2-card', root);
+    const ribbon = el('div', 'pq2-ribbon', card);
+    ribbon.textContent = 'Not quite!';
+    if (tag) { // the item, with its price tag and its discount sticker
+      const item = el('div', 'pq2-item', card);
+      Object.assign(el('img', 'pq2-item-pic', item), { src: tag.icon, alt: '' });
+      const t = el('div', 'pq2-tag', item);
+      el('span', 'pq2-tag-price', t).textContent = inr(tag.price);
+      el('span', 'pq2-tag-off', t).innerHTML = `${tag.off}%<br>OFF`;
+    }
+    const body = el('div', 'pq2-body', card);
+    const q = el('div', 'pq2-question', body);
+    q.textContent = question;
+    const hint = el('div', 'pq2-hint', body);
+    const tipRow = el('div', 'pq2-tip', hint);
+    el('span', 'pq2-bulb', tipRow).innerHTML = PARTY_ICONS.bulb;
+    const tipText = el('span', 'pq2-tip-text', tipRow);
+    const sumRow = el('div', 'pq2-sum', hint);
+    const grid = el('div', 'pq2-options', body);
+    let picked = -1;
+    let waiting = null;
+    const check = el('button', 'pq2-check', body);
+    check.type = 'button';
+    check.innerHTML = `<span>Check</span>${PARTY_ICONS.next}`;
+    check.disabled = true;
+    const buttons = options.map((value, i) => {
+      const b = el('button', 'pq2-opt', grid);
+      b.type = 'button';
+      b.disabled = true; // (until the question has been read: answer())
+      el('span', 'pq2-opt-label', b).textContent = inr(value);
+      b.addEventListener('click', () => {
+        if (b.disabled) return;
+        Sound.click();
+        picked = i;
+        buttons.forEach(o => o.classList.toggle('is-picked', o === b));
+        check.disabled = false;
+        check.classList.add('is-ready');
+      });
+      return b;
+    });
+    check.addEventListener('click', () => {
+      if (check.disabled || picked < 0 || !waiting) return;
+      const resolve = waiting;
+      waiting = null;
+      check.disabled = true;
+      check.classList.remove('is-ready');
+      buttons.forEach(b => { b.disabled = true; });
+      resolve(picked);
+    });
+    card.setAttribute('role', 'group');
+    card.setAttribute('aria-label', question);
+    [ribbon, hint].forEach(n => { n.style.display = 'none'; });
+    root.style.opacity = '0';
+    return {
+      el: root,
+      card,
+      question: q,
+      tipText,
+      sumRow,
+      buttons,
+      open: () => springIn(root, 600),
+      // Resolves with the index of the amount checked.
+      answer() {
+        picked = -1;
+        buttons.forEach(b => {
+          b.classList.remove('is-picked');
+          if (!b.classList.contains('is-wrong')) b.disabled = false;
+        });
+        check.disabled = true;
+        return new Promise(resolve => { waiting = resolve; });
+      },
+      wrong(i, { tip, sum }) {
+        const b = buttons[i];
+        b.classList.remove('is-picked');
+        b.classList.add('is-wrong');
+        el('span', 'pq2-x', b).innerHTML = ICON_CROSS;
+        Sound.wrong();
+        b.animate([{ transform: 'translateX(0)' }, { transform: 'translateX(-10px)' }, { transform: 'translateX(9px)' },
+          { transform: 'translateX(-6px)' }, { transform: 'translateX(4px)' }, { transform: 'none' }], { duration: 420 });
+        tipText.textContent = tip;
+        sumRow.replaceChildren();
+        sum.forEach(seg => { el('span', seg.cls || '', sumRow).textContent = seg.t; });
+        const first = ribbon.style.display === 'none';
+        ribbon.style.display = '';
+        hint.style.display = '';
+        q.style.display = 'none'; // (as in the designs: the hint takes the question's place, "Not quite!" on top)
+        if (first) {
+          popIn(ribbon, 460);
+          reveal(hint, [{ opacity: 0, transform: 'translateY(-10px)' }, { opacity: 1, transform: 'none' }], { duration: T(420), easing: PARTY_EASE });
+        } else {
+          nudge(hint);
+        }
+        return hint;
+      },
+      right(i) {
+        const b = buttons[i];
+        b.classList.remove('is-picked');
+        b.classList.add('is-right');
+        el('span', 'pq2-x pq2-tick', b).innerHTML = ICON_CHECK;
+        Sound.correct();
+        ribbon.style.display = 'none';
+      },
+      async close() {
+        await settle(root.animate([{ opacity: 1, transform: 'none' }, { opacity: 0, transform: 'translateY(24px) scale(.96)' }],
+          { duration: 320, easing: 'ease-in', fill: 'forwards' }));
+        root.remove();
+      },
+    };
+  }
+
+  /**
+   * An item's price worked out (as in the designs): its picture, then Original Price, Discount (n%) − ₹…, a line, and
+   * Sale Price (or You Paid), big and green; and buttons under it (Buy, Keep Looking). choose() resolves with the index of
+   * the button pressed. With `ribbon` (e.g. "Shirt Purchased!"), a green ribbon and a ✓ medal on top, and `note` under it.
+   *  icon;  rows [{ label, value, cls }];  total { label, value };  buttons [{ label, tone, icon }];  ribbon;  note
+   */
+  function priceCard(parent, { icon, rows, total, buttons = [], ribbon = null, note = null, cls = '' }) {
+    const root = el('div', classes('pc2', cls), parent);
+    const card = el('div', 'pc2-card', root);
+    let medal = null;
+    if (ribbon) {
+      medal = el('div', 'pc2-medal', root);
+      medal.innerHTML = ICON_CHECK;
+      el('div', 'pc2-ribbon', root).textContent = ribbon;
+      root.classList.add('has-ribbon');
+    }
+    const top = el('div', 'pc2-top', card);
+    const pic = el('div', 'pc2-pic', top);
+    Object.assign(el('img', '', pic), { src: icon, alt: '' });
+    const table = el('div', 'pc2-rows', top);
+    const rowEls = rows.map(r => {
+      const row = el('div', classes('pc2-row', r.cls), table);
+      el('span', 'pc2-label', row).textContent = r.label;
+      el('span', 'pc2-value', row).textContent = r.value;
+      return row;
+    });
+    el('div', 'pc2-line', table);
+    const totalRow = el('div', 'pc2-row pc2-total', table);
+    el('span', 'pc2-label', totalRow).textContent = total.label;
+    el('span', 'pc2-value', totalRow).textContent = total.value;
+    if (note) el('div', 'pc2-note', card).textContent = note;
+    let choosing = null;
+    let early = null; // a button pressed before choose() was asked (e.g. while Swifty still speaks): it counts
+    const buttonEls = buttons.map((b, i) => {
+      if (i === 0) el('div', 'pc2-buttons', card);
+      const btn = el('button', `pc2-btn pc2-btn--${b.tone}`, card.querySelector('.pc2-buttons'));
+      btn.type = 'button';
+      btn.innerHTML = `${b.icon ? PARTY_ICONS[b.icon] : ''}<span>${b.label}</span>`;
+      btn.addEventListener('click', () => {
+        if (!choosing) {
+          if (early === null && !btn.closest('.is-paid')) {
+            early = i;
+            Sound.click();
+            btn.classList.add('is-pressed');
+          }
+          return;
+        }
+        Sound.click();
+        const resolve = choosing;
+        choosing = null;
+        resolve(i);
+      });
+      return btn;
+    });
+    root.style.opacity = '0';
+    return {
+      el: root,
+      card,
+      rows: rowEls,
+      total: totalRow,
+      buttons: buttonEls,
+      async open() {
+        await springIn(root, 620);
+        if (medal) popIn(medal, 520);
+      },
+      choose() {
+        if (early !== null) {
+          const i = early;
+          early = null;
+          buttonEls.forEach(b => b.classList.remove('is-pressed'));
+          return Promise.resolve(i);
+        }
+        return new Promise(resolve => { choosing = resolve; });
+      },
+      // Paid: a stamp across the price, and the buttons go.
+      stamp(text = 'PAID') {
+        root.classList.add('is-paid');
+        const s = el('div', 'pc2-stamp', card);
+        s.textContent = text;
+        Sound.stamp();
+        reveal(s, [{ opacity: 0, transform: 'scale(2.2) rotate(-14deg)' }, { opacity: 1, transform: 'scale(.95) rotate(-10deg)', offset: 0.7 },
+          { opacity: 1, transform: 'rotate(-10deg)' }], { duration: 480, easing: 'cubic-bezier(.3,.7,.4,1)' });
+        const row = card.querySelector('.pc2-buttons');
+        if (row) settle(row.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 300, fill: 'forwards' }));
+      },
+      async close() {
+        await settle(root.animate([{ opacity: 1, transform: 'none' }, { opacity: 0, transform: 'translateY(24px) scale(.96)' }],
+          { duration: 320, easing: 'ease-in', fill: 'forwards' }));
+        root.remove();
+      },
+      hide() {
+        return settle(root.animate([{ opacity: 1, transform: 'none' }, { opacity: 0, transform: 'translateY(40px) scale(.94)' }],
+          { duration: 360, easing: 'ease-in', fill: 'forwards' }));
+      },
+      show() {
+        root.getAnimations().forEach(a => a.cancel());
+        return springIn(root, 520);
+      },
+    };
+  }
+
+  /** A green ✓ badge on a shop that is done (its item bought). */
+  function doneBadge(parent, { x, y, instant = false }) {
+    const b = el('div', 'pm-done', parent, { left: px(x - 34), top: px(y - 34) });
+    b.innerHTML = ICON_CHECK;
+    if (!instant) popIn(b, 460);
+    return b;
+  }
+
+  /**
+   * The party look, priced (as in the design "All Set for the Party!"): a green ribbon, a row for each item (its picture,
+   * its name, its price struck through, what was paid), a line, the total, and the money left. row(i) brings one in.
+   */
+  function partyTable(parent, { title, items, total, left }) {
+    const root = el('div', 'pt', parent);
+    el('div', 'pt-ribbon', root).textContent = title;
+    const card = el('div', 'pt-card', root);
+    const rows = items.map(it => {
+      const row = el('div', 'pt-row', card);
+      Object.assign(el('img', 'pt-icon', row), { src: it.icon, alt: '' });
+      el('span', 'pt-name', row).textContent = it.name;
+      el('s', 'pt-was', row).textContent = inr(it.mp);
+      el('b', 'pt-paid', row).textContent = inr(it.pay);
+      row.style.opacity = '0';
+      return row;
+    });
+    el('div', 'pt-line', card);
+    const totalRow = el('div', 'pt-sum', card);
+    el('span', '', totalRow).textContent = 'Total Amount';
+    el('b', '', totalRow).textContent = inr(total);
+    const leftRow = el('div', 'pt-sum pt-left', card);
+    el('span', '', leftRow).textContent = 'Money Left';
+    el('b', '', leftRow).textContent = inr(left);
+    [totalRow, leftRow].forEach(n => { n.style.opacity = '0'; });
+    root.style.opacity = '0';
+    return {
+      el: root,
+      rows,
+      totalRow,
+      leftRow,
+      open: () => springIn(root, 640),
+      row: i => reveal(rows[i], [{ opacity: 0, transform: 'translateX(24px)' }, { opacity: 1, transform: 'none' }], { duration: T(360), easing: PARTY_EASE }),
+      showTotal: () => popIn(totalRow, 460),
+      showLeft: () => popIn(leftRow, 460),
+    };
+  }
+
+  /** Mission Complete (as in the design): three gold stars, a red ribbon, a line, and the items, each ticked. */
+  function partyMission(parent, { title, text, items }) {
+    const root = el('div', 'pmc', parent);
+    const stars = el('div', 'pmc-stars', root);
+    const starEls = [0, 1, 2].map(() => {
+      const s = el('span', 'pmc-star', stars);
+      s.innerHTML = PARTY_ICONS.star;
+      s.style.opacity = '0';
+      return s;
+    });
+    el('div', 'pmc-ribbon', root).textContent = title;
+    const card = el('div', 'pmc-card', root);
+    const textEl = el('div', 'pmc-text', card);
+    textEl.textContent = text;
+    const grid = el('div', 'pmc-grid', card);
+    const tiles = items.map(it => {
+      const tile = el('div', 'pmc-tile', grid);
+      const pic = el('div', 'pmc-pic', tile);
+      Object.assign(el('img', '', pic), { src: it.icon, alt: '' });
+      el('span', 'pmc-tick', pic).innerHTML = ICON_CHECK;
+      el('span', 'pmc-name', tile).textContent = it.name;
+      tile.style.opacity = '0';
+      return tile;
+    });
+    root.style.opacity = '0';
+    return {
+      el: root,
+      text: textEl,
+      async open(ctx) {
+        await springIn(root, 640);
+        for (const s of starEls) {
+          Sound.sparkle();
+          popIn(s, 520);
+          await ctx.wait(160);
+        }
+      },
+      async tiles(ctx) {
+        for (const t of tiles) {
+          popIn(t, 420);
+          await ctx.wait(140);
+        }
+      },
+    };
+  }
+
   window.FX = {
     CANCELLED, el, fracText, rand, settle, reveal, flyAcross, glow, motes, twinkles, burst, shine, exclaim, bubble, thought, badge, ring, question, definitions, pricePanel,
     reduction, definitionCard, checkpoint, formulaNote, concept, barModel, grid100, formulaPanel, formulaReveal, summaryPanel, productCard, productQuestion, meansPanel, workedSheet, summarySheet, strike, stickTag, choices, percentFormula, questionPanel, challengePanel, walletPanel, shopPicker, street, streetVeil, questionBar, offerCard, flyPicture, purchaseSlip, confetti, celebration, receipt, twoAmounts, missionPanel, recapCards, takeaway, Bird, Walker,
+    inr, partyHud, shopQuestion, priceCard, doneBadge, partyTable, partyMission, arrowPad, TopWalker,
     setPace(p) { pace = p; },
   };
 })();

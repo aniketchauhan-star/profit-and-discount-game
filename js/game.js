@@ -8,6 +8,7 @@
   const STAGE_W = 1920;
   const STAGE_H = 1080;
   const ASSETS = 'game assets/';
+  const PARTY = ASSETS + 'party/'; // Party Prep's pictures, after screen 31 (the user's of 2026-10-23)
   const reducedMotion = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
   const $ = sel => document.querySelector(sel);
   const sleep = ms => new Promise(r => setTimeout(r, ms));
@@ -122,9 +123,8 @@
     offmeans: [[342, 79, 600, 382], [1248, 558, 1444, 710], [1116, 701, 1452, 855]],     // (the same picture)
     final: [[436, 73, 664, 345], [1224, 558, 1406, 648], [1088, 679, 1406, 800]],        // Aniket, the two tags
     return: [[373, 73, 600, 315], [1327, 194, 1600, 436]],                                // Aniket, his father
-    school: [[364, 127, 606, 370], [1303, 127, 1545, 370]],
-    money: [[285, 67, 573, 370], [1270, 97, 1542, 370], [830, 370, 1179, 642]],          // his father, Aniket, the money
-    deal: [[433, 218, 691, 491], [1236, 36, 1479, 309]],
+    partymoney: [[285, 67, 573, 370], [1270, 97, 1542, 370], [830, 370, 1179, 642]],     // his father, Aniket, the money
+    partydeal: [[433, 218, 691, 491], [1236, 36, 1479, 309]],
   };
 
   // Aniket's questions, carried from the story to the top of the teaching screens that answer them (the revamp, Part 2:
@@ -134,14 +134,6 @@
   // stay in view on the left. QUIZ_DRIFT is where its slow drift goes.
   const QUIZ_CAMERA = 'translateX(-282px) scale(1.04)';
   const QUIZ_DRIFT = 'translateX(-290px) scale(1.055)';
-
-  // Screens 43 and 44 share one view (only Aniket's hands change), and so one slow drift: the fade between them
-  // carries the camera over.
-  const KB_TABLE = { origin: '55% 40%', from: 'scale(1.02)', to: 'scale(1.05) translate(-4px, 3px)' };
-
-  // The shopping game's four streets (screens 48–51), as the scene list names them.
-  const ROUND_TITLES = [['Uniform Street', 'School Uniform: three shops'], ['Shoe Street', 'School Shoes: three shops'],
-    ['Bag Corner', 'School Bag: three shops'], ['Bottle Stop', 'Water Bottle: the final challenge']];
 
   const SCENES = [
     {
@@ -443,116 +435,72 @@
       dust: [560, 80, 1300, 720],  // specks floating in the sunlight
       play: playReturn,
     },
+    // Party Prep (the user's pictures of 2026-10-23, after screen 31): a message: Rohan's birthday party is tonight. His
+    // father gives him ₹5,000 (their talk, in the clips made for it), and at the mall Aniket walks where the player steers
+    // him, with four arrows, on its map seen from above: into a shop, and its own picture comes. In each he works out the
+    // sale price of what he needs, and buys it. Then all set for the party.
     {
-      id: 'school', title: 'School Starts Soon', sub: 'Your new school session starts in a few days.',
-      bg: ASSETS + 'boy and his father talking.png',
-      kb: { origin: '60% 32%', from: 'scale(1.02)', to: 'scale(1.05) translate(-4px, 3px)' }, // a slow drift, both faces in view
-      lamps: [[1062, 240, 260]],   // the daylight through the far doorway
-      dust: [620, 80, 1300, 640],
-      play: playSchool,
+      id: 'invite', title: 'A Party Message', sub: 'Rohan’s birthday party is tonight!',
+      bg: PARTY + 'party-message.webp',
+      kb: { origin: '62% 40%', from: 'scale(1.02)', to: 'scale(1.05)' },
+      lamps: [[220, 240, 260]], dust: [200, 80, 1400, 700],
+      play: playInvite,
     },
     {
-      id: 'list', title: 'The Shopping List', sub: 'School uniform, shoes, bag and water bottle',
-      bg: ASSETS + 'father gave him list.png',
-      kb: null, origin: '55% 40%', still: true, // the camera pushes in on the list and back (see playList)
-      lamps: [[1856, 250, 300]],   // the sunny window
-      dust: [1100, 60, 1900, 640],
-      play: playList,
-    },
-    {
-      id: 'money', title: '₹5,000 to Spend', sub: 'Here’s ₹5,000.',
+      id: 'partymoney', title: '₹5,000 for the Party', sub: 'Here’s ₹5,000.',
       bg: ASSETS + 'father gave him money.png',
-      kb: KB_TABLE, lamps: [[1856, 250, 300]], dust: [1100, 60, 1900, 640],
-      shot: 'table',
-      play: playMoney,
+      kb: { origin: '55% 40%', from: 'scale(1.02)', to: 'scale(1.05) translate(-4px, 3px)' },
+      lamps: [[1856, 250, 300]], dust: [1100, 60, 1900, 640],
+      play: playPartyMoney,
     },
     {
-      id: 'deal', title: 'Find the Best Deals', sub: 'Then I’m definitely finding the best offers!',
+      id: 'partydeal', title: 'Find the Best Deals', sub: 'Then I’m definitely finding the best offers!',
       bg: ASSETS + 'boy stand and talk .png',
       kb: { origin: '52% 30%', from: 'scale(1.02)', to: 'scale(1.05) translate(4px, 3px)' }, // a slow drift, both faces in view
-      lamps: [[1520, 300, 300]],   // the sunny window behind Aniket
-      dust: [700, 80, 1500, 640],
-      play: playDeal,
+      lamps: [[1520, 300, 300]], dust: [700, 80, 1500, 640],
+      play: playPartyDeal,
     },
     {
-      id: 'begin', title: 'Game Begins', sub: 'School Shopping Challenge',
-      bg: ASSETS + 'game begins.png',
-      kb: { origin: '25% 45%', from: 'scale(1.02)', to: 'scale(1.04) translate(3px, 2px)' }, // a slow drift on Aniket
-      lamps: [[1560, 110, 380]],   // the morning sun over the trees
-      dust: [80, 60, 980, 820],
-      play: playBegin,
+      id: 'tomall', title: 'To the Mall', sub: 'Aniket walks into the mall',
+      bg: PARTY + 'mall-entrance.webp',
+      kb: { origin: '72% 52%', from: 'scale(1.02)', to: 'scale(1.1)' }, // in towards the doors
+      lamps: [[1300, 560, 360]], dust: [700, 300, 1900, 900],
+      play: playToMall,
     },
     {
-      id: 'shops', title: 'Shopping Area', sub: 'Choose any item first',
-      look: 'shops', // no picture: the game draws the design's light blue (see css: .scene.look-shops)
-      kb: null, origin: '50% 50%', lamps: [], dust: null,
-      exit: 'zoom', // into a street: the camera pushes in on the card picked (see playShops)
-      next: () => (SHOPS.find(shop => !Shopping.bought.includes(shop.id)) || { id: 'complete' }).id, // the next item to buy
-      play: playShops,
+      id: 'mallfloor', title: 'Inside the Mall', sub: 'Walk to a shop with the arrows',
+      bg: PARTY + 'mall-map.webp',
+      kb: null, origin: '50% 50%', still: true, lamps: [], dust: null,
+      next: () => (partyDone() ? 'partydone' : PARTY_ITEMS.find(it => !Party.bought.has(it.id)).shop),
+      setup: mallSetup,
+      play: playMall,
     },
-    ...['uniform', 'shoes', 'bag', 'bottle'].map((id, i) => ({
-      id, title: ROUND_TITLES[i][0], sub: ROUND_TITLES[i][1],
-      look: 'street', // drawn by the game: a street of three shops (see FX.street)
-      kb: null, origin: '50% 50%', lamps: [], dust: null,
-      next: () => (allBought() ? 'complete' : 'shops'), // back to the Shopping Area (or on to the end)
-      back: () => 'shops',
-      play: playRound,
-    })),
+    ...[['shirtshop', 'The Shirts Shop', 'shirt', 'shop-shirts'], ['pantsshop', 'The Bottomwear Shop', 'pants', 'shop-bottomwear'],
+      ['watchshop', 'The Watch Shop', 'watch', 'shop-watches'], ['sunshop', 'The Sunglasses Shop', 'sunglasses', 'shop-sunglasses']]
+      .map(([id, title, buys, pic]) => ({
+        id, title, sub: 'Work out the sale price, and buy it', buys,
+        bg: PARTY + pic + '.webp',
+        kb: null, origin: '50% 50%', still: true, lamps: [], dust: null,
+        next: () => (partyDone() ? 'partydone' : 'mallfloor'), // (back out into the mall, by its door)
+        back: () => 'mallfloor',
+        setup: shopSetup,
+        play: playShop,
+      })),
     {
-      id: 'complete', title: 'Shopping Complete!', sub: 'You bought everything on the list!',
-      look: 'party', kb: null, origin: '50% 50%', lamps: [], dust: null,
-      back: () => 'shops',
-      play: playComplete,
-    },
-    {
-      id: 'receipt', title: 'Final Receipt', sub: 'Aniket’s School Shopping',
-      look: 'party', kb: null, origin: '50% 50%', lamps: [], dust: null,
-      play: playReceipt,
-    },
-    {
-      id: 'left', title: 'Money Left', sub: '₹5,000 − ₹4,340 = ₹660',
-      sheet: 'panel', still: true, kb: null, origin: '50% 50%', lamps: [], dust: null,
-      setup: setupGuide,
-      play: playMoneyLeft,
-    },
-    {
-      id: 'two', title: 'Two Different Amounts', sub: 'Discount received ₹1,060, money left ₹660',
-      sheet: 'panel', still: true, kb: null, origin: '50% 50%', lamps: [], dust: null,
-      setup: setupGuide,
-      play: playTwoAmounts,
-    },
-    {
-      id: 'homeagain', title: 'Back Home', sub: 'Did you get everything?',
-      bg: ASSETS + 'return home shopping list .png', // Aniket home with his shopping bag, his father at the table
-      kb: { origin: '52% 30%', from: 'scale(1.02)', to: 'scale(1.05) translate(4px, 3px)' },
-      lamps: [[1020, 270, 240]],   // the sunny window in the room behind them
-      dust: [700, 80, 1500, 640],
-      play: playHomeAgain,
-    },
-    {
-      id: 'mission', title: 'Mission Complete', sub: 'Budget, amount spent, money left, discount',
-      look: 'party', kb: null, origin: '50% 50%', lamps: [], dust: null,
-      play: playMission,
-    },
-    {
-      id: 'recap', title: 'What We Learnt', sub: 'Marked Price, Discount, Discount %, Selling Price',
-      sheet: 'panel', still: true, kb: null, origin: '50% 50%', lamps: [], dust: null,
-      setup: setupGuide,
-      play: playRecap,
-    },
-    {
-      id: 'takeaway', title: 'Final Takeaway', sub: 'Compare the final price before you buy',
-      sheet: 'panel', still: true, kb: null, origin: '50% 50%', lamps: [], dust: null,
-      setup: setupGuide,
-      play: playTakeaway,
+      id: 'partydone', title: 'All Set for the Party!', sub: 'Total ₹3,720, ₹1,280 left',
+      bg: PARTY + 'mall-map.webp',
+      kb: null, origin: '50% 50%', still: true, lamps: [], dust: null,
+      back: () => 'mallfloor',
+      setup: scene => allBlur(scene),
+      play: playPartyDone,
     },
   ];
   const LAST = SCENES.length - 1;
   SCENES.forEach((scene, i) => { scene.num = i ? String(i) : '★'; }); // each screen's number is its place
-  // The revamp (Bookstore Journey - Revamp Brief.docx) covers the story, screens 1–46, and the conversation back home at
-  // the end (the same dialogue boxes): `v2` (css: .is-v2).
-  const REVAMP_END = SCENES.findIndex(s => s.id === 'begin');
-  SCENES.forEach((scene, i) => { if ((i >= 1 && i <= REVAMP_END) || scene.id === 'homeagain') scene.v2 = true; });
+  // The revamp (Bookstore Journey - Revamp Brief.docx) covers the story, every screen after the start: `v2` (css: .is-v2).
+  // (The screens after 31 were taken out on 2026-10-23, at the user's word, to be made again: the talk about school, the
+  // shopping challenge and its four streets, the receipt, back home, and the recap. They are in git's history.)
+  SCENES.forEach((scene, i) => { if (i >= 1) scene.v2 = true; });
 
   // ======================================================================
   // Scene scripts. `ctx.wait()` throws CANCELLED as soon as the player
@@ -1226,7 +1174,6 @@
   // His bubble: right of his face, between the two of them, its tail at his mouth (aniket give money to shopkeeper.png,
   // stage px), as on screen 4.
   const THANKS_AT = { anchor: [746, 300], corner: 'bl', tip: [694, 368] }; // (clear of the ₹800 badge above the money)
-
 
   // After an answer has been explained, or a teaching screen has said all it has to say, the story moves on by itself this
   // long after (the user, 2026-10-21: no Next buttons of their own on the screens, "after 5 second the screen is jump to
@@ -1953,7 +1900,7 @@
   // line with no bubble is her voice on its own (see swiftyTalk). So she isn't there during worked solutions either.
   // (The revamp, Part 1 rule 3: she comes only to introduce an idea, ask a question or react to an answer, and celebrate
   // at a checkpoint.)
-  const RUNS = [['left', 'two'], ['recap', 'takeaway']];
+  const RUNS = []; // (none now: the money left and the two amounts, the recap and the takeaway were taken out, 2026-10-23)
   const lastOfRun = scene => {
     const run = RUNS.find(r => r.includes(scene.id));
     return !run || run[run.length - 1] === scene.id;
@@ -2982,76 +2929,149 @@
     await learnt.hide();
     await ctx.wait(250);
     await say(Object.assign({ text: 'That’s useful, because\nyou have another\nshopping job.' }, DAD), 'home-next', 'dad');
-    ctx.advance(3000); // then the talk turns to school
+    ctx.advance(3000); // then the party invite (Party Prep)
   }
 
-  // A bubble on a story picture, typed while its speaker says it; resolves with the bubble, still up.
-  async function sayOnPicture(ctx, scene, bubble, id, who) {
+  // ======================================================================
+  // Party Prep (after screen 31: the user's pictures of 2026-10-23)
+  // ======================================================================
+  // What Aniket buys for the party, at what price and discount (as the user's party designs had them: ₹3,720 in all,
+  // ₹1,280 left of ₹5,000), and on each shop's picture: where the thing is (its gold ring, picture px of 1672 × 941) and
+  // where its tag hangs (stage px); the amounts offered for its sale price.
+  const PARTY_BUDGET = 5000;
+  const PARTY_WALLET = ASSETS + 'ui/shop/wallet.png';
+  const PARTY_ITEMS = [
+    { id: 'shirt', name: 'Shirt', icon: PARTY + 'icon-shirt.png', mp: 1500, off: 20, shop: 'shirtshop', a: 'this shirt',
+      question: 'What is the sale price of this shirt?', options: [1500, 1300, 1200, 1050],
+      ring: [470, 222, 622, 402], tag: [728, 286] },
+    { id: 'pants', name: 'Bottomwear', icon: PARTY + 'icon-pants.png', mp: 1200, off: 10, shop: 'pantsshop', a: 'this bottomwear',
+      question: 'What is the sale price of this bottomwear?', options: [1080, 1100, 1200, 1320],
+      ring: [1236, 452, 1452, 704], tag: [1380, 520] },
+    { id: 'watch', name: 'Watch', icon: PARTY + 'icon-watch.png', mp: 1000, off: 20, shop: 'watchshop', a: 'this watch',
+      question: 'What is the sale price of this watch?', options: [1200, 900, 800, 980],
+      ring: [570, 232, 736, 458], tag: [870, 300] },
+    { id: 'sunglasses', name: 'Sunglasses', icon: PARTY + 'icon-sunglasses.png', mp: 800, off: 20, shop: 'sunshop', a: 'these sunglasses',
+      question: 'What is the sale price of these sunglasses?', options: [720, 640, 960, 780],
+      ring: [782, 486, 892, 542], tag: [1056, 470] },
+  ];
+  const inr = FX.inr;
+  const partyOff = it => (it.mp * it.off) / 100;
+  const partyPay = it => it.mp - partyOff(it);
+  // What Aniket has bought (ids), and which shop he came out of (where he stands on the map then). Fresh at the message.
+  const Party = { bought: new Set(), from: null };
+  const partyMoney = () => PARTY_BUDGET - PARTY_ITEMS.filter(it => Party.bought.has(it.id)).reduce((sum, it) => sum + partyPay(it), 0);
+  const partyDone = () => PARTY_ITEMS.every(it => Party.bought.has(it.id));
+  const sceneIndex = id => SCENES.findIndex(s => s.id === id);
+  // Picture px (the pictures are 1672 × 941) → stage px.
+  const PK = STAGE_W / 1672;
+  const pp = (x, y) => [Math.round(x * PK), Math.round(y * PK)];
+
+  // The bar on top (the mall and its shops): the wallet and the shopping list.
+  function partyBar(scene) {
+    scene.bar = FX.partyHud(scene.ui, {
+      wallet: PARTY_WALLET, money: partyMoney(),
+      items: PARTY_ITEMS.map(it => ({ icon: it.icon, name: it.name, done: Party.bought.has(it.id) })),
+    });
+  }
+
+  // A line in a bubble on the picture, typed while it is said; resolves with the bubble, still up.
+  async function picSay(ctx, scene, bubble, id, who) {
     const line = FX.bubble(scene.layer, Object.assign({ voice: who }, bubble));
     await line.show();
     await speak(ctx, line, id, who);
     return line;
   }
 
-  // At the table, his father brings up school, one line after the other from the same place beside his face.
-  async function playSchool(ctx, scene) {
-    const DAD = { anchor: [1234, 400], corner: 'br', tip: [1322, 336] }; // between them, the tail at his mouth
-    await ctx.wait(700);
-    const soon = await sayOnPicture(ctx, scene, Object.assign({ text: 'Your new school session\nstarts in a few days.' }, DAD), 'school-soon', 'dad');
-    await ctx.wait(900);
-    await soon.hide();
-    await ctx.wait(250);
-    await sayOnPicture(ctx, scene, Object.assign({ text: 'You still need some\nthings for school.' }, DAD), 'school-need', 'dad');
-    ctx.advance(3000); // then the list
-  }
-
-  // The list his father hands him: the camera pushes in until the list fills the middle of the screen, and it
-  // lights up; then the camera eases back out to the framing screen 43 starts from (KB_TABLE.from, about the same
-  // `origin`), so the dissolve there only changes what is in their hands. No words.
-  const SCHOOL_LIST = [[878, 384], [1118, 356], [1194, 622], [954, 660]]; // the sheet of paper (stage px)
-  async function playList(ctx, scene) {
-    const move = (to, ms) => {
-      if (reducedMotion) return;
-      const from = getComputedStyle(scene.world).transform;
-      scene.kbAnim = scene.world.animate([{ transform: from }, { transform: to }], {
-        duration: ms * PACE, easing: 'cubic-bezier(.45,0,.25,1)', fill: 'forwards',
-      });
+  // Swifty, as on the story's pictures: she pops up in the bottom-left corner (no books), her bubble on her right, and
+  // goes back down when it goes (she is there only with a bubble). say() after say() changes the bubble; hide().
+  function partyBird(ctx, scene, { at = NOT_QUITE, upTo = 1000, size = 40 } = {}) {
+    let bird = null;
+    let line = null;
+    const head = at.y - at.s * 300; // (level with her beak)
+    return {
+      async say(id, text, ms = 0) {
+        if (line) {
+          await line.hide();
+          line = null;
+          await ctx.wait(120);
+        }
+        if (!bird) {
+          bird = new FX.Bird(scene.ui, SWIFTY, { scale: at.s });
+          bird.place(at.x, at.y);
+          bird.root.classList.add('is-mirrored'); // (she points to her right, at her bubble)
+          bird.point();
+          Sound.chirp();
+          await FX.settle(bird.body.animate([{ transform: 'translateY(320px)' }, { transform: 'translateY(-8px)', offset: 0.75 }, { transform: 'none' }],
+            { duration: reducedMotion ? 1 : 600, easing: 'cubic-bezier(.2,.8,.3,1)' }));
+        }
+        line = FX.bubble(scene.ui, { anchor: [at.x + 176, head], corner: 'ml', tip: [at.x + 120, head + 6], text, size, voice: 'bird', within: [at.x + 176, upTo] });
+        await line.show();
+        await Promise.all([speak(ctx, line, id, 'bird', bird), ctx.wait(ms)]);
+        bird.point();
+      },
+      async hide() {
+        if (line) {
+          const old = line;
+          line = null;
+          await old.hide();
+        }
+        if (!bird) return;
+        const b = bird;
+        bird = null;
+        await FX.settle(b.body.animate([{ transform: 'none' }, { transform: 'translateY(320px)' }],
+          { duration: reducedMotion ? 1 : 450, easing: 'cubic-bezier(.5,0,.75,0)', fill: 'forwards' }));
+        b.root.remove();
+      },
     };
-    await ctx.wait(500);
-    move('translate(-62px, -20px) scale(1.7)', 2200); // the list's centre (1036, 508) to the middle, 1.7× bigger
-    await ctx.wait(1700);
-    FX.glow(scene.layer, 1036, 508, 420, 440, { cls: 'glow--book', delay: 0 });
-    FX.shine(scene.layer, SCHOOL_LIST, { duration: 1100, width: 120 });
-    Sound.sparkle();
-    await ctx.wait(1800);
-    move(KB_TABLE.from, 1500); // back out, for the money
-    await ctx.wait(1500);
-    ctx.advance(1500); // then the money
   }
 
-  // His father holds out the money: it shines (cha-ching), and he says how much.
+  // The party message (screen 32): Aniket, on the sofa, reads his phone: the invite comes up out of it.
+  const PHONE_AT = [1000, 410]; // his phone (stage px)
+  const SOFA_SAYS = { anchor: [1080, 236], corner: 'br', tip: [1196, 290], voice: 'boy' }; // left of his face, the tail at his mouth
+  async function playInvite(ctx, scene) {
+    Party.bought.clear(); // (the shopping starts afresh)
+    Party.from = null;
+    await ctx.wait(800);
+    Sound.chime();
+    const card = el('div', 'invite-card', scene.ui);
+    card.innerHTML = '<div class="ic-top"><span>You’re invited!</span></div><div class="ic-title">Rohan’s<br>Birthday Party</div>' +
+      '<div class="ic-row"><i class="ic-dot ic-dot--time"></i>Tonight, 8:00 PM</div><div class="ic-row"><i class="ic-dot ic-dot--place"></i>Rohan’s House</div>';
+    const r = card.getBoundingClientRect(); // (from the phone)
+    void r;
+    card.style.transformOrigin = `${PHONE_AT[0] - 150}px ${PHONE_AT[1] - 200}px`;
+    await FX.reveal(card, [{ opacity: 0, transform: 'scale(.1)' }, { opacity: 1, transform: 'scale(1.04)', offset: 0.7 }, { opacity: 1, transform: 'none' }],
+      { duration: reducedMotion ? 1 : 700, easing: 'cubic-bezier(.2,.8,.3,1)' });
+    await ctx.wait(500);
+    let line = await picSay(ctx, scene, Object.assign({ text: [{ t: 'Wow! Rohan’s ' }, { t: 'birthday party', cls: 'key' }, { t: ' is tonight!' }] }, SOFA_SAYS), 'inv-1', 'boy');
+    await ctx.wait(900);
+    await line.hide();
+    await ctx.wait(250);
+    line = await picSay(ctx, scene, Object.assign({ text: 'I need a new outfit for the party!' }, SOFA_SAYS), 'inv-2', 'boy');
+    ctx.advance(3000);
+  }
+
+  // Screen 33: his father holds out the money (it shines, cha-ching) and says how much (his clip, s43).
   const NOTES_FAN = [[836, 436], [919, 396], [1010, 385], [1102, 402], [1148, 459], [1174, 540], [1102, 574], [988, 643], [947, 620], [873, 517]];
-  async function playMoney(ctx, scene) {
-    await ctx.wait(600);
+  async function playPartyMoney(ctx, scene) {
+    await ctx.wait(700);
     FX.glow(scene.layer, 1004, 512, 420, 300, { cls: 'glow--money', delay: 0 });
     FX.shine(scene.layer, NOTES_FAN, { duration: 1000, width: 140 });
     Sound.kaching();
     await ctx.wait(700);
-    const line = await sayOnPicture(ctx, scene, {
+    const line = await picSay(ctx, scene, {
       anchor: [690, 236], corner: 'bl', tip: [650, 312], // up-right of his face, the tail at his mouth
       text: [{ t: 'Here’s ' }, { t: '₹5,000', em: true }, { t: '.' }],
     }, 'money', 'dad');
     line.emphasize();
     Sound.ding();
-    ctx.advance(3000); // then into his pocket
+    ctx.advance(3000);
   }
 
-
-  // His father's advice, then Aniket's answer: one bubble at a time. The story so far ends here.
-  async function playDeal(ctx, scene) {
+  // Screen 34: his father's advice, then Aniket's answer, one bubble at a time (their clips, s45).
+  async function playPartyDeal(ctx, scene) {
     const DAD = { anchor: [790, 330], corner: 'bl', tip: [742, 380] }; // up-right of his head, the tail at his mouth
     const say = async (bubble, id, who, keep) => {
-      const line = await sayOnPicture(ctx, scene, bubble, id, who);
+      const line = await picSay(ctx, scene, bubble, id, who);
       if (keep) return line;
       await ctx.wait(900);
       await line.hide();
@@ -3066,702 +3086,307 @@
       anchor: [1160, 352], corner: 'br', tip: [1236, 282], // left of his face, the tail at his mouth
       text: 'Then I’m\ndefinitely finding\nthe best offers!',
     }, 'deal-offers', 'boy', true);
-    ctx.advance(3000); // then the challenge begins
+    ctx.advance(3000);
   }
 
-  // The shopping challenge begins: outside his house, Aniket is ready to go, and the challenge's panel builds up
-  // beside him, as in the design (FX.challengePanel): the banner and its ribbon, the wallet (₹5,000, cha-ching),
-  // the shopping list one item at a time, and the START SHOPPING button, which waits for the player and takes
-  // them to the shops (screen 47).
-  const BEGIN = ASSETS + 'ui/begin/';
-  const BEGIN_ART = {
-    panel: BEGIN + 'panel.png', banner: BEGIN + 'banner.png', ribbon: BEGIN + 'ribbon.png',
-    wallet: BEGIN + 'wallet.png', button: BEGIN + 'button.png',
+  // Screen 35: he walks up to the mall.
+  async function playToMall(ctx, scene) {
+    await ctx.wait(900);
+    await picSay(ctx, scene, { anchor: [660, 210], corner: 'bc', tip: [660, 300], // above his head, left of the sign's letters
+      text: [{ t: 'The mall! ' }, { t: 'Let’s go shopping!', cls: 'key' }] }, 'tm-1', 'boy');
+    ctx.advance(3000);
+  }
+
+  // ---------- The mall (screen 36): walked with the arrows ----------
+  // The map seen from above (picture px): where he can walk (the floor between the shops), each shop's doorway (where he
+  // goes in, walking up into it), where he comes out (facing out), and the corner of its sign (the ✓ once bought).
+  const MALL = {
+    walk: [[600, 150, 1075, 430], [95, 383, 1590, 432], [590, 430, 1090, 941], [300, 812, 590, 872], [1090, 812, 1380, 872]],
+    start: [836, 610], // (in the middle of the plaza, above Swifty's bubble)
+    shops: {
+      shirt: { door: [300, 383, 470, 412], out: [385, 424], badge: [512, 112] },
+      pants: { door: [1200, 383, 1380, 412], out: [1290, 424], badge: [1484, 128] },
+      sunglasses: { door: [260, 812, 450, 840], out: [355, 862], badge: [500, 540] },
+      watch: { door: [1150, 812, 1330, 840], out: [1240, 862], badge: [1462, 548] },
+    },
   };
-  const SHOPPING_LIST = [
-    { icon: ASSETS + 'ui/shop/icon-uniform.png', label: 'School Uniform' }, // the same pictures as everywhere in the game
-    { icon: ASSETS + 'ui/shop/icon-shoes.png', label: 'School Shoes' },
-    { icon: ASSETS + 'ui/shop/icon-bag.png', label: 'School Bag' },
-    { icon: ASSETS + 'ui/shop/icon-bottle.png', label: 'Water Bottle' },
-  ];
-
-  async function playBegin(ctx, scene) {
-    Shopping.bought = []; // the challenge starts afresh: nothing bought yet
-    const panel = FX.challengePanel(scene.ui, { art: BEGIN_ART, items: SHOPPING_LIST, wallet: 'Wallet: ₹5,000' });
-    await ctx.wait(700);
-    await panel.open();
-    await panel.ribbon();
-    await ctx.wait(250);
-    await panel.wallet();
-    await ctx.wait(500);
-    await panel.list();
-    for (let i = 0; i < SHOPPING_LIST.length; i++) {
-      await panel.item(ctx, i);
-      await ctx.wait(180);
-    }
-    await ctx.wait(300);
-    await panel.start(() => next()); // no countdown: the button (or Next) moves on
-  }
-
-  // ======================================================================
-  // The shopping game (screens 47–51): the Shopping Area, then a street of three shops for each item. The player
-  // picks any item first; on its street they check each shop's offer (working out what they would pay), compare the
-  // three, buy at the best one, and go back to the Shopping Area, until everything on the list is bought.
-  // ======================================================================
-
-  // Choosing a shop, as in the design (FX.shopPicker): the four shops' cards on the left (uniform, shoes, bag and
-  // water bottle), the wallet and the shopping list on the right. The pictures are cut from "select shop sheet.png"
-  // (game assets/ui/shop/).
-  const SHOP = ASSETS + 'ui/shop/';
-  const SHOP_ART = { wallet: SHOP + 'wallet.png', check: SHOP + 'check-empty.png', done: SHOP + 'check-done.png' };
-  const MONEY_NOTES = SHOP + 'money.png';
-  // The streets: their picture (the sky, the town, the pavement and the road; the sign and the clouds are drawn by the
-  // game), the three shop fronts cut from "new shops for game .png", and the pieces cut from "sheet .png" (made with
-  // ChatGPT from the asset prompt): the price and offer tags (on the offer cards), the green badge (the Selling Price), the
-  // yellow ribbon (best deal) and the Buy button. They have no words on them: the game writes them.
-  const STREET = ASSETS + 'ui/street/';
-  const STREET_ART = {
-    backdrop: ASSETS + 'game background.png',
-    fronts: { coral: STREET + 'front-coral.png', blue: STREET + 'front-blue.png', purple: STREET + 'front-purple.png' },
-    price: STREET + 'tag-price.png', offer: STREET + 'tag-offer.png',
-    pill: STREET + 'pill.png', ribbon: STREET + 'ribbon.png', button: STREET + 'button.png',
+  const TOP_SHEET = {
+    src: PARTY + 'aniket-topdown.png', frameW: 190, frameH: 238, anchorX: 95, anchorY: 207,
+    rows: { down: 0, up: 1, left: 2, right: 3 }, frames: { down: 10, up: 10, left: 7, right: 7 },
+    stand: { down: [4, 0], up: [4, 1], right: [4, 2] },
   };
-  const SHOPS = [ // sparks: [x %, y %, angle] of each little dash beside the picture, as in the design
-    { id: 'uniform', name: 'Uniform', icon: SHOP + 'icon-uniform.png', tone: 'yellow', sparks: [[14.2, 33.3, 41], [13.9, 46.6, -19], [85.9, 33.2, -40], [85.9, 46.7, 21]] },
-    { id: 'shoes', name: 'Shoes', icon: SHOP + 'icon-shoes.png', tone: 'pink', sparks: [[17.9, 25.6, 54], [12.7, 35.9, 17], [85.6, 22.8, -53], [89.8, 35.1, -11]] },
-    { id: 'bag', name: 'Bag', icon: SHOP + 'icon-bag.png', tone: 'green', sparks: [[15.1, 30.4, 49], [11.2, 41.4, 10], [85.5, 28, -49], [89.3, 39, -11]] },
-    { id: 'bottle', name: 'Bottle', icon: SHOP + 'icon-bottle.png', tone: 'purple', sparks: [[21.7, 34, 46], [19.1, 45.3, 4], [78.1, 34, -47], [81, 45.2, -6]] },
-  ];
+  // How he walks (the user, 2026-10-23: "the movement should be smooth and slow, it should look like a walk"): at an easy
+  // pace, speeding up and slowing down gently (WALK_EASE: how quickly, a second), his steps in time with the ground he
+  // covers: a cycle of them (10 frames up or down, 7 sideways) is about 120 px, two steps.
+  const WALK_SPEED = 140; // stage px a second
+  const WALK_EASE = 6;
+  const WALK_PER = { up: 12, down: 12, left: 17, right: 17 }; // px a frame
+  const inBox = ([x0, y0, x1, y1], [x, y]) => { const [a, b] = pp(x0, y0); const [c, d] = pp(x1, y1); return x >= a && x <= c && y >= b && y <= d; };
+  const onFloor = p => MALL.walk.some(box => inBox(box, p));
 
-  // What has been bought so far (the ids, in the order bought). Screen 46 starts the challenge afresh.
-  const BUDGET = 5000;
-  const Shopping = { bought: [] };
-  const rupees = n => '₹' + n.toLocaleString('en-IN');
-  const bestPrice = id => ROUNDS[id].shops[ROUNDS[id].best].pay;
-  const moneyLeft = () => BUDGET - Shopping.bought.reduce((sum, id) => sum + bestPrice(id), 0);
-  const allBought = () => SHOPS.every(shop => Shopping.bought.includes(shop.id));
-  const sceneIndex = id => SCENES.findIndex(s => s.id === id);
-
-  // The question bar. In the shopping game's own screens (the streets, Shopping Complete and the receipt) Swifty doesn't
-  // stand on her books: she speaks from a bar at the top of the screen (in the top row, between the wallet and Back /
-  // Next), her face in a round frame on its left corner (FX.questionBar). On the big panel's screens (the money left, the two amounts, the recap, the takeaway) she
-  // stands on her books, as on every teaching screen. It is one bar for all of its screens, on the stage over them: it
-  // slides up with the first and stays put from one to the next (so it never jumps), and slides down when the game
-  // goes to a screen without it. Every line she says is written on it as she says it; between lines it says what to
-  // do (the task).
-  const BAR_SCREENS = new Set(['uniform', 'shoes', 'bag', 'bottle', 'complete', 'receipt']);
-  let questionBar = null; // made the first time a screen with it comes up
-
-  function syncBar(scene) {
-    const on = BAR_SCREENS.has(scene.id);
-    if (!questionBar && !on) return;
-    if (!questionBar) {
-      questionBar = FX.questionBar($('#stage'), { sheets: SWIFTY });
-      $('#scenes').after(questionBar.el); // over the screens, under the buttons and the scene list
-    }
-    questionBar.reset(); // the screen before may have left a line on it
-    questionBar.toggle(on);
-  }
-
-  // Swifty's lines on the question bar, for a screen's script: each one takes the place of the one before, typed while
-  // her voice says it (as swiftyTalk does with bubbles). `task`: the question, or what to do, shown while she isn't
-  // saying anything. Nothing on the bar repeats what a panel shows: the panels carry no question of their own.
-  function barTalk(ctx, task = '') {
-    const bar = questionBar;
-    bar.task(task);
-    let line = null;
-    let away = false; // stepped away while a question panel is up (see away)
-    const live = () => { if (!ctx.alive()) throw CANCELLED; }; // the player has left this screen: hands off the bar
-    // Whenever she speaks, she is on screen: the bar slides back in first if it had stepped away.
-    const back = async () => {
-      if (!away) return;
-      away = false;
-      bar.toggle(true);
-      await ctx.wait(450, { real: true });
-    };
-    const talk = {
-      bird: bar.speaker,
-      get line() { return line; },
-      // While a question panel is up (an offer to check, the three offers compared), the bar isn't needed: the question
-      // is on the panel, above its answers. It slides away, empty, and comes back when she next speaks.
-      away() {
-        live();
-        if (away) return;
-        away = true;
-        if (line) {
-          line.el.remove();
-          line = null;
-        }
-        bar.task('');
-        bar.toggle(false);
-      },
-      back,
-      async show(text) {
-        live();
-        await back();
-        if (line) {
-          const old = line;
-          line = null;
-          await old.hide();
-          live();
-        }
-        line = bar.line(text);
-        await line.show();
-      },
-      // Types part `i` of the line while she says it; never quicker than `ms`.
-      part(id, i, ms = 0) {
-        return Promise.all([speakPart(ctx, line, i, id, line.parts[i], 'bird', bar.speaker), ctx.wait(ms)]);
-      },
-      // Her line goes, and the task shows.
-      async clear() {
-        live();
-        if (line) {
-          const old = line;
-          line = null;
-          await old.hide();
-          live();
-        }
-        bar.showTask();
-      },
-      // A whole line, typed while she says it; never quicker than `ms`. An array of strings is a line too long for one
-      // line of the bar: its parts are said one after the other, each on its own line of the bar.
-      async say(id, text, ms = 0) {
-        if (Array.isArray(text) && typeof text[0] === 'string') {
-          for (const [k, part] of text.entries()) await talk.say(`${id}-${k + 1}`, part, ms);
-          return;
-        }
-        await talk.show(text);
-        await Promise.all([speak(ctx, line, id, 'bird', bar.speaker), ctx.wait(ms)]);
-      },
-      task(text) {
-        if (ctx.alive()) bar.task(text);
-      },
-      // She reads out something written on the screen as it is written (`show`). Its words are there, so the bar doesn't
-      // repeat them: it keeps what it shows (her last line, or what to do) while she talks.
-      async readOut(id, text, show) {
-        live();
-        await back();
-        bar.speaker.talk();
-        const saying = sayHere(ctx, id, text, 'bird');
-        try {
-          await show;
-          await Promise.all([saying, ctx.wait(500)]);
-        } finally {
-          bar.speaker.idle();
-        }
-      },
-    };
-    return talk;
-  }
-
-  async function playShops(ctx, scene) {
-    const back = SHOPS.some(shop => shop.id === scene.cameFrom); // back from a shop: no need to build it all up again
-    const picker = FX.shopPicker(scene.ui, {
-      shops: SHOPS,
-      art: SHOP_ART,
-      money: moneyLeft(),
-      bought: Shopping.bought,
-      onPick(i) { // on to that item's street, once the card has glowed
-        const r = stageRect(picker.el.querySelectorAll('.sp-card')[i]);
-        scene.el.style.setProperty('--zoom-origin', `${Math.round(r.left + r.width / 2)}px ${Math.round(r.top + r.height / 2)}px`);
-        Game.timers.add(setTimeout(() => ctx.alive() && go(sceneIndex(SHOPS[i].id)), 900));
-      },
+  // The map (from its first frame): the bar on top, a ✓ on every shop already done, and Aniket where he is: at the bottom
+  // when he comes in, or outside the shop he has just come out of.
+  function mallSetup(scene) {
+    partyBar(scene);
+    PARTY_ITEMS.forEach(it => {
+      if (!Party.bought.has(it.id)) return;
+      const [x, y] = pp(...MALL.shops[it.id].badge);
+      FX.doneBadge(scene.layer, { x, y, instant: true });
     });
-    await ctx.wait(200);
-    await picker.enter(ctx, { quick: back });
-    if (allBought()) {
-      ctx.advance(2500); // everything is bought: on to the end
+    const from = Party.from && MALL.shops[Party.from];
+    const [x, y] = from ? pp(...from.out) : pp(...MALL.start);
+    scene.walker = new FX.TopWalker(scene.layer, TOP_SHEET, { scale: 0.78, per: WALK_PER });
+    scene.walker.place(x, y);
+    scene.walker.stand(from ? 'down' : 'up');
+  }
+
+  async function playMall(ctx, scene) {
+    const walker = scene.walker;
+    const pad = FX.arrowPad(scene.ui); // (the user, 2026-10-23: arrows, not a joystick)
+    Game.steering = true; // (the arrow keys and W A S D walk him here: see wireUI)
+    const glows = {};
+    Object.entries(MALL.shops).forEach(([id, shop]) => {
+      const [x0, y0] = pp(shop.door[0], shop.door[1] - 120);
+      const [x1, y1] = pp(shop.door[2], shop.door[1]);
+      glows[id] = el('div', 'mall-door', scene.layer, { left: `${x0}px`, top: `${y0}px`, width: `${x1 - x0}px`, height: `${y1 - y0}px` });
+    });
+    let swifty = null;
+    const cleanup = () => { pad.destroy(); Game.steering = false; };
+    try {
+      if (!Party.from) { // the first time in: how to walk, and what to buy (he can walk meanwhile)
+        swifty = partyBird(ctx, scene, { at: { x: 540, y: 1090, s: 0.62 }, upTo: 1220, size: 36 }); // (right of the arrows, under the shops)
+        (async () => {
+          pad.el.classList.add('is-pulsing'); // (the arrows call while she says it; the list on top says what to buy)
+          await swifty.say('mall-how', [{ t: 'Use the ' }, { t: 'arrows', cls: 'key' }, { t: ' to walk into a shop!' }], 600);
+          await ctx.wait(1200);
+          pad.el.classList.remove('is-pulsing');
+          await swifty.hide();
+        })().catch(err => { if (err !== CANCELLED) console.error(err); });
+      }
+      let way = walker.way;
+      let last = null;
+      let toast = null;
+      let vel = [0, 0]; // his velocity (stage px a second): it eases towards where the arrows point
+      const going = await new Promise((resolve, reject) => {
+        const tick = now => {
+          if (!ctx.alive()) return reject(CANCELLED);
+          const dt = last === null ? 0 : Math.min(0.05, (now - last) / 1000);
+          last = now;
+          const v = pad.value();
+          const pressed = v.x !== 0 || v.y !== 0;
+          // he faces the way pressed at once (a diagonal: the way he was facing, if it is one of the two)
+          if (pressed) {
+            const sideways = Math.abs(v.x) > 0.01;
+            const upDown = Math.abs(v.y) > 0.01;
+            const h = v.x > 0 ? 'right' : 'left';
+            const u = v.y > 0 ? 'down' : 'up';
+            if (sideways && upDown) way = way === h || way === u ? way : h;
+            else way = sideways ? h : u;
+          }
+          const k = 1 - Math.exp(-WALK_EASE * dt);
+          vel = [vel[0] + (v.x * WALK_SPEED - vel[0]) * k, vel[1] + (v.y * WALK_SPEED - vel[1]) * k];
+          const speed = Math.hypot(vel[0], vel[1]);
+          if (speed > 8) {
+            const p = [walker.x, walker.y];
+            const dx = vel[0] * dt;
+            const dy = vel[1] * dt;
+            let q = [p[0] + dx, p[1] + dy];
+            if (!onFloor(q)) { // (along a shop's wall: he slides along it, or stops)
+              if (onFloor([p[0] + dx, p[1]])) q = [p[0] + dx, p[1]];
+              else if (onFloor([p[0], p[1] + dy])) q = [p[0], p[1] + dy];
+              else q = p;
+              if (q[0] === p[0]) vel[0] = 0;
+              if (q[1] === p[1]) vel[1] = 0;
+            }
+            const moved = Math.hypot(q[0] - p[0], q[1] - p[1]);
+            walker.place(q[0], q[1]);
+            if (moved > 0.01) walker.walk(way, moved);
+            else walker.stand(way);
+          } else {
+            vel = [0, 0];
+            walker.stand(way);
+          }
+          // at a shop's door: it glows; walking up into it, in he goes (or, if done already, a note says so)
+          let at = null;
+          Object.entries(MALL.shops).forEach(([id, shop]) => {
+            const here = inBox(shop.door, [walker.x, walker.y]);
+            glows[id].classList.toggle('is-on', here && !Party.bought.has(id));
+            if (here) at = id;
+          });
+          if (at && v.y < -0.3) {
+            if (!Party.bought.has(at)) return resolve(at);
+            if (!toast) {
+              const it = PARTY_ITEMS.find(x => x.id === at);
+              toast = el('div', 'mall-toast', scene.ui);
+              toast.textContent = `✓ You bought the ${it.name.toLowerCase()} already!`;
+              setTimeout(() => { toast.remove(); toast = null; }, 1800);
+            }
+          }
+          requestAnimationFrame(tick);
+        };
+        requestAnimationFrame(tick);
+      });
+      // in through the doors
+      walker.stand('up');
+      Sound.whoosh();
+      cleanup();
+      Party.from = going;
+      go(sceneIndex(PARTY_ITEMS.find(it => it.id === going).shop));
+    } catch (err) {
+      cleanup();
+      throw err;
+    }
+  }
+
+  // ---------- A shop (screens 37–40) ----------
+  // Its picture: the thing to buy ringed, its price tag hanging on it; Swifty says what it costs. The question (its sale
+  // price) on a card: a wrong answer, "Not quite!" and a hint on the card (read out), another try; the right one, the
+  // sale price worked out, Buy or Keep Looking. Buy: PAID, the money comes out of the wallet, its picture goes onto the
+  // shopping list (ticked), and back out into the mall (or, all bought, on to the end).
+  function shopSetup(scene) {
+    Party.from = scene.buys; // (back out into the mall, he stands at this shop's door)
+    partyBar(scene);
+    const it = PARTY_ITEMS.find(x => x.id === scene.buys);
+    const [tx, ty] = it.tag;
+    const tag = el('div', 'shop-tag', scene.layer, { left: `${tx}px`, top: `${ty}px` });
+    tag.innerHTML = `<span class="tg-price">${inr(it.mp)}</span><span class="tg-off">${it.off}%<br>OFF</span>`;
+    tag.style.opacity = '0';
+    scene.tag = tag;
+  }
+
+  async function playShop(ctx, scene) {
+    const k = PARTY_ITEMS.findIndex(x => x.id === scene.buys);
+    const it = PARTY_ITEMS[k];
+    const off = partyOff(it);
+    const pay = partyPay(it);
+    const bar = scene.bar;
+    const swifty = partyBird(ctx, scene, { upTo: it.id === 'pants' ? 1180 : 1060 });
+    await ctx.wait(700);
+    const [x0, y0] = pp(it.ring[0], it.ring[1]);
+    const [x1, y1] = pp(it.ring[2], it.ring[3]);
+    FX.ring(scene.layer, { x: (x0 + x1) / 2, y: (y0 + y1) / 2, w: x1 - x0 + 30, h: y1 - y0 + 30, round: 24 });
+    Sound.sparkle();
+    await ctx.wait(300);
+    Sound.pop();
+    FX.reveal(scene.tag, [{ opacity: 0, transform: 'rotate(-30deg) scale(.4)' }, { opacity: 1, transform: 'rotate(8deg) scale(1.05)', offset: 0.6 },
+      { opacity: 1, transform: 'rotate(-3deg)', offset: 0.8 }, { opacity: 1, transform: 'none' }], { duration: reducedMotion ? 1 : 900, easing: 'ease-out' });
+    await ctx.wait(500);
+    if (Party.bought.has(it.id)) { // (here again, from the scene list: it is bought already)
+      await swifty.say(`${it.id}-had`, `You bought ${it.a} already!`);
+      ctx.advance(3000);
       return;
     }
-    await picker.invite(ctx);
-  }
-
-  // The four streets. Each shop: its marked price (mp), its offer (off, as on its red tag), the three answers to
-  // "How much will you pay?" (options) and the right one (pay), the working, a line each, and which hint helps (kind:
-  // a percentage, a flat amount off, or "get at" a price). `best`: the shop with the lowest final price.
-  const SHOP_NAMES = ['Shop A', 'Shop B', 'Shop C'];
-  const SHOP_TONES = ['coral', 'blue', 'purple'];
-  const ROUNDS = {
-    uniform: {
-      street: 'Uniform Street', item: 'School Uniform',
-      intro: ['Three shops sell\nthe same uniform.', 'Tap each shop\nto check its offer!'],
-      question: 'Which shop gives the best deal?',
-      shops: [
-        { mp: 1600, off: ['10%', 'OFF'], kind: 'percent', options: [1590, 1440, 160], pay: 1440,
-          work: [{ left: '10% of ₹1,600', right: '₹160' }, { left: '₹1,600 − ₹160', right: '₹1,440' }] },
-        { mp: 1600, off: ['₹250', 'OFF'], kind: 'flat', options: [1850, 250, 1350], pay: 1350,
-          work: [{ left: '₹1,600 − ₹250', right: '₹1,350' }] },
-        { mp: 1600, off: ['GET AT', '₹1,300'], kind: 'getat', options: [300, 1300, 1600], pay: 1300,
-          work: [{ text: 'GET AT ₹1,300' }, { left: 'Final Price', right: '₹1,300' }] },
-      ],
-      best: 2,
-      bought: 'Uniform purchased!',
-    },
-    shoes: {
-      street: 'Shoe Street', item: 'School Shoes',
-      intro: ['Every shop marks\nthe shoes at ₹1,800.', 'Tap each shop\nto check its offer!'],
-      question: 'Where should Aniket buy the shoes?',
-      shops: [
-        { mp: 1800, off: ['20%', 'OFF'], kind: 'percent', options: [1440, 360, 1780], pay: 1440,
-          work: [{ left: '10% of ₹1,800', right: '₹180' }, { left: '20%', right: '₹360' }, { left: '₹1,800 − ₹360', right: '₹1,440' }] },
-        { mp: 1800, off: ['₹400', 'OFF'], kind: 'flat', options: [400, 1400, 2200], pay: 1400,
-          work: [{ left: '₹1,800 − ₹400', right: '₹1,400' }] },
-        { mp: 1800, off: ['25%', 'OFF'], kind: 'percent', options: [1775, 450, 1350], pay: 1350,
-          work: [{ text: '25% means one-quarter.' }, { left: '₹1,800 ÷ 4', right: '₹450' }, { left: '₹1,800 − ₹450', right: '₹1,350' }] },
-      ],
-      best: 2,
-      bought: 'Shoes purchased!',
-    },
-    bag: {
-      street: 'Bag Corner', item: 'School Bag',
-      intro: ['Now the marked prices\nare different!', 'Don’t choose just by\nthe discount percentage.'],
-      question: 'Which shop gives the best value?',
-      shops: [
-        { mp: 1600, off: ['25%', 'OFF'], kind: 'percent', options: [1200, 1575, 400], pay: 1200,
-          work: [{ left: '25% of ₹1,600', right: '₹400' }, { left: '₹1,600 − ₹400', right: '₹1,200' }] },
-        { mp: 1500, off: ['20%', 'OFF'], kind: 'percent', options: [300, 1200, 1480], pay: 1200,
-          work: [{ left: '20% of ₹1,500', right: '₹300' }, { left: '₹1,500 − ₹300', right: '₹1,200' }] },
-        { mp: 1400, off: ['₹250', 'OFF'], kind: 'flat', options: [1650, 250, 1150], pay: 1150,
-          work: [{ left: '₹1,400 − ₹250', right: '₹1,150' }] },
-      ],
-      best: 2,
-      lesson: ['Even though Shop A offers 25% OFF,', 'Shop C has the lowest final price.'], // said in two parts: one line of the bar each
-      bought: 'Bag purchased!',
-    },
-    bottle: {
-      street: 'Bottle Stop', item: 'Water Bottle',
-      intro: ['This is the\nfinal challenge!', 'Different prices,\ndifferent offers.\nCheck each one!'],
-      question: 'Which bottle should Aniket buy?',
-      shops: [
-        { mp: 800, off: ['25%', 'OFF'], kind: 'percent', options: [775, 600, 200], pay: 600,
-          work: [{ left: '25% of ₹800', right: '₹200' }, { left: '₹800 − ₹200', right: '₹600' }] },
-        { mp: 700, off: ['₹150', 'OFF'], kind: 'flat', options: [550, 850, 150], pay: 550,
-          work: [{ left: '₹700 − ₹150', right: '₹550' }] },
-        { mp: 600, off: ['10%', 'OFF'], kind: 'percent', options: [60, 590, 540], pay: 540,
-          work: [{ left: '10% of ₹600', right: '₹60' }, { left: '₹600 − ₹60', right: '₹540' }] },
-      ],
-      best: 2,
-      bought: 'Bottle purchased!',
-    },
-  };
-
-  // Swifty's help when an answer is wrong: first "check what you will actually pay"; then a hint about how (by the
-  // kind of offer, or for the comparison), while the one answer left glows.
-  const HINTS = {
-    again: 'Check how much\nyou will actually pay.',
-    percent: ['Find the discount first,', 'then subtract it from the marked price.'], // in two parts: one line of the bar each
-    flat: 'Subtract the discount\nfrom the marked price.',
-    getat: 'Get at tells you\nthe price you pay.',
-    compare: 'Compare the final prices,\nnot just the discount\npercentages.',
-    lowest: 'Buy where the Selling Price\nis the lowest.',
-  };
-
-  // Aniket walks in from the left along the road and stops in front of the shops (bottom-left).
-  async function walkOn(ctx, scene) {
-    const walker = new FX.Walker(scene.ui, WALK_RIG, { matte: true });
-    const from = { x: -170, y: 1032, s: 0.56 };
-    const to = { x: 190, y: 1032, s: 0.56 };
-    walker.place(from.x, from.y, from.s);
-    walker.setFrame('idle');
-    const pan = x => (x / STAGE_W) * 1.6 - 0.8;
-    Sound.duck(true, 'walk');
-    try {
-      await walker.walk(ctx, { from, to, speed: 260, decel: 200, onStep: x => Sound.step(pan(x)) });
-    } finally {
-      Sound.duck(false, 'walk');
-    }
-    Sound.step(pan(to.x), 0.5);
-    walker.idle(true);
-  }
-
-  // A street of three shops: one item's round of the game. The street builds up and Swifty, on the question bar, tells
-  // what to do; the player checks the three offers in any order (checkOffer: each shop's Selling Price goes under
-  // it), then chooses where to buy, by pressing one of the Buy buttons the prices turn into (buyItem). Then the game
-  // goes back to the Shopping Area (or on to the end).
-  async function playRound(ctx, scene) {
-    const id = scene.id;
-    const round = ROUNDS[id];
-    const n = SHOPS.findIndex(shop => shop.id === id); // its line on the shopping list
-    Shopping.bought = Shopping.bought.filter(b => b !== id); // shopping for it (again): it isn't bought yet
-    const money = moneyLeft();
-    const shops = round.shops.map((shop, k) => ({
-      name: SHOP_NAMES[k], tone: SHOP_TONES[k], price: rupees(shop.mp), off: shop.off, pay: rupees(shop.pay),
-    }));
-    const st = FX.street(scene.ui, { id, name: round.street, item: round.item, icon: SHOPS[n].icon, shops, art: STREET_ART });
-    const board = FX.walletPanel(scene.ui, { items: SHOPS, art: SHOP_ART, money, bought: Shopping.bought, street: true });
-    board.light(n);
-    const talk = barTalk(ctx, `${round.street} · ${round.item}`); // where we are, while the street builds up
-    const walking = walkOn(ctx, scene); // Aniket walks onto the road while the street builds up
-    walking.catch(() => {});
-    await ctx.wait(300);
-    await st.enter(ctx);
-    await walking;
-    await talk.say(id + '-intro-1', round.intro[0], 300);
-    await talk.say(id + '-intro-2', round.intro[1], 300);
-    talk.task('Tap a shop to check its offer.');
-    talk.bird.point();
-
-    // The offers, checked one at a time, in any order. While the game waits for a tap, the shops still to check
-    // bounce now and then.
-    const checked = new Set();
-    while (checked.size < shops.length) {
-      let waiting = true;
-      (async () => {
-        while (waiting) {
-          await ctx.wait(5000, { real: true });
-          if (waiting) await st.bounce(ctx, checked);
-        }
-      })().catch(() => {});
-      const k = await st.tap(checked);
-      waiting = false;
-      await checkOffer(ctx, scene, talk, round, shops, st, k, SHOPS[n].icon);
-      checked.add(k);
-      await st.paid(k);
-      talk.task(checked.size < shops.length ? 'Tap another shop to check its offer.' : 'Now compare the three prices.');
-      await talk.clear();
-      await ctx.wait(300);
-    }
-    await buyItem(ctx, scene, talk, round, shops, st, board, n, money);
-    talk.bird.wave();
-    ctx.advance(2500); // back to the Shopping Area (or on to the end)
-  }
-
-  // One shop's offer: its card comes up out of the shop with "How much will you pay?" above three answers, and the
-  // question bar steps away. A wrong answer is crossed out and Swifty helps from the bar, which comes back (see HINTS);
-  // the right one is worked out on the card, line by line, as she reads it out, and the Selling Price is stamped under
-  // it (SP = ₹1,440). Then the card goes back into the shop.
-  async function checkOffer(ctx, scene, talk, round, shops, st, k, icon) {
-    const shop = round.shops[k];
-    const right = shop.options.indexOf(shop.pay);
-    const veil = st.veil();
-    const card = FX.offerCard(scene.ui, {
-      name: shops[k].name, tone: shops[k].tone, item: round.item, icon,
-      price: shops[k].price, off: shop.off, options: shop.options.map(rupees), right, work: shop.work, pay: shops[k].pay, art: STREET_ART,
-    });
-    const at = stagePoint(st.shops[k]);
-    talk.away(); // the question is on the card, above its answers: the bar comes back when Swifty speaks
-    await card.open(ctx, at);
-    let wrong = 0;
-    while ((await card.pick()) !== right) {
-      wrong++;
-      await ctx.wait(400);
-      if (wrong > 1) card.guide(right);
-      await talk.say(wrong > 1 ? 'hint-' + shop.kind : 'hint-again', wrong > 1 ? HINTS[shop.kind] : HINTS.again);
-      talk.bird.point();
-    }
-    const [x, y] = stagePoint(card.buttons[right]);
-    FX.burst(scene.ui, x, y, { count: 16, dist: [100, 200], size: [12, 24] });
-    await talk.say('right', 'Correct!');
-    await card.toWork(ctx);
-    talk.task('Here is how to work it out.');
-    await talk.clear();
-    for (const [i, line] of shop.work.entries()) {
-      await talk.readOut(`${scene.id}-${k}-work-${i}`, line.text || `${line.left} = ${line.right}`, card.line(i));
-    }
-    await card.result();
-    talk.bird.point();
-    await ctx.wait(1300);
-    await Promise.all([card.close(at), veil.hide()]);
-    await talk.back();
-  }
-
-  // Where to buy: once the three Selling Prices are under the shops, they dissolve into Buy buttons ("Buy for ₹1,440"
-  // …), and Swifty asks the round's question on the bar ("Where should Aniket buy the shoes?"). A wrong shop's button
-  // shakes and is crossed out, with Swifty's help from the bar (see HINTS; after two, the one left glows); the best
-  // one's button is pressed home, the prices come back, the best shop gets the "Best deal!" ribbon and she says why.
-  // Then the money flies from the wallet to the shop (SOLD), the item flies from the shop onto the shopping list
-  // (ticked), and a slip shows the wallet's sum (₹5,000 − ₹1,300 = ₹3,700 left) while the wallet counts down, and the
-  // bar says what comes next.
-  async function buyItem(ctx, scene, talk, round, shops, st, board, n, money) {
-    const k = round.best;
-    const cost = round.shops[k].pay;
-    talk.task('Tap Buy at the best shop.');
-    const choice = await st.choose(shops.map(shop => 'Buy for ' + shop.pay));
-    await talk.say(scene.id + '-where', round.question);
-    talk.bird.point();
-    let wrong = 0;
-    for (let i; (i = await choice.pick()) !== k;) {
-      wrong++;
-      choice.wrong(i);
-      await ctx.wait(500);
-      if (wrong > 1) choice.guide(k);
-      await talk.say(wrong > 1 ? 'hint-lowest' : 'hint-compare', wrong > 1 ? HINTS.lowest : HINTS.compare);
-      talk.bird.point();
-    }
-    const [x, y] = stagePoint(choice.buttons[k]);
-    FX.burst(scene.ui, x, y, { count: 18, dist: [110, 230], size: [14, 28] });
-    await choice.finish(k);
-    await st.best(k);
-    // Why it is the best deal (the street already shows each shop's Selling Price, and the ribbon).
-    await talk.say(scene.id + '-best', round.lesson || `${shops[k].name} has the lowest\nfinal price.`);
-    talk.task(`Paying ${rupees(cost)}…`);
-    await talk.clear();
-    const purse = stageRect(board.wallet.querySelector('.sp-wallet-icon'));
-    const shop = stageRect(st.pictures[k]);
-    Sound.swish();
-    await FX.flyPicture(scene.ui, MONEY_NOTES, purse, shop, { ms: 800 });
-    Sound.kaching();
-    st.sold(k);
-    await ctx.wait(300);
-    Sound.swish();
-    await FX.flyPicture(scene.ui, SHOPS[n].icon, shop, stageRect(board.rows[n].querySelector('.sp-row-icon')), { ms: 900, lift: 220 });
-    board.tick(n);
-    Shopping.bought.push(scene.id);
-    const slip = FX.purchaseSlip(scene.ui, { icon: SHOPS[n].icon, title: round.bought, from: money, cost, left: money - cost });
-    const counting = board.countTo(money - cost, 1000);
-    talk.task(allBought() ? 'That was the last thing on the list!' : 'Next: back to the Shopping Area.');
-    await slip.show(ctx);
-    await counting;
-    await talk.readOut(scene.id + '-bought', round.bought, null); // she reads the slip out (its words aren't repeated on the bar)
-    await ctx.wait(1400);
-    slip.hide();
-  }
-
-  // ======================================================================
-  // The end of the shopping game (screens 52–59): everything bought, the receipt, the money left, the two amounts
-  // not to mix up, back home, the mission's result, what we learnt, and the takeaway.
-  // ======================================================================
-
-  // What Aniket paid for each item (at its best shop), and the totals: ₹5,400 marked, ₹1,060 off, ₹4,340 paid.
-  const PAID = SHOPS.map(shop => {
-    const round = ROUNDS[shop.id];
-    const best = round.shops[round.best];
-    return { name: shop.name, icon: shop.icon, mp: best.mp, off: best.mp - best.pay, pay: best.pay };
-  });
-  const TOTAL = PAID.reduce((t, p) => ({ mp: t.mp + p.mp, off: t.off + p.off, pay: t.pay + p.pay }), { mp: 0, off: 0, pay: 0 });
-  const FULL_NAMES = { uniform: 'Uniform', shoes: 'School Shoes', bag: 'School Bag', bottle: 'Water Bottle' };
-
-  // Everything on the list is bought: a banner and confetti; the wallet (the money left) and the list on the left, its
-  // lines ticked one by one as the four things bought pop up on the right. Swifty, on the question bar, says how well
-  // it went (the banner already says it is complete).
-  async function playComplete(ctx, scene) {
-    const party = FX.celebration(scene.ui, {
-      title: 'SHOPPING COMPLETE!', text: 'You bought everything on the list!', items: SHOPS, art: SHOP_ART, money: BUDGET - TOTAL.pay,
-    });
-    const talk = barTalk(ctx); // the banner says it is complete: her line adds how well it went
-    await ctx.wait(300);
-    const building = party.enter(ctx);
-    building.catch(() => {}); // if the player leaves meanwhile, the wait below reports it
-    await ctx.wait(200);
-    await talk.say('complete-well', 'Well done! You found the best\nprice for every item.');
-    await building;
-    talk.bird.wave();
-    ctx.advance(3000);
-  }
-
-  // Aniket's receipt, printed row by row: each item's marked price, its discount and what he paid, and the totals.
-  const RECEIPT = {
-    title: 'Aniket’s School Shopping',
-    head: ['Item', 'Marked Price', 'Discount', 'Amount Paid'],
-    rows: PAID.map(p => ({ icon: p.icon, cells: [p.name, rupees(p.mp), rupees(p.off), rupees(p.pay)] })),
-    total: ['Total', rupees(TOTAL.mp), rupees(TOTAL.off), rupees(TOTAL.pay)],
-  };
-
-  async function playReceipt(ctx, scene) {
-    const rc = FX.receipt(scene.ui, RECEIPT);
-    const talk = barTalk(ctx); // the receipt has its own heading: her lines say how to read it
-    await ctx.wait(300);
-    await rc.open();
-    await talk.say('receipt-colours', [{ t: 'The discounts are in ' }, { t: 'red', cls: 'tone-d' }, { t: ',\nwhat he paid in ' }, { t: 'green', cls: 'tone-pay' }, { t: '.' }]);
-    for (let i = 0; i < RECEIPT.rows.length; i++) {
-      await rc.row(i);
-      await ctx.wait(150);
-    }
-    await rc.total();
-    await talk.say('receipt-paid', [{ t: 'He paid ' }, { t: rupees(TOTAL.pay), em: true }, { t: '\nfor everything.' }]);
-    talk.line.emphasize();
-    rc.ping('total');
-    talk.bird.point();
-    ctx.advance(3000);
-  }
-
-  // Swifty reads out a line that is written on the screen as she says it (no bubble: its words are there).
-  async function readOut(ctx, bird, id, text, show) {
-    bird.talk();
-    const saying = sayHere(ctx, id, text, 'bird');
-    await show;
-    await Promise.all([saying, ctx.wait(500)]);
-    bird.idle();
-  }
-
-  // The money left, worked out on the big panel (the way screen 34 worked out the amount to pay): what his father gave,
-  // what he spent, and Money left = ₹5,000 − ₹4,340 = ₹660.
-  const LEFT_SHEET = {
-    boxes: [{ label: 'Father gave', value: rupees(BUDGET), tone: 'blue' }, { label: 'Aniket spent', value: rupees(TOTAL.pay), tone: 'red' }],
-    rows: [
-      { label: [{ t: 'Money left' }], parts: [{ t: rupees(BUDGET) }, { op: '−' }, { t: rupees(TOTAL.pay) }] },
-      { parts: [{ answer: rupees(BUDGET - TOTAL.pay) }] },
-    ],
-  };
-
-  async function playMoneyLeft(ctx, scene) {
-    const w = FX.workedSheet(scene.ui, LEFT_SHEET);
-    const arriving = cornerSwifty(ctx, scene); // she flies in as the panel opens
-    arriving.catch(() => {});
-    w.open();
-    await ctx.wait(600);
-    const talk = await arriving;
-    talk.bird.point();
-    await talk.show([{ t: 'His father gave\nhim ' }, { t: rupees(BUDGET), em: true }, { t: '.' }]);
-    await partWith(ctx, talk, 'left-gave', 0, 500, () => w.box(0));
-    await talk.show([{ t: 'He spent ' }, { t: rupees(TOTAL.pay), em: true }, { t: '.' }]);
-    await partWith(ctx, talk, 'left-spent', 0, 500, () => w.box(1));
-    await talk.show([
-      { t: 'Money left\n= ₹5,000 − ₹4,340', end: true },
-      { t: '\n= ' }, { t: '₹660', em: true }, { t: '.' },
-    ]);
-    let writing = null;
-    await partWith(ctx, talk, 'left-sum', 0, 300, () => {
-      writing = (async () => {
-        await w.write(0);
-        for (let j = 0; j < 3; j++) await w.part(0, j);
-      })();
-    });
-    await writing;
-    await partWith(ctx, talk, 'left-660', 1, 200, () => {
-      writing = w.write(1).then(() => w.answer(1)).then(() => w.mark(1));
-    });
-    await writing;
-    talk.line.emphasize();
-    talk.bird.point();
-    endWithSwifty(ctx, scene, talk); // then the two amounts not to mix up
-  }
-
-  // Two different amounts, on two cards: the discount Aniket received in all (₹1,060), and the money left from the
-  // budget (₹660), which he keeps. Swifty reads each card out.
-  const TWO_AMOUNTS = {
-    title: 'Two Different Amounts',
-    cards: [
-      { term: 'Total Discount Received', value: rupees(TOTAL.off), text: 'The difference between the marked prices and the prices Aniket paid.', sum: `${rupees(TOTAL.mp)} − ${rupees(TOTAL.pay)} = ${rupees(TOTAL.off)}`, tone: 'off' },
-      { term: 'Money Left From the ₹5,000 Budget', value: rupees(BUDGET - TOTAL.pay), text: 'The amount Aniket gets to keep.', sum: `${rupees(BUDGET)} − ${rupees(TOTAL.pay)} = ${rupees(BUDGET - TOTAL.pay)}`, tone: 'left' },
-    ],
-  };
-
-  async function playTwoAmounts(ctx, scene) {
-    const t = FX.twoAmounts(scene.ui, TWO_AMOUNTS);
-    const arriving = cornerSwifty(ctx, scene);
-    arriving.catch(() => {});
-    await ctx.wait(450); // the money-left sheet finishes fading away first
-    await t.open();
-    const talk = await arriving;
-    talk.bird.point();
-    await talk.say('two-intro', 'These are two\ndifferent amounts.', 400);
-    await talk.clear();
-    for (const [i, c] of TWO_AMOUNTS.cards.entries()) {
-      const showing = t.card(ctx, i);
-      showing.catch(() => {});
-      await ctx.wait(500);
-      await readOut(ctx, talk.bird, 'two-' + i, `${c.term}: ${c.value}. ${c.text}`, showing);
-      t.ping(i);
-      await ctx.wait(500);
-    }
-    talk.bird.point();
-    endWithSwifty(ctx, scene, talk); // she flies off; the panel slides down
-  }
-
-  // Back home: Aniket comes in with his shopping bag and talks with his father, who sits at the table with his tea and
-  // the newspaper, one bubble at a time between them.
-  async function playHomeAgain(ctx, scene) {
-    const DAD = { anchor: [1300, 330], corner: 'br', tip: [1348, 398] };        // up-left of his head, the tail at his mouth
-    const BOY = { anchor: [700, 255], corner: 'bl', tip: [620, 292] };          // up-right of his face, the tail at his mouth
-    const say = async (bubble, id, who) => {
-      const line = await sayOnPicture(ctx, scene, bubble, id, who);
-      await ctx.wait(900);
-      await line.hide();
-      await ctx.wait(250);
-    };
-    await ctx.wait(700);
-    await say(Object.assign({ text: 'Did you get\neverything?' }, DAD), 'end-everything', 'dad');
-    await say(Object.assign({ text: 'Yes!' }, BOY), 'end-yes', 'boy');
-    await say(Object.assign({ text: 'How much did\nyou spend?' }, DAD), 'end-spend', 'dad');
-    await say(Object.assign({ text: rupees(TOTAL.pay) + '.' }, BOY), 'end-spent', 'boy');
-    await say(Object.assign({ text: 'So you still have\n' + rupees(BUDGET - TOTAL.pay) + ' left!' }, DAD), 'end-left', 'dad');
-    await say(Object.assign({ text: 'And I got the\nbest deal for\nevery item!' }, BOY), 'end-best', 'boy');
-    await sayOnPicture(ctx, scene, Object.assign({ text: 'Well done! You\nreally did shop\nwisely.' }, DAD), 'end-welldone', 'dad');
-    ctx.advance(3000);
-  }
-
-  // The mission's result: MISSION COMPLETE, the four things ticked, and the four amounts.
-  async function playMission(ctx, scene) {
-    const m = FX.missionPanel(scene.ui, {
-      title: 'MISSION COMPLETE',
-      items: SHOPS.map(shop => ({ name: FULL_NAMES[shop.id], icon: shop.icon })),
-      art: SHOP_ART,
-      stats: [
-        { label: 'Budget', value: rupees(BUDGET), tone: 'blue' },
-        { label: 'Amount Spent', value: rupees(TOTAL.pay), tone: 'orange' },
-        { label: 'Money Left', value: rupees(BUDGET - TOTAL.pay), tone: 'green' },
-        { label: 'Total Discount Received', value: rupees(TOTAL.off), tone: 'pink' },
-      ],
-    });
-    await ctx.wait(400);
-    await m.enter(ctx);
-    ctx.advance(3500);
-  }
-
-  // What we learnt, on four cards, each read out by Swifty as it comes in.
-  const RECAP = {
-    title: 'What We Learnt',
-    cards: [
-      { term: 'Marked Price', text: 'The price written on the item.', tone: 'mp' },
-      { term: 'Discount', text: 'The amount reduced from the marked price.', formula: 'Discount =\nMarked Price − Selling Price', tone: 'd' },
-      { term: 'Discount Percentage', text: 'The discount written as a percentage of the marked price.', formula: 'Discount % =\n(Discount ÷ Marked Price) × 100', tone: 'pct' },
-      { term: 'Price After Discount', formula: 'Selling Price =\nMarked Price − Discount', tone: 'sp' },
-    ],
-  };
-
-  async function playRecap(ctx, scene) {
-    const r = FX.recapCards(scene.ui, RECAP);
-    const arriving = cornerSwifty(ctx, scene); // she flies in as the panel opens
-    arriving.catch(() => {});
-    await ctx.wait(300);
-    await r.open();
-    const talk = await arriving;
-    talk.bird.point();
-    await talk.say('recap-intro', 'Let’s remember\nwhat we learnt!', 300);
-    await talk.clear();
-    for (const [i, c] of RECAP.cards.entries()) {
-      const showing = r.card(ctx, i);
-      showing.catch(() => {});
-      await ctx.wait(400);
-      await readOut(ctx, talk.bird, 'recap-' + i, [c.term + '.', c.text, c.formula].filter(Boolean).join(' '), showing);
-      await ctx.wait(300);
-    }
-    talk.bird.point();
-    endWithSwifty(ctx, scene, talk); // then the takeaway
-  }
-
-  // The takeaway, with the bag's two offers from Bag Corner: 25% OFF (SP = ₹1,200) against ₹250 OFF (₹1,150, the best
-  // deal). Swifty: "A bigger discount percentage does not always mean a better deal." "Calculate how much you actually
-  // have to pay." Then the banner: "Compare the final price before you buy."
-  const TAKEAWAY = {
-    offers: [
-      { off: ['25%', 'OFF'], price: 'Marked Price ₹1,600', pay: '₹1,200' },
-      { off: ['₹250', 'OFF'], price: 'Marked Price ₹1,400', pay: '₹1,150' },
-    ],
-    best: 1,
-    text: 'Compare the final price before you buy.',
-  };
-
-  async function playTakeaway(ctx, scene) {
-    const tk = FX.takeaway(scene.ui, Object.assign({ art: STREET_ART }, TAKEAWAY));
-    const arriving = cornerSwifty(ctx, scene);
-    arriving.catch(() => {});
-    await ctx.wait(450); // the recap finishes fading away first
-    tk.open();
+    await swifty.say(`${it.id}-intro`, [{ t: `${it.a[0].toUpperCase()}${it.a.slice(1)} ${it.id === 'sunglasses' ? 'are' : 'is'} ` }, { t: inr(it.mp), em: true }, { t: `, with ${it.off}% off.` }]);
     await ctx.wait(500);
-    await tk.offer(ctx, 0);
-    await tk.offer(ctx, 1);
-    const talk = await arriving;
-    talk.bird.point();
-    await talk.say('takeaway-1', 'A bigger discount\npercentage does not\nalways mean a\nbetter deal.', 300);
-    await tk.best();
+    await swifty.hide();
+    const q = FX.shopQuestion(scene.ui, { question: it.question, options: it.options, tag: { icon: it.icon, price: it.mp, off: it.off } });
+    await q.open();
+    await readLit(ctx, `${it.id}-ask`, it.question, [q.question]);
+    for (;;) {
+      const i = await q.answer();
+      if (!ctx.alive()) return;
+      if (it.options[i] === pay) {
+        q.right(i);
+        const r = stageRect(q.buttons[i]);
+        FX.burst(scene.ui, r.left + r.width / 2, r.top + r.height / 2, { count: 18, dist: [110, 230], size: [14, 28] });
+        break;
+      }
+      const tip = `Find the ${it.off}% discount first.`;
+      const hint = q.wrong(i, { tip, sum: [{ t: `${it.off}% of ${inr(it.mp)} = ` }, { t: inr(off), cls: 'is-red' }] });
+      await ctx.wait(500);
+      await readLit(ctx, `${it.id}-hint`, `Not quite! ${tip} ${it.off}% of ${inr(it.mp)} = ${inr(off)}.`, [hint]);
+    }
+    await ctx.wait(900);
+    await q.close();
+    const card = FX.priceCard(scene.ui, {
+      icon: it.icon, cls: `pc2--buy pc2--${it.id}`,
+      rows: [{ label: 'Original Price', value: inr(it.mp) }, { label: `Discount (${it.off}%)`, value: `− ${inr(off)}`, cls: 'is-off' }],
+      total: { label: 'Sale Price', value: inr(pay) },
+      buttons: [{ label: 'Buy', tone: 'buy', icon: 'cart' }, { label: 'Keep Looking', tone: 'look', icon: 'search' }],
+    });
+    await card.open();
+    const ask = [{ t: 'Great!', cls: 'stress' }, { t: ' The sale price is ' }, { t: inr(pay), em: true }, { t: `. Do you want to buy ${it.a}?` }];
+    await swifty.say(`${it.id}-great`, ask);
+    for (;;) {
+      const b = await card.choose();
+      if (!ctx.alive()) return;
+      if (b === 0) break;
+      await card.hide(); // Keep Looking: a look round the shop, and it comes back
+      await swifty.say('look-around', 'Take your time and look around!', 300);
+      await ctx.wait(900);
+      await card.show();
+      await swifty.say(`${it.id}-great`, ask);
+    }
+    // Buy: paid; the money comes out of the wallet, and the thing goes onto the list, ticked.
+    await swifty.hide();
+    card.stamp('PAID');
+    Sound.kaching();
+    Party.bought.add(it.id);
+    const counting = bar.count(partyMoney());
+    await flyToList(ctx, scene, card.el.querySelector('.pc2-pic img'), bar.slots[k], it.icon);
+    bar.tick(k);
+    await counting;
     await ctx.wait(400);
-    await talk.say('takeaway-2', 'Calculate how much\nyou actually have\nto pay.', 300);
-    await ctx.wait(400);
-    await tk.banner();
-    talk.bird.point();
-    endWithSwifty(ctx, scene, talk); // the last screen: then Replay
+    await swifty.say(`${it.id}-done`, [{ t: 'Great!', cls: 'stress' }, { t: ` You bought ${it.id === 'pants' ? 'the bottomwear' : `the ${it.name.toLowerCase()}`}!` }]);
+    ctx.advance(3000); // back out into the mall (or on to the end)
+  }
+
+  // A copy of its picture flies from the card onto its slot on the shopping list.
+  async function flyToList(ctx, scene, from, slot, src) {
+    if (!from || !slot) return;
+    const a = stageRect(from);
+    const b = stageRect(slot);
+    const img = el('img', 'party-fly', scene.ui, { left: `${a.left}px`, top: `${a.top}px`, width: `${a.width}px`, height: `${a.height}px` });
+    Object.assign(img, { src, alt: '' });
+    const k = Math.min(b.width / a.width, b.height / a.height);
+    const dx = b.left + b.width / 2 - (a.left + a.width / 2);
+    const dy = b.top + b.height / 2 - (a.top + a.height / 2);
+    Sound.swish();
+    await FX.settle(img.animate([
+      { transform: 'none' },
+      { transform: `translate(${dx * 0.45}px, ${dy * 0.45 - 140}px) scale(${(1 + k) / 2 * 1.15})`, offset: 0.5 },
+      { transform: `translate(${dx}px, ${dy}px) scale(${k})` },
+    ], { duration: reducedMotion ? 1 : 1000, easing: 'cubic-bezier(.45,0,.3,1)', fill: 'forwards' }));
+    img.remove();
+    Sound.pop();
+  }
+
+  // ---------- The end (screen 41): all set for the party ----------
+  async function playPartyDone(ctx, scene) {
+    const total = PARTY_BUDGET - partyMoney();
+    const bought = PARTY_ITEMS.filter(it => Party.bought.has(it.id));
+    const items = (bought.length ? bought : PARTY_ITEMS).map(it => ({ name: it.name, icon: it.icon, mp: it.mp, pay: partyPay(it) }));
+    const shown = bought.length ? total : PARTY_ITEMS.reduce((sum, it) => sum + partyPay(it), 0); // (from the scene list: the whole list)
+    const table = FX.partyTable(scene.ui, { title: 'All Set for the Party!', items, total: shown, left: PARTY_BUDGET - shown });
+    const swifty = partyBird(ctx, scene, { upTo: 1080 }); // (left of the table)
+    await ctx.wait(500);
+    FX.confetti(scene.ui);
+    Sound.chime();
+    table.open();
+    items.forEach((_, i) => ctx.wait(160 + i * 140).then(() => { Sound.pop(); table.row(i); }, () => {}));
+    await ctx.wait(1300);
+    Sound.ding();
+    await table.showTotal();
+    await readLit(ctx, 'as-total', `Total amount: ${inr(shown)}.`, [table.totalRow]);
+    await table.showLeft();
+    await readLit(ctx, 'as-left', `Money left: ${inr(PARTY_BUDGET - shown)}.`, [table.leftRow]);
+    await swifty.say('as-wow', [{ t: 'Wow!', cls: 'stress' }, { t: ' You found the best deals for the party!' }]);
+    await ctx.wait(1500);
+    await swifty.hide();
+    await FX.settle(table.el.animate([{ opacity: 1, transform: 'none' }, { opacity: 0, transform: 'translateY(30px) scale(.95)' }], { duration: 400, fill: 'forwards' }));
+    table.el.remove();
+    const mission = FX.partyMission(scene.ui, {
+      title: 'MISSION COMPLETE!', text: 'You have successfully helped Aniket get ready for the party!',
+      items: PARTY_ITEMS.map(it => ({ name: it.name, icon: it.icon })),
+    });
+    FX.confetti(scene.ui);
+    const tiles = mission.tiles(ctx); // (they come in with the card: it is never empty)
+    tiles.catch(() => {});
+    await mission.open(ctx);
+    await tiles;
+    await readLit(ctx, 'md-text', 'You have successfully helped Aniket get ready for the party!', [mission.text]);
+    await swifty.say('md-wow', [{ t: 'Wow!', cls: 'stress' }, { t: ' You did it!' }]);
+    ctx.advance(NEXT_IN);
   }
 
   // A comic jolt of the whole picture, for a surprise.
@@ -3854,19 +3479,11 @@
     final: { idle: 's23-idle', lines: { 'final-1': 's22-aniket-1', 'final-2': 's22-aniket-3' } },
     boxed: { idle: 's36-box', once: true },
     return: { idle: 's40-idle', hold: true, lines: { 'home-ask': 's40-father-1', 'home-learnt': 's40-aniket', 'home-next': 's40-father-2' } },
-    school: { idle: 's41-idle', lines: { 'school-soon': 's41-father-1', 'school-need': ['s41-father-2', 's41-father-1'] } },
-    money: { lines: { money: 's43-father' } },
-    deal: {
+    // (Party Prep: the father's ₹5,000 and his advice, in the clips made for the screens that had them before)
+    partymoney: { lines: { money: 's43-father' } },
+    partydeal: {
       idle: 's45-idle', hold: true,
       lines: { 'deal-use': 's45-father-1', 'deal-left': ['s45-father-2', 's45-father-1'], 'deal-really': 's45-aniket-1', 'deal-offers': 's45-aniket-2' },
-    },
-    begin: { idle: 's46-idle' },
-    homeagain: {
-      idle: 's56-idle',
-      lines: {
-        'end-everything': 's56-father-1', 'end-yes': 's56-aniket-1', 'end-spend': 's56-father-2', 'end-spent': 's56-aniket-2',
-        'end-left': 's56-father-3', 'end-best': 's56-aniket-3', 'end-welldone': 's56-father-4',
-      },
     },
   };
   // The movement clips, going forward from one screen to the next ("from>to").
@@ -3880,8 +3497,8 @@
     's01-aniket-1': 4.5, 's01-aniket-2': 1.42, 's01-father': 3.58, 's05-aniket': 2.5, 's06-aniket': 1.83, 's06-shopkeeper': 2.67,
     's22-aniket-3': 3.83,
   };
-  const CLIP_MOVES = {
-    'list>money': 's42-to-s43', // (s06-to-s07, from Aniket asking to his paying, went with the user's doc of 2026-10-23: he pays later)
+  const CLIP_MOVES = { // (none now: s06-to-s07 went with the user's doc of 2026-10-23, he pays later; s42-to-s43 with the screens
+    // after 31, the same day)
   };
 
   const Clips = {
@@ -4259,9 +3876,12 @@
   // worked out → what ₹540 is → the amount to pay → the final answer; and 540 as a percent of 1800 → the discount
   // percentage → the summary.
   // Every other change is a straight cut.
-  const FADES = [['home', 'outside'], ['return', 'school'], ['school', 'list'], ['list', 'money'], ['money', 'deal'], ['deal', 'begin'], ['begin', 'shops'], ['shops', 'uniform'], ['shops', 'shoes'], ['shops', 'bag'], ['shops', 'bottle'], ['shops', 'complete'], ['uniform', 'complete'], ['shoes', 'complete'], ['bag', 'complete'], ['bottle', 'complete'], ['complete', 'receipt'], ['homeagain', 'mission'], ['mpcard', 'reveal'], ['pay', 'exit'], ['outside', 'browse'], ['browse', 'ask'], ['leave', 'sneakers'], ['sneakers', 'shoe'], ['shoe', 'confused'], ['final', 'boxed']];
+  const PARTY_IDS = ['return', 'invite', 'partymoney', 'partydeal', 'tomall', 'mallfloor'];
+  const SHOP_IDS = ['shirtshop', 'pantsshop', 'watchshop', 'sunshop'];
+  const FADES = [...PARTY_IDS.slice(1).map((id, i) => [PARTY_IDS[i], id]), ...SHOP_IDS.flatMap(id => [['mallfloor', id], [id, 'partydone']]),
+    ['mallfloor', 'partydone'], ['home', 'outside'], ['mpcard', 'reveal'], ['pay', 'exit'], ['outside', 'browse'], ['browse', 'ask'], ['leave', 'sneakers'], ['sneakers', 'shoe'], ['shoe', 'confused'], ['final', 'boxed']];
   const FORWARD_FADES = [['mp', 'mpcard'], ['formula', 'formula-reveal'], ['confused', 'smcard'], ['smcard', 'offmeans'], ['percentrule', 'whatpercent'],
-    ['whatpercent', 'check'], ['check', 'topay'], ['topay', 'thirty'], ['thirty', 'paywork'], ['paywork', 'final'], ['left', 'two'], ['recap', 'takeaway']];
+    ['whatpercent', 'check'], ['check', 'topay'], ['topay', 'thirty'], ['thirty', 'paywork'], ['paywork', 'final']];
   const FADE_MS = 1200; // not stretched by PACE: changing screens stays brisk
   const SLIDE_MS = 950;  // a sheet sliding up over a story picture (see slide)
   const fadesBetween = (a, b) =>
@@ -4345,7 +3965,6 @@
     if (from && !fade && !sheet) deactivate(from);
     Game.index = i;
     UI.update();
-    syncBar(to);
 
     if (sheet) {
       const framed = x => !!x.snapEl;
@@ -4489,9 +4108,8 @@
     }, SNAP_MS);
   }
 
-  // Next and Back go to the screen after or before, unless the screen says where (`next`, `back`: a screen's id). The
-  // shopping game isn't a straight line: Next on the Shopping Area goes to the next item to buy, and from a street
-  // both go back to the Shopping Area (or, once everything is bought, Next goes on to the end).
+  // Next and Back go to the screen after or before (Next on the last screen starts the story again), unless the screen
+  // says where (`next`, `back`: a screen's id): the mall and its shops aren't in a line (a shop goes back out into the mall).
   function next() {
     const scene = SCENES[Game.index];
     if (Game.index === 0) startStory();
@@ -4613,8 +4231,6 @@
       scene.world = el('div', 'scene-world', scene.parallax);
       scene.world.style.setProperty('--kb-origin', scene.kb ? scene.kb.origin : scene.origin);
       if (scene.sheet) scene.el.classList.add('is-sheet');
-      if (scene.look) scene.el.classList.add('look-' + scene.look);
-      if (BAR_SCREENS.has(scene.id)) scene.el.classList.add('has-bar'); // Swifty speaks from the question bar
       // She comes on this screen: her corner is kept (also on screen 8, whose panel slides up over the picture).
       if (scene.v2 && scene.swifty) scene.el.classList.add('has-swifty');
       if (scene.sheet === 'panel') el('div', 'sheet-panel', scene.world); // one big panel filling the screen (Swifty's books come with her: see standFor)
@@ -4666,9 +4282,7 @@
       const thumb = el('span', 'si-thumb', item);
       const picture = scene.react || scene.bg; // a screen's reaction picture shows best what it is about
       if (scene.sheet) thumb.classList.add('si-thumb--sheet'); // on the big panel: a little cream panel, with Swifty's stand
-      if (BAR_SCREENS.has(scene.id)) thumb.classList.add('si-thumb--bar'); // the question bar along its bottom, not the stand
-      if (picture || (scene.sheet && !BAR_SCREENS.has(scene.id))) Object.assign(el('img', '', thumb), { src: picture || STAND, alt: '' });
-      else thumb.classList.add('si-thumb--' + scene.look); // a screen the game draws (the shops): a tiny copy, in CSS
+      if (picture || scene.sheet) Object.assign(el('img', '', thumb), { src: picture || STAND, alt: '' });
       el('span', 'si-now', thumb).textContent = 'NOW';
       const text = el('span', 'si-text', item);
       el('strong', '', text).textContent = scene.title;
@@ -4715,6 +4329,7 @@
 
     document.addEventListener('keydown', e => {
       if (e.altKey || e.ctrlKey || e.metaKey) return;
+      if (Game.steering && /^(Arrow(Up|Down|Left|Right)|[wasdWASD])$/.test(e.key)) return; // (they walk Aniket: the mall's arrows)
       const focus = document.activeElement;
       const control = focus && (focus.tagName === 'BUTTON' || focus.tagName === 'INPUT' || focus.getAttribute('role') === 'button');
       switch (e.key) {
@@ -4808,9 +4423,7 @@
     const label = $('#loader-text');
     const images = SCENES.flatMap(s => [s.bg, s.react]).filter(Boolean).concat(
       ASSETS + 'ui/start-button.png', WALK_RIG.src, SWIFTY.fly.src, SWIFTY.stand.src, ART.money, ART.book,
-      ASSETS + 'ui/sneakers.png', DOORWAY.src, STAND, ...Object.values(BEGIN_ART), ...SHOPPING_LIST.map(item => item.icon),
-      ...Object.values(SHOP_ART), MONEY_NOTES, ...SHOPS.map(shop => shop.icon), ASSETS + 'boy stand and talk .png',
-      ...Object.values(STREET_ART).flatMap(v => (typeof v === 'string' ? [v] : Object.values(v)))
+      ASSETS + 'ui/sneakers.png', DOORWAY.src, STAND, TOP_SHEET.src, PARTY_WALLET, ...PARTY_ITEMS.map(it => it.icon)
     );
     const fonts = document.fonts
       ? Promise.race([Promise.all([ // the fonts, before the first words appear (no swapping in later)

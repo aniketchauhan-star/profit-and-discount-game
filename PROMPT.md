@@ -1,12 +1,12 @@
 # Bookstore Journey — Game Prompt
 
-> A full description of the **Profit & Discount** game: the story that teaches the ideas (Screens 1–46 of the brief; 1–36 in the game), then the shopping game that uses them (Screens 47–59; 37–49 in the game).
+> A full description of the **Profit & Discount** game: the story that teaches the ideas (Screens 1–40 of the brief; 1–31 in the game), then **Party Prep** (games 32–41, made from the user's pictures of 2026-10-23: see *Party Prep* below), where Aniket shops for Rohan's birthday party with ₹5,000, walking round the mall with four arrow buttons. The brief's screens 41–59 (the talk about school, the shopping challenge and its streets, back home, the recap) were taken out the same day, at the user's word ("after 31 screen all screen are change"); their sections below describe them as they were (in git's history).
 > You can paste this into any AI coding tool to rebuild or extend the game.
 > Items marked ✨ are extra effects added on top of the original request.
 >
 > **The revamp brief is applied** (`Bookstore Journey - Revamp Brief.docx`; what was done, the decisions made on its open questions, and what is still to do: `docs/REVIEW.md`). Its rules for every screen are in section 1, and each screen below says what it does now.
 >
-> **Screen numbers** here are the story's own, as in the brief and the text spreadsheet; each screen's heading also gives its number in the game ("game 7"). The game has **49 screens**: Screens 1, 3 and 5 here are 1–3 in the game; then, in **the order of the user's doc of 2026-10-23** (below), 6 is 4, 10 is 5, 11 is 6, a new question card is 7, 14 is 8, 15 is 9, a new question card is 10, 17–18 (the formula, back at the user's word the same day) are 11–12, 7 is 13, 20–23 are 14–17, 25 is 18 and 20 with a new question card (19) between them, 27–30 are 21–24, 34 is 25 (its question) and 27 (its working) with 32 (26) between them, 35–37 are 28–30, 40–43 are 31–34, and 45–59 are 35–49. Taken out: Screens 2, 4, 9, 24, 26 and 44 and the checkpoints on percentages and on the price after a discount (2026-10-21; see *The review meeting* below); 13, 16, 38 and 39 (Checkpoint 4) on 2026-10-22; and 8, 12, 19 (Checkpoint 1), 31 and 33 on 2026-10-23. The game has no checkpoints now.
+> **Screen numbers** here are the story's own, as in the brief and the text spreadsheet; each screen's heading also gives its number in the game ("game 7"). The game has **41 screens**: Screens 1, 3 and 5 here are 1–3 in the game; then, in **the order of the user's doc of 2026-10-23** (below), 6 is 4, 10 is 5, 11 is 6, a new question card is 7, 14 is 8, 15 is 9, a new question card is 10, 17–18 (the formula, back at the user's word the same day) are 11–12, 7 is 13, 20–23 are 14–17, 25 is 18 and 20 with a new question card (19) between them, 27–30 are 21–24, 34 is 25 (its question) and 27 (its working) with 32 (26) between them, 35–37 are 28–30, 40 is 31, and Party Prep (the user's pictures of 2026-10-23) is 32–41. Taken out: Screens 2, 4, 9, 24, 26 and 44 and the checkpoints on percentages and on the price after a discount (2026-10-21; see *The review meeting* below); 13, 16, 38 and 39 (Checkpoint 4) on 2026-10-22; and 8, 12, 19 (Checkpoint 1), 31 and 33 on 2026-10-23, and the same day **everything after Screen 40** (41–59), to be made again. The game has no checkpoints now.
 >
 > **The user's doc of 2026-10-23** (a page of the story, with a screenshot of Screen 6) set the order from the bookstore's price to the sneakers' question, and the user chose to take out what it doesn't have (the Cost/Selling Price question, the discount formula and Checkpoint 1; the formula came back the same day, after the discount question: "after screen 10 add this") and to ask the sneakers' question once, then work it out: "It's ₹800!" → "It is too costly, uncle." → "Check the printed price on the book." → "Oh! The price printed on it is ₹1000." → Swifty: the marked price → **a question card** (₹800 or ₹1000) → the shopkeeper: printed ₹1000, selling at ₹800, "I gave you a discount." → "Discount? What is that?" → Swifty: the definition → **a question card** (₹200 or ₹800) → the formula, ₹1000 − ₹800 = ₹200, then Discount = Marked Price − Selling Price, D = MP − SP → the book given, "Thank you, uncle!" → outside, Swifty: "Aniket bought the book and understood the discount." "Let's help Aniket buy the sneakers!" → "Wow, nice sneakers! I love them." → "The price tagged on it is ₹1800." → **a question card** (30%, ₹1800 or ₹1830) → "What does 30% OFF mean here?" "If this is a discount, how much do I actually have to pay?" → Swifty: "30% OFF means 30% discount here." → the recall of percentages, the rule, its example, "Let's have some practice!" and the practice question → **"How much does Aniket have to pay?"** → the discount (30% of ₹1800 = ₹540) → the amount to pay (₹1800 − ₹540 = ₹1260). Every question card gives a hint and another try after a wrong answer, and turns over in the middle after the right one. 26 new lines are to be recorded (`docs/VOICEOVER.md`, *To record next*): the device's voice reads them until then.
 >
@@ -392,7 +392,7 @@ Taken out on 2026-10-22, at the user's word ("remove this screen"): Screen 37 al
 ### Screen 39 — Checkpoint 4: Discount % (taken out)
 Taken out on 2026-10-22, at the user's word ("screen 31 remove"): Screen 37 grows straight out into Screen 40 (back home). Checkpoint 1 (Screen 19) is the game's only checkpoint now.
 
-### Screen 40 — Back Home
+### Screen 40 — Back Home (game 31)
 - Background: `boy return home .png`: back home, Aniket comes in with his backpack, the new book under his arm and the sneakers in a shopping bag; his father sits at the dining table with a cup of tea and the newspaper. A slow drift, the daylight through the far window softly glowing, and dust floating in the sunlight ✨.
 - A conversation, **one person at a time** (each bubble goes before the next one comes), every line spoken in its speaker's voice, clear of both faces:
   1. **Father:** **"How was your shopping?"**, on the wall up-left of his head, its point down at his mouth.
@@ -400,19 +400,35 @@ Taken out on 2026-10-22, at the user's word ("screen 31 remove"): Screen 37 grow
   3. **Father:** **"That’s useful, because you have another shopping job."**, up-left of his head again.
 - About 3 seconds later, a smooth **cross-fade into Screen 41**.
 
-### Screen 41 — School Starts Soon
+### Party Prep (games 32–41: the user's pictures of 2026-10-23)
+(The user sent eight pictures: Aniket on the sofa with his phone, the mall's entrance, the mall seen from above with its four shops, the inside of each shop, and a sheet of Aniket walking seen from above, in four directions: "after 31 screen, do not use the images I uploaded before … use this image, and there is a conversation: use the video I uploaded; make a joystick to control the character: I use the joystick and go, then where the shop is, if I go to the watch shop then the watch shop comes". The earlier Party Prep, made from 26 designs the same day, was replaced. The conversation is the father and son's, with the clips made for it before (`s43-father`, `s45-…`: "Here's ₹5,000.", "Use what you have learnt and find the best deals.", "Whatever is left after buying everything is yours.", "Really?", "Then I'm definitely finding the best offers!"), on their own pictures (`father gave him money.png`, `boy stand and talk .png`). New pictures: `game assets/party/` (the user's, as WebP; Aniket's walk cut out of its sheet with the isnet-anime model and lined up on his head: `aniket-topdown.png`, 190 × 238 frames; the four things cut out of the shops' pictures, made sharp with Real-ESRGAN: `icon-*.png`).)
+
+- **The prices** (as the party designs had them): **Shirt** ₹1,500, 20% off (₹1,200); **Bottomwear** ₹1,200, 10% off (₹1,080); **Watch** ₹1,000, 20% off (₹800); **Sunglasses** ₹800, 20% off (₹640). Total ₹3,720; ₹1,280 left of ₹5,000.
+- **The bar on top** (the mall and the shops): the **wallet** (counting down as he pays) and the **Shopping List** (the four things' pictures, each ticked ✓ once bought), between the scene button and Back / Next.
+1. **A Party Message (32)**: Aniket on the sofa, reading his phone; the invite (You're invited! Rohan's Birthday Party, Tonight 8:00 PM, Rohan's House) comes up: **"Wow! Rohan's birthday party is tonight!"**, then **"I need a new outfit for the party!"**
+2. **₹5,000 for the Party (33)**: his father holds out the money (it shines, cha-ching): **"Here's ₹5,000."** (his clip).
+3. **Find the Best Deals (34)**: **"Use what you have learnt and find the best deals."** — **"Whatever is left after buying everything is yours."** — **"Really?"** — **"Then I'm definitely finding the best offers!"** (their clips).
+4. **To the Mall (35)**: Aniket walks up to the mall (the camera eases in to the doors): **"The mall! Let's go shopping!"**
+5. **Inside the Mall (36)**: the mall from above, Aniket in the middle of the plaza, seen from above, and **four arrow buttons** (up, down, left, right) at the bottom left (the user, 2026-10-23: "instead of the joystick add arrows"; it was a joystick at first): press and hold one (or two, for a diagonal) to walk; the arrow keys and W A S D press them too. **He walks smoothly and slowly** (the user: "the movement should be smooth and slow, it should look like a walk"): 140 px a second (it was 250), speeding up and slowing down gently (in about a fifth of a second), his steps in time with the ground he covers (a cycle of two steps for about 120 px: 10 frames up or down, 7 sideways), facing the way pressed; on the floor only (along a shop's wall he slides along it). The first time, Swifty pops up beside the arrows (which glow): **"Use the arrows to walk into a shop!"** (he can walk meanwhile; the Shopping List on top says what to buy). At a shop's doorway it glows gold; **walking up into it, he goes in**, and that shop's picture comes (the Shirts shop → the shirts, the Watches → the watches…), in any order. A shop already done says so ("✓ You bought the watch already!") and he can't go in; it has a green ✓ on its sign. Back out of a shop, he stands at its door. (Next on the mall goes to the next shop still to visit; the shops' Back goes out to the mall.)
+6. **A shop (37 Shirts, 38 Bottomwear, 39 Watches, 40 Sunglasses)**: what to buy is ringed in gold on the shop's picture (the blue shirt on its stand, the beige cargo trousers, the blue watch on its poster, the sunglasses on the middle stand) and its price tag swings onto it (₹1,500, 20% OFF); Swifty, bottom left: **"This shirt is ₹1,500, with 20% off."** Then the question on a card (the thing, its tag, **"What is the sale price of this shirt?"** read out, four amounts, **Check**): wrong: crossed out, **"Not quite!"** on top and a hint in the question's place ("Find the 20% discount first." and "20% of ₹1,500 = ₹300", read out), another try; right: ticked, sparkles, and the sale price worked out (Original Price, Discount (20%) − ₹300, **Sale Price ₹1,200**) with **Buy** and **Keep Looking**; **"Great! The sale price is ₹1,200. Do you want to buy this shirt?"** Keep Looking: **"Take your time and look around!"**, and it comes back. Buy: **PAID**, the wallet counts down, the thing flies onto the Shopping List (ticked); **"Great! You bought the shirt!"**, and 3 seconds later back out into the mall.
+7. **All Set for the Party! (41)**, once all four are bought: the mall blurred, confetti, the four things (each struck through at its price, and what was paid), **Total Amount ₹3,720** and **Money Left ₹1,280** (read out); **"Wow! You found the best deals for the party!"**; then **Mission Complete!** (three stars; "You have successfully helped Aniket get ready for the party!", read out; the four things ticked): **"Wow! You did it!"** The last screen: Next becomes Replay.
+- 34 lines to record (vo165–vo198); the father and son's (vo132–vo136) are recorded already.
+
+> **Screens 41–59 below were taken out on 2026-10-23** (the user: "after 31 screen all screen are change, please remove the screens after 31"): the game ends on Screen 40 (game 31), and Next there starts the story again. They are kept here, as they were, for when they are made again; their pictures, video clips and recorded lines are still in `game assets/`, and the shopping game's parts (`FX.street`, `FX.receipt`, the wallet, the question bar…) and their styles are still in `js/fx.js` and `css/style.css`, unused.
+
+### Screen 41 — School Starts Soon (taken out)
 - Background: `boy and his father talking.png`: Aniket and his father sit facing each other at the dining table; his father talks, one hand raised. A slow drift, the daylight in the far doorway softly glowing, dust in the sunlight ✨.
 - His father talks, **one line after the other**, from a bubble on the wall between them (clear of both faces), its point at his mouth from the side:
   1. **"Your new school session starts in a few days."**
   2. **"You still need some things for school."**
 - About 3 seconds later, a **cross-dissolve into Screen 42**.
 
-### Screen 42 — The Shopping List
+### Screen 42 — The Shopping List (taken out)
 - Background: `father gave him list.png`: his father hands Aniket a list: **School Uniform, School Shoes, School Bag, Water Bottle**. No words.
 - The camera **pushes in on the list** until it fills the middle of the screen, 1.7× bigger; the list glows and a shine sweeps across the paper (a soft sparkle sound; no twinkles).
 - Then the camera **eases back out** to exactly the framing Screen 43 starts from, and Screen 42 **dissolves into Screen 43**: the pictures line up, so only what is in their hands changes (the list becomes the money).
 
-### Screen 43 — ₹5,000 to Spend
+### Screen 43 — ₹5,000 to Spend (taken out)
 - Background: `father gave him money.png`: the same view; his father holds out a fan of ₹500 notes. A slow drift.
 - The notes glow and shine, with a cash-register **"cha-ching"** ✨. Then his father's bubble, up-right of his face, its point at his mouth (clear of both faces and the money): **"Here’s ₹5,000."** (₹5,000 bold; the voice says "five thousand rupees"), and the amount pulses with a soft "ding".
 - About 3 seconds later, a **cross-fade into Screen 45**.
@@ -420,7 +436,7 @@ Taken out on 2026-10-22, at the user's word ("screen 31 remove"): Screen 37 grow
 ### Screen 44 — Into His Pocket (taken out)
 - Taken out on 2026-10-21, at the user's request (a still screen with nothing to say): Screen 43 now fades into Screen 45. (It was `boy take money in his pocket.png`, a shine on the notes.)
 
-### Screen 45 — Find the Best Deals
+### Screen 45 — Find the Best Deals (taken out)
 - Background: `boy stand and talk .png`: his father, seated at the table, talks to Aniket, who stands by the table with his backpack. A slow drift, the sunny window softly glowing ✨.
 - **One bubble at a time**, each spoken in its speaker's voice, clear of both faces:
   1. **Father:** **"Use what you have learnt and find the best deals."**, up-right of his head, its point down at his mouth.
@@ -429,7 +445,7 @@ Taken out on 2026-10-22, at the user's word ("screen 31 remove"): Screen 37 grow
   4. **Aniket:** **"Then I’m definitely finding the best offers!"**, left of his face, its point at his mouth from the side.
 - About 3 seconds later, a **cross-fade into Screen 46**.
 
-### Screen 46 — Game Begins
+### Screen 46 — Game Begins (taken out)
 - Background: `game begins.png`: Aniket, ready to go, outside his house (No. 27) by the gate, on the left. A slow drift, the morning sun softly glowing ✨.
 - On the right, **the shopping challenge's panel** (its pieces cut from `game begin panel sheet .png` into `ui/begin/`), with **only a few things in it and room round each**, building up one piece at a time:
   1. The **cream panel** springs up, and the blue **GAME BEGINS** banner drops onto its top with a little bounce (whoosh).
@@ -440,7 +456,7 @@ Taken out on 2026-10-22, at the user's word ("screen 31 remove"): Screen 37 grow
 - The panel stands in the design's place (stage x 1000–1848, with the banner just under the top buttons); the item cards are drawn in the sheet's colours and the game's font.
 - **START SHOPPING** waits for the player (there is no countdown; **Next** works too) and leads, with a cross-fade, to Screen 47.
 
-### The shopping game (Screens 47–59)
+### The shopping game (Screens 47–59, taken out)
 
 After the story, the learner **plays**. Aniket has ₹5,000 and the school shopping list; for each item the learner checks three shops' offers, works out what each would cost, compares them and buys at the best one. **Learning becomes the gameplay.**
 
@@ -460,7 +476,7 @@ After the story, the learner **plays**. Aniket has ₹5,000 and the school shopp
 - **Voices:** only Swifty and, at home, Aniket and his father speak: Swifty's lines on the question bar (on the big panel, in her bubbles), Aniket's and his father's in bubbles (the Shopping Area and Mission Complete have no one on screen, so no one speaks there).
 - **The question bar (Screens 48–53: the streets, Shopping Complete and the receipt):** Swifty doesn't stand on her books here. She speaks from **a big white bar at the top of the screen** (132 px tall), always fully on it, in the top row between the wallet and the Back / Next buttons: **her face in a round frame inside its left end** (108 px; her real, animated self; the frame's ring turns teal and glows while she talks; no name), and beside it **what she says, written as she says it**, **at 34 px and always on one line**, one line at a time. The two lines too long for one line are said in two halves, one bar line after the other: the percentage hint ("Find the discount first," / "then subtract it from the marked price.") and Bag Corner's lesson ("Even though Shop A offers 25% OFF," / "Shop C has the lowest final price."). Between her lines it shows **what to do**, in a deep blue: the street and its item while the street builds ("Uniform Street · School Uniform"), "Here is how to work it out.", "Tap another shop to check its offer.", "Now compare the three offers.", "Next: back to the Shopping Area.". **While a question panel is up** (an offer card, the three offers compared) **the bar isn't needed: it slides away**, and the question is on the panel, **above its answers**; the bar slides back as soon as Swifty speaks (a hint, "Correct!", why a shop is the best deal), so she is always on screen when she talks. **Nothing is written twice:** what is on a panel (its question, each line of the working, the purchase slip) is never written again on the bar; Swifty reads the working and the slip out without writing them on it. It is **one bar for all those screens**: it slides up with the first of them and **stays put from one to the next** (it never jumps or blinks), and slides down for the Shopping Area and after the receipt. On the big panel's screens (54, 55, 58 and 59) it isn't there: **Swifty stands on her books**, with her speech bubbles above her head, as on every teaching screen.
 
-### Screen 47 — Shopping Area
+### Screen 47 — Shopping Area (taken out)
 - No picture: the design's **light blue with soft circles**, drawn by the game. It shifts a little with the mouse, like the pictures do, while everything on it holds still. No one speaks here (no character is on screen): the "Tap to Select" pill is the instruction.
 - **As in the design**, its pictures cut from `select shop sheet.png` into `ui/shop/`, and the cards, pills, sparks, panel and tags drawn in the sheet's colours and the game's font:
   - On the left, **four shop cards** (2×2), each in its shop's colour, its picture standing on its name pill, little sparks on both sides: **Uniform** (yellow), **Shoes** (pink), **Bag** (green), **Bottle** (purple).
@@ -470,7 +486,7 @@ After the story, the learner **plays**. Aniket has ₹5,000 and the school shopp
 - **Tapping a card picks that shop:** it springs, lifts and glows in its colour (as on the sheet), a yellow **"Selected"** tag pops up on its top edge, its sparks burst, and its line on the list lights up in its colour; "Tap to Select" goes away. A moment later the screen **pushes in on that card** while its street fades in. With a mouse, a card also lifts a little when the pointer is over it.
 - **A bought item's card** turns **light grey** (its picture greyed out, its pill grey) with a **big green tick** over its picture, and its button is **disabled**: it can't be picked again. Once everything is bought the pill says **"All done!"** and the game moves on to Screen 52.
 
-### Screens 48–51 — The four streets
+### Screens 48–51 — The four streets (taken out)
 - As in the street's design. **The street's picture** (`game background.png`): a blue sky, trees on both sides, a light-blue town behind a green hedge, a pink pavement and the road. **Two white clouds drift slowly across the sky** (behind everything; they hold still if the player's device asks for less motion). Drawn by the game over it:
   - **three shop fronts** side by side on the pavement, **Shop A** (red), **Shop B** (blue) and **Shop C** (purple): the pictures from `new shops for game .png` (a sign with a bump on top, a striped awning with a scalloped edge, a cream front with a big window and three lamps), with the game's words and things on them: the shop's **name on its sign** (white, outlined), and in the window **the item** on the left (the uniform on a hanger), **its marked price on a cream tag hanging from a string** on the right, and **the shop's offer on a red tag** under it (the amount big, the word small: 10% OFF, ₹250 OFF, GET AT ₹1,300);
   - in the top-left corner, right of the screens button, **the wallet** (its picture and the money) **and the shopping list** (Uniform, Shoes, Bag, Bottle, each with its box and picture) on **two white cards**, the item's line lit up in its colour;
@@ -504,22 +520,22 @@ The four streets (what each shop's card asks, and the answers it offers, the rig
 - **Where to buy** (the Buy buttons, the right one in bold): Uniform Street: "Which shop gives the best deal?" (Buy for ₹1,440, Buy for ₹1,350, **Buy for ₹1,300**); Shoe Street: "Where should Aniket buy the shoes?" (₹1,440, ₹1,400, **₹1,350**); Bag Corner: "Which shop gives the best value?" (₹1,200, ₹1,200, **₹1,150**), and Swifty adds **"Even though Shop A offers 25% OFF, Shop C has the lowest final price."**; Bottle Stop: "Which bottle should Aniket buy?" (₹600, ₹550, **₹540**). On the others, Swifty: "Shop C has the lowest final price."
 - **The wallet**, bought in the order Uniform → Shoes → Bag → Bottle: ₹5,000 − ₹1,300 = **₹3,700 left**; − ₹1,350 = **₹2,350**; − ₹1,150 = **₹1,200**; − ₹540 = **₹660**. In any other order the steps differ but it always ends at ₹660.
 
-### Screen 52 — Shopping Complete!
+### Screen 52 — Shopping Complete! (taken out)
 - The light blue; a big blue banner **SHOPPING COMPLETE!** (gold words) drops in, **confetti** rains, and **"You bought everything on the list!"** comes up under it (all of it under the question bar). Then:
   - **on the left, the wallet and the shopping list**: the Shopping Area's white panel (a little smaller), the wallet showing **₹660 LEFT** in green, and the list's four lines;
   - **on the right, the four things bought**, each on a card in its shop's colour as on the Shopping Area (Uniform yellow, Shoes pink, Bag green, Bottle purple: its picture on its name pill).
   Line by line, **each item is ticked on the list as it pops up on its card on the right** (with its own green tick), so the list and the things bought match up; then the money left pops ("cha-ching"). As the banner lands, Swifty adds on the question bar: **"Well done! You found the best price for every item."** (the banner already says it is complete). (Aniket isn't on this screen.)
 
-### Screen 53 — Final Receipt
+### Screen 53 — Final Receipt (taken out)
 - A **receipt** (white paper, its bottom edge perforated) prints row by row: **"Aniket's School Shopping"**, then Item · Marked Price · Discount · Amount Paid: **Uniform** ₹1,600 · ₹300 · ₹1,300; **Shoes** ₹1,800 · ₹450 · ₹1,350; **Bag** ₹1,400 · ₹250 · ₹1,150; **Bottle** ₹600 · ₹60 · ₹540; **Total ₹5,400 · ₹1,060 · ₹4,340** (discounts in red, amounts paid in green, each item with its picture). The receipt is centred under the question bar, where Swifty says how to read it (its heading already says what it is): **"The discounts are in red, what he paid in green."** … "He paid ₹4,340 for everything."
 
-### Screen 54 — Money Left
+### Screen 54 — Money Left (taken out)
 - The big panel slides up, and the money left is worked out as on Screen 34: **Father gave ₹5,000** ↓ **Aniket spent ₹4,340**, and on the white sheet **Money left = ₹5,000 − ₹4,340 = ₹660** (₹660 marked yellow), each step as Swifty (on her stand) says it: "His father gave him ₹5,000." "He spent ₹4,340." "Money left = ₹5,000 − ₹4,340 = ₹660."
 
-### Screen 55 — Two Different Amounts
+### Screen 55 — Two Different Amounts (taken out)
 - A dissolve: **"Two Different Amounts"** on a purple strip, and two cards with a **≠** between them: **Total Discount Received ₹1,060** (red) — "The difference between the marked prices and the prices Aniket paid." (₹5,400 − ₹4,340 = ₹1,060), and **Money Left From the ₹5,000 Budget ₹660** (green) — "The amount Aniket gets to keep." (₹5,000 − ₹4,340 = ₹660). Swifty: "These are two different amounts.", then she reads each card out as it comes in. Neither is called "savings". Then she flies off and the panel slides down.
 
-### Screen 56 — Back Home
+### Screen 56 — Back Home (taken out)
 - Background: `return home shopping list .png`: Aniket, on the left, has come home with his backpack and a blue shopping bag; his father sits at the table on the right with his tea and the newspaper. A slow drift, the sunny window in the room behind them softly glowing. Nothing is added on the table. One bubble at a time, between the two of them: his father's up-left of his head, Aniket's up-right of his face, each with its tail at the speaker's mouth:
   1. **Father:** "Did you get everything?"
   2. **Aniket:** "Yes!"
@@ -529,13 +545,13 @@ The four streets (what each shop's card asks, and the answers it offers, the rig
   6. **Aniket:** "And I got the best deal for every item!"
   7. **Father:** "Well done! You really did shop wisely."
 
-### Screen 57 — Mission Complete
+### Screen 57 — Mission Complete (taken out)
 - The light blue; a green banner **MISSION COMPLETE** drops in (confetti), and a card: ✅ **Uniform**, ✅ **School Shoes**, ✅ **School Bag**, ✅ **Water Bottle**, and four boxes: **Budget ₹5,000**, **Amount Spent ₹4,340**, **Money Left ₹660**, **Total Discount Received ₹1,060**. No one speaks.
 
-### Screen 58 — What We Learnt
+### Screen 58 — What We Learnt (taken out)
 - The big panel slides up: **"What We Learnt"** and four cards (2 × 2), visual and short, each read out by Swifty (on her stand) as it comes in: **Marked Price** — the price written on the item; **Discount** — the amount reduced from the marked price (**Discount = Marked Price − Selling Price**); **Discount Percentage** — the discount written as a percentage of the marked price (**Discount % = (Discount ÷ Marked Price) × 100**); **Price After Discount** — **Selling Price = Marked Price − Discount**.
 
-### Screen 59 — Final Takeaway
+### Screen 59 — Final Takeaway (taken out)
 - A dissolve: the bag's two offers from Bag Corner, side by side: **25% OFF** (Marked Price ₹1,600, **SP = ₹1,200**) **vs** **₹250 OFF** (Marked Price ₹1,400, **SP = ₹1,150**). Swifty, on her stand: **"A bigger discount percentage does not always mean a better deal."** (the red tags from the streets) — the ₹250 OFF card glows, with the yellow "Best deal!" ribbon — and **"Calculate how much you actually have to pay."** Then the green banner: **Compare the final price before you buy.**
 - This is the last screen, so **Next** becomes **Replay**. The last screen always waits for the player to press Replay; it never starts the story over by itself.
 
