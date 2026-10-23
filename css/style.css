@@ -4414,10 +4414,18 @@ kbd {
 .is-v2[data-scene="thirty"] .practice-host .ws-sheet { font-size: 46px; }
 .is-v2 .practice-host .ws-panel ~ .bm { width: 860px; }
 
-/* Screens 21 and 22 (game.js allBlur; the user, 2026-10-22: "the panel in the middle of the image, all the image
-   blurred, the panel slightly bigger"): the whole picture blurred and dimmed, the panel bigger in the middle. (23 was
-   too, until the user asked for it as 24–27: "focus on shoes and this left side": the panel on the left, as theirs.) */
+/* Screens 22, 23 and 24 (game.js allBlur; the user, 2026-10-22: "the panel in the middle of the image, all the image
+   blurred, the panel slightly bigger"): the whole picture blurred and dimmed, the panel bigger in the middle (on 24, the
+   middle of the room left of Swifty's corner, so it stays clear of her bubbles, which start at x 1380). (24 had its
+   sneakers sharp and the panel on the left for a day: the user, 2026-10-23, "the options come between, blur all the
+   image".) */
 .is-v2:is([data-scene="percentrule"], [data-scene="whatpercent"]) .practice-host { left: 0; width: 1920px; }
+.is-v2[data-scene="check"] .practice-host { left: 0; width: 1364px; }
+.is-v2[data-scene="check"] .practice-host .qp-panel { width: 1100px; gap: 32px; padding: 44px 56px 50px; }
+.is-v2[data-scene="check"] .practice-host .qp-panel > .pf-question { font-size: 62px; }
+.is-v2[data-scene="check"] .practice-host .qp-answers { min-height: 160px; }
+.is-v2[data-scene="check"] .practice-host .qp-answers .pq-opt { width: 300px !important; height: 160px; font-size: 72px; }
+.is-v2[data-scene="check"] .practice-host .qp-answers .pq-opt .q-chip { width: 92px; height: 92px; font-size: 48px; }
 .is-v2:is([data-scene="percentrule"], [data-scene="whatpercent"]) .practice-host .pf-panel { column-gap: 56px; row-gap: 30px; padding: 44px 56px 50px; }
 .is-v2:is([data-scene="percentrule"], [data-scene="whatpercent"]) .practice-host .pf-question { font-size: 58px; }
 .is-v2:is([data-scene="percentrule"], [data-scene="whatpercent"]) .practice-host .pf-box { font-size: 54px; }
@@ -4449,3 +4457,12 @@ kbd {
 .is-v2[data-scene="smcard"] .qcard-pos.is-middle { transform: translate(544px, -50%); }
 .is-v2[data-scene="smcard"] .qcard-pos.is-middle.is-wide { transform: translate(344px, -50%); }
 .is-v2:is([data-scene="mpcard"], [data-scene="dcard"], [data-scene="smcard"]) .qback-text { text-wrap: pretty; } /* (no word left alone on the last line) */
+
+/* Screen 6 (the user, 2026-10-23: "remove Swifty; the ₹1000 panel big, on the right side; only her voice"): the panel
+   right of the book's price tag (the spotlight, x 210–730), big, what it is in full lines under the name. */
+.is-v2 .pop-card--mp { left: 1330px; top: 540px; width: 980px; padding: 56px 72px 60px; }
+.is-v2 .pop-card--mp .cn { gap: 30px; }
+.is-v2 .pop-card--mp .cn-note { padding: 34px 76px 22px; }
+.is-v2 .pop-card--mp .cn-value { font-size: 150px; }
+.is-v2 .pop-card--mp .cn-term { font-size: 84px; }
+.is-v2 .pop-card--mp .cn-meaning { font-size: 54px; line-height: 1.3; white-space: normal; text-wrap: pretty; }

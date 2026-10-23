@@ -379,8 +379,7 @@
       bg: ASSETS + 'he is tinking to see the shoes.png', // the shoe shop, the working on a small panel on it (practiceHost)
       kb: null, origin: '50% 50%', still: true,
       lamps: [[1740, 160, 260], [1740, 370, 260], [120, 60, 180]], dust: null,
-      setup: standFocus, // (as 24–27: the sneakers and their tags sharp, the panel on the left: the user, 2026-10-22)
-      cornerClear: STAND_CLEAR, // (her bubbles keep clear of the sneakers and their tags)
+      setup: allBlur, // (the whole picture blurred, the panel in the middle, as 22 and 23: the user, 2026-10-23)
       play: playCheck,
     },
     {
@@ -1325,14 +1324,15 @@
     return { veil, spot, on: () => veil.classList.add('is-on') };
   }
   // Swifty and her books slide in from the right edge (on): or are there already (carried over from the screen before).
-  async function swiftyFromRight(ctx, scene, already = false) {
+  // `bubbles`: where her bubbles go ([minX, maxX]; her corner's room by default).
+  async function swiftyFromRight(ctx, scene, already = false, { bubbles = CORNER.bubbles } = {}) {
     const stand = standFor(scene);
     const bird = new FX.Bird(scene.ui, SWIFTY, { scale: CORNER.s });
     bird.place(CORNER.x, CORNER.y);
     bird.shadowOn(true);
     Object.assign(bird, { stand, here: true });
     scene.bird = bird;
-    const talk = swiftyTalk(ctx, scene.ui, bird, b => overHead(b, CORNER.bubbles));
+    const talk = swiftyTalk(ctx, scene.ui, bird, b => overHead(b, bubbles));
     if (already) {
       bird.point();
       return talk;
@@ -1361,10 +1361,13 @@
   }
 
   function setupMarked(scene) {
-    // Coming from screen 7, the camera is where it was (it moves in on the book as the screen plays).
+    // Coming from screen 5, the camera is where it was (it moves in on the book as the screen plays).
     if (scene.startFrom && scene.startFrom !== 'none') scene.world.style.transform = scene.startFrom;
-    scene.panel = tagPanel(scene);
-    scene.concept = FX.concept(scene.panel.card, { value: '₹1000', term: 'Marked Price', abbr: '(MP)', meaning: 'The price printed on an item.', tone: 'mp' });
+    scene.panel = tagPanel(scene, 'pop-card--tag pop-card--mp');
+    const c = FX.concept(scene.panel.card, { value: '₹1000', term: 'Marked Price', abbr: '(MP)', meaning: '', tone: 'mp' });
+    // what it is, in the two parts her voice says (each lights up as it is said); it wraps at the card's edge
+    c.parts = ['The price printed on an item ', 'is called its marked price.'].map(t => Object.assign(el('span', '', c.meaning), { textContent: t }));
+    scene.concept = c;
   }
 
   async function playMarked(ctx, scene) {
@@ -1381,31 +1384,24 @@
     Sound.sparkle();
     await ctx.wait(700);
 
-    // Swifty comes in from the right and says what it is (the user's doc, 2026-10-23: "The price printed on an item is
-    // called its marked price."), in two parts: with the first, the ₹1000 lifts off the tag and the panel springs up with
-    // it (never empty); with the second, its name comes in under it.
-    const talk = await swiftyFromRight(ctx, scene);
-    await ctx.wait(300);
-    await talk.show([{ t: 'The price printed on an item', end: true }, { t: ' is called its ' }, { t: 'marked price', cls: 'key' }, { t: '.' }]);
-    const first = talk.part('mp-1', 0, 600);
-    first.catch(() => {}); // if the player leaves mid-line, the waits below report it
-    await ctx.wait(900);
+    // No Swifty (the user, 2026-10-23: "remove Swifty; the ₹1000 panel big, on the right side; only her voice"): the ₹1000
+    // lifts off the tag and flies to a big panel on the right, which springs up with it (never empty); then what it is
+    // comes in under it, and her voice says it (the user's doc: "The price printed on an item is called its marked
+    // price."), each word lighting up as it is said; its name comes in as she says it.
+    const reader = swiftyTalk(ctx, ui, null, null);
     await flyFromSnap(ctx, scene, light.spot, '₹1000', c.value);
     scene.panel.open();
     c.showNote();
-    await first;
-    const second = talk.part('mp-2', 1, 600);
-    second.catch(() => {});
-    await ctx.wait(700);
-    c.showTerm();
-    await second;
-    talk.line.emphasize();
-    await ctx.wait(1200);
-
-    // Her bubble goes, and she goes with it, back out to the right (the user, 2026-10-22: she is there only with her
-    // bubble); what she said stays on the panel, in short.
-    await swiftyAway(ctx, talk);
+    await ctx.wait(800);
     c.showMeaning();
+    await ctx.wait(500);
+    await reader.read('mp-1', 'The price printed on an item', [c.parts[0]], 300);
+    const naming = reader.read('mp-2', 'is called its marked price.', [c.parts[1], c.term], 600);
+    naming.catch(() => {}); // if the player leaves mid-line, the wait below reports it
+    await ctx.wait(800);
+    c.showTerm();
+    await naming;
+    Sound.ding();
     await ctx.wait(1200);
     ctx.advance(NEXT_IN); // then the question card
   }
@@ -1934,7 +1930,7 @@
   // Swifty on her stand (CORNER), ready to talk (her bubbles go above her head). She is out of sight until her first
   // bubble: then she and her books rise in together from the bottom edge (swiftyIn), and they go back down when her
   // bubble goes (swiftyOut). { size }: her bubbles' text size (default 34 px).
-  async function cornerSwifty(ctx, scene, { size } = {}) {
+  async function cornerSwifty(ctx, scene, { size, within = CORNER.bubbles } = {}) { // (within: her bubbles' room)
     let bird = scene.bird && !scene.bird.gone ? scene.bird : null;
     if (!bird) {
       const stand = standFor(scene); // first, so that she is drawn over it: both feet on the top book
@@ -1946,7 +1942,7 @@
       [bird.root, bird.stand].forEach(n => { n.style.visibility = 'hidden'; });
       scene.bird = bird;
     }
-    return swiftyTalk(ctx, scene.ui, bird, b => Object.assign(overHead(b, CORNER.bubbles), size ? { size } : {},
+    return swiftyTalk(ctx, scene.ui, bird, b => Object.assign(overHead(b, within), size ? { size } : {},
       scene.cornerClear ? { avoid: scene.cornerClear } : {}));
   }
 
@@ -2164,7 +2160,7 @@
     await ctx.wait(1600);
     shoesFocus(scene, cam, { instant: false });
     await ctx.wait(reducedMotion ? 60 : 800);
-    const talk = await swiftyFromRight(ctx, scene);
+    const talk = await swiftyFromRight(ctx, scene, false, { bubbles: SHOES_BUBBLES });
     await ctx.wait(200);
     await talk.show([{ t: '30% OFF', em: true }, { t: ' means', end: true }, { t: '\n30% ' }, { t: 'discount', cls: 'key' }, { t: ' here.' }]);
     await talk.part('om-1', 0, 600);
@@ -2176,6 +2172,9 @@
   }
   // The camera on the sneakers and their two tags (the picture's px), and where they come on screen, how close.
   const SHOES_CAM = { face: [1300, 650], to: [1000, 560], s: 1.5 };
+  // Swifty's bubbles there: right of the sneakers (on screen they end at x 1477), so none covers them (the user,
+  // 2026-10-23: her bubble on screen 21 was over the shoes); a long line wraps into more lines.
+  const SHOES_BUBBLES = [1495, 1890];
   // The sharp window round the sneakers and their tags, as the camera `cam` shows them (screens 19 and 20).
   function shoesFocus(scene, cam, opts) {
     const [x0, y0] = cam.at([STAND_FOCUS.x, STAND_FOCUS.y]);
@@ -2208,7 +2207,7 @@
 
   async function playRecall(ctx, scene) {
     await ctx.wait(400);
-    const talk = await swiftyFromRight(ctx, scene);
+    const talk = await swiftyFromRight(ctx, scene, false, { bubbles: SHOES_BUBBLES });
     await ctx.wait(200);
     // (The user's doc, 2026-10-23: "To calculate how much Aniket has to pay to buy these sneakers, let's recall the
     // percentage of a value concept.")
@@ -2462,7 +2461,13 @@
     await readWith(ctx, voice, 'pr-sign', 'Then put a % sign after it.', 500, () => f.answer());
     markAnswer(scene, f);
     await ctx.wait(900);
-    await voice.read('pr-example', 'Let’s take an example!', [], 600);
+    // Then Swifty rises in on her books with what comes next (the user, 2026-10-23: "Let's have some practice!" before
+    // screen 23, not on 24; it takes the place of "Let's take an example!"), her bubble right of the panel, and goes.
+    const talk = await cornerSwifty(ctx, scene, { within: [1500, 1890] });
+    talk.bird.point();
+    await talk.say('practice', [{ t: 'Let’s have some ' }, { t: 'practice', cls: 'key' }, { t: '!' }], 600);
+    await ctx.wait(1200);
+    await talk.clear(); // (she goes with her bubble)
     ctx.advance(NEXT_IN); // then the example
   }
 
@@ -2506,16 +2511,13 @@
     const q = FX.questionPanel(practiceHost(scene), CHECK);
     const grid = FX.grid100(q.slot, { shade: 25, label: '25 out of 100 = 25%' }); // under the answers, at the end
     await ctx.wait(450); // the formula finishes fading away first
-    // First she says it is time to practise (the user's doc, 2026-10-23: "Then Swifty says let's have some practice",
-    // on a screen of its own), in her bubble; then the panel springs up with the question, and she reads it out.
-    const talk = await cornerSwifty(ctx, scene);
-    talk.bird.point();
-    await talk.say('practice', [{ t: 'Let’s have some ' }, { t: 'practice', cls: 'key' }, { t: '!' }], 600);
-    await ctx.wait(300);
+    const arriving = cornerSwifty(ctx, scene); // she asks the question ("Let's have some practice!" is said before 23)
+    arriving.catch(() => {});
     q.open();
     const asked = q.showQuestion(); // (with the panel: it is never empty)
     await ctx.wait(600);
     await asked;
+    const talk = await arriving;
     await ctx.wait(300);
     await talk.read('cfu-ask', '250 is what percent of 1000?', [scene.ui.querySelector('.pf-question')], 1400);
     await ctx.wait(400);
