@@ -4,11 +4,13 @@
   python3 tools/make_walk_rig.py      writes "game assets/sprites/aniket-rig.png" and prints the pieces' places in it
 
 The pieces come from the first frame of the old walk sheet ("sprites/aniket-walk-clean.png"; its front leg is the
-near one): the upper body (with the far hand by the hip), the hips (the jeans' top: the seat and both thighs' tops, to the
-crotch), and the near leg cut into thigh, shin and shoe, which also make the far leg, a little darker. Each limb piece
-is rounded at its joint (the knee), so a bent knee shows no corner, and the thigh's top fades in, so it never shows past
-the seat as it turns. Every piece keeps the frame's coordinates (its offset is printed), so the game turns it about its
-joint as drawn there: the hip (200, 355), the knee (215, 476) and the ankle (234, 580); the ground is at y 610.
+near one): the upper body (with the far hand by the hip), the hips (the jeans' top, to the crotch: the game draws them
+over both thighs), and the near leg cut into thigh, shin and shoe, which also make the far leg, a little darker. As in a
+cut-out puppet, each limb piece is round at its top joint, centred on it, so it shows no corner as it turns: the thigh's
+top is hidden under the hips, and the knee is round on both pieces. The hips' back is cut along a smooth line from the
+waist to the crotch, without the top of the drawing's back leg (it stood out behind him as a lump once his legs moved:
+the user, 2026-10-23). Every piece keeps the frame's coordinates (its offset is printed), so the game turns it about its
+joint as drawn there: the hip (206, 375), the knee (215, 476) and the ankle (234, 580); the ground is at y 610.
 After running it, copy the printed PIECES into WALK_RIG in js/game.js. Needs Pillow and NumPy.
 """
 from pathlib import Path
@@ -48,10 +50,10 @@ def main():
         return out.clip(0, 255).astype(np.uint8)
 
     upper = np.maximum(mask([(0, 0), (FW, 0), (FW, 333), (0, 333)]), mask([(236, 300), (300, 300), (300, 368), (236, 368)]))
-    hips = mask([(118, 326), (237, 326), (237, 395), (222, 404), (200, 410), (180, 409), (165, 406), (152, 400), (142, 391),
-                 (135, 379), (131, 364), (129, 346)], feather=1)  # (a round seat: it shows when his legs are under him)
-    thigh = mask([(168, 350), (233, 350), (236, 400), (238, 440), (238, 476), (192, 476), (186, 440), (181, 410), (171, 385)],
-                 feather=1.0, circles=[(215, 476, 23)], fade=(350, 368))
+    hips = mask([(118, 326), (238, 326), (238, 382), (234, 392), (224, 400), (206, 405), (183, 406), (169, 399),
+                 (155, 389), (143, 376), (134, 361), (129, 346), (127, 335)], feather=0.6)
+    thigh = mask([(176, 380), (236, 380), (238, 440), (238, 476), (192, 476), (186, 440), (181, 410)],
+                 feather=0.8, circles=[(206, 375, 31), (215, 476, 23)])
     shin = mask([(192, 476), (238, 476), (243, 500), (248, 520), (252, 540), (257, 560), (263, 582), (206, 582), (205, 560),
                  (203, 520), (199, 500)], feather=0.8, circles=[(215, 476, 23)])
     shoe = mask([(196, 568), (262, 566), (320, 590), (320, 614), (196, 614)], feather=0.6)

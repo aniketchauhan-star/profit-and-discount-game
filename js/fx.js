@@ -4857,8 +4857,14 @@
 
     // A pose: 'idle' (standing, both feet down: how a walk starts and ends), or a point in the walk (0–1 of the cycle).
     setFrame(f) {
-      if (f === 'idle') this._pose(this.rig.gait.stop, 1);
+      if (f === 'idle') this._pose(this._stop(), 1);
       else this._pose(f || 0, 0);
+    }
+
+    // Where in the cycle he stands: the planted foot just ahead of his hips (gait.standFront).
+    _stop() {
+      const g = this.rig.gait;
+      return (g.heelStrike - g.standFront) / this.cycle;
     }
 
     // How far he goes in a cycle (two steps): the gait's own, or a little more or less, so a walk is whole cycles.
@@ -4919,8 +4925,8 @@
       return t[k % t.length] + (t[(k + 1) % t.length] - t[k % t.length]) * (f - k);
     }
 
-    // The pose at `phi` of the cycle; `rest` (0–1) brings the other foot down a little behind, to stand (as in the
-    // drawing the pieces come from), the hips as low as that needs.
+    // The pose at `phi` of the cycle; `rest` (0–1) brings the other foot down beside the planted one, to stand, the hips
+    // as low as that needs.
     _pose(phi, rest) {
       const near = this._foot(phi);
       const far = this._foot(phi + 0.5);
@@ -4954,6 +4960,8 @@
         g.rotate(-angle);
         g.drawImage(this.atlas, sx, sy, w, h, ox - at[0], oy - at[1], w, h);
       };
+      // the far leg, the near leg, then the hips over both thighs' tops (round, so they never show a corner), then the
+      // upper body
       for (const [[ax, ay, tilt], near] of pose.legs) {
         const ankle = [hx + ax, ay];
         const dx = ankle[0] - hip[0];
@@ -4967,8 +4975,8 @@
         put('shoe' + k, r.ankle, tilt, ankle);
         put('shin' + k, r.knee, shin - this.shin0, knee);
         put('thigh' + k, r.hip, thigh - this.thigh0, hip);
-        if (!near) put('hips', r.hip, 0, hip); // over the far leg, under the near one
       }
+      put('hips', r.hip, 0, hip);
       put('upper', r.hip, 0, hip);
       const m = this.reflection.getContext('2d');
       m.clearRect(0, 0, this.reflection.width, this.reflection.height);
@@ -4992,6 +5000,7 @@
       const travel = u => (Math.abs(ds) < 1e-6 ? (u * D) / from.s : (D * Math.log((from.s + ds * u) / from.s)) / ds);
       const all = travel(1);
       this._setCycle(all / Math.max(1, Math.round(all / g.cycle)));
+      const stop = this._stop();
       const liftTo = Math.min(0.4, (0.3 * this.cycle) / all); // setting off: the passing foot lifts…
       const restFrom = Math.max(liftTo, 1 - (slow * 0.6) / D); // …and at the end of the slowing down it comes down
       let half = null;
@@ -5009,14 +5018,14 @@
           } else d = D;
           const u = Math.min(1, d / D);
           this.place(from.x + (to.x - from.x) * u, from.y + (to.y - from.y) * u, from.s + ds * u);
-          const phi = g.stop + travel(u) / this.cycle;
+          const phi = stop + travel(u) / this.cycle;
           const k = Math.floor(phi * 2);
           if (half !== null && k !== half && onStep) onStep(this.x); // a foot comes down
           half = k;
           const rest = u < liftTo ? 1 - u / liftTo : u <= restFrom ? 0 : (u - restFrom) / (1 - restFrom);
           this._pose(phi, rest * rest * (3 - 2 * rest));
           if (t >= totalT) {
-            this._pose(g.stop, 1);
+            this._pose(stop, 1);
             resolve();
             return;
           }

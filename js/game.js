@@ -26,24 +26,25 @@
   const WALK_RIG = {
     src: ASSETS + 'sprites/aniket-rig.png',
     frameW: 358, frameH: 614, anchorX: 166, baselineY: 612,
-    hip: [200, 355], knee: [215, 476], ankle: [234, 580], ground: 610,
+    hip: [206, 375], knee: [215, 476], ankle: [234, 580], ground: 610,
     pieces: { // [atlas x, y, w, h, frame x, y], as tools/make_walk_rig.py prints them
       upper: [0, 0, 216, 350, 53, 10],
-      hips: [220, 0, 124, 90, 117, 323],
-      thigh: [348, 0, 74, 152, 166, 351],
-      shin: [426, 0, 75, 134, 191, 451],
-      shoe: [505, 0, 107, 48, 204, 564],
-      thighFar: [616, 0, 74, 152, 166, 351],
-      shinFar: [694, 0, 75, 134, 191, 451],
-      shoeFar: [773, 0, 107, 48, 204, 564],
+      hips: [220, 0, 123, 85, 118, 324],
+      thigh: [347, 0, 67, 160, 173, 342],
+      shin: [418, 0, 75, 134, 191, 451],
+      shoe: [497, 0, 107, 48, 204, 564],
+      thighFar: [608, 0, 67, 160, 173, 342],
+      shinFar: [679, 0, 75, 134, 191, 451],
+      shoeFar: [758, 0, 107, 48, 204, 564],
     },
     // The walk (frame px): two steps of 150 a cycle; each foot planted for 60% of it, landing 80 ahead of the hip, heel
     // first (toe up 14°, rolling down by 8% of the cycle), heel up onto the ball from 42% (to 32°), then swinging in an
-    // arc 16 high. The heel and the ball are 26 behind and 52 ahead of the ankle. He stands (and sets off and stops)
-    // 15% into a cycle: one foot planted a little ahead of him, the other down 55 behind (as the drawing stands).
+    // arc 16 high. The heel and the ball are 26 behind and 52 ahead of the ankle. He stands with his feet together under
+    // him, legs straight (the user, 2026-10-23: "his stand position"): the near foot 14 ahead of the hips, the far one 14
+    // behind; he stops as the planted foot gets there, the other coming down beside it, and sets off the same way.
     gait: {
       cycle: 300, stance: 0.6, heelStrike: 80, roll: 0.08, heelOff: 0.42, lift: 16,
-      toeUp: 14 * Math.PI / 180, heelUp: 32 * Math.PI / 180, heel: -26, ball: 52, stop: 0.15, standBack: -55,
+      toeUp: 14 * Math.PI / 180, heelUp: 32 * Math.PI / 180, heel: -26, ball: 52, standFront: 14, standBack: -14,
     },
   };
 
