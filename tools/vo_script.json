@@ -42,6 +42,114 @@
     "devanagari": "इट्स एट हंड्रेड रुपीस!"
   },
   {
+    "id": "vo139",
+    "line": "It is too costly, uncle.",
+    "spoken": "It is too costly, uncle.",
+    "speaker": "Aniket"
+  },
+  {
+    "id": "vo140",
+    "line": "Check the printed price on the book.",
+    "spoken": "Check the printed price on the book.",
+    "speaker": "Shopkeeper"
+  },
+  {
+    "id": "vo141",
+    "line": "Oh! The price printed on it is ₹1000.",
+    "spoken": "Oh! The price printed on it is one thousand rupees.",
+    "speaker": "Aniket"
+  },
+  {
+    "id": "vo142",
+    "line": "The price printed on an item",
+    "spoken": "The price printed on an item",
+    "speaker": "Swifty"
+  },
+  {
+    "id": "vo143",
+    "line": "is called its marked price.",
+    "spoken": "is called its marked price.",
+    "speaker": "Swifty"
+  },
+  {
+    "id": "vo144",
+    "line": "Not quite! Check the price printed on the book.",
+    "spoken": "Not quite! Check the price printed on the book.",
+    "speaker": "Swifty"
+  },
+  {
+    "id": "vo145",
+    "line": "Correct! The price printed on the book, ₹1000, is its marked price.",
+    "spoken": "Correct! The price printed on the book, one thousand rupees, is its marked price.",
+    "speaker": "Swifty"
+  },
+  {
+    "id": "vo146",
+    "line": "See, the price printed on the book is ₹1000,",
+    "spoken": "See, the price printed on the book is one thousand rupees,",
+    "speaker": "Shopkeeper"
+  },
+  {
+    "id": "vo147",
+    "line": "but I am selling it to you at ₹800.",
+    "spoken": "but I am selling it to you at eight hundred rupees.",
+    "speaker": "Shopkeeper"
+  },
+  {
+    "id": "vo148",
+    "line": "I gave you a discount.",
+    "spoken": "I gave you a discount.",
+    "speaker": "Shopkeeper"
+  },
+  {
+    "id": "vo149",
+    "line": "Discount? What is that?",
+    "spoken": "Discount? What is that?",
+    "speaker": "Aniket"
+  },
+  {
+    "id": "vo150",
+    "line": "The reduction given on the marked price of an item",
+    "spoken": "The reduction given on the marked price of an item",
+    "speaker": "Swifty"
+  },
+  {
+    "id": "vo151",
+    "line": "is called a discount.",
+    "spoken": "is called a discount.",
+    "speaker": "Swifty"
+  },
+  {
+    "id": "vo152",
+    "line": "Not quite! ₹800 is the shopkeeper’s selling price.",
+    "spoken": "Not quite! Eight hundred rupees is the shopkeeper's selling price.",
+    "speaker": "Swifty"
+  },
+  {
+    "id": "vo153",
+    "line": "Yes! Aniket paid ₹200 less than the marked price.",
+    "spoken": "Yes! Aniket paid two hundred rupees less than the marked price.",
+    "speaker": "Swifty"
+  },
+  {
+    "id": "vo154",
+    "line": "Thank you, uncle!",
+    "spoken": "Thank you, uncle!",
+    "speaker": "Aniket"
+  },
+  {
+    "id": "vo155",
+    "line": "Aniket bought the book and understood the discount.",
+    "spoken": "Aniket bought the book and understood the discount.",
+    "speaker": "Swifty"
+  },
+  {
+    "id": "vo156",
+    "line": "Let’s help Aniket buy the sneakers!",
+    "spoken": "Let's help Aniket buy the sneakers!",
+    "speaker": "Swifty"
+  },
+  {
     "id": "vo007",
     "line": "Not quite! The shopkeeper sold the book for ₹800.",
     "spoken": "Not quite! The shopkeeper sold the book for eight hundred rupees.",
@@ -307,6 +415,12 @@
     "devanagari": "एंड रिमेंबर द फॉर्मूला: डिस्काउंट इक्वल्स एम पी माइनस एस पी!"
   },
   {
+    "id": "vo157",
+    "line": "Wow, nice sneakers! I love them.",
+    "spoken": "Wow, nice sneakers! I love them.",
+    "speaker": "Aniket"
+  },
+  {
     "id": "vo045",
     "line": "These sneakers look good!",
     "spoken": "These sneakers look good!",
@@ -329,14 +443,26 @@
   },
   {
     "id": "vo048",
-    "line": "The tag says ₹1800.",
-    "spoken": "The tag says one thousand eight hundred rupees.",
+    "line": "The price tagged on it is ₹1800.",
+    "spoken": "The price tagged on it is one thousand eight hundred rupees.",
     "speaker": "Aniket"
   },
   {
+    "id": "vo158",
+    "line": "Not quite! Check the price tagged on the sneakers.",
+    "spoken": "Not quite! Check the price tagged on the sneakers.",
+    "speaker": "Swifty"
+  },
+  {
+    "id": "vo159",
+    "line": "Correct! ₹1800 is the price tagged on the sneakers: their marked price.",
+    "spoken": "Correct! One thousand eight hundred rupees is the price tagged on the sneakers: their marked price.",
+    "speaker": "Swifty"
+  },
+  {
     "id": "vo049",
-    "line": "With 30% off, how much do I actually pay?",
-    "spoken": "With thirty percent off, how much do I actually pay?",
+    "line": "If this is a discount, how much do I actually have to pay?",
+    "spoken": "If this is a discount, how much do I actually have to pay?",
     "speaker": "Aniket"
   },
   {
@@ -352,6 +478,18 @@
     "spoken": "thirty percent discount.",
     "speaker": "Swifty",
     "devanagari": "थर्टी परसेंट डिस्काउंट."
+  },
+  {
+    "id": "vo160",
+    "line": "30% discount here.",
+    "spoken": "thirty percent discount here.",
+    "speaker": "Swifty"
+  },
+  {
+    "id": "vo161",
+    "line": "To calculate how much Aniket has to pay for these sneakers,",
+    "spoken": "To calculate how much Aniket has to pay for these sneakers,",
+    "speaker": "Swifty"
   },
   {
     "id": "vo052",
@@ -480,6 +618,12 @@
     "devanagari": "सो, वन हंड्रेड एंड ट्वेंटी-फाइव इज़ ट्वेंटी-फाइव परसेंट ऑफ फाइव हंड्रेड!"
   },
   {
+    "id": "vo162",
+    "line": "Let’s have some practice!",
+    "spoken": "Let's have some practice!",
+    "speaker": "Swifty"
+  },
+  {
     "id": "vo070",
     "line": "250 is what percent of 1000?",
     "spoken": "Two hundred and fifty is what percent of one thousand?",
@@ -606,6 +750,12 @@
     "devanagari": "सो इट्स फाईव हंड्रेड एंड फोर्टी रुपीज़!"
   },
   {
+    "id": "vo164",
+    "line": "So, the discount is ₹540.",
+    "spoken": "So, the discount is five hundred and forty rupees.",
+    "speaker": "Swifty"
+  },
+  {
     "id": "vo088",
     "line": "What does ₹540 represent here?",
     "spoken": "What does five hundred and forty rupees represent here?",
@@ -632,6 +782,12 @@
     "spoken": "Now, let’s find out how much money Aniket needs to pay.",
     "speaker": "Swifty",
     "devanagari": "नाउ, लेट्स फाइंड आउट हाउ मच मनी अनिकेत नीड्स टू पे।"
+  },
+  {
+    "id": "vo163",
+    "line": "How much does Aniket have to pay?",
+    "spoken": "How much does Aniket have to pay?",
+    "speaker": "Swifty"
   },
   {
     "id": "vo092",

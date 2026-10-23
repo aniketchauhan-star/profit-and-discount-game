@@ -4175,15 +4175,15 @@ kbd {
 .is-v2 .ws-panel ~ .bm .bm-tenth small { font-size: 26px; }
 .is-v2 .ws-panel ~ .bm .bm-note { font-size: 46px; }
 /* Screen 29: the amounts and the working, then the bar under them, left of Swifty's corner (she is there for the drags) */
-.is-v2[data-scene="topay"] .mp { row-gap: 40px; }
+.is-v2[data-scene="paywork"] .mp { row-gap: 40px; }
 .is-v2.has-swifty .ws-panel { gap: 44px; }
 .is-v2.has-swifty .cmp-box.ws-box { width: 300px; height: 140px; }
 .is-v2.has-swifty .ws-box .cmp-price { font-size: 64px; }
 .is-v2.has-swifty .ws-box .cmp-label { font-size: 30px; }
 .is-v2.has-swifty .ws-sheet { padding-left: 40px; padding-right: 40px; font-size: 50px; }
-.is-v2[data-scene="topay"] .ws-panel ~ .bm { width: 1000px; }
-.is-v2[data-scene="topay"] .ws-panel ~ .bm .bm-seg b { font-size: 50px; }
-.is-v2[data-scene="topay"] .ws-panel ~ .bm .bm-seg small { font-size: 28px; }
+.is-v2[data-scene="paywork"] .ws-panel ~ .bm { width: 1000px; }
+.is-v2[data-scene="paywork"] .ws-panel ~ .bm .bm-seg b { font-size: 50px; }
+.is-v2[data-scene="paywork"] .ws-panel ~ .bm .bm-seg small { font-size: 28px; }
 
 /* The end of the game (screens 48, 49, 52 and 53, in the shopping game's own look), bigger in the room left of Swifty's
    corner (the user, 2026-10-21: "use the negative space"). 48: the two amounts side by side, the working under them. */
@@ -4245,14 +4245,13 @@ kbd {
 .is-v2 :is(.qp-answers, .pqp-answers) .pq-opt .q-chip { width: 112px; height: 112px; font-size: 58px; }
 /* 28 and 29: their answers are longer (names, four-figure amounts: "fix the number should inside the boxes"), so one under
    another, as wide as the question */
-.is-v2:is([data-scene="represent"], [data-scene="topay"]) .pqp-answers .pq-choices { flex-direction: column; gap: 22px; }
-.is-v2:is([data-scene="represent"], [data-scene="topay"]) .pqp-answers .pq-opt { width: 100% !important; height: 112px; font-size: 68px; }
-.is-v2:is([data-scene="represent"], [data-scene="topay"]) .pqp-answers .pq-opt .q-chip { width: 88px; height: 88px; font-size: 46px; }
-.is-v2[data-scene="represent"] .pqp-answers { min-height: 380px; }
+.is-v2[data-scene="topay"] .pqp-answers .pq-choices { flex-direction: column; gap: 22px; }
+.is-v2[data-scene="topay"] .pqp-answers .pq-opt { width: 100% !important; height: 112px; font-size: 68px; }
+.is-v2[data-scene="topay"] .pqp-answers .pq-opt .q-chip { width: 88px; height: 88px; font-size: 46px; }
 .is-v2[data-scene="topay"] .pqp-answers .pq-choices { gap: 18px; }
 .is-v2[data-scene="topay"] .pqp-answers .pq-opt { height: 100px; }
 .is-v2[data-scene="topay"] .pqp-answers { min-height: 336px; }
-.is-v2:is([data-scene="represent"], [data-scene="topay"]) .pqp-question { font-size: 70px; }
+.is-v2[data-scene="topay"] .pqp-question { font-size: 70px; }
 /* 23, 24 and 32: the question's strip as wide as what is under it; 32 in the middle of the panel too (Swifty has no
    bubble there, so her corner isn't kept) */
 .is-v2 .pf-panel > .pf-question { justify-self: stretch; text-align: center; }
@@ -4294,21 +4293,18 @@ kbd {
 .is-v2 .g100-grid { grid-template-columns: repeat(10, 23px); gap: 4px; padding: 10px; }
 .is-v2 .g100-cell { width: 23px; height: 23px; }
 .is-v2 .g100-label { font-size: 36px; }
-.is-v2[data-scene="represent"] .pqp-answers .pq-opt { height: 104px; } /* 28 */
-.is-v2[data-scene="represent"] .pqp-answers .pq-choices { gap: 18px; }
-.is-v2[data-scene="represent"] .pqp-answers { min-height: 348px; }
-.is-v2[data-scene="topay"] .mp { row-gap: 28px; } /* 29: the working */
-.is-v2[data-scene="topay"] .cmp-box.ws-box { width: 270px; height: 116px; }
-.is-v2[data-scene="topay"] .ws-box .cmp-price { font-size: 56px; }
-.is-v2[data-scene="topay"] .ws-box .cmp-label { font-size: 28px; }
-.is-v2[data-scene="topay"] .ws-boxes .dc-arrow { height: 64px; }
-.is-v2[data-scene="topay"] .ws-sheet { font-size: 42px; }
-.is-v2[data-scene="topay"] .ws-panel ~ .bm { gap: 12px; }
-.is-v2[data-scene="topay"] .ws-panel ~ .bm .bm-total { font-size: 38px; }
-.is-v2[data-scene="topay"] .ws-panel ~ .bm .bm-bar { height: 96px; }
-.is-v2[data-scene="topay"] .ws-panel ~ .bm .bm-bar { height: 84px; }
+.is-v2[data-scene="paywork"] .mp { row-gap: 28px; } /* 29: the working */
+.is-v2[data-scene="paywork"] .cmp-box.ws-box { width: 270px; height: 116px; }
+.is-v2[data-scene="paywork"] .ws-box .cmp-price { font-size: 56px; }
+.is-v2[data-scene="paywork"] .ws-box .cmp-label { font-size: 28px; }
+.is-v2[data-scene="paywork"] .ws-boxes .dc-arrow { height: 64px; }
+.is-v2[data-scene="paywork"] .ws-sheet { font-size: 42px; }
+.is-v2[data-scene="paywork"] .ws-panel ~ .bm { gap: 12px; }
+.is-v2[data-scene="paywork"] .ws-panel ~ .bm .bm-total { font-size: 38px; }
+.is-v2[data-scene="paywork"] .ws-panel ~ .bm .bm-bar { height: 96px; }
+.is-v2[data-scene="paywork"] .ws-panel ~ .bm .bm-bar { height: 84px; }
 .q-slot .remember .f-note--small { font-size: 36px; } /* (in the room right of the photo, x 736–1340) */
-.is-v2[data-scene="topay"] .ws-sheet { font-size: 40px; }
+.is-v2[data-scene="paywork"] .ws-sheet { font-size: 40px; }
 .is-v2[data-scene="pctofmp"] .pf-sheet { font-size: 41px; }
 .is-v2[data-scene="pctofmp"] .pf-question { font-size: 46px; }
 
@@ -4409,10 +4405,10 @@ kbd {
 .is-v2 .practice-host .pqp-answers .pq-opt .q-chip { width: 80px; height: 80px; font-size: 42px; }
 .is-v2 .practice-host .pqp-side > :is(.q-slot, .pqp-hint) { position: static; translate: none; margin: 0; min-height: 0; }
 .is-v2 .practice-host .pqp-hint { padding: 14px 28px 10px; font-size: 40px; }
-.is-v2:is([data-scene="represent"], [data-scene="topay"]) .practice-host .pqp-answers { min-height: 336px; }
-.is-v2:is([data-scene="represent"], [data-scene="topay"]) .practice-host .pqp-answers .pq-choices { gap: 18px; }
-.is-v2:is([data-scene="represent"], [data-scene="topay"]) .practice-host .pqp-answers .pq-opt { width: 100% !important; height: 100px; font-size: 56px; }
-.is-v2:is([data-scene="represent"], [data-scene="topay"]) .practice-host .pqp-question { font-size: 54px; }
+.is-v2[data-scene="topay"] .practice-host .pqp-answers { min-height: 336px; }
+.is-v2[data-scene="topay"] .practice-host .pqp-answers .pq-choices { gap: 18px; }
+.is-v2[data-scene="topay"] .practice-host .pqp-answers .pq-opt { width: 100% !important; height: 100px; font-size: 56px; }
+.is-v2[data-scene="topay"] .practice-host .pqp-question { font-size: 54px; }
 /* 25 and 27: the working (and the bar under it) on the small panel itself */
 .is-v2 .practice-host .mp:has(> .ws-panel) { display: flex; flex-direction: column; align-items: center; gap: 30px; padding: 34px 44px 40px; border-radius: 32px; background: var(--paper); box-shadow: 0 24px 60px var(--deep-45); pointer-events: auto; }
 .is-v2[data-scene="thirty"] .practice-host .ws-sheet { font-size: 46px; }
@@ -4438,4 +4434,18 @@ kbd {
 .is-v2 .practice-host .is-growing::before { content: ''; position: absolute; z-index: -1; left: 0; right: 0; top: 0; height: var(--grown, 100%); border-radius: inherit; background: var(--paper); box-shadow: 0 24px 60px var(--deep-45); transition: height .45s cubic-bezier(.2,.8,.3,1); }
 .is-v2 .practice-host .is-growing.is-instant::before { transition: none; }
 /* (screen 27's bar on the picture has the room its amounts need: they no longer touch its top) */
-.is-v2[data-scene="topay"] .practice-host .ws-panel ~ .bm .bm-bar { height: 112px; }
+.is-v2[data-scene="paywork"] .practice-host .ws-panel ~ .bm .bm-bar { height: 112px; }
+
+/* 2026-10-23, the user's doc: the question cards on screens 7, 10 and 17 (game.js cardQuestion), wider than the old
+   quiz's, so each line of the question fits on one line. 7: between the book's ₹1000 tag (left) and Swifty's corner;
+   10: on the right, as the old Cost/Selling Price question; 17: on the left, the sneakers and their tags sharp on the
+   right. A right answer brings the card to the middle, wide (is-middle, is-wide), as before. */
+.is-v2:is([data-scene="mpcard"], [data-scene="dcard"], [data-scene="smcard"]) .qcard-pos { width: 720px; }
+.is-v2[data-scene="mpcard"] .qcard-pos { right: 540px; }
+.is-v2[data-scene="mpcard"] .qcard-pos.is-middle { transform: translate(-60px, -50%); }
+.is-v2[data-scene="mpcard"] .qcard-pos.is-middle.is-wide { transform: translate(140px, -50%); }
+.is-v2[data-scene="dcard"] .qcard-pos.is-middle { transform: translate(-544px, -50%); }
+.is-v2[data-scene="smcard"] .qcard-pos { right: auto; left: 56px; }
+.is-v2[data-scene="smcard"] .qcard-pos.is-middle { transform: translate(544px, -50%); }
+.is-v2[data-scene="smcard"] .qcard-pos.is-middle.is-wide { transform: translate(344px, -50%); }
+.is-v2:is([data-scene="mpcard"], [data-scene="dcard"], [data-scene="smcard"]) .qback-text { text-wrap: pretty; } /* (no word left alone on the last line) */

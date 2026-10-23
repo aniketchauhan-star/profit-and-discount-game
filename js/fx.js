@@ -720,7 +720,7 @@
    *  options   [{ label, correct }]
    *  onAnswer  (correct, button) => void
    */
-  function question(parent, { lines, options, onAnswer }) {
+  function question(parent, { lines, options, onAnswer, fromLeft = false }) { // (fromLeft: a card on the left swings in from there)
     const pos = el('div', 'qcard-pos', parent);
     const card = el('div', 'qcard', pos);
     card.setAttribute('role', 'group');
@@ -776,6 +776,10 @@
       // Blocks every answer while feedback plays.
       lock() {
         buttons.forEach(b => { b.disabled = true; });
+      },
+      // Lets the player answer again (after a wrong answer: it stays crossed out).
+      unlock() {
+        buttons.forEach(b => { if (!b.classList.contains('is-wrong')) b.disabled = false; });
       },
       // Shrinks the card out of the way while a bigger panel is up.
       hide() {
@@ -847,14 +851,15 @@
           return;
         }
         Sound.whoosh();
+        const k = fromLeft ? -1 : 1;
         settle(card.animate([
-          { transform: 'translateX(135%) rotate(9deg)' },
-          { transform: 'translateX(-5%) rotate(-2.5deg)', offset: 0.62 },
-          { transform: 'translateX(1.5%) rotate(.8deg)', offset: 0.82 },
+          { transform: `translateX(${135 * k}%) rotate(${9 * k}deg)` },
+          { transform: `translateX(${-5 * k}%) rotate(${-2.5 * k}deg)`, offset: 0.62 },
+          { transform: `translateX(${1.5 * k}%) rotate(${0.8 * k}deg)`, offset: 0.82 },
           { transform: 'translateX(0) rotate(0deg)' },
         ], { duration: T(950), easing: 'cubic-bezier(.22,.9,.28,1)' }));
 
-        await ctx.wait(300); // its words come in as it arrives (it is never empty)
+        await ctx.wait(60); // its words come in with it (it is never empty)
         reveal(tape, [
           { opacity: 0, transform: 'translateY(-46px) rotate(-18deg) scale(.6)' },
           { opacity: 1, transform: 'translateY(4px) rotate(-2deg) scale(1.06)', offset: 0.7 },
@@ -1345,7 +1350,7 @@
       segs,
       note,
       async open(ctx) {
-        root.style.opacity = '';
+        reveal(root, [{ opacity: 0 }, { opacity: 1 }], { duration: T(350), easing: 'ease-out' }); // (as the panel's paper grows to it)
         await settle(bar.animate([{ clipPath: 'inset(0 100% 0 0)' }, { clipPath: 'inset(0 0 0 0)' }],
           { duration: reducedMotion ? 1 : T(700), easing: 'cubic-bezier(.45,0,.3,1)', fill: 'backwards' }));
       },
@@ -3130,11 +3135,11 @@
     mid.innerHTML = downArrow('red');
     const arrow = mid.firstElementChild;
     const tag = el('div', 'red-tag', mid);
-    el('div', 'red-cut', tag).textContent = cut;
+    if (cut) el('div', 'red-cut', tag).textContent = cut; // (no `cut`: only the note, e.g. "discount")
     el('div', 'red-note', tag).textContent = note;
     const bottom = box(to);
     card.setAttribute('role', 'img');
-    card.setAttribute('aria-label', `${from.price}, ${cut} ${note}, ${to.price}`);
+    card.setAttribute('aria-label', `${from.price}, ${cut ? cut + ' ' : ''}${note}, ${to.price}`);
     [card, top, arrow, tag, bottom].forEach(n => { n.style.opacity = '0'; });
     const pop = node => reveal(node, [
       { opacity: 0, transform: 'scale(.6)' },
@@ -3157,7 +3162,7 @@
     return {
       el: pos,
       // Where each price lands (see FX.flyAcross): the Marked Price, the Selling Price, and the cut.
-      prices: { from: top.querySelector('.cmp-price'), to: bottom.querySelector('.cmp-price'), cut: tag.querySelector('.red-cut') },
+      prices: { from: top.querySelector('.cmp-price'), to: bottom.querySelector('.cmp-price'), cut: tag.querySelector('.red-cut') || tag },
       // The card swings in from the right (as the first price flies to it).
       enter() {
         Sound.whoosh();
