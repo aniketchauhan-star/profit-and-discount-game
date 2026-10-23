@@ -1,14 +1,14 @@
 # Bookstore Journey — Game Prompt
 
-> A full description of the **Profit & Discount** game: the story that teaches the ideas (Screens 1–46 of the brief; 1–34 in the game), then the shopping game that uses them (Screens 47–59; 35–47 in the game).
+> A full description of the **Profit & Discount** game: the story that teaches the ideas (Screens 1–46 of the brief; 1–36 in the game), then the shopping game that uses them (Screens 47–59; 37–49 in the game).
 > You can paste this into any AI coding tool to rebuild or extend the game.
 > Items marked ✨ are extra effects added on top of the original request.
 >
 > **The revamp brief is applied** (`Bookstore Journey - Revamp Brief.docx`; what was done, the decisions made on its open questions, and what is still to do: `docs/REVIEW.md`). Its rules for every screen are in section 1, and each screen below says what it does now.
 >
-> **Screen numbers** here are the story's own, as in the brief and the text spreadsheet; each screen's heading also gives its number in the game ("game 7"). The game has **47 screens**: Screens 1, 3 and 5 here are 1–3 in the game; then, in **the order of the user's doc of 2026-10-23** (below), 6 is 4, 10 is 5, 11 is 6, a new question card is 7, 14 is 8, 15 is 9, a new question card is 10, 7 is 11, 20–23 are 12–15, 25 is 16 and 18 with a new question card (17) between them, 27–30 are 19–22, 34 is 23 (its question) and 25 (its working) with 32 (24) between them, 35–37 are 26–28, 40–43 are 29–32, and 45–59 are 33–47. Taken out: Screens 2, 4, 9, 24, 26 and 44 and the checkpoints on percentages and on the price after a discount (2026-10-21; see *The review meeting* below); 13, 16, 38 and 39 (Checkpoint 4) on 2026-10-22; and 8, 12, 17, 18, 19 (Checkpoint 1), 31 and 33 on 2026-10-23. The game has no checkpoints now.
+> **Screen numbers** here are the story's own, as in the brief and the text spreadsheet; each screen's heading also gives its number in the game ("game 7"). The game has **49 screens**: Screens 1, 3 and 5 here are 1–3 in the game; then, in **the order of the user's doc of 2026-10-23** (below), 6 is 4, 10 is 5, 11 is 6, a new question card is 7, 14 is 8, 15 is 9, a new question card is 10, 17–18 (the formula, back at the user's word the same day) are 11–12, 7 is 13, 20–23 are 14–17, 25 is 18 and 20 with a new question card (19) between them, 27–30 are 21–24, 34 is 25 (its question) and 27 (its working) with 32 (26) between them, 35–37 are 28–30, 40–43 are 31–34, and 45–59 are 35–49. Taken out: Screens 2, 4, 9, 24, 26 and 44 and the checkpoints on percentages and on the price after a discount (2026-10-21; see *The review meeting* below); 13, 16, 38 and 39 (Checkpoint 4) on 2026-10-22; and 8, 12, 19 (Checkpoint 1), 31 and 33 on 2026-10-23. The game has no checkpoints now.
 >
-> **The user's doc of 2026-10-23** (a page of the story, with a screenshot of Screen 6) set the order from the bookstore's price to the sneakers' question, and the user chose to take out what it doesn't have (the Cost/Selling Price question, the discount formula and Checkpoint 1) and to ask the sneakers' question once, then work it out: "It's ₹800!" → "It is too costly, uncle." → "Check the printed price on the book." → "Oh! The price printed on it is ₹1000." → Swifty: the marked price → **a question card** (₹800 or ₹1000) → the shopkeeper: printed ₹1000, selling at ₹800, "I gave you a discount." → "Discount? What is that?" → Swifty: the definition → **a question card** (₹200 or ₹800) → the book given, "Thank you, uncle!" → outside, Swifty: "Aniket bought the book and understood the discount." "Let's help Aniket buy the sneakers!" → "Wow, nice sneakers! I love them." → "The price tagged on it is ₹1800." → **a question card** (30%, ₹1800 or ₹1830) → "What does 30% OFF mean here?" "If this is a discount, how much do I actually have to pay?" → Swifty: "30% OFF means 30% discount here." → the recall of percentages, the rule, its example, "Let's have some practice!" and the practice question → **"How much does Aniket have to pay?"** → the discount (30% of ₹1800 = ₹540) → the amount to pay (₹1800 − ₹540 = ₹1260). Every question card gives a hint and another try after a wrong answer, and turns over in the middle after the right one. 26 new lines are to be recorded (`docs/VOICEOVER.md`, *To record next*): the device's voice reads them until then.
+> **The user's doc of 2026-10-23** (a page of the story, with a screenshot of Screen 6) set the order from the bookstore's price to the sneakers' question, and the user chose to take out what it doesn't have (the Cost/Selling Price question, the discount formula and Checkpoint 1; the formula came back the same day, after the discount question: "after screen 10 add this") and to ask the sneakers' question once, then work it out: "It's ₹800!" → "It is too costly, uncle." → "Check the printed price on the book." → "Oh! The price printed on it is ₹1000." → Swifty: the marked price → **a question card** (₹800 or ₹1000) → the shopkeeper: printed ₹1000, selling at ₹800, "I gave you a discount." → "Discount? What is that?" → Swifty: the definition → **a question card** (₹200 or ₹800) → the formula, ₹1000 − ₹800 = ₹200, then Discount = Marked Price − Selling Price, D = MP − SP → the book given, "Thank you, uncle!" → outside, Swifty: "Aniket bought the book and understood the discount." "Let's help Aniket buy the sneakers!" → "Wow, nice sneakers! I love them." → "The price tagged on it is ₹1800." → **a question card** (30%, ₹1800 or ₹1830) → "What does 30% OFF mean here?" "If this is a discount, how much do I actually have to pay?" → Swifty: "30% OFF means 30% discount here." → the recall of percentages, the rule, its example, "Let's have some practice!" and the practice question → **"How much does Aniket have to pay?"** → the discount (30% of ₹1800 = ₹540) → the amount to pay (₹1800 − ₹540 = ₹1260). Every question card gives a hint and another try after a wrong answer, and turns over in the middle after the right one. 26 new lines are to be recorded (`docs/VOICEOVER.md`, *To record next*): the device's voice reads them until then.
 >
 > **The review meeting of 2026-10-21** (`docs/MEETING-2026-10-21.md`: each point, its time in the recording, and what was done) changed the game, and the screens below say so where it matters: no title or question on top of any screen (the photo moved up into the corner); Screens 2, 4, 9, 26 and 44 and the checkpoints on percentages and on the price after a discount taken out; the checkpoints left centred and big, with no example and no buttons, moving on by themselves; what to remember shown only after a wrong answer, with a second try (Screens 30, 31 and 34); Aniket's puzzled face only, on 15–16; **"30% OFF means 30% Discount" as a pop-up on Screen 25**, the shop blurred behind it (the way the meeting asked every teaching screen to work: tried here first); the voice starting with its talking clip; and the Gemini clips to make again on Higgsfield (`Animation Video Prompts - Left to Make.md`).
 
@@ -105,6 +105,7 @@ A short animated **story game** for kids that runs in a web browser. It asks a f
 **Cutting the sprite sheet properly:** the 8 frames are **not** evenly spaced, and each frame's box overlaps the next one, so cutting the sheet into an even grid would clip the neighbouring frame.
 Cut every frame along its **own outline**, line all frames up on the **same head/body point** and the **same floor line**, and save them as a clean strip with gaps between frames.
 Also play the frames in an order that gives an even step rhythm (the original order limps), and move the boy at the same speed as his stride so his feet don't skate.
+**His walk now (2026-10-23):** the user found the eight frames choppy and like a "ramp walk" (each pose held a quarter of a second, and two kicked a foot up behind). He walks as **a jointed cutout** of the first frame instead (`tools/make_walk_rig.py` cuts it into the upper body, the hips, and a thigh, shin and shoe for each leg, the far one a shade darker: `sprites/aniket-rig.png`, 159 KB): every animation frame places his feet (each planted for 60% of a two-step cycle, landing heel first and rolling up onto the ball, then swinging forward in a low arc), raises his hips as far as the planted leg allows (a gentle bob), bends his knees to reach (two-joint inverse kinematics) and draws the pieces turned about their joints, on a canvas and its reflection. He moves exactly a stride per step, so a planted foot never slides; a walk is a whole number of strides, so he sets off from standing and stops standing again, one foot a little ahead, as in the drawing. The same walk is used on Screen 3, on the shopping game's four streets (Screens 48–51: he walks onto the road as each street builds up), and out of the bookstore when the clips are off.
 Cut both bird sheets the same way. Line up the flying frames on her body centre and the standing frames on her feet, and draw both at the same size so switching between them never jumps.
 
 ## 3. Screens
@@ -128,7 +129,7 @@ Cut both bird sheets the same way. Line up the flying frames on her body centre 
 
 ### Screen 3 — The Bookstore (game 2)
 - Background: `book store outside view.png`.
-- Aniket walks in **from the left**, **slowly**, and stops at the **front (bottom) of the store**.
+- Aniket walks in **from the left**, **slowly**, and stops at the **front (bottom) of the store**: a smooth, natural walk, his feet planted as he steps, his knees bending (the jointed cutout above; the user, 2026-10-23: "his steps smooth, not ramp walk type").
 - **Footstep sound** on every step. The sound follows him from left to right ✨.
 - Soft shadow under his feet and a faint reflection on the shiny floor ✨.
 - When he arrives, a comic **"!"** pops above his head and the **BOOKS & MORE** sign shines ✨.
@@ -151,12 +152,12 @@ Cut both bird sheets the same way. Line up the flying frames on her body centre 
 - Then (the user’s doc of 2026-10-23) Aniket: **"It is too costly, uncle."** ("costly" stressed), and the shopkeeper: **"Check the printed price on the book."** ("printed price" stressed), one bubble at a time, in the same places.
 - About 3 seconds later, a cut to Screen 10 (game 5): he looks at the price on the book. (He pays later, on Screen 7, after the discount question.)
 
-### Screen 7 — Thank You! (game 11)
-- **Now after the discount question** (the user’s doc of 2026-10-23: "The shopkeeper gave the book and Aniket says thank you"): it comes after "How Much Discount?" (game 10), the counter dissolving into it.
+### Screen 7 — Thank You! (game 13)
+- **Now after the discount question and the formula** (the user’s doc of 2026-10-23: "The shopkeeper gave the book and Aniket says thank you"): it comes after the formula (game 12), whose photo grows back out into it.
 - Background: `aniket give money to shopkeeper.png`: the shopkeeper gives him the book as he hands over the money.
 - A soft glow and a shine across the notes; then a **pop sound**, and a **small ₹800** badge pops up **just above the money**, and a cash-register "ka-ching" ✨.
 - Aniket's bubble, right of his face, between the two of them (clear of the badge): **"Thank you, uncle!"**
-- About 3 seconds later it **dissolves into Screen 20** (game 12), outside the bookstore.
+- About 3 seconds later it **dissolves into Screen 20** (game 14), outside the bookstore.
 
 ### Screen 8 — Think Like the Shopkeeper (taken out)
 - Taken out on 2026-10-23 (the user’s doc of 2026-10-23 goes from the shopkeeper's price straight to the price printed on the book). It asked "For the shopkeeper, ₹800 is the —" (Cost Price or Selling Price), and a wrong answer taught the two on cards. Its question card is the model for the three new ones (games 7, 10 and 17).
@@ -212,35 +213,50 @@ Taken out on 2026-10-22, at the user's word ("remove this screen"): Screen 12 go
 - It **starts on Screen 15's view** (his puzzled face, close), so the change is seamless; then the camera **moves back and left** (as for the old Cost/Selling Price question) and the right side softly darkens.
 - **The question card swings in from the right**: **"How much discount did Aniket get on the book?"** ("discount" highlighted), **A ₹200**, **B ₹800**.
 - **Wrong (₹800):** crossed out; **Swifty pops up in the picture's bottom-left corner** (no books), pointing at her bubble on her right: **"Not quite! ₹800 is the shopkeeper’s selling price."**, then goes back down. The player **tries again**.
-- **Right (₹200):** green tick, chime, sparkles; the picture blurs and dims, and the card **comes to the middle and turns over, wide**: **"Yes!"** and **"Aniket paid ₹200 less than the marked price."**, read out by her voice. 5 seconds later the counter **dissolves into Screen 7** (game 11): he pays and says thank you (the counter blurs as it goes, so nothing shows twice).
+- **Right (₹200):** green tick, chime, sparkles; the picture blurs and dims, and the card **comes to the middle and turns over, wide**: **"Yes!"** and **"Aniket paid ₹200 less than the marked price."**, read out by her voice. 5 seconds later the counter **zooms in and shrinks into the small photo** of the formula (Screen 17, game 11).
 
-### Screen 17 — Discount formula (built visually) (taken out)
-- Taken out on 2026-10-23 (the user’s doc of 2026-10-23 goes from the discount question to the shopkeeper giving the book, and the user chose to take these out). It was the discount formula, Marked Price − Selling Price = Discount, built with the book and a bar. (The game has no checkpoints now.)
+### Screen 17 — Discount formula (built visually) (game 11)
+- **Back at the user's word** (2026-10-23: "after screen 10 add this", with pictures of this screen and the next): after the question card on the discount (game 10), the counter **zooms in and shrinks into the small photo**, and the formula is built as below.
+(The **Worked example** layout. Swifty isn't on this screen: her voice goes on by itself.)
+- The photo stays where it is (no title on top).
+- The **book** (the same "A Brighter Tomorrow" drawing with its **₹1000** sticker) eases in on the left, **big** (400 px wide, as tall as the sum and the bar beside it: "this book should big", the user, 2026-10-21), then the sum builds one piece at a time beside it **with the amounts only** (**₹1000 − ₹800 = ₹200**: the boxes have no names yet):
+  1. A gold ring pulses on the book's sticker. The first box (amber) pops in empty, and the **₹1000 lifts off the sticker and flies into it** in an arc.
+  2. **−** pops in, then the **₹800** box (blue).
+  3. **=** pops in, then the **₹200** box (red) **lands like a stamp**.
+- Then her voice says the formula in words, and **as each part is said, its box's name is written in above its amount** (left to right, in the box's colour; its place was kept, so nothing moves), while that part lights up: "Marked Price," → **Marked Price** above ₹1000 → "minus Selling Price," → the − pops and **Selling Price** is written above ₹800 → "equals Discount." → the = pops and **Discount** is written above ₹200.
+- **A bar model** comes in under the sum (beside the book): a bar for **₹1000 (Marked Price)** that splits into **₹800 paid** (blue) and **₹200 discount** (red). "So, the discount is ₹200." lights up the ₹200 part, and the Discount box keeps glowing.
+- 5 seconds later the sum **dissolves into Screen 18** (game 12).
 
-### Screen 18 — Formula reveal (taken out)
-- Taken out on 2026-10-23 (the user’s doc of 2026-10-23 goes from the discount question to the shopkeeper giving the book, and the user chose to take these out). It was the formula in words and in short, D = MP − SP. (The game has no checkpoints now.)
+### Screen 18 — Formula reveal (game 12)
+- **A picture over each price** (the user, 2026-10-22): as "Marked Price" is said, the photo in the corner (the counter: the book Aniket holds) **glides over "Marked Price"**, smaller; as "Selling Price" is said, **the picture of Aniket handing over the money** (`aniket give money to shopkeeper.png`, zoomed on the notes) **pops in over "Selling Price"**.
+(Swifty isn't on this screen: her voice goes on by itself.)
+- The photo stays where it is (no title on top).
+- A plain paper strip springs up, and the formula in words is written on it part by part as her voice says it, each part lighting up: "Discount" → "equals Marked Price," → "minus Selling Price." (**Discount** red, **Marked Price** amber, **Selling Price** blue, the signs in ink).
+- **"Let’s write it in short."** (the user, 2026-10-22; it was "We can write it in short.", said with nothing on screen): **Swifty pops up in the panel's bottom-left corner** with it in her bubble, as with her "Not quite!" on Screen 8, and goes (a new line to record: vo138; the device's voice until then). A **yellow sticky note** comes in under the strip. Then, term by term, the **first letters light up** in the strip (a white key-cap pops behind each: **D**, **M** + **P**, **S** + **P**) and **lift out and fly down onto the note**, growing as they go, to build **D = MP − SP**, while her voice says "D for Discount," "MP for Marked Price," "SP for Selling Price." (spelling out "M P" and "S P"). The = and − pop in between.
+- Then the short form is read out, **"So, D = MP − SP."**, each part popping as it is said.
+- 5 seconds later **the photo grows back out** into Screen 7 (game 13): he pays and says thank you. (Checkpoint 1, which came next, stays taken out.)
 
 ### Screen 19 — Checkpoint 1: Discount (taken out)
 - Taken out on 2026-10-23 (the user’s doc of 2026-10-23 goes from the discount question to the shopkeeper giving the book, and the user chose to take these out). It was Checkpoint 1: Marked Price, Selling Price, Discount and D = MP − SP on cards. (The game has no checkpoints now.)
 
-### Screen 20 — Coming Out of the Bookstore (game 12)
+### Screen 20 — Coming Out of the Bookstore (game 14)
 - Background: `book store outside view.png`, the bookstore from the mall, as on Screen 3, with the same slow zoom and lights.
 - **Aniket comes out (a video clip, `s20-out`):** the right-hand door stands open, and Aniket walks out of the shop towards us, stops in front of it, smiling, and walks off to the right (the first 4.6 s of the Gemini take `outgoing.mp4`). No words. As it ends, **a cut to Screen 21**: its clip starts on the very next frame, so nothing jumps.
 - **With motion turned down (no clips):** the doors open: the shop's two glass doors are drawn over the picture (`ui/bookstore-doorway.png` is the doorway with the doors taken out: their seam, handles and fittings painted out and the glass's haze off; over it, the two door leaves are drawn as pale glass with their pull handles and fittings). Closed, they look just as in the picture.
 - **Then he comes out** (still with motion turned down): he walks up to the doors inside the shop, seen through the glass (footsteps); the **shop's bell rings and the doors swing open into the shop** on their hinges (in 3D, with a little settle), the left one on the left and the right one on the right, and the shop is seen clearly through the open doorway. He **walks out through the doors** into the mall, coming closer, and stops just outside. No words. About 1.5 seconds later, a **cut to Screen 21** (the same view: nothing changes but what Aniket does).
 
-### Screen 21 — To the Shoe Shop (game 13)
+### Screen 21 — To the Shoe Shop (game 15)
 - The same view. **The rest of the take (`s21-walk`, 1.4 s):** Aniket walks on past the open door, along the mall to the right. (With motion turned down: the doors stand open behind him and he walks off to the right.)
 - **Then Swifty sums up** (the user’s doc of 2026-10-23: "the narration with Swifty comes"): she **pops up in the picture's bottom-left corner** (no books), her bubble on her right, clear of Aniket: **"Aniket bought the book and understood the discount."** ("discount" red), then **"Let’s help Aniket buy the sneakers!"** ("sneakers" stressed), one after the other; then she goes back down.
 - About a second later, a **cross-fade into Screen 22**: the shoe shop.
 
-### Screen 22 — The Shoe Shop (game 14)
+### Screen 22 — The Shoe Shop (game 16)
 - Background: `he saw a shoe.png`: in a shoe shop in the mall, Aniket stands at a display, **pointing at a pair of blue sneakers**, with a white **₹1800** tag hanging from them and a red **30% OFF** label on the front of the stand. It moves all the time: Aniket pointing and breathing (`s23-idle`), and his talking clip with his line.
 - A soft glow pulses around the sneakers, then a light sweeps across them, with a sparkle sound ✨.
-- Aniket's bubble, beside his face with its tail at his mouth: **"Wow, nice sneakers! I love them."** (the user’s doc of 2026-10-23). (His question about the 30% OFF comes on game 18, after the question on the price.)
+- Aniket's bubble, beside his face with its tail at his mouth: **"Wow, nice sneakers! I love them."** (the user’s doc of 2026-10-23). (His question about the 30% OFF comes on game 20, after the question on the price.)
 - About 3 seconds later, a plain **dissolve into Screen 23**: the same view, and the camera carries on.
 
-### Screen 23 — Tagged Price (game 15)
+### Screen 23 — Tagged Price (game 17)
 - Background: `he saw a shoe.png`, the same view: Aniket **points at the sneakers and their ₹1800 tag** (the red 30% OFF label on the stand under them).
 - Its clip (`s23-zoom`): Aniket lifts a finger as if he has spotted something and points again, and **the camera moves in on the sneakers until the ₹1800 tag and the 30% OFF label fill the screen**. No speech bubble, no text.
 - About 2 seconds after the camera gets there, a smooth **cross-fade into Screen 25**, back to the whole stand. (Without the clip: the picture, and the fade about 3 seconds later.)
@@ -248,26 +264,26 @@ Taken out on 2026-10-22, at the user's word ("remove this screen"): Screen 12 go
 ### Screen 24 — 30% Off! (taken out)
 - Taken out on 2026-10-21, at the user's request: Screen 23 now fades straight into Screen 25. (It was Aniket, hand on his chin, looking at the 30% OFF label, which lit up in gold; `hee see discount on shoes.png` and its clip `s24-idle`.)
 
-### Screen 25 — The Price Tag (game 16), and What Does 30% OFF Mean? (game 18)
-(the user’s doc of 2026-10-23 splits it in two, with a question card between them: game 17.)
+### Screen 25 — The Price Tag (game 18), and What Does 30% OFF Mean? (game 20)
+(the user’s doc of 2026-10-23 splits it in two, with a question card between them: game 19.)
 - Background: `he is tinking to see the shoes.png`: Aniket, hand on his chin, at the sneakers' stand; he thinks (a quiet loop, `s25-idle`) until he speaks, and each line has its talking clip. A still picture (no slow zoom), so the dissolves into the question card and back are clean.
-- **Game 16:** **"The price tagged on it is ₹1800."** (the user’s doc of 2026-10-23; ₹1800 bold), while a gold frame lights up round the white **₹1800** card on the sneakers (the card is always the picture's, so ₹1800 stays clear). About 3 seconds later it dissolves into the question card (game 17).
+- **Game 16:** **"The price tagged on it is ₹1800."** (the user’s doc of 2026-10-23; ₹1800 bold), while a gold frame lights up round the white **₹1800** card on the sneakers (the card is always the picture's, so ₹1800 stays clear). About 3 seconds later it dissolves into the question card (game 19).
 - **Game 18** (after the card): the picture is sharp again; the **30% OFF label lights up** in glowing gold, and Aniket, one bubble at a time: **"What does 30% OFF mean here?"** (30% OFF bold), then **"If this is a discount, how much do I actually have to pay?"** (the user’s doc of 2026-10-23; "discount" red).
-- **Then Swifty** (the user’s doc of 2026-10-23: "Then Swifty comes and says '30% off means 30% discount here.'"): **the camera moves in on the sneakers and their tags**, **everything else blurs** (a soft-edged window keeps the sneakers and both tags sharp), and **Swifty slides in from the right** on her books: **"30% OFF means 30% discount here."** (in two parts); then she slides back out with her bubble. 5 seconds later: Screen 27 (game 19), on the same view.
+- **Then Swifty** (the user’s doc of 2026-10-23: "Then Swifty comes and says '30% off means 30% discount here.'"): **the camera moves in on the sneakers and their tags**, **everything else blurs** (a soft-edged window keeps the sneakers and both tags sharp), and **Swifty slides in from the right** on her books: **"30% OFF means 30% discount here."** (in two parts); then she slides back out with her bubble. 5 seconds later: Screen 27 (game 21), on the same view.
 
-### New — The Sneakers' Marked Price (game 17)
+### New — The Sneakers' Marked Price (game 19)
 (the user’s doc of 2026-10-23: "The CFU appears: The marked price of the sneaker is: give options 30%, ₹1800, ₹1830.")
 - The shop **blurs and dims but the sneakers and their two tags** (as on the practice screens), and **the question card swings in from the left**, on the left: **"The marked price of the sneakers is —"** ("marked price" highlighted), **A 30%**, **B ₹1800**, **C ₹1830**.
 - **Wrong (30% or ₹1830):** crossed out; the ₹1800 card on the sneakers is ringed in gold, and **Swifty rises in on her books** in her corner (her bubble above the sneakers, clear of them): **"Not quite! Check the price tagged on the sneakers."**, then goes. The player **tries again**.
-- **Right (₹1800):** green tick, chime, sparkles; the card **comes to the middle and turns over, wide**: **"Correct!"** and **"₹1800 is the price tagged on the sneakers: their marked price."**, read out by her voice. 5 seconds later it dissolves into game 18 (Aniket wonders about the 30% OFF).
+- **Right (₹1800):** green tick, chime, sparkles; the card **comes to the middle and turns over, wide**: **"Correct!"** and **"₹1800 is the price tagged on the sneakers: their marked price."**, read out by her voice. 5 seconds later it dissolves into game 20 (Aniket wonders about the 30% OFF).
 
 ### Screen 26 — What 30% OFF Means (taken out)
 - Taken out on 2026-10-21: "30% OFF means 30% Discount" is a pop-up on Screen 25 now (see Screen 25).
 
-### Screen 27 — Recall Percentages (game 19)
-- **On the shoe shop's picture, as game 18 ends** (the camera on the sneakers, everything else blurred), so the change is seamless; **Swifty slides in from the right** on her books and says, in her bubble, **"To calculate how much Aniket has to pay for these sneakers, let’s first recall how percentages work."** (the user’s doc of 2026-10-23: "To calculate how much Aniket has to pay to buy these sneakers, let's recall the percentage of a value concept."; "percentages" red; the 30% OFF tag lights up), in two parts; then she goes with her bubble, and 5 seconds later Screen 28 begins on the same view: everything blurs and the camera eases back out before its panel comes in.
+### Screen 27 — Recall Percentages (game 21)
+- **On the shoe shop's picture, as game 20 ends** (the camera on the sneakers, everything else blurred), so the change is seamless; **Swifty slides in from the right** on her books and says, in her bubble, **"To calculate how much Aniket has to pay for these sneakers, let’s first recall how percentages work."** (the user’s doc of 2026-10-23: "To calculate how much Aniket has to pay to buy these sneakers, let's recall the percentage of a value concept."; "percentages" red; the 30% OFF tag lights up), in two parts; then she goes with her bubble, and 5 seconds later Screen 28 begins on the same view: everything blurs and the camera eases back out before its panel comes in.
 
-### Screen 28 — The Percentage Rule (game 20)
+### Screen 28 — The Percentage Rule (game 22)
 - **On the shoe shop's picture, not the cream panel** (the user, 2026-10-22: "remove the panel, show it in the image; a small panel on the image of the shoes"): **the whole picture blurs and dims** and the working is on **a panel in the middle**, a little bigger (the user, 2026-10-22: "the panel in the middle of the image, all the image blurred, the panel slightly bigger"). (Screens 30–34 keep the sneakers and their tags sharp, with the panel on the left.) Screens 28 → 29 → 30 dissolve into each other; Screen 28 begins on Screen 27's view (the camera on the sneakers), then everything blurs as the camera eases back out; into Screen 30, the sneakers and their tags come sharp again. Each small panel comes in with its first line, and its paper grows down as the next lines and the answers come in (no empty paper waits under the question).
 (The storyboard's "a is what percent of b?", first in general, with letters; then Screen 29 works the same example with numbers. Swifty isn't on these two screens: her voice goes on by itself. The **Worked example** layout.)
 - **A practice question** (Screens 28–30): the panel and the photo stay as they are (the review meeting's pale blue and out-of-focus photo were taken out again, at the user's word, 2026-10-21). The sneakers card fades away and the working springs up, with **letters for the amounts**, *a* and *b*, in **italic** as in a maths book (a serif italic):
@@ -283,7 +299,7 @@ Taken out on 2026-10-22, at the user's word ("remove this screen"): Screen 12 go
   5. **"Let’s take an example!"**
 - About 3 seconds later the working **dissolves into Screen 29**.
 
-### Screen 29 — What Percent? (game 21)
+### Screen 29 — What Percent? (game 23)
 - **On the shoe shop's picture, not the cream panel** (the user, 2026-10-22: "remove the panel, show it in the image; a small panel on the image of the shoes"): **the whole picture blurs and dims** and the working is on **a panel in the middle**, a little bigger (the user, 2026-10-22: "the panel in the middle of the image, all the image blurred, the panel slightly bigger"). (Screens 30–34 keep the sneakers and their tags sharp, with the panel on the left.) Screens 28 → 29 → 30 dissolve into each other; Screen 28 begins on Screen 27's view (the camera on the sneakers), then everything blurs as the camera eases back out; into Screen 30, the sneakers and their tags come sharp again. Each small panel comes in with its first line, and its paper grows down as the next lines and the answers come in (no empty paper waits under the question).
 (Storyboard: "a is what percent of b?", worked with numbers after the rule on Screen 28. The storyboard shows no dialogue here, so the lines below are written for the game. Swifty isn't here: her voice on its own.)
 - The same layout as Screen 28, with numbers (no ₹ anywhere on this screen): the question **"125 is what percent of 500?"**, the boxes **Part = 125** and **Whole = 500**, and on the graph paper **Percentage = Part / Whole × 100**, then **= 125 / 500 × 100**, then **= 25%** (real stacked fractions).
@@ -291,26 +307,26 @@ Taken out on 2026-10-22, at the user's word ("remove this screen"): Screen 12 go
 - **A 10 × 10 grid** comes in beside the working: **25 of its 100 squares fill in**, one after another ("25 out of 100 = 25%"), lit as her voice says **"So, 125 is 25% of 500!"**
 - About 3 seconds later the working **dissolves into Screen 30**.
 
-### Screen 30 — Quick CFU (game 22)
+### Screen 30 — Quick CFU (game 24)
 - **First, "Let’s have some practice!"** (the user’s doc of 2026-10-23: "Then Swifty says let's have some practice"): Swifty rises in on her books with it in her bubble, before the panel comes in; then she asks the question (below).
-- **On the shoe shop's picture, as Screens 31–34** (the user, 2026-10-22: "focus on shoes and this left side"; it had the whole picture blurred and the panel in the middle, as 28–29): the picture blurs and dims but the sneakers and their ₹1800 and 30% OFF tags, and the question with its answers (then the 10 × 10 grid) is on **a small panel on its left**, Swifty in her corner. From Screen 29 it dissolves in (the sneakers come sharp again); games 22 → 23 → 24 → 25 dissolve into each other (the same view: only the panel changes). Swifty's bubbles keep clear of the sneakers and their tags: one too wide to fit beside them goes up above them, its point still aimed at her (the user, 2026-10-22: her bubble was over the shoes). The panel comes in with the question, and its paper grows down as the answers and the grid come in.
+- **On the shoe shop's picture, as Screens 31–34** (the user, 2026-10-22: "focus on shoes and this left side"; it had the whole picture blurred and the panel in the middle, as 28–29): the picture blurs and dims but the sneakers and their ₹1800 and 30% OFF tags, and the question with its answers (then the 10 × 10 grid) is on **a small panel on its left**, Swifty in her corner. From Screen 29 it dissolves in (the sneakers come sharp again); games 24 → 25 → 26 → 27 dissolve into each other (the same view: only the panel changes). Swifty's bubbles keep clear of the sneakers and their tags: one too wide to fit beside them goes up above them, its point still aimed at her (the user, 2026-10-22: her bubble was over the shoes). The panel comes in with the question, and its paper grows down as the answers and the grid come in.
 (Storyboard: "Quick CFU", a check for understanding. The storyboard shows no dialogue, so Swifty's feedback lines below are written for the game. The **Question** layout.)
 - On the same panel, the working fades away and the question springs up on its strip: **"250 is what percent of 1000?"** (plain numbers, no ₹). **Swifty rises in on her books** (she asks it) and reads it out (its words are on the strip, so no bubble).
 - **Three answers slide in, stacked** under the strip: **A 20%**, **B 25%**, **C 50%**. Swifty points at them and waits.
 - **Right (B 25%):** a green marker tick, a happy chime and a sparkle burst. Her bubble: **"Correct! 250 ÷ 1000 × 100 = 25%."** As she says the sum, **250 in the question turns violet** (the part) and **1000 olive** (the whole), as on Screen 29.
 - **A first wrong answer (A or C)** (the review meeting of 2026-10-21): it shakes, buzzes, turns grey and is crossed out; Swifty: **"Not quite! Try again!"**, and between the two the formula comes in on a sticky note under the photo ("REMEMBER" over it) while her voice reads it ("To find the percentage," "divide the part by the whole," "then multiply by 100."). The two answers left can be picked again.
 - **A second wrong answer:** every answer locks. Her bubble: **"Not quite! 250 is the part, 1000 is the whole. 250 ÷ 1000 × 100 = 25%."** (four parts: 250 turns violet as she names the part, 1000 olive as she names the whole, and at the end of the sum the right answer, **B**, is ticked).
-- Both ways end with **"So, 250 is 25% of 1000."** while the **same 10 × 10 grid** fills 25 squares under the photo, and the right answer and the two amounts light up. Then Swifty goes back down with her books, and **5 seconds later the screen moves on by itself** to game 23, the question on the sneakers (no Next button of its own).
+- Both ways end with **"So, 250 is 25% of 1000."** while the **same 10 × 10 grid** fills 25 squares under the photo, and the right answer and the two amounts light up. Then Swifty goes back down with her books, and **5 seconds later the screen moves on by itself** to game 25, the question on the sneakers (no Next button of its own).
 
 ### Checkpoint 2 — Percentages (taken out)
 - Taken out on 2026-10-21 (the review meeting): Screen 30 goes straight on to Screen 31.
 
 ### Screen 31 — Back to the Sneakers (taken out)
-- Taken out on 2026-10-23 (the user’s doc of 2026-10-23: "ask how much he has to pay directly, then give the explanation"; the user chose one question, then the working). It asked "Now, what is 30% of ₹1800?" (₹360, ₹540, ₹720). The question now is "How much does Aniket have to pay?" (Screen 34's first part, game 23), and 30% of ₹1800 is worked out after it (Screen 32, game 24).
+- Taken out on 2026-10-23 (the user’s doc of 2026-10-23: "ask how much he has to pay directly, then give the explanation"; the user chose one question, then the working). It asked "Now, what is 30% of ₹1800?" (₹360, ₹540, ₹720). The question now is "How much does Aniket have to pay?" (Screen 34's first part, game 25), and 30% of ₹1800 is worked out after it (Screen 32, game 26).
 
-### Screen 32 — The Discount: 30% of ₹1800 (game 24)
-- **Now after the question "How much does Aniket have to pay?"** (game 23; the user’s doc of 2026-10-23): the first half of the explanation, the discount. It ends with the bar's note **"Discount: 3 parts = 30% = ₹540"** and her voice: **"So, the discount is ₹540."** (the note lights up); 5 seconds later it dissolves into the second half, the amount to pay (game 25).
-- **On the shoe shop's picture, as Screens 28–30** (the user, 2026-10-22: "show the image, not the panel; the shoes only, the rest blurred"): the picture blurs and dims but the sneakers and their ₹1800 and 30% OFF tags, and the question with its answers (or the working) is on **a small panel on its left**; the tags light up on the picture itself. games 22 → 23 → 24 → 25 dissolve into each other (the same view: only the panel changes). Swifty's bubbles keep clear of the sneakers and their tags: one too wide to fit beside them goes up above them, its point still aimed at her (the user, 2026-10-22: her bubble was over the shoes). Each small panel comes in with its first line, and its paper grows down as the next lines and the answers come in (no empty paper waits under the question).
+### Screen 32 — The Discount: 30% of ₹1800 (game 26)
+- **Now after the question "How much does Aniket have to pay?"** (game 25; the user’s doc of 2026-10-23): the first half of the explanation, the discount. It ends with the bar's note **"Discount: 3 parts = 30% = ₹540"** and her voice: **"So, the discount is ₹540."** (the note lights up); 5 seconds later it dissolves into the second half, the amount to pay (game 27).
+- **On the shoe shop's picture, as Screens 28–30** (the user, 2026-10-22: "show the image, not the panel; the shoes only, the rest blurred"): the picture blurs and dims but the sneakers and their ₹1800 and 30% OFF tags, and the question with its answers (or the working) is on **a small panel on its left**; the tags light up on the picture itself. games 24 → 25 → 26 → 27 dissolve into each other (the same view: only the panel changes). Swifty's bubbles keep clear of the sneakers and their tags: one too wide to fit beside them goes up above them, its point still aimed at her (the user, 2026-10-22: her bubble was over the shoes). Each small panel comes in with its first line, and its paper grows down as the next lines and the answers come in (no empty paper waits under the question).
 (The **Worked example** layout. Swifty isn't here: her voice on its own.)
 - The question dissolves into the **working on graph paper**, written line by line, its = signs lined up (big writing): **30% = 30/100**, then **30% of ₹1800 = 30/100 × 1800**, then **= ₹540** (real stacked fractions, in ink).
 - Each line is written in (a left-to-right wipe with a marker scribble) as her voice says it, with no bubbles:
@@ -321,10 +337,10 @@ Taken out on 2026-10-22, at the user's word ("remove this screen"): Screen 12 go
 - About 3 seconds later it **dissolves into Screen 33**.
 
 ### Screen 33 — What Does ₹540 Represent? (taken out)
-- Taken out on 2026-10-23 (with Screen 31: one question, then the working). It asked what ₹540 is (Marked Price, Selling Price or Discount); the working on game 24 now says it: "So, the discount is ₹540."
+- Taken out on 2026-10-23 (with Screen 31: one question, then the working). It asked what ₹540 is (Marked Price, Selling Price or Discount); the working on game 26 now says it: "So, the discount is ₹540."
 
-### Screen 34 — How Much to Pay? (game 23) and The Amount to Pay (game 25)
-- **Split in two** (the user’s doc of 2026-10-23: "ask how much he has to pay directly, then give the explanation"): **game 23** asks it, right after the practice: Swifty, **"Now, let’s find out how much money Aniket needs to pay."**, then the question on the small panel, **"How much does Aniket have to pay?"**, with **A ₹2340**, **B ₹1260**, **C ₹540**, **one try** (no hint): right, **"Correct!"**; wrong, **"Not quite!"** and B is ticked; both ways, **"Let’s see how to work it out!"**, and 3 seconds later the working: first the discount (Screen 32, game 24), then **game 25, the amount to pay**: the working below (the notes, the rule, the drag and drop, = ₹1260, the bar), Swifty coming with her "Your turn!" bubble. 5 seconds after "So, you pay ₹1260 for the sneakers!" it moves on by itself to Screen 35 (game 26). (Below, the question part is the earlier version, before the doc.)
+### Screen 34 — How Much to Pay? (game 25) and The Amount to Pay (game 27)
+- **Split in two** (the user’s doc of 2026-10-23: "ask how much he has to pay directly, then give the explanation"): **game 25** asks it, right after the practice: Swifty, **"Now, let’s find out how much money Aniket needs to pay."**, then the question on the small panel, **"How much does Aniket have to pay?"**, with **A ₹2340**, **B ₹1260**, **C ₹540**, **one try** (no hint): right, **"Correct!"**; wrong, **"Not quite!"** and B is ticked; both ways, **"Let’s see how to work it out!"**, and 3 seconds later the working: first the discount (Screen 32, game 26), then **game 27, the amount to pay**: the working below (the notes, the rule, the drag and drop, = ₹1260, the bar), Swifty coming with her "Your turn!" bubble. 5 seconds after "So, you pay ₹1260 for the sneakers!" it moves on by itself to Screen 35 (game 28). (Below, the question part is the earlier version, before the doc.)
 - **On the shoe shop's picture, as Screens 31–33** (the user, 2026-10-22: "focus on the shoes, the rest blurred, and the options"): the picture blurs and dims but the sneakers and their tags; the question and its answers, then the working (the amounts to drag, the sheet, the bar), are on **a small panel on its left**, Swifty in her corner. From Screen 33 it dissolves in (the same view); into Screen 35 the shop blurs all over as Aniket at the stand dissolves in, so the stand doesn't show twice. Her bubbles keep clear of the sneakers and their tags, as on 30–33. As on 28–33, the small panel comes in with its first line and grows down as the answers, the hint and the working come in.
 - **First, what to find (nothing on the panel yet).** The question before dissolves away, and Swifty, on her books, says in her bubble: **"Now, let’s find out how much money Aniket needs to pay."**
 - **Then the question.** Her bubble goes, and the question springs up: **"What will be the Selling Price?"**, and under it **the formula as a hint**, on the rule band (pale yellow, like every rule band): **"Hint: SP = MP − Discount"** (SP blue, MP amber, Discount red). She reads the question out, then the hint (both are on the panel, so no bubble); the hint comes in as she reads it.
@@ -343,7 +359,7 @@ Taken out on 2026-10-22, at the user's word ("remove this screen"): Screen 12 go
 - **A bar model** comes in under the working: **₹1800 (Marked Price)** splits into **₹1260 pay** (blue) and **₹540 discount** (red), and **Aniket's question on top is answered**: **"→ ₹1260 ✓"** in green after it (a chime). **"So, you pay ₹1260 for the sneakers!"** lights up the ₹1260 part.
 - She goes back down with her books, and the big **Next** button appears (no auto-advance on this screen); it leads to Screen 35, the photo growing back out into it.
 
-### Screen 35 — Final Answer (game 26)
+### Screen 35 — Final Answer (game 28)
 (Storyboard 18: "Final answer and summary". The line is Aniket's, in his voice.)
 - Background: `he saw a shoe.png` (the same view as Screens 22–23: Aniket at the stand, **pointing at the price tags**). Coming from Screen 34, the small photo grows back out into it. It moves as on Screen 22, with the same clips: Aniket pointing between the parts of his line, and talking with each part.
 - Aniket's bubble, right of his face above the sneakers (clear of his face and both tags), the tail at his mouth, spoken in two parts:
@@ -356,12 +372,12 @@ Taken out on 2026-10-22, at the user's word ("remove this screen"): Screen 12 go
 ### Checkpoint 3 — Price after a discount (taken out)
 - Taken out on 2026-10-21 (the review meeting: repetition): Screen 35 fades straight into Screen 36.
 
-### Screen 36 — Here Are Your Sneakers (game 27)
+### Screen 36 — Here Are Your Sneakers (game 29)
 - Background: `shopkeeper gives sneakers box.png`: at the shop's counter, the shopkeeper hands Aniket his new sneakers in an open orange-and-white box; both smile. A slow zoom eases in towards the box; the shelf lights glow softly.
 - No speech bubble, no words: a soft **light sweeps across the box**, with a chime (no twinkles).
 - About 3 seconds later: Screen 37.
 
-### Screen 37 — What Percent Is the Discount? (game 28)
+### Screen 37 — What Percent Is the Discount? (game 30)
 (Before the discount percentage formula: the discount, as a percent of the marked price, worked out with the part and the whole, the way Screens 28 and 29 did; then the rule's words dissolve into the discount percentage formula. Swifty's lines are written for the game.)
 - The counter picture gives way to the panel, with **the photo of the sneakers and their ₹1800 and 30% OFF tags** on the left (so 540 and 1800 clearly come from them) and the title **"What percent is the discount?"** on top.
 - (No Remember note here since the review meeting of 2026-10-21: what to remember shows only after a wrong answer, and this screen asks nothing.)

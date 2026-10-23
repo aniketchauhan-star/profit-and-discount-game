@@ -43,20 +43,22 @@ The bookstore and the sneakers were re-ordered to the user's doc (see `PROMPT.md
 | vo150, vo151 | Swifty | 9 | The reduction given on the marked price of an item / is called a discount. (two parts) |
 | vo152 | Swifty | 10 (a wrong answer) | Not quite! ₹800 is the shopkeeper’s selling price. |
 | vo153 | Swifty | 10 (the right one) | Yes! Aniket paid ₹200 less than the marked price. |
-| vo154 | Aniket | 11 | Thank you, uncle! |
-| vo155, vo156 | Swifty | 13 | Aniket bought the book and understood the discount. / Let’s help Aniket buy the sneakers! |
-| vo157 | Aniket | 14 | Wow, nice sneakers! I love them. |
-| vo048 (changed again) | Aniket | 16 | The price tagged on it is ₹1800. |
-| vo158 | Swifty | 17 (a wrong answer) | Not quite! Check the price tagged on the sneakers. |
-| vo159 | Swifty | 17 (the right one) | Correct! ₹1800 is the price tagged on the sneakers: their marked price. |
-| vo049 (changed again) | Aniket | 18 | If this is a discount, how much do I actually have to pay? |
-| vo160 | Swifty | 18 | 30% discount here. (after vo050 "30% OFF means") |
-| vo161 | Swifty | 19 | To calculate how much Aniket has to pay for these sneakers, (then vo053) |
-| vo162 | Swifty | 22 | Let’s have some practice! |
-| vo163 | Swifty | 23 | How much does Aniket have to pay? |
-| vo164 | Swifty | 24 | So, the discount is ₹540. |
+| vo154 | Aniket | 13 | Thank you, uncle! |
+| vo155, vo156 | Swifty | 15 | Aniket bought the book and understood the discount. / Let’s help Aniket buy the sneakers! |
+| vo157 | Aniket | 16 | Wow, nice sneakers! I love them. |
+| vo048 (changed again) | Aniket | 18 | The price tagged on it is ₹1800. |
+| vo158 | Swifty | 19 (a wrong answer) | Not quite! Check the price tagged on the sneakers. |
+| vo159 | Swifty | 19 (the right one) | Correct! ₹1800 is the price tagged on the sneakers: their marked price. |
+| vo049 (changed again) | Aniket | 20 | If this is a discount, how much do I actually have to pay? |
+| vo160 | Swifty | 20 | 30% discount here. (after vo050 "30% OFF means") |
+| vo161 | Swifty | 21 | To calculate how much Aniket has to pay for these sneakers, (then vo053) |
+| vo162 | Swifty | 24 | Let’s have some practice! |
+| vo163 | Swifty | 25 | How much does Aniket have to pay? |
+| vo164 | Swifty | 26 | So, the discount is ₹540. |
 
-The lines of the screens taken out (vo007–vo013, vo015–vo020, vo025–vo044, and those of the questions "Now, what is 30% of ₹1800?" and "What does ₹540 represent here?") and the old words of the changed ones (vo014, vo021–vo024, vo045, vo047, vo051, vo052) are no longer heard; their clips were kept, in case those screens come back.
+The lines of the screens taken out (vo007–vo013, vo015–vo020, vo025, vo040–vo044, and those of the questions "Now, what is 30% of ₹1800?" and "What does ₹540 represent here?") and the old words of the changed ones (vo014, vo021–vo024, vo045, vo047, vo051, vo052) are no longer heard; their clips were kept, in case those screens come back.
+
+The formula screens (11 and 12) came back the same day: their lines (vo026–vo039, with vo138 "Let’s write it in short." still to record) are heard again.
 
 ## The studio and its settings
 

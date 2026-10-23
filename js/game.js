@@ -20,13 +20,31 @@
 
   // Clean strip cut from "aniket walking sprite sheet.png": every frame cut along its own outline
   // and aligned on the head/torso and the floor line, with a 16px gap between frames.
-  const WALK_SHEET = {
-    src: ASSETS + 'sprites/aniket-walk-clean.png',
-    frameW: 358, frameH: 614, gutter: 16, anchorX: 166, baselineY: 612,
-    loop: [3, 4, 5, 6, 7, 0, 1],           // sheet frames in an even contact → passing rhythm
-    stride: [96, 97, 77, 111, 26, 53, 87], // body travel (sprite px) from each loop frame to the next
-    contact: [3, 5, 7],                    // a foot lands → footstep sound
-    idle: 0,                               // both feet flat on the floor: the pose he stops on
+  // Aniket walking (FX.Walker): his figure as a jointed cutout, made by tools/make_walk_rig.py from the first frame of the
+  // old walk sheet (sprites/aniket-walk-clean.png), whose frame coordinates it keeps. anchorX, baselineY: the point on
+  // the floor the screens place him by (as the sheet's frames had it); hip, knee, ankle: the joints; ground: the floor.
+  const WALK_RIG = {
+    src: ASSETS + 'sprites/aniket-rig.png',
+    frameW: 358, frameH: 614, anchorX: 166, baselineY: 612,
+    hip: [200, 355], knee: [215, 476], ankle: [234, 580], ground: 610,
+    pieces: { // [atlas x, y, w, h, frame x, y], as tools/make_walk_rig.py prints them
+      upper: [0, 0, 216, 350, 53, 10],
+      hips: [220, 0, 124, 90, 117, 323],
+      thigh: [348, 0, 74, 152, 166, 351],
+      shin: [426, 0, 75, 134, 191, 451],
+      shoe: [505, 0, 107, 48, 204, 564],
+      thighFar: [616, 0, 74, 152, 166, 351],
+      shinFar: [694, 0, 75, 134, 191, 451],
+      shoeFar: [773, 0, 107, 48, 204, 564],
+    },
+    // The walk (frame px): two steps of 150 a cycle; each foot planted for 60% of it, landing 80 ahead of the hip, heel
+    // first (toe up 14°, rolling down by 8% of the cycle), heel up onto the ball from 42% (to 32°), then swinging in an
+    // arc 16 high. The heel and the ball are 26 behind and 52 ahead of the ankle. He stands (and sets off and stops)
+    // 15% into a cycle: one foot planted a little ahead of him, the other down 55 behind (as the drawing stands).
+    gait: {
+      cycle: 300, stance: 0.6, heelStrike: 80, roll: 0.08, heelOff: 0.42, lift: 16,
+      toeUp: 14 * Math.PI / 180, heelUp: 32 * Math.PI / 180, heel: -26, ball: 52, stop: 0.15, standBack: -55,
+    },
   };
 
   // Swifty, the teal bird with a backpack: clean strips cut from "bird fly .png" and "bird talk .png"
@@ -234,8 +252,22 @@
       dust: [300, 60, 1500, 700],
       backdrop: true, // the camera pans left: a soft blurred copy fills in past the picture's right edge
       shot: 'counter-talk', // (carried over from screen 9: see playDiscountCard)
-      blurOut: true, // (its camera is moved left for the card: into screen 11's picture it blurs, so nothing shows twice)
       play: playDiscountCard,
+    },
+    {
+      // Back at the user's word (2026-10-23: "after screen 10 add this"): the formula with the book, then in short.
+      id: 'formula', title: 'The Discount Formula', sub: 'Marked Price − Selling Price = Discount',
+      snap: PUZZLED, snapFocus: [900, 520, 1.25],
+      sheet: 'panel', still: true, kb: null, origin: '50% 50%', lamps: [], dust: null,
+      setup: setupGuide,
+      play: playFormula,
+    },
+    {
+      id: 'formula-reveal', title: 'Formula Reveal', sub: 'D = MP − SP',
+      snap: PUZZLED, snapFocus: [900, 520, 1.25],
+      sheet: 'panel', still: true, kb: null, origin: '50% 50%', lamps: [], dust: null,
+      setup: scene => scene.snapEl.getAnimations().forEach(a => a.cancel()), // (its photo back in the corner: see playFormulaReveal)
+      play: playFormulaReveal,
     },
     {
       id: 'pay', title: 'Thank You!', sub: 'The shopkeeper gives Aniket the book',
@@ -615,11 +647,11 @@
       return;
     }
     const L = scene.layer;
-    const walker = new FX.Walker(L, WALK_SHEET);
+    const walker = new FX.Walker(L, WALK_RIG);
     const from = { x: -190, y: 1016, s: 0.79 }; // off-screen left, slightly closer to the camera
     const to = { x: 925, y: 986, s: 0.76 };     // front of the store, by the display table
     walker.place(from.x, from.y, from.s);
-    walker.setFrame(WALK_SHEET.loop[0]);
+    walker.setFrame('idle');
     const pan = x => (x / STAGE_W) * 1.6 - 0.8;
 
     await ctx.wait(600);
@@ -630,7 +662,7 @@
     walker.idle(true);
 
     await ctx.wait(300);
-    const headTop = to.y - (WALK_SHEET.baselineY - 10) * to.s;
+    const headTop = to.y - (WALK_RIG.baselineY - 10) * to.s;
     FX.exclaim(L, to.x + 22, headTop - 34);
     Sound.ding();
 
@@ -768,12 +800,12 @@
     }
     const L = scene.layer;
     const doors = scene.doors;
-    const walker = new FX.Walker(L, WALK_SHEET);
+    const walker = new FX.Walker(L, WALK_RIG);
     doors.under(walker.root); // inside the shop, behind the glass
     const inside = { x: 760, y: 822, s: 0.5 };      // inside the shop, by the left-hand door
     const atDoors = { x: 905, y: 830, s: 0.52 };    // at the doors
     walker.place(inside.x, inside.y, inside.s);
-    walker.setFrame(WALK_SHEET.loop[0]);
+    walker.setFrame('idle');
     walker.root.style.opacity = '0';
     const pan = x => (x / STAGE_W) * 1.6 - 0.8;
 
@@ -807,9 +839,9 @@
   function setupLeave(scene) {
     if (Clips.has('s21-walk')) return;
     bookstoreDoors(scene.layer, { open: true });
-    const walker = new FX.Walker(scene.layer, WALK_SHEET);
+    const walker = new FX.Walker(scene.layer, WALK_RIG);
     walker.place(OUT_OF_THE_DOORS.x, OUT_OF_THE_DOORS.y, OUT_OF_THE_DOORS.s);
-    walker.setFrame(WALK_SHEET.idle);
+    walker.setFrame('idle');
     walker.idle(true);
     scene.walker = walker;
   }
@@ -1219,6 +1251,7 @@
   // card makes way for a small panel with the Cost Price and Selling Price cards, read out one at a time. Then the picture
   // clears, and a note over the money he hands over ties it to the story. 5 seconds later the story moves on.
   const NOT_QUITE = { x: 220, y: 1066, s: 0.74 }; // her feet, at the picture's bottom-left edge
+  const ON_PANEL = { x: 220, y: 1040, s: 0.74 }; // …and on the panel, inside its edge
   async function swiftyCorner(ctx, scene, id, text, opts = {}) {
     return swiftyCornerLines(ctx, scene, [[id, text]], opts);
   }
@@ -1717,6 +1750,154 @@
     if (scene.kbAnim) scene.kbAnim.cancel();
     scene.kbAnim = scene.world.animate([{ transform: from === 'none' ? 'none' : from }, { transform }],
       { duration: ms, easing: 'cubic-bezier(.65,0,.35,1)', fill: 'forwards' });
+  }
+
+  // Screens 11 and 12, the formula (back at the user's word, 2026-10-23: "after screen 10 add this", with pictures of both).
+  // The discount formula (Swifty isn't here: a worked example, her voice on its own). The book, then the sum built one piece
+  // at a time with the amounts only: the ₹1000 lifts off the book's sticker into the first box, then − ₹800, then = ₹200.
+  // As her voice says the formula in words, each box's name is written in above its amount. Then a bar of ₹1000 is split
+  // into ₹800 paid and ₹200 discount (the revamp's new visual), and "So, the discount is ₹200." lights up the ₹200.
+  async function playFormula(ctx, scene) {
+    const reader = swiftyTalk(ctx, scene.ui, null, null);
+    const fp = FX.formulaPanel(scene.ui, {
+      price: '₹1000',
+      terms: [
+        { label: 'Marked Price', value: '₹1000', tone: 'yellow' }, // the colours used since screen 13
+        { label: 'Selling Price', value: '₹800', tone: 'blue' },
+        { label: 'Discount', value: '₹200', tone: 'red' },
+      ],
+      ops: ['−', '='],
+      namesLater: true, // the amounts first: each name is written in as it is said
+    });
+    const bar = FX.barModel(fp.side, { // under the sum, beside the book
+      total: { value: '₹1000', label: 'Marked Price', tone: 'mp' },
+      parts: [{ value: '₹800', label: 'paid', tone: 'sp', share: 0.8 }, { value: '₹200', label: 'discount', tone: 'd', share: 0.2 }],
+    });
+    await ctx.wait(450); // the screen before finishes fading away first
+    fp.open();
+    await ctx.wait(500);
+    fp.showBook();
+    await ctx.wait(900);
+
+    // ₹1000 − ₹800 = ₹200, the amounts only (the sum builds by itself)
+    fp.highlight();
+    await ctx.wait(500);
+    await fp.box(0, { empty: true });
+    await ctx.wait(200);
+    await fp.fly();
+    await ctx.wait(700);
+    fp.op(0);
+    await ctx.wait(350);
+    await fp.box(1);
+    await ctx.wait(900);
+    fp.op(1);
+    await ctx.wait(350);
+    await fp.box(2, { stamp: true });
+    await ctx.wait(1000);
+
+    // The formula in words: each box's name is written in above its amount as it is said.
+    const said = ['Marked Price,', 'minus Selling Price,', 'equals Discount.']; // as recorded
+    const lit = [[fp.boxes[0]], [fp.ops[0], fp.boxes[1]], [fp.ops[1], fp.boxes[2]]];
+    for (const [i, parts] of lit.entries()) {
+      parts.forEach((part, k) => ctx.wait(k * 420).then(() => {
+        fp.ping(part);
+        if (part === fp.boxes[i]) fp.name(i);
+      }, () => {}));
+      await reader.read(`rule-${i + 1}`, said[i], [fp.boxes[i]], 900);
+    }
+    await ctx.wait(400);
+
+    // The bar: ₹1000, split into ₹800 paid and ₹200 discount; the ₹200 is the discount.
+    await bar.open(ctx);
+    await ctx.wait(300);
+    bar.split();
+    await ctx.wait(700);
+    fp.glow(2); // the Discount keeps glowing
+    await reader.read('f-so', 'So, the discount is ₹200.', [bar.segs[1]], 600);
+    ctx.advance(NEXT_IN); // then the formula itself
+  }
+
+  // Screen 13's pictures over the prices: 16:9, centred on the term, just above the formula's strip.
+  const PAY_FOCUS = [990, 500, 1.5]; // the notes handed over, both faces in view (aniket give money to shopkeeper.png)
+  function overTerm(term) {
+    const t = stageRect(term);
+    const strip = stageRect(term.closest('.fr-strip'));
+    const width = 440;
+    const height = width * 9 / 16;
+    return { left: t.left + t.width / 2 - width / 2, top: strip.top - 30 - height, width, height };
+  }
+
+  // The formula (Swifty isn't here: her voice on its own): first in words, written part by part as it is said; then the
+  // first letters of each term light up and fly down to make the short form, D = MP − SP, on a yellow sticky note, which is
+  // read out, each part lighting up as it is said.
+  async function playFormulaReveal(ctx, scene) {
+    const reader = swiftyTalk(ctx, scene.ui, null, null);
+    const fr = FX.formulaReveal(scene.ui, {
+      terms: [
+        { words: 'Discount', short: 'D', tone: 'd' }, // the colours used since screen 13
+        { words: 'Marked Price', short: 'MP', tone: 'mp' },
+        { words: 'Selling Price', short: 'SP', tone: 'sp' },
+      ],
+      ops: ['=', '−'],
+    });
+    await ctx.wait(450); // the formula panel finishes fading away first
+    fr.open();
+    await ctx.wait(700);
+
+    // In words, one part at a time; a picture comes over each price as it is said (the user, 2026-10-22): the photo of the
+    // counter (the book Aniket holds) glides from the corner over "Marked Price", and Aniket paying comes over "Selling
+    // Price".
+    fr.term(0);
+    await reader.read('fr-1', 'Discount', [fr.longTerms[0]], 700);
+    fr.op(0);
+    await ctx.wait(300);
+    fr.term(1);
+    const mp = overTerm(fr.longTerms[1]);
+    scene.snapEl.style.transformOrigin = '0 0';
+    FX.settle(scene.snapEl.animate([{ transform: 'none' }, { transform: `translate(${mp.left - SNAP.x}px, ${mp.top - SNAP.y}px) scale(${mp.width / SNAP.w})` }],
+      { duration: reducedMotion ? 1 : 900, easing: 'cubic-bezier(.45,0,.3,1)', fill: 'forwards' }));
+    await reader.read('fr-2', 'equals Marked Price,', [fr.longTerms[1]], 900);
+    fr.op(1);
+    await ctx.wait(300);
+    fr.term(2);
+    const sp = overTerm(fr.longTerms[2]);
+    const pay = el('div', 'scene-snap', scene.ui, { left: `${sp.left}px`, top: `${sp.top}px`, width: `${sp.width}px`, height: `${sp.height}px` });
+    Object.assign(el('img', '', pay), { src: ASSETS + 'aniket give money to shopkeeper.png', alt: '', draggable: false });
+    focusOn(pay, PAY_FOCUS);
+    Sound.bloop();
+    FX.reveal(pay, [{ opacity: 0, transform: 'translateY(24px) scale(.92)' }, { opacity: 1, transform: 'none' }], { duration: 600, easing: 'cubic-bezier(.2,.8,.3,1)' });
+    await reader.read('fr-3', 'minus Selling Price.', [fr.longTerms[2]], 900);
+    await ctx.wait(600);
+
+    // In short: Swifty pops up in the bottom-left corner to say so, in her bubble, and goes (the user, 2026-10-22: its words
+    // on screen, as with her "Not quite!"); then each term's first letters fly down onto the sticky note (which comes in as
+    // the first ones go).
+    await swiftyCorner(ctx, scene, 'fr-4', 'Let’s write it in short.', { at: ON_PANEL });
+    const letters = ['D for Discount,', 'MP for Marked Price,', 'SP for Selling Price.']; // as recorded
+    for (let i = 0; i < 3; i++) {
+      if (i) {
+        fr.shortOp(i - 1);
+        await ctx.wait(350);
+      }
+      fr.lightUp(i);
+      const saying = reader.read(`fr-${5 + i}`, letters[i], [], 800);
+      saying.catch(() => {}); // if the player leaves mid-line, the waits below report it
+      await ctx.wait(450);
+      if (!i) fr.showShort(); // as the first letters fly down to it
+      await fr.fly(i);
+      await saying;
+    }
+    await ctx.wait(400);
+
+    // The short form, read out: each part lights up as it is said.
+    const read = [[fr.shortTerms[0]], [fr.shortOps[0], fr.shortTerms[1]], [fr.shortOps[1], fr.shortTerms[2]]];
+    const said = ['So, D', '= MP', '− SP.']; // as recorded
+    for (const [i, pieces] of read.entries()) {
+      pieces.forEach((piece, k) => ctx.wait(k * 420).then(() => fr.ping(piece), () => {}));
+      await reader.read(`fr-${8 + i}`, said[i], [], 900);
+    }
+    await ctx.wait(500);
+    ctx.advance(NEXT_IN); // then he pays for the book (the photo grows back out into it)
   }
 
   // A screen over the blurred counter that starts out already blurred: during a dissolve from the screen
@@ -3116,11 +3297,11 @@
 
   // Aniket walks in from the left along the road and stops in front of the shops (bottom-left).
   async function walkOn(ctx, scene) {
-    const walker = new FX.Walker(scene.ui, WALK_SHEET, { matte: true });
+    const walker = new FX.Walker(scene.ui, WALK_RIG, { matte: true });
     const from = { x: -170, y: 1032, s: 0.56 };
     const to = { x: 190, y: 1032, s: 0.56 };
     walker.place(from.x, from.y, from.s);
-    walker.setFrame(WALK_SHEET.loop[0]);
+    walker.setFrame('idle');
     const pan = x => (x / STAGE_W) * 1.6 - 0.8;
     Sound.duck(true, 'walk');
     try {
@@ -4017,8 +4198,8 @@
   // worked out → what ₹540 is → the amount to pay → the final answer; and 540 as a percent of 1800 → the discount
   // percentage → the summary.
   // Every other change is a straight cut.
-  const FADES = [['home', 'outside'], ['return', 'school'], ['school', 'list'], ['list', 'money'], ['money', 'deal'], ['deal', 'begin'], ['begin', 'shops'], ['shops', 'uniform'], ['shops', 'shoes'], ['shops', 'bag'], ['shops', 'bottle'], ['shops', 'complete'], ['uniform', 'complete'], ['shoes', 'complete'], ['bag', 'complete'], ['bottle', 'complete'], ['complete', 'receipt'], ['homeagain', 'mission'], ['mpcard', 'reveal'], ['dcard', 'pay'], ['pay', 'exit'], ['outside', 'browse'], ['browse', 'ask'], ['leave', 'sneakers'], ['sneakers', 'shoe'], ['shoe', 'confused'], ['final', 'boxed']];
-  const FORWARD_FADES = [['mp', 'mpcard'], ['confused', 'smcard'], ['smcard', 'offmeans'], ['percentrule', 'whatpercent'],
+  const FADES = [['home', 'outside'], ['return', 'school'], ['school', 'list'], ['list', 'money'], ['money', 'deal'], ['deal', 'begin'], ['begin', 'shops'], ['shops', 'uniform'], ['shops', 'shoes'], ['shops', 'bag'], ['shops', 'bottle'], ['shops', 'complete'], ['uniform', 'complete'], ['shoes', 'complete'], ['bag', 'complete'], ['bottle', 'complete'], ['complete', 'receipt'], ['homeagain', 'mission'], ['mpcard', 'reveal'], ['pay', 'exit'], ['outside', 'browse'], ['browse', 'ask'], ['leave', 'sneakers'], ['sneakers', 'shoe'], ['shoe', 'confused'], ['final', 'boxed']];
+  const FORWARD_FADES = [['mp', 'mpcard'], ['formula', 'formula-reveal'], ['confused', 'smcard'], ['smcard', 'offmeans'], ['percentrule', 'whatpercent'],
     ['whatpercent', 'check'], ['check', 'topay'], ['topay', 'thirty'], ['thirty', 'paywork'], ['paywork', 'final'], ['left', 'two'], ['recap', 'takeaway']];
   const FADE_MS = 1200; // not stretched by PACE: changing screens stays brisk
   const SLIDE_MS = 950;  // a sheet sliding up over a story picture (see slide)
@@ -4565,7 +4746,7 @@
     const fill = $('#loader-fill');
     const label = $('#loader-text');
     const images = SCENES.flatMap(s => [s.bg, s.react]).filter(Boolean).concat(
-      ASSETS + 'ui/start-button.png', WALK_SHEET.src, SWIFTY.fly.src, SWIFTY.stand.src, ART.money, ART.book,
+      ASSETS + 'ui/start-button.png', WALK_RIG.src, SWIFTY.fly.src, SWIFTY.stand.src, ART.money, ART.book,
       ASSETS + 'ui/sneakers.png', DOORWAY.src, STAND, ...Object.values(BEGIN_ART), ...SHOPPING_LIST.map(item => item.icon),
       ...Object.values(SHOP_ART), MONEY_NOTES, ...SHOPS.map(shop => shop.icon), ASSETS + 'boy stand and talk .png',
       ...Object.values(STREET_ART).flatMap(v => (typeof v === 'string' ? [v] : Object.values(v)))
