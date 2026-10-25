@@ -4452,7 +4452,7 @@ kbd {
    The mall on its map, Aniket walked with four arrows, and its shops, each with a card for the sale price. Drawn in the
    game's party look: navy words, cream cards with a gold edge, white pills, green and orange buttons. Stage px. */
 .scene { --pp-ink: #1d2f6f; --pp-cream: #fffaf0; --pp-gold: #f3c34f; --pp-red: #e0303f; --pp-green: #17923d; }
-.pq2 { position: absolute; z-index: 4; font-family: 'Baloo 2', system-ui, sans-serif; }
+.pq2 { position: absolute; z-index: 4; font-family: 'Baloo 2', system-ui, sans-serif; pointer-events: auto; } /* (.scene-ui lets presses through) */
 .pq2-card { position: relative; padding: 44px 40px 32px; border: 6px solid var(--pp-gold); border-radius: 34px; background: var(--pp-cream);
   box-shadow: 0 22px 50px rgba(15, 25, 55, .38); }
 .pq2-card--tag { display: grid; grid-template-columns: 290px 1fr; gap: 30px; align-items: center; }
@@ -4489,7 +4489,7 @@ kbd {
   text-align: center; box-shadow: 0 6px 12px rgba(0, 0, 0, .18); }
 .pq2-tag-price { display: block; color: #1b1b1b; font-size: 30px; font-weight: 800; line-height: 1.1; }
 .pq2-tag-off { display: block; margin-top: 6px; padding: 6px 0 4px; border-radius: 6px; background: #ffd400; color: var(--pp-red); font-size: 28px; font-weight: 900; line-height: .95; }
-.pc2 { position: absolute; z-index: 4; font-family: 'Baloo 2', system-ui, sans-serif; }
+.pc2 { position: absolute; z-index: 4; font-family: 'Baloo 2', system-ui, sans-serif; pointer-events: auto; }
 .pc2.has-ribbon { padding-top: 76px; }
 .pc2-card { position: relative; padding: 34px 38px 30px; border: 6px solid var(--pp-gold); border-radius: 34px; background: var(--pp-cream); box-shadow: 0 22px 50px rgba(15, 25, 55, .38); }
 .pc2.has-ribbon .pc2-card { padding-top: 56px; }

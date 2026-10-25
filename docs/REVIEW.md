@@ -75,6 +75,7 @@ The brief is `Bookstore Journey - Revamp Brief.docx` ("Changes for Screens 1–4
 - PROMPT.md's facts: the discount's red starts at Screens 14–15, and Swifty's screens are the new ones.
 - PROMPT.md is updated for every change.
 - Found while testing, and fixed: leaving a screen in the middle of a line could let the next line start on the following screen. For example, pressing "Got it, next" while "Hear it again" was reading made the next card's line play over Screen 20. A line now starts only while its screen is on.
+- Found while testing, and fixed (2026-10-24): in Party Prep's four shops, a press with the mouse or a finger went through the question card and the Buy / Keep Looking card to the shop's picture, so the amounts, Check, Buy and Keep Looking couldn't be pressed. The earlier tests had pressed them from inside the page, which skips this. Both cards now take presses (`.pq2`, `.pc2` in `css/style.css`), and a whole shop was played with mouse presses. Every story question was checked the same way and already took them.
 
 ## The brief's questions: what was done meanwhile
 
