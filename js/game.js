@@ -2940,6 +2940,7 @@
   // its picture for the card and the shopping list. ₹4,470 in all, ₹530 left of ₹5,000.
   const PARTY_BUDGET = 5000;
   const PARTY_WALLET = ASSETS + 'ui/shop/wallet.png';
+  const PARTY_JOY = { base: PARTY + 'joystick-base.png', knob: PARTY + 'joystick-knob.png' }; // (the user's controller, cut out of their picture)
   const PARTY_ITEMS = [
     { id: 'shirt', name: 'Shirt', icon: PARTY + 'icon-shirt.png', shop: 'shirtshop', a: 'this shirt',
       ask: 'Which shirt is the better deal? Tap it!', deals: [
@@ -2996,12 +2997,18 @@
     return line;
   }
 
-  // Swifty, as on the story's pictures: she pops up in the bottom-left corner (no books), her bubble on her right, and
-  // goes back down when it goes (she is there only with a bubble). say() after say() changes the bubble; hide().
-  function partyBird(ctx, scene, { at = NOT_QUITE, upTo = 1000, size = 40 } = {}) {
+  // Swifty, as on the story's pictures: she pops up in a bottom corner (no books), her bubble beside her, and goes back
+  // down when it goes (she is there only with a bubble). say() after say() changes the bubble; hide(). On the right
+  // (`side: 'right'`; the user, 2026-10-26: "Swifty comes in on the right side") she slides in from its edge, her bubble
+  // on her left. With `focus` (an FX.focusVeil) she and her words are in the spotlight while she talks (the user: "focus
+  // on Swifty when she is talking"); hide() takes it away too, unless asked to keep it (for what comes next).
+  function partyBird(ctx, scene, { at = null, side = 'left', upTo = 1000, downTo = 640, size = 40, focus = null } = {}) {
+    const right = side === 'right';
+    const spot = at || (right ? { x: 1740, y: 1066, s: 0.74 } : NOT_QUITE);
+    const away = right ? 'translateX(380px)' : 'translateY(320px)'; // (where she comes from, and goes back to)
     let bird = null;
     let line = null;
-    const head = at.y - at.s * 300; // (level with her beak)
+    const head = spot.y - spot.s * 300; // (level with her beak)
     return {
       async say(id, text, ms = 0) {
         if (line) {
@@ -3010,20 +3017,24 @@
           await ctx.wait(120);
         }
         if (!bird) {
-          bird = new FX.Bird(scene.ui, SWIFTY, { scale: at.s });
-          bird.place(at.x, at.y);
-          bird.root.classList.add('is-mirrored'); // (she points to her right, at her bubble)
+          bird = new FX.Bird(scene.ui, SWIFTY, { scale: spot.s });
+          bird.place(spot.x, spot.y);
+          if (!right) bird.root.classList.add('is-mirrored'); // (she points to her right, at her bubble)
           bird.point();
           Sound.chirp();
-          await FX.settle(bird.body.animate([{ transform: 'translateY(320px)' }, { transform: 'translateY(-8px)', offset: 0.75 }, { transform: 'none' }],
+          await FX.settle(bird.body.animate([{ transform: away }, { transform: right ? 'translateX(-10px)' : 'translateY(-8px)', offset: 0.75 }, { transform: 'none' }],
             { duration: reducedMotion ? 1 : 600, easing: 'cubic-bezier(.2,.8,.3,1)' }));
         }
-        line = FX.bubble(scene.ui, { anchor: [at.x + 176, head], corner: 'ml', tip: [at.x + 120, head + 6], text, size, voice: 'bird', within: [at.x + 176, upTo] });
+        line = FX.bubble(scene.ui, right
+          ? { anchor: [spot.x - 176, head], corner: 'mr', tip: [spot.x - 120, head + 6], text, size, voice: 'bird', within: [downTo, spot.x - 176] }
+          : { anchor: [spot.x + 176, head], corner: 'ml', tip: [spot.x + 120, head + 6], text, size, voice: 'bird', within: [spot.x + 176, upTo] });
         await line.show();
+        if (focus) focus.on(spotOf([bird.root, line.el]));
         await Promise.all([speak(ctx, line, id, 'bird', bird), ctx.wait(ms)]);
         bird.point();
       },
-      async hide() {
+      async hide({ keepFocus = false } = {}) {
+        if (focus && !keepFocus) focus.off();
         if (line) {
           const old = line;
           line = null;
@@ -3032,11 +3043,21 @@
         if (!bird) return;
         const b = bird;
         bird = null;
-        await FX.settle(b.body.animate([{ transform: 'none' }, { transform: 'translateY(320px)' }],
+        await FX.settle(b.body.animate([{ transform: 'none' }, { transform: away }],
           { duration: reducedMotion ? 1 : 450, easing: 'cubic-bezier(.5,0,.75,0)', fill: 'forwards' }));
         b.root.remove();
       },
     };
+  }
+
+  // The spotlight's hole round some things (stage px): an oval round all of them, a little room to spare.
+  function spotOf(nodes, room = 1.3) {
+    const rs = nodes.filter(Boolean).map(stageRect);
+    const left = Math.min(...rs.map(r => r.left));
+    const top = Math.min(...rs.map(r => r.top));
+    const right = Math.max(...rs.map(r => r.right));
+    const bottom = Math.max(...rs.map(r => r.bottom));
+    return { x: (left + right) / 2, y: (top + bottom) / 2, rx: ((right - left) / 2) * room, ry: ((bottom - top) / 2) * room };
   }
 
   // The party message (screen 32): Aniket, on the sofa, reads his phone: the invite comes up out of it.
@@ -3186,7 +3207,7 @@
 
   async function playMall(ctx, scene) {
     const walker = scene.walker;
-    const pad = FX.arrowPad(scene.ui); // (the user, 2026-10-23: arrows, not a joystick)
+    const pad = FX.joystick(scene.ui, PARTY_JOY); // (the user's controller, 2026-10-26; before it, four arrows)
     const steer = {}; // (this run's: a run cut short, as by opening this screen again, switches off only its own)
     Game.steering = steer; // (the arrow keys and W A S D walk him here: see wireUI)
     const glows = {}; // (each over its doorway: up from the threshold, slanting with it)
@@ -3199,20 +3220,26 @@
     let swifty = null;
     const cleanup = () => { pad.destroy(); if (Game.steering === steer) Game.steering = false; };
     try {
-      if (!Party.from) { // the first time in: how to walk, and what to buy (he can walk meanwhile)
-        swifty = partyBird(ctx, scene, { at: { x: 540, y: 1090, s: 0.62 }, upTo: 1220, size: 36 }); // (right of the arrows, under the shops)
+      if (!Party.from) { // the first time in: how to walk (he can walk meanwhile; the list on top says what to buy)
+        // Swifty comes in on the right, in the spotlight while she says it; then the spotlight goes round to the
+        // controller, which glows, everything else dark and blurred, until it is used (the user, 2026-10-26)
+        const veil = FX.focusVeil(scene.ui);
+        swifty = partyBird(ctx, scene, { side: 'right', focus: veil, size: 38 });
         (async () => {
-          pad.el.classList.add('is-pulsing'); // (the arrows call while she says it; the list on top says what to buy)
-          await swifty.say('mall-how', [{ t: 'Use the ' }, { t: 'arrows', cls: 'key' }, { t: ' to walk into a shop!' }], 600);
-          await ctx.wait(1200);
-          pad.el.classList.remove('is-pulsing');
-          await swifty.hide();
+          await swifty.say('mall-how', [{ t: 'Use the ' }, { t: 'controller', cls: 'key' }, { t: ' to walk into a shop!' }], 400);
+          await swifty.hide({ keepFocus: true });
+          const r = stageRect(pad.el);
+          pad.el.classList.add('is-glowing');
+          await veil.on({ x: r.left + r.width / 2, y: r.top + r.height / 2, rx: r.width / 2 + 34 });
+          await Promise.race([pad.pressed().then(() => ctx.wait(1200)), ctx.wait(5000)]);
+          pad.el.classList.remove('is-glowing');
+          await veil.off();
         })().catch(err => { if (err !== CANCELLED) console.error(err); });
       }
       let way = walker.way;
       let last = null;
       let toast = null;
-      let vel = [0, 0]; // his velocity (stage px a second): it eases towards where the arrows point
+      let vel = [0, 0]; // his velocity (stage px a second): it eases towards where the controller points
       const going = await new Promise((resolve, reject) => {
         const tick = now => {
           if (!ctx.alive()) return reject(CANCELLED);
@@ -3220,14 +3247,16 @@
           last = now;
           const v = pad.value();
           const pressed = v.x !== 0 || v.y !== 0;
-          // he faces the way pressed at once (a diagonal: the way he was facing, if it is one of the two)
+          // he faces the way pushed at once: the controller's stronger way (near a diagonal, the way he was facing, if it
+          // is one of the two)
           if (pressed) {
-            const sideways = Math.abs(v.x) > 0.01;
-            const upDown = Math.abs(v.y) > 0.01;
             const h = v.x > 0 ? 'right' : 'left';
             const u = v.y > 0 ? 'down' : 'up';
-            if (sideways && upDown) way = way === h || way === u ? way : h;
-            else way = sideways ? h : u;
+            const ax = Math.abs(v.x);
+            const ay = Math.abs(v.y);
+            if (ax > ay * 1.3) way = h;
+            else if (ay > ax * 1.3) way = u;
+            else way = way === h || way === u ? way : (ax >= ay ? h : u);
           }
           const k = 1 - Math.exp(-WALK_EASE * dt);
           vel = [vel[0] + (v.x * WALK_SPEED - vel[0]) * k, vel[1] + (v.y * WALK_SPEED - vel[1]) * k];
@@ -3296,15 +3325,33 @@
     partyBar(scene);
     const it = PARTY_ITEMS.find(x => x.id === scene.buys);
     scene.spots = it.deals.map(d => {
-      const [x0, y0] = pp(d.spot[0], d.spot[1]);
-      const [x1, y1] = pp(d.spot[2], d.spot[3]);
-      const b = el('button', 'deal-spot', scene.ui, { left: `${x0}px`, top: `${y0}px`, width: `${x1 - x0}px`, height: `${y1 - y0}px` });
+      const b = el('button', 'deal-spot', scene.ui); // (placed when the camera is on the two: see playShop)
       b.type = 'button';
       b.setAttribute('aria-label', `${d.name}: ${inr(d.mp)}, ${d.pct ? `${d.pct}%` : inr(d.flat)} off`);
       el('span', 'ds-mark', b);
       b.style.opacity = '0';
       return b;
     });
+  }
+
+  // The camera on the two things (the user, 2026-10-26: "first we see the full room, then zoom, then show only these
+  // two"): the picture eases in until both, with their tags, fill the room left of the cards (and above Swifty's bubble).
+  // map() takes a point on the picture as it was (stage px) to where it is then.
+  const SHOP_VIEW = [70, 130, 1250, 735]; // stage px
+  function shopCamera(it) {
+    const xs = it.deals.flatMap(d => [d.spot[0], d.spot[2]]).map(v => v * PK);
+    const ys = it.deals.flatMap(d => [d.spot[1], d.spot[3]]).map(v => v * PK);
+    const room = 36;
+    const [x0, x1, y0, y1] = [Math.min(...xs) - room, Math.max(...xs) + room, Math.min(...ys) - room, Math.max(...ys) + room];
+    const [vx0, vy0, vx1, vy1] = SHOP_VIEW;
+    const s = Math.min(1.8, (vx1 - vx0) / (x1 - x0), (vy1 - vy0) / (y1 - y0)); // (no closer than 1.8: the picture stays sharp)
+    const [ox, oy] = [STAGE_W / 2, STAGE_H / 2]; // (the camera turns round the middle: the shops' `origin`)
+    // (the two in the middle of that room, as far as the picture still fills the screen: a shop whose two are tall,
+    // seen less close, can't move as far left)
+    const clamp = (v, edge) => Math.max(edge - edge * s, Math.min(edge * s - edge, v));
+    const tx = clamp((vx0 + vx1) / 2 - ox - s * ((x0 + x1) / 2 - ox), ox);
+    const ty = clamp((vy0 + vy1) / 2 - oy - s * ((y0 + y1) / 2 - oy), oy);
+    return { transform: `translate(${tx}px, ${ty}px) scale(${s})`, map: ([x, y]) => [ox + tx + s * (x - ox), oy + ty + s * (y - oy)] };
   }
 
   // "Blue shirt: ₹1,200 − ₹240 = ₹960." (a deal's sale price worked out, as said and as written on the hint card)
@@ -3316,7 +3363,8 @@
     const best = bestDeal(it);
     const bar = scene.bar;
     const spots = scene.spots;
-    const swifty = partyBird(ctx, scene, { upTo: 1180 });
+    const veil = FX.focusVeil(scene.ui);
+    const swifty = partyBird(ctx, scene, { side: 'right', focus: veil });
     // a tap counts at once, even while she still asks (as the price card's buttons do)
     let tapped = null;
     let waiting = null;
@@ -3337,7 +3385,22 @@
         tapped = null;
       }
     });
-    await ctx.wait(700);
+    await ctx.wait(1100); // (the whole room first)
+    const cam = shopCamera(it);
+    const zoom = scene.world.animate([{ transform: 'none' }, { transform: cam.transform }],
+      { duration: reducedMotion ? 1 : 1500, easing: 'cubic-bezier(.65,0,.35,1)', fill: 'forwards' });
+    scene.kbAnim = zoom; // (a camera move: stopped if the screen is left)
+    await FX.settle(zoom);
+    if (!ctx.alive()) return;
+    scene.world.style.transform = cam.transform;
+    zoom.cancel();
+    scene.kbAnim = null;
+    it.deals.forEach((d, i) => { // the rings, round the two where they are now
+      const [x0, y0] = cam.map([d.spot[0] * PK, d.spot[1] * PK]);
+      const [x1, y1] = cam.map([d.spot[2] * PK, d.spot[3] * PK]);
+      Object.assign(spots[i].style, { left: `${x0}px`, top: `${y0}px`, width: `${x1 - x0}px`, height: `${y1 - y0}px` });
+    });
+    await ctx.wait(300);
     Sound.sparkle();
     spots.forEach((b, i) => FX.reveal(b, [{ opacity: 0, transform: 'scale(1.25)' }, { opacity: 1, transform: 'none' }],
       { duration: reducedMotion ? 1 : 600, delay: reducedMotion ? 0 : i * 160, easing: 'cubic-bezier(.2,.8,.3,1)' }));
@@ -3372,8 +3435,10 @@
         { t: `${inr(d.mp)} − ${inr(dealOff(d))} = ` }, { t: inr(dealPay(d)), em: true }, { t: '.' }])]);
       FX.reveal(hint, [{ opacity: 0, transform: 'translateY(24px) scale(.96)' }, { opacity: 1, transform: 'none' }], { duration: reducedMotion ? 1 : 420, easing: 'cubic-bezier(.2,.8,.3,1)' });
       await ctx.wait(reducedMotion ? 60 : 450);
+      veil.on(spotOf([hint], 1.25)); // (what she reads, in the spotlight)
       await readLit(ctx, 'deal-hint', 'Not quite! Work out both sale prices.', [strip.parts[0]]);
       for (const [n, d] of it.deals.entries()) await readLit(ctx, `${it.id}-sum-${n}`, dealSum(d), [strip.parts[n + 1]]);
+      await veil.off(); // (and the two again, to pick)
     }
     await ctx.wait(700);
     if (hint) {
@@ -3389,10 +3454,12 @@
     const other = it.deals.find(d => d !== best);
     await swifty.say(`${it.id}-right`, [{ t: 'Correct!', cls: 'stress' }, { t: ` The ${best.name.toLowerCase()} ${best.plural ? 'cost' : 'costs'} ` },
       { t: inr(dealPay(other) - dealPay(best)), em: true }, { t: ' less.' }]);
+    await swifty.hide({ keepFocus: true });
+    veil.on(spotOf([card.el], 1.2)); // (then the card in the spotlight, till Buy is pressed)
     await card.choose();
     if (!ctx.alive()) return;
     // Buy: paid; the money comes out of the wallet, and the thing goes onto the list, ticked.
-    await swifty.hide();
+    veil.off();
     card.stamp('PAID');
     Sound.kaching();
     Party.bought.add(it.id);
@@ -4499,7 +4566,7 @@
     const label = $('#loader-text');
     const images = SCENES.flatMap(s => [s.bg, s.react]).filter(Boolean).concat(
       ASSETS + 'ui/start-button.png', WALK_RIG.src, SWIFTY.fly.src, SWIFTY.stand.src, ART.money, ART.book,
-      ASSETS + 'ui/sneakers.png', DOORWAY.src, STAND, TOP_SHEET.src, PARTY_WALLET, ...PARTY_ITEMS.flatMap(it => [it.icon, ...it.deals.map(d => d.pic)])
+      ASSETS + 'ui/sneakers.png', DOORWAY.src, STAND, TOP_SHEET.src, PARTY_WALLET, PARTY_JOY.base, PARTY_JOY.knob, ...PARTY_ITEMS.flatMap(it => [it.icon, ...it.deals.map(d => d.pic)])
     );
     const fonts = document.fonts
       ? Promise.race([Promise.all([ // the fonts, before the first words appear (no swapping in later)

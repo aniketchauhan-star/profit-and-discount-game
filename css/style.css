@@ -4587,6 +4587,26 @@ kbd {
 .apad-btn:focus-visible { outline: 5px solid #ffd84d; outline-offset: 3px; }
 .apad.is-pulsing .apad-btn { animation: apad-call 1.2s ease-in-out infinite; }
 @keyframes apad-call { 50% { box-shadow: 0 7px 0 #0d3a8f, 0 0 0 8px rgba(255, 216, 77, .75), 0 0 26px rgba(255, 216, 77, .9); } }
+/* The mall's controller (the user's picture of 2026-10-26: a round base, a knob with four arrows), bottom left, where the
+   arrows were: press anywhere on it, or drag the knob; it springs back when let go. The first time, in the spotlight, it
+   glows. */
+.joy2 { position: absolute; left: 60px; bottom: 50px; z-index: 7; width: 300px; height: 300px; border-radius: 50%; cursor: grab; pointer-events: auto;
+  touch-action: none; user-select: none; -webkit-user-select: none; }
+.joy2.is-dragged { cursor: grabbing; }
+.joy2-base { position: absolute; inset: 0; width: 100%; height: 100%; filter: drop-shadow(0 10px 16px rgba(10, 30, 90, .45)); pointer-events: none; }
+.joy2-knob { position: absolute; left: 50%; top: 50%; width: 172px; height: 172px; margin: -86px 0 0 -86px; transition: transform .2s cubic-bezier(.3, 1.5, .5, 1);
+  pointer-events: none; }
+.joy2.is-dragged .joy2-knob { transition: none; }
+.joy2-knob img { display: block; width: 100%; height: 100%; filter: drop-shadow(0 8px 10px rgba(0, 20, 80, .45)); }
+.joy2.is-held .joy2-knob img { filter: drop-shadow(0 8px 10px rgba(0, 20, 80, .45)) brightness(1.08); }
+.joy2.is-glowing::before { content: ''; position: absolute; inset: -14px; border-radius: 50%; pointer-events: none;
+  box-shadow: 0 0 0 6px rgba(120, 220, 255, .85), 0 0 46px 18px rgba(80, 200, 255, .7); animation: joy-glow 1.4s ease-in-out infinite; }
+@keyframes joy-glow { 50% { box-shadow: 0 0 0 9px rgba(170, 238, 255, .95), 0 0 74px 30px rgba(80, 200, 255, .85); } }
+/* The spotlight (FX.focusVeil; the user, 2026-10-26: "focus on the things I want to see"): the screen dark and blurred,
+   but for a soft-edged hole on Swifty while she talks, on the controller, on a card */
+.focus-veil { position: absolute; inset: 0; z-index: 9; background: rgba(6, 12, 34, .6); -webkit-backdrop-filter: blur(5px); backdrop-filter: blur(5px);
+  opacity: 0; transition: opacity .45s ease; pointer-events: none; }
+.focus-veil.is-on { opacity: 1; }
 
 /* Aniket seen from above, his shadow under his feet (on the map's own layer: he walks under the bar, the arrows and the bubbles) */
 .scene[data-scene="mallfloor"] .scene-layer { isolation: isolate; }

@@ -5202,6 +5202,161 @@
   }
 
   /**
+   * A joystick to walk with (the user's controller, 2026-10-26: a round base, a knob with four arrows on it). Press
+   * anywhere on it, or drag the knob: the knob goes that way, as far as its rim, and value() is where it points, { x, y }
+   * (length 1 at the rim, so a small push walks slowly; 0 in its middle and when let go: the knob springs back). The
+   * arrow keys and W A S D move the knob too. pressed() resolves the first time it is used. destroy() takes it away.
+   */
+  function joystick(parent, { base, knob, cls = '' } = {}) {
+    const root = el('div', classes('joy2', cls), parent);
+    root.setAttribute('role', 'group');
+    root.setAttribute('aria-label', 'Controller: press and drag to walk, or use the arrow keys');
+    Object.assign(el('img', 'joy2-base', root), { src: base, alt: '', draggable: false });
+    const knobEl = el('div', 'joy2-knob', root);
+    Object.assign(el('img', '', knobEl), { src: knob, alt: '', draggable: false });
+    const TRAVEL = 70; // how far the knob goes from the middle (stage px)
+    const DEAD = 0.18; // the middle where nothing happens (of TRAVEL)
+    const WAYS = { up: [0, -1], down: [0, 1], left: [-1, 0], right: [1, 0] };
+    const KEY = { ArrowUp: 'up', w: 'up', W: 'up', ArrowDown: 'down', s: 'down', S: 'down', ArrowLeft: 'left', a: 'left', A: 'left', ArrowRight: 'right', d: 'right', D: 'right' };
+    const keys = new Set();
+    let held = null; // the pointer pressing it
+    let touch = { x: 0, y: 0 }; // where the pointer pushes it (length ≤ 1)
+    let used = null;
+    const firstUse = new Promise(resolve => { used = resolve; });
+    const fromKeys = () => {
+      let x = 0;
+      let y = 0;
+      keys.forEach(way => { x += WAYS[way][0]; y += WAYS[way][1]; });
+      const n = Math.hypot(x, y);
+      return n ? { x: x / n, y: y / n } : { x: 0, y: 0 };
+    };
+    const push = () => (held !== null ? touch : fromKeys());
+    const show = () => {
+      const t = push();
+      knobEl.style.transform = `translate(${t.x * TRAVEL}px, ${t.y * TRAVEL}px)`;
+      root.classList.toggle('is-held', t.x !== 0 || t.y !== 0);
+    };
+    const point = e => {
+      const r = root.getBoundingClientRect();
+      const travel = TRAVEL * (r.width / root.offsetWidth); // (in the window's px: the stage is scaled to fit it)
+      let x = (e.clientX - (r.left + r.width / 2)) / travel;
+      let y = (e.clientY - (r.top + r.height / 2)) / travel;
+      const n = Math.hypot(x, y);
+      if (n > 1) {
+        x /= n;
+        y /= n;
+      }
+      touch = { x, y };
+      show();
+    };
+    root.addEventListener('pointerdown', e => {
+      e.preventDefault();
+      if (held !== null) return;
+      held = e.pointerId;
+      try { root.setPointerCapture(e.pointerId); } catch (err) { /* (a synthetic pointer) */ }
+      root.classList.add('is-dragged');
+      point(e);
+      used();
+    });
+    root.addEventListener('pointermove', e => { if (e.pointerId === held) point(e); });
+    const letGo = e => {
+      if (e.pointerId !== held) return;
+      held = null;
+      touch = { x: 0, y: 0 };
+      root.classList.remove('is-dragged');
+      show();
+    };
+    ['pointerup', 'pointercancel', 'lostpointercapture'].forEach(type => root.addEventListener(type, letGo));
+    const keyDown = e => {
+      const way = KEY[e.key];
+      if (!way || e.altKey || e.ctrlKey || e.metaKey) return;
+      e.preventDefault();
+      keys.add(way);
+      show();
+      used();
+    };
+    const keyUp = e => {
+      const way = KEY[e.key];
+      if (!way) return;
+      keys.delete(way);
+      show();
+    };
+    const blur = () => {
+      keys.clear();
+      show();
+    };
+    window.addEventListener('keydown', keyDown);
+    window.addEventListener('keyup', keyUp);
+    window.addEventListener('blur', blur);
+    return {
+      el: root,
+      pressed: () => firstUse,
+      value() {
+        const t = push();
+        const n = Math.hypot(t.x, t.y);
+        if (n < DEAD) return { x: 0, y: 0 };
+        const k = Math.min(1, (n - DEAD) / (1 - DEAD)) / n; // (the dead middle taken out: a push starts from nothing)
+        return { x: t.x * k, y: t.y * k };
+      },
+      destroy() {
+        window.removeEventListener('keydown', keyDown);
+        window.removeEventListener('keyup', keyUp);
+        window.removeEventListener('blur', blur);
+        root.remove();
+      },
+    };
+  }
+
+  /**
+   * A spotlight on what to look at (the user, 2026-10-26: "focus on the things I want to see"): the rest of the screen
+   * darkened and blurred, a round (or oval) hole with a soft edge where it isn't. on({ x, y, rx, ry }) brings it in (or
+   * glides the hole there), off() takes it away. It never takes a press.
+   */
+  function focusVeil(parent) {
+    const veil = el('div', 'focus-veil', parent);
+    const SOFT = 70; // the hole's soft edge (px)
+    const wait = ms => new Promise(resolve => setTimeout(resolve, ms)); // (its fade, in css)
+    let now = null;
+    let gliding = 0;
+    const draw = ({ x, y, rx, ry }) => {
+      const g = `radial-gradient(${rx + SOFT}px ${ry + SOFT}px at ${x}px ${y}px, transparent ${(100 * rx) / (rx + SOFT)}%, #000 100%)`;
+      veil.style.webkitMaskImage = g;
+      veil.style.maskImage = g;
+    };
+    return {
+      el: veil,
+      on(spot, ms = 650) {
+        const to = { x: spot.x, y: spot.y, rx: spot.rx, ry: spot.ry ?? spot.rx };
+        cancelAnimationFrame(gliding);
+        if (!now || !veil.classList.contains('is-on') || reducedMotion) {
+          now = to;
+          draw(now);
+          veil.classList.add('is-on');
+          return wait(reducedMotion ? 0 : 450);
+        }
+        const from = now;
+        const t0 = performance.now();
+        return new Promise(resolve => {
+          const step = t => {
+            const k = Math.min(1, (t - t0) / ms);
+            const e = k < 0.5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2;
+            now = { x: from.x + (to.x - from.x) * e, y: from.y + (to.y - from.y) * e, rx: from.rx + (to.rx - from.rx) * e, ry: from.ry + (to.ry - from.ry) * e };
+            draw(now);
+            if (k < 1 && veil.isConnected) gliding = requestAnimationFrame(step);
+            else resolve();
+          };
+          gliding = requestAnimationFrame(step);
+        });
+      },
+      off() {
+        cancelAnimationFrame(gliding);
+        veil.classList.remove('is-on');
+        return wait(reducedMotion ? 0 : 450);
+      },
+    };
+  }
+
+  /**
    * Aniket seen from above (the mall's map): his walk in four ways, from a strip of frames (sheet: { src, frameW, frameH,
    * anchorX, anchorY (the point between his feet), rows: { down, up, left, right }, frames: { down: n, … }, stand:
    * { down: [row, col], up, right } (left: right, mirrored) }), drawn `scale` times as big. place(x, y) puts the point
@@ -5652,7 +5807,7 @@
   window.FX = {
     CANCELLED, el, fracText, rand, settle, reveal, flyAcross, glow, motes, twinkles, burst, shine, exclaim, bubble, thought, badge, ring, question, definitions, pricePanel,
     reduction, definitionCard, checkpoint, formulaNote, concept, barModel, grid100, formulaPanel, formulaReveal, summaryPanel, productCard, productQuestion, meansPanel, workedSheet, summarySheet, strike, stickTag, choices, percentFormula, questionPanel, challengePanel, walletPanel, shopPicker, street, streetVeil, questionBar, offerCard, flyPicture, purchaseSlip, confetti, celebration, receipt, twoAmounts, missionPanel, recapCards, takeaway, Bird, Walker,
-    inr, partyHud, shopQuestion, priceCard, dealCard, doneBadge, partyTable, partyMission, arrowPad, TopWalker,
+    inr, partyHud, shopQuestion, priceCard, dealCard, doneBadge, partyTable, partyMission, arrowPad, joystick, focusVeil, TopWalker,
     setPace(p) { pace = p; },
   };
 })();

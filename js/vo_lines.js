@@ -221,4 +221,5 @@ const VO_LINES = {
   "Great! You bought the brown sunglasses!": ["vo219", 3.43],
   "Total amount: ₹4,470.": ["vo220", 4.67],
   "Money left: ₹530.": ["vo221", 3.94],
+  "Use the controller to walk into a shop!": ["vo222", 3.1],
 };
