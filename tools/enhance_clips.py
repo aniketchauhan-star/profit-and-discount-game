@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-"""Sharpens the game's 1280 x 720 clips (Gemini's size) into 1920 x 1080, the stage's size. See "Animation Video Prompts.md".
+"""Sharpens the game's 1280 x 720 clips (Gemini's size) into 1920 x 1080, the stage's size. See "docs/prompts/Animation Video Prompts.md".
 
-  python3 tools/enhance_clips.py                     every 1280 x 720 clip in "game assets/video/"
+  python3 tools/enhance_clips.py                     every 1280 x 720 clip in "assets/video/"
   python3 tools/enhance_clips.py s22-aniket-1 …      just these
   python3 tools/enhance_clips.py --ai FOLDER …       with Real-ESRGAN (better): FOLDER holds realesrgan-ncnn-vulkan and
                                                      its models (github.com/xinntao/Real-ESRGAN/releases, v0.2.5.0)
@@ -21,7 +21,7 @@ import tempfile
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-CLIPS = ROOT / 'game assets' / 'video'
+CLIPS = ROOT / 'assets' / 'video'
 SHARPEN = 'hqdn3d=1.5:1.5:2.5:2.5,scale=1920:1080:flags=lanczos+accurate_rnd+full_chroma_int,unsharp=5:5:0.7:5:5:0.0'
 MODEL = 'realesr-animevideov3-x2'
 # RGB → the clips' YUV (BT.709, TV range), marked sRGB: as tools/gemini_clean.py writes them.

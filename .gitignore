@@ -1,7 +1,7 @@
 # macOS Finder data: rewritten by the system, not part of the game
 .DS_Store
 
-# Raw video downloads (HEVC with sound): the game uses the converted copies in "game assets/video/"
+# Raw video downloads (HEVC with sound): the game uses the converted copies in "assets/video/"
 videos\ /
 
 # Half-finished downloads and conversions

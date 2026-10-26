@@ -1,14 +1,14 @@
 # The revamp brief: what was done
 
-The brief is `Bookstore Journey - Revamp Brief.docx` ("Changes for Screens 1–46"), with the text spreadsheet `Bookstore Journey - All Text (Screens 1-46).xlsx`. This file says what was done for each of its points, what was decided where the brief left a question open, and what is still to do. `PROMPT.md` describes the game as it is now, screen by screen.
+The brief is `docs/briefs/Bookstore Journey - Revamp Brief.docx` ("Changes for Screens 1–46"), with the text spreadsheet `docs/briefs/Bookstore Journey - All Text (Screens 1-46).xlsx`. This file says what was done for each of its points, what was decided where the brief left a question open, and what is still to do. `docs/PROMPT.md` describes the game as it is now, screen by screen.
 
-**Screen numbers** here are the brief's. Screens 2, 4, 9, 24, 26 and 44 and the checkpoints on percentages and on the price after a discount were taken out on 2026-10-21 (the still screens at the user's request, the rest at the review meeting: `docs/MEETING-2026-10-21.md`), Screens 13, 16, 38 and 39 on 2026-10-22, and Screens 8, 12, 19, 31 and 33 on 2026-10-23, when the story from the bookstore's price to the sneakers' question was put in the order of the user's doc, with three new question cards and the amount to pay split in two (17 and 18, the formula, were taken out with them and came back the same day, after the discount question; see `PROMPT.md`: each screen's heading gives its number in the game). Later on 2026-10-23 every screen after the game's 31 (the brief's 41–59: the talk about school, the shopping challenge, back home and the recap) was taken out too, and Party Prep (games 32–41, from the user's pictures: a joystick mall) was made in its place. The game has 41 screens.
+**Screen numbers** here are the brief's. Screens 2, 4, 9, 24, 26 and 44 and the checkpoints on percentages and on the price after a discount were taken out on 2026-10-21 (the still screens at the user's request, the rest at the review meeting: `docs/MEETING-2026-10-21.md`), Screens 13, 16, 38 and 39 on 2026-10-22, and Screens 8, 12, 19, 31 and 33 on 2026-10-23, when the story from the bookstore's price to the sneakers' question was put in the order of the user's doc, with three new question cards and the amount to pay split in two (17 and 18, the formula, were taken out with them and came back the same day, after the discount question; see `docs/PROMPT.md`: each screen's heading gives its number in the game). Later on 2026-10-23 every screen after the game's 31 (the brief's 41–59: the talk about school, the shopping challenge, back home and the recap) was taken out too, and Party Prep (games 32–41, from the user's pictures: a joystick mall) was made in its place. The game has 41 screens.
 
 ## Part 1: rules for every screen
 
 | Rule | State | What the game does now |
 |---|---|---|
-| 1. Animation | **Started** | Video clips made from the prompts in `Animation Video Prompts.md` (with Higgsfield's Seedance 2.5, or with Gemini) play in the game: a quiet loop between lines, a talking clip with each line, and a movement clip in place of a fade. 42 are in (Screens 1, 4 → 5, 5–8, 22–25, 35, 36, 40, 41, 42 → 43, 43, 45, 46 and 56). Each starts on its picture; Gemini's are cleaned first (`tools/gemini_clean.py`: the sparkle off, the framing back on the picture). Back, Next, Scenes-list jumps and reduced motion land on a clean frame. The rest wait for their clips. |
+| 1. Animation | **Started** | Video clips made from the prompts in `docs/prompts/Animation Video Prompts.md` (with Higgsfield's Seedance 2.5, or with Gemini) play in the game: a quiet loop between lines, a talking clip with each line, and a movement clip in place of a fade. 42 are in (Screens 1, 4 → 5, 5–8, 22–25, 35, 36, 40, 41, 42 → 43, 43, 45, 46 and 56). Each starts on its picture; Gemini's are cleaned first (`tools/gemini_clean.py`: the sparkle off, the framing back on the picture). Back, Next, Scenes-list jumps and reduced motion land on a clean frame. The rest wait for their clips. |
 | 2. Speech bubbles | Done | Lines wrap by themselves into balanced lines of about 20–28 letters (a typed line break counts as a space, except after a short "Correct!" or "Not quite!"); weight 600, line spacing 1.3, the same padding on every side; keep-clear areas on 11 story pictures (faces, prices, tags, the book), which bubbles move around; a soft fade in with the whole line (no bounce, no "bloop", no letters jumping in), each word lit with the highlighter as it is said; 34 px, about 18 px on a 1024 px-wide tablet. On Screens 1–46 and the conversation back home (56); the shopping game's own bubbles are unchanged. |
 | 3. Swifty | Done | No bubble when her words are on the screen (the voice stays, and what she reads lights up). Bubbles only for questions, hints, "Correct!" / "Not quite!", instructions and links. She comes only to introduce an idea (11, 16, 26, 37), ask or react (8, 13, 30, 31, 33, 34) and celebrate at a checkpoint; she is not there in the worked solutions (12, 17, 18, 28, 29, 32, 38, the working on 37), where her voice goes on by itself, and the content uses her room. |
 | 4. Story → panel | Done | The picture zooms in on the key object, then shrinks into a framed photo on the left of the panel; the ₹1000 (11) and the 30% OFF tag (26) fly from it onto the panel. Going back, the photo grows back to full screen, and the result shows on the picture: the green ₹1260 tag (35). The notes "₹1000 → ₹800" (14) and "Discount = MP − SP" (20) were taken out: they covered the shopkeeper's first bubble and the shop's sign. |
@@ -62,18 +62,18 @@ The brief is `Bookstore Journey - Revamp Brief.docx` ("Changes for Screens 1–4
   - Also from the spreadsheet: "Think again." became "Not quite!" (its must-fix), and "It's" got the curly apostrophe.
 - **Four recordings to make:** the four lines whose words changed (`docs/VOICEOVER.md`, *To record next*). Until then the device's voice reads them. The brief asks for one recording batch after the language review, so they wait for it. The other changed lines only changed capital letters or an apostrophe, so their clips were kept.
 - **The logger:** `js/linelog.js`, on with `?log=right` or `?log=wrong`. It saves every line as it appears: spoken lines with their speaker, bubble type and clip, and the words written on each screen. **L** saves a spreadsheet; both paths are merged, with "All", "Right answer" or "Wrong answer" on each line. How to use it: `docs/VOICEOVER.md`, *Checking the language*.
-- **Every path, played:** every question answered right, then every question answered wrong first, plus wrong boxes in the drag and "Hear it again". The result is `Bookstore Journey - Lines for the language check.xlsx`, with screen, speaker, type, text, path, clip and the words that must not change.
-- **`Language Review Prompt.txt`:** the brief says it is in this folder, but it wasn't, so it was written: fill in the grade first.
+- **Every path, played:** every question answered right, then every question answered wrong first, plus wrong boxes in the drag and "Hear it again". The result is `docs/briefs/Bookstore Journey - Lines for the language check.xlsx`, with screen, speaker, type, text, path, clip and the words that must not change.
+- **`docs/prompts/Language Review Prompt.txt`:** the brief says it is in this folder, but it wasn't, so it was written: fill in the grade first.
 - **Next, for the team:** run it through ChatGPT, have the content team check every suggestion, change only what is needed, record all changed lines in one batch, run `vo_build.py --check`, and play the whole game again.
 - **The spreadsheet's other suggestions** ("Should change" and "Optional") are not made yet (except "We can write it in short." → "Let’s write it in short.", made at the user's word on 2026-10-22): they wait for the content team, as the brief says. For example: "article" → "item", "₹200 reduced" → "₹200 off", "30% Discount." → "a 30% discount.", "1000 is the whole." → "and 1000 is the whole.", and Screen 8's full question.
 
 ## Small fixes
 
-- PROMPT.md's clip count: 136 lines (132 clips now, plus the 4 to record).
+- docs/PROMPT.md's clip count: 136 lines (132 clips now, plus the 4 to record).
 - `vo_build.py` prints UTF-8 itself, so `--check` runs in a Windows terminal. Checked with a Windows code page: the old script crashed, the new one doesn't.
 - index.html no longer shows "1 / 4" before the script loads.
-- PROMPT.md's facts: the discount's red starts at Screens 14–15, and Swifty's screens are the new ones.
-- PROMPT.md is updated for every change.
+- docs/PROMPT.md's facts: the discount's red starts at Screens 14–15, and Swifty's screens are the new ones.
+- docs/PROMPT.md is updated for every change.
 - Found while testing, and fixed: leaving a screen in the middle of a line could let the next line start on the following screen. For example, pressing "Got it, next" while "Hear it again" was reading made the next card's line play over Screen 20. A line now starts only while its screen is on.
 - Found while testing, and fixed (2026-10-24): in Party Prep's four shops, a press with the mouse or a finger went through the question card and the Buy / Keep Looking card to the shop's picture, so the amounts, Check, Buy and Keep Looking couldn't be pressed. The earlier tests had pressed them from inside the page, which skips this. Both cards now take presses (`.pq2`, `.pc2` in `css/style.css`), and a whole shop was played with mouse presses. Every story question was checked the same way and already took them.
 
@@ -90,15 +90,15 @@ The brief is `Bookstore Journey - Revamp Brief.docx` ("Changes for Screens 1–4
 | The notebook now, or only the checkpoints? | A simple notebook: each checkpoint's cards and formula, opened any time. |
 | Auto-play on by default? | Kept on. Checkpoints wait for the player anyway. |
 | Which grade? | Not known: left as [GRADE] in the prompt. |
-| The "previous files" for layout ideas | Not shared yet. The design board (`design/hand-made design board.png`) was used. |
+| The "previous files" for layout ideas | Not shared yet. The design board (`source/hand-made design board.png`) was used. |
 
 ## Still to do
 
 0. **The review meeting of 2026-10-21** (`docs/MEETING-2026-10-21.md`): its changes are in, except two that wait for a yes: the
    pop-up over the blurred story for every teaching screen (tried on Screen 25's "30% OFF means 30% Discount"), and making the
-   Gemini clips again on Higgsfield (the list: `Animation Video Prompts - Left to Make.md`; it spends credits).
+   Gemini clips again on Higgsfield (the list: `docs/prompts/Animation Video Prompts - Left to Make.md`; it spends credits).
 
-1. **The rest of the animation clips:** 12 of 54 are still to make (`Animation Video Prompts - Left to Make.md`): the movements on Higgsfield (Gemini can't be given an end frame), `s06-to-s07` again among them; Screens 10, 14 and 15; and the father's second lines on 41 and 45. Each one plays in the game as soon as it is brought in.
+1. **The rest of the animation clips:** 12 of 54 are still to make (`docs/prompts/Animation Video Prompts - Left to Make.md`): the movements on Higgsfield (Gemini can't be given an end frame), `s06-to-s07` again among them; Screens 10, 14 and 15; and the father's second lines on 41 and 45. Each one plays in the game as soon as it is brought in.
 2. **The language review** with ChatGPT and the content team (above), then one recording batch.
 3. **Text sizes:** bring Screens 17, 27, 29–34 and 37 down to the checkpoints' four sizes (26 / 38 / 46 / 56). They use 6–9 now: the question on top, the bubbles, the working, the answers, the bar's labels and the key number. The checkpoints were done first, as the sample. The rest changes how those panels look, so it waits for your OK on them.
 4. **The older styles' colours** (mostly the shopping game's): still typed directly, not yet named variables.
@@ -107,4 +107,4 @@ The brief is `Bookstore Journey - Revamp Brief.docx` ("Changes for Screens 1–4
 
 ## Animation: the clips
 
-Every clip (its start and end pictures, its length, its prompt, the words it says and its file name) is in `Animation Video Prompts.md`, which replaced the shot list that was here. What is already in the game, and what is to be made again, is at its top.
+Every clip (its start and end pictures, its length, its prompt, the words it says and its file name) is in `docs/prompts/Animation Video Prompts.md`, which replaced the shot list that was here. What is already in the game, and what is to be made again, is at its top.

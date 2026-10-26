@@ -15,7 +15,7 @@
 
   // The recorded lines: { "line as shown": [clip, seconds] } (js/vo_lines.js, made by tools/vo_build.py).
   const LINES = typeof VO_LINES === 'object' ? VO_LINES : {};
-  const DIR = 'game assets/vo/';
+  const DIR = 'assets/vo/';
   const player = new Audio(); // one audio element for every line (tablets only play from one they have unlocked)
   player.preload = 'auto';
   const recorded = !/[?&]vo=0\b/.test(location.search) && !!player.canPlayType('audio/ogg; codecs="opus"');

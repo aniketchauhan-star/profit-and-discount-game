@@ -2,7 +2,7 @@ LANGUAGE REVIEW PROMPT (for ChatGPT)
 
 Before you paste it:
 1. Replace [GRADE] below with the learners' grade (for example "Grade 7, ages 12-13").
-2. Paste the line log at the bottom, all its rows and columns: the sheet "All lines in order" of "Bookstore Journey - Lines for the language check.xlsx" (made with the game's line log), or a new one from the line log itself (index.html?log=right, then ?log=wrong, then L; see docs/VOICEOVER.md).
+2. Paste the line log at the bottom, all its rows and columns: the sheet "All lines in order" of "docs/briefs/Bookstore Journey - Lines for the language check.xlsx" (made with the game's line log), or a new one from the line log itself (index.html?log=right, then ?log=wrong, then L; see docs/VOICEOVER.md).
 3. The content team checks every suggestion before anything changes in the game.
 
 ---------------------------------------------------------------------------

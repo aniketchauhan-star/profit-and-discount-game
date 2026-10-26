@@ -6,7 +6,7 @@
 #   Father      vo002 vo133 vo134         as they were (deepened before, about 135 Hz)
 #   Shopkeeper  vo021 vo022 vo023         pitch × 0.66, throat × 0.88: deeper (about 125 Hz; his studio clips were at about
 #                                         195 Hz, a woman's range)
-# Don't shape the clips in game assets/vo again: they are these voices already. Each line (its spoken form, from
+# Don't shape the clips in assets/vo again: they are these voices already. Each line (its spoken form, from
 # tools/vo_script.json): takes (seeds 1000, 1001, …) until one has exactly its words (whisper) and its pitch in the voice's
 # range, at least TAKES and at most MAX_TAKES; the likest of those to the voice kept, trimmed, as loud as Swifty's clips
 # (−16 LUFS): OUT/<id>.wav. A line already in OUT is skipped (a run cut short goes on where it stopped). Then

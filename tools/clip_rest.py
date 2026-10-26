@@ -5,7 +5,7 @@ moment it moves more than a third of its biggest change, plus a little. Needs nu
   python3 tools/clip_rest.py      (add a new clip's face box to FACES first: KEEP_CLEAR in js/game.js has them)
 """
 import subprocess, numpy as np, json
-D = str(__import__("pathlib").Path(__file__).resolve().parent.parent / "game assets" / "video") + "/"
+D = str(__import__("pathlib").Path(__file__).resolve().parent.parent / "assets" / "video") + "/"
 FACES = {
     's01-aniket-1': (500, 48, 758, 276), 's01-aniket-2': (500, 48, 758, 276), 's01-father': (1273, 185, 1500, 412),
     's05-aniket': (630, 79, 903, 352), 's06-aniket': (530, 164, 773, 406), 's06-shopkeeper': (1288, 164, 1515, 406),

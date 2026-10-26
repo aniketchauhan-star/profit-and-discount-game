@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Readies a clip made with Google Gemini (Veo) for the game. tools/make_videos.py --import --gemini runs it on each clip,
-with the clip's story pictures from "Animation Video Prompts.md". It also runs on its own:
+with the clip's story pictures from "docs/prompts/Animation Video Prompts.md". It also runs on its own:
 
   python3 tools/gemini_clean.py SOURCE DEST --picture PICTURE [--end-picture PICTURE] [--trim FROM-TO] [--pingpong]
                                 [--cover X0,Y0,X1,Y1@FROM-TO ...] [--keep-camera] [--framing ZOOM,DX,DY]

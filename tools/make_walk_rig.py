@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """Cuts Aniket's walking figure into the pieces of a jointed cutout, for the game's walk (js/fx.js, Walker).
 
-  python3 tools/make_walk_rig.py      writes "game assets/sprites/aniket-rig.png" and prints the pieces' places in it
+  python3 tools/make_walk_rig.py      writes "assets/sprites/aniket-rig.png" and prints the pieces' places in it
 
-The pieces come from the first frame of the old walk sheet ("sprites/aniket-walk-clean.png"; its front leg is the
+The pieces come from the first frame of the old walk sheet ("source/aniket-walk-clean.png"; its front leg is the
 near one): the upper body (with the far hand by the hip), the hips (the jeans' top, to the crotch: the game draws them
 over both thighs), and the near leg cut into thigh, shin and shoe, which also make the far leg, a little darker. As in a
 cut-out puppet, each limb piece is round at its top joint, centred on it, so it shows no corner as it turns: the thigh's
@@ -19,8 +19,8 @@ import numpy as np
 from PIL import Image, ImageDraw, ImageFilter
 
 ROOT = Path(__file__).resolve().parent.parent
-SHEET = ROOT / 'game assets' / 'sprites' / 'aniket-walk-clean.png'
-OUT = ROOT / 'game assets' / 'sprites' / 'aniket-rig.png'
+SHEET = ROOT / 'source' / 'aniket-walk-clean.png'
+OUT = ROOT / 'assets' / 'sprites' / 'aniket-rig.png'
 FW, FH = 358, 614
 FAR = 0.86  # the far leg's shade
 

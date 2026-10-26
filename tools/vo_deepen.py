@@ -22,7 +22,7 @@ import pyworld as pw
 
 ROOT = Path(__file__).resolve().parent.parent
 SCRIPT = ROOT / 'tools' / 'vo_script.json'
-CLIPS = ROOT / 'game assets' / 'vo'
+CLIPS = ROOT / 'assets' / 'vo'
 RATE = 24000   # the studio's sample rate
 FRAME = 5.0    # ms between the vocoder's frames
 MARK = 'deepened'

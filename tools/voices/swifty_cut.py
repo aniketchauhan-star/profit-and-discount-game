@@ -1,4 +1,4 @@
-# The user's Swifty recording (swifty.mp3, in the project's folder: her 82 lines, swifty_lines.txt, read in that order)
+# The user's Swifty recording (source/swifty.mp3, in the project's folder: her 82 lines, swifty_lines.txt, read in that order)
 # cut into the game's clips: each line split into the pieces the game says one at a time (pieces.json: their ids and
 # their keys in js/vo_lines.js), each piece trimmed of silence, with short fades. Where a piece is said twice in the
 # recording, the take in a clause of its own is used (PREFER). See docs/VOICEOVER.md, "The voices now".
@@ -14,7 +14,7 @@ from pathlib import Path
 import numpy as np, soundfile as sf
 
 HERE = os.path.dirname(os.path.abspath(__file__)) + '/'
-MP3 = str(Path(__file__).resolve().parents[2] / 'swifty.mp3')
+MP3 = str(Path(__file__).resolve().parents[2] / 'source/swifty.mp3')
 SR = 44100
 PREFER = {'Not quite!': 32, 'Correct!': 36, '250 ÷ 1000 × 100 = 25%.': 32}  # (line index of the take to use)
 

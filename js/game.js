@@ -7,10 +7,11 @@
   const { el, CANCELLED } = FX;
   const STAGE_W = 1920;
   const STAGE_H = 1080;
-  const ASSETS = 'game assets/';
+  const ASSETS = 'assets/';
+  const STORY = ASSETS + 'story/'; // the story's pictures
   const PARTY = ASSETS + 'party/'; // Party Prep's pictures, after screen 31 (the user's of 2026-10-23)
   // Its shops' pictures (the user's showrooms of 2026-10-26: two of a kind in each, their prices on their tags).
-  const PARTY_SHOWROOMS = { shirt: 'shirt showroom .png', pants: 'bottom wear showroom.png', watch: 'watch showroom.png', sunglasses: 'glass showroom.png' };
+  const PARTY_SHOWROOMS = { shirt: 'shirt-showroom.png', pants: 'bottomwear-showroom.png', watch: 'watch-showroom.png', sunglasses: 'sunglasses-showroom.png' };
   const reducedMotion = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
   const $ = sel => document.querySelector(sel);
   const sleep = ms => new Promise(r => setTimeout(r, ms));
@@ -24,7 +25,7 @@
   // Clean strip cut from "aniket walking sprite sheet.png": every frame cut along its own outline
   // and aligned on the head/torso and the floor line, with a 16px gap between frames.
   // Aniket walking (FX.Walker): his figure as a jointed cutout, made by tools/make_walk_rig.py from the first frame of the
-  // old walk sheet (sprites/aniket-walk-clean.png), whose frame coordinates it keeps. anchorX, baselineY: the point on
+  // old walk sheet (source/aniket-walk-clean.png), whose frame coordinates it keeps. anchorX, baselineY: the point on
   // the floor the screens place him by (as the sheet's frames had it); hip, knee, ankle: the joints; ground: the floor.
   const WALK_RIG = {
     src: ASSETS + 'sprites/aniket-rig.png',
@@ -82,8 +83,8 @@
   };
 
   // The counter picture once more, with Aniket puzzled by the word "discount": it lines up exactly with
-  // "aniket give a book to shopkepper.png" (only his face differs), so it can fade in over it.
-  const PUZZLED = ASSETS + 'what is discount.png';
+  // "story/aniket-gives-a-book-to-shopkeeper.png" (only his face differs), so it can fade in over it.
+  const PUZZLED = STORY + 'what-is-a-discount.png';
 
   // Sheets: the teaching screens are on one big cream panel that fills the screen (`sheet: 'panel'`, drawn by the
   // game: see buildScenes), with no picture behind it. A sheet slides up over the story picture before it, and
@@ -140,7 +141,7 @@
   const SCENES = [
     {
       id: 'title', title: 'Start', sub: 'Bookstore Journey',
-      bg: ASSETS + 'start screen.png',
+      bg: STORY + 'start-screen.png',
       kb: { origin: '60% 45%', from: 'scale(1.02)', to: 'scale(1.07) translate(-10px, -6px)' },
       lamps: [[826, 96, 300], [1442, 134, 320]],
       dust: [120, 140, 1000, 900],
@@ -148,7 +149,7 @@
     },
     {
       id: 'home', title: 'Talking to Dad', sub: 'Dad, I want to buy a book and a new pair of sneakers…',
-      bg: ASSETS + 'starting boy talking with father.png',
+      bg: STORY + 'boy-talks-with-father.png',
       kb: { origin: '50% 28%', from: 'scale(1.02)', to: 'scale(1.05) translate(-4px, 3px)' }, // a slow drift, both faces in view
       lamps: [[288, 360, 320]],    // the daylight through the open door
       dust: [180, 120, 1100, 760], // specks floating in the sunlight
@@ -156,7 +157,7 @@
     },
     {
       id: 'outside', title: 'The Bookstore', sub: 'Aniket walks to the store',
-      bg: ASSETS + 'book store outside view.png',
+      bg: STORY + 'bookstore-outside-view.png',
       kb: { origin: '50% 62%', from: 'scale(1.02)', to: 'scale(1.06) translate(-6px, -4px)' },
       lamps: [[167, 321, 230], [767, 334, 170], [1313, 299, 170], [1666, 275, 170]], // the wall lamp; ceiling lights behind the glass
       dust: [420, 260, 1840, 820],
@@ -165,7 +166,7 @@
     },
     {
       id: 'browse', title: 'An Interesting Book', sub: 'This book looks interesting!',
-      bg: ASSETS + 'aniket hold the book scene.png',
+      bg: STORY + 'aniket-holds-the-book.png',
       kb: { origin: '54% 40%', from: 'scale(1.02)', to: 'scale(1.08)' },
       lamps: [[1065, 140, 300], [1570, 116, 300]],
       dust: [200, 80, 1800, 800],
@@ -175,7 +176,7 @@
     },
     {
       id: 'ask', title: 'How Much?', sub: 'How much is this book?',
-      bg: ASSETS + 'aniket give a book to shopkepper.png',
+      bg: STORY + 'aniket-gives-a-book-to-shopkeeper.png',
       kb: { origin: '50% 38%', from: 'scale(1.02)', to: 'scale(1.065) translate(-6px, 0)' },
       lamps: [[1472, 106, 330]],
       dust: [300, 60, 1500, 700],
@@ -183,7 +184,7 @@
     },
     {
       id: 'shock', title: 'The Printed Price', sub: 'Oh! The price printed on it is ₹1000.',
-      bg: ASSETS + 'shocked aniket.png',
+      bg: STORY + 'shocked-aniket.png',
       kb: { origin: '55% 80%', from: 'scale(1.02)', to: 'scale(1.065)' },
       lamps: [[1292, 128, 300]],
       dust: [150, 60, 1500, 760],
@@ -194,7 +195,7 @@
       id: 'mp', title: 'Marked Price', sub: 'The price printed on an item is its marked price',
       // On the story picture (the user, 2026-10-22): the camera moves in on the book, everything blurs but its price tag,
       // and Swifty comes in from the right to say what it is, on a panel (see setupMarked, playMarked).
-      bg: ASSETS + 'shocked aniket.png',
+      bg: STORY + 'shocked-aniket.png',
       kb: null, origin: '55% 80%', still: true, // (the camera of screen 7, carried over: the same origin; no parallax)
       lamps: [[1292, 128, 300]], dust: [150, 60, 1500, 760],
       shot: 'cover',
@@ -205,7 +206,7 @@
       id: 'mpcard', title: 'The Book’s Marked Price', sub: 'The marked price of the book is —',
       // The user's doc (2026-10-23): a question card, on the book as screen 6 ends (the camera on it, all blurred but its
       // ₹1000 tag); a wrong answer: "Check the price printed on the book.", and another try.
-      bg: ASSETS + 'shocked aniket.png',
+      bg: STORY + 'shocked-aniket.png',
       kb: null, origin: '55% 80%', still: true,
       lamps: [[1292, 128, 300]], dust: [150, 60, 1500, 760],
       shot: 'cover-tag',
@@ -214,7 +215,7 @@
     },
     {
       id: 'reveal', title: 'I Gave You a Discount', sub: 'Printed ₹1000, but selling it at ₹800',
-      bg: ASSETS + 'aniket give a book to shopkepper.png',
+      bg: STORY + 'aniket-gives-a-book-to-shopkeeper.png',
       kb: { origin: '50% 46%', from: QUIZ_CAMERA, to: QUIZ_DRIFT }, // framed left, like the question screen
       lamps: [[1472, 106, 330]],
       dust: [300, 60, 1500, 700],
@@ -225,7 +226,7 @@
     },
     {
       id: 'discount', title: 'What Is a Discount?', sub: 'Discount? What is that?',
-      bg: ASSETS + 'aniket give a book to shopkepper.png',
+      bg: STORY + 'aniket-gives-a-book-to-shopkeeper.png',
       react: PUZZLED, // fades in over the picture when he hears "discount" (see playDiscount)
       kb: { origin: '50% 46%', from: 'scale(1.02)', to: 'scale(1.065) translate(-6px, 0)' },
       lamps: [[1472, 106, 330]],
@@ -266,7 +267,7 @@
     },
     {
       id: 'pay', title: 'Thank You!', sub: 'The shopkeeper gives Aniket the book',
-      bg: ASSETS + 'aniket give money to shopkeeper.png',
+      bg: STORY + 'aniket-gives-money-to-shopkeeper.png',
       kb: { origin: '50% 46%', from: 'scale(1.02)', to: 'scale(1.075)' },
       lamps: [[1408, 86, 330]],
       dust: [300, 60, 1500, 700],
@@ -274,7 +275,7 @@
     },
     {
       id: 'exit', title: 'Coming Out of the Bookstore', sub: 'The doors swing open and Aniket comes out',
-      bg: ASSETS + 'book store outside view.png', // the bookstore from the mall, as on screen 3
+      bg: STORY + 'bookstore-outside-view.png', // the bookstore from the mall, as on screen 3
       kb: { origin: '50% 62%', from: 'scale(1.02)', to: 'scale(1.06) translate(-6px, -4px)' },
       lamps: [[167, 321, 230], [767, 334, 170], [1313, 299, 170], [1666, 275, 170]], // the wall lamp; ceiling lights behind the glass
       dust: [420, 260, 1840, 820],
@@ -284,7 +285,7 @@
     },
     {
       id: 'leave', title: 'To the Shoe Shop', sub: 'Let’s help Aniket buy the sneakers!',
-      bg: ASSETS + 'book store outside view.png',
+      bg: STORY + 'bookstore-outside-view.png',
       kb: { origin: '50% 62%', from: 'scale(1.02)', to: 'scale(1.06) translate(-6px, -4px)' },
       lamps: [[167, 321, 230], [767, 334, 170], [1313, 299, 170], [1666, 275, 170]],
       dust: [420, 260, 1840, 820],
@@ -294,7 +295,7 @@
     },
     {
       id: 'sneakers', title: 'The Shoe Shop', sub: 'Wow, nice sneakers! I love them.',
-      bg: ASSETS + 'he saw a shoe.png', // Aniket at the stand, pointing at the sneakers: the picture his clips start on
+      bg: STORY + 'he-sees-a-shoe.png', // Aniket at the stand, pointing at the sneakers: the picture his clips start on
       kb: { origin: '63% 66%', from: 'scale(1.02)', to: 'scale(1.07)' }, // eases in towards the price tags
       lamps: [[1740, 160, 260], [1740, 370, 260], [120, 60, 180]], // shelf lights, a ceiling light
       dust: [600, 40, 1900, 720],
@@ -304,7 +305,7 @@
     },
     {
       id: 'shoe', title: 'Tagged Price', sub: 'Aniket points at the ₹1800 tag',
-      bg: ASSETS + 'he saw a shoe.png',
+      bg: STORY + 'he-sees-a-shoe.png',
       kb: { origin: '63% 66%', from: 'scale(1.02)', to: 'scale(1.07)' }, // eases in towards the price tags
       lamps: [[1740, 160, 260], [1740, 370, 260], [120, 60, 180]], // shelf lights, a ceiling light
       dust: [600, 40, 1900, 720],
@@ -313,7 +314,7 @@
     },
     {
       id: 'confused', title: 'The Price Tag', sub: 'The price tagged on it is ₹1800.',
-      bg: ASSETS + 'he is tinking to see the shoes.png',
+      bg: STORY + 'he-thinks-about-the-shoes.png',
       kb: null, origin: '50% 50%', still: true, // (still: the question card after it is on the same view, so the change is a plain dissolve)
       lamps: [[1740, 160, 260], [1740, 370, 260], [120, 60, 180]],
       dust: [600, 40, 1900, 720],
@@ -324,7 +325,7 @@
       id: 'smcard', title: 'The Sneakers’ Marked Price', sub: 'The marked price of the sneakers is —',
       // The user's doc (2026-10-23): a question card on the shoe shop, all blurred but the sneakers and their tags, the
       // card on the left; a wrong answer: "Check the price tagged on the sneakers.", and another try.
-      bg: ASSETS + 'he is tinking to see the shoes.png', // the shoe shop, the card on the left
+      bg: STORY + 'he-thinks-about-the-shoes.png', // the shoe shop, the card on the left
       kb: null, origin: '50% 50%', still: true,
       lamps: [[1740, 160, 260], [1740, 370, 260], [120, 60, 180]], dust: null,
       setup: standFocus,
@@ -333,7 +334,7 @@
     {
       id: 'offmeans', title: 'What Does 30% OFF Mean?', sub: 'If this is a discount, how much do I actually have to pay?',
       // The user's doc (2026-10-23): Aniket sees the 30% OFF tag and wonders; Swifty: "30% OFF means 30% discount here."
-      bg: ASSETS + 'he is tinking to see the shoes.png',
+      bg: STORY + 'he-thinks-about-the-shoes.png',
       kb: null, origin: '63% 66%', still: true, // (screen 19's camera origin: it ends on the same view, so that change is seamless)
       lamps: [[1740, 160, 260], [1740, 370, 260], [120, 60, 180]],
       dust: [600, 40, 1900, 720],
@@ -344,7 +345,7 @@
     {
       id: 'recall', title: 'Recall Percentages', sub: 'Let’s first recall how percentages work.',
       swifty: true,
-      bg: ASSETS + 'he is tinking to see the shoes.png', // the shop as screen 19 ends: the camera on the sneakers, the rest blurred
+      bg: STORY + 'he-thinks-about-the-shoes.png', // the shop as screen 19 ends: the camera on the sneakers, the rest blurred
       kb: null, origin: '63% 66%', still: true, // (screen 19's camera origin, so the same view: a seamless cut)
       lamps: [[1740, 160, 260], [1740, 370, 260], [120, 60, 180]], dust: null,
       shot: 'stand',
@@ -353,7 +354,7 @@
     },
     {
       id: 'percentrule', title: 'Percentage Rule', sub: 'a is what percent of b?',
-      bg: ASSETS + 'he is tinking to see the shoes.png', // the shoe shop, the working on a small panel on it (practiceHost)
+      bg: STORY + 'he-thinks-about-the-shoes.png', // the shoe shop, the working on a small panel on it (practiceHost)
       kb: null, origin: '50% 50%', still: true,
       lamps: [[1740, 160, 260], [1740, 370, 260], [120, 60, 180]], dust: null,
       setup: setupPracticeStart, // (from screen 20 it begins on 20's view, then blurs all and eases out: see zoomOutOfShoes)
@@ -361,7 +362,7 @@
     },
     {
       id: 'whatpercent', title: 'What Percent?', sub: '125 is what percent of 500?',
-      bg: ASSETS + 'he is tinking to see the shoes.png', // the shoe shop, the working on a small panel on it (practiceHost)
+      bg: STORY + 'he-thinks-about-the-shoes.png', // the shoe shop, the working on a small panel on it (practiceHost)
       kb: null, origin: '50% 50%', still: true,
       lamps: [[1740, 160, 260], [1740, 370, 260], [120, 60, 180]], dust: null,
       setup: allBlur, // (the whole picture blurred, the panel in the middle: the user, 2026-10-22)
@@ -370,7 +371,7 @@
     {
       id: 'check', title: 'Quick CFU', sub: '250 is what percent of 1000?',
       swifty: true,
-      bg: ASSETS + 'he is tinking to see the shoes.png', // the shoe shop, the working on a small panel on it (practiceHost)
+      bg: STORY + 'he-thinks-about-the-shoes.png', // the shoe shop, the working on a small panel on it (practiceHost)
       kb: null, origin: '50% 50%', still: true,
       lamps: [[1740, 160, 260], [1740, 370, 260], [120, 60, 180]], dust: null,
       setup: allBlur, // (the whole picture blurred, the panel in the middle, as 22 and 23: the user, 2026-10-23)
@@ -379,7 +380,7 @@
     {
       id: 'topay', title: 'How Much to Pay?', sub: 'How much does Aniket have to pay?',
       swifty: true,
-      bg: ASSETS + 'he is tinking to see the shoes.png', // the shoe shop, the question on a small panel on it (practiceHost)
+      bg: STORY + 'he-thinks-about-the-shoes.png', // the shoe shop, the question on a small panel on it (practiceHost)
       kb: null, origin: '50% 50%', still: true,
       lamps: [[1740, 160, 260], [1740, 370, 260], [120, 60, 180]], dust: null,
       setup: standFocus, // (blurred but the sneakers and their tags, from the first frame)
@@ -388,7 +389,7 @@
     },
     {
       id: 'thirty', title: 'The Discount: 30% of ₹1800', sub: '30/100 × 1800 = ₹540',
-      bg: ASSETS + 'he is tinking to see the shoes.png', // the shoe shop, the working on a small panel on it (practiceHost)
+      bg: STORY + 'he-thinks-about-the-shoes.png', // the shoe shop, the working on a small panel on it (practiceHost)
       kb: null, origin: '50% 50%', still: true,
       lamps: [[1740, 160, 260], [1740, 370, 260], [120, 60, 180]], dust: null,
       setup: standFocus, // (blurred but the sneakers and their tags, from the first frame)
@@ -397,7 +398,7 @@
     {
       id: 'paywork', title: 'The Amount to Pay', sub: 'SP = MP − Discount = ₹1260',
       swifty: true,
-      bg: ASSETS + 'he is tinking to see the shoes.png', // the shoe shop, the working on a small panel on it (practiceHost)
+      bg: STORY + 'he-thinks-about-the-shoes.png', // the shoe shop, the working on a small panel on it (practiceHost)
       kb: null, origin: '50% 50%', still: true,
       lamps: [[1740, 160, 260], [1740, 370, 260], [120, 60, 180]], dust: null,
       setup: standFocus, // (blurred but the sneakers and their tags, from the first frame)
@@ -406,7 +407,7 @@
     },
     {
       id: 'final', title: 'Final Answer', sub: 'After a 30% discount, I will pay ₹1260.',
-      bg: ASSETS + 'he saw a shoe.png', // the same view as screens 23–34: Aniket pointing at the tags
+      bg: STORY + 'he-sees-a-shoe.png', // the same view as screens 23–34: Aniket pointing at the tags
       kb: { origin: '63% 66%', from: 'scale(1.02)', to: 'scale(1.07)' },
       lamps: [[1740, 160, 260], [1740, 370, 260], [120, 60, 180]],
       dust: [600, 40, 1900, 720],
@@ -416,7 +417,7 @@
     },
     {
       id: 'boxed', title: 'Here Are Your Sneakers', sub: 'The shopkeeper hands Aniket the sneakers in a box',
-      bg: ASSETS + 'shopkeeper gives sneakers box.png',
+      bg: STORY + 'shopkeeper-gives-the-sneakers-box.png',
       kb: { origin: '54% 56%', from: 'scale(1.02)', to: 'scale(1.07)' }, // eases in towards the box
       lamps: [[1760, 170, 240], [1760, 360, 240], [300, 85, 170]], // shelf lights, a ceiling light in the mall
       dust: [600, 40, 1900, 720],
@@ -424,14 +425,14 @@
     },
     {
       id: 'pctofmp', title: 'What Percent Is the Discount?', sub: '540 is what percent of 1800?',
-      snap: ASSETS + 'he is tinking to see the shoes.png', snapFocus: [1300, 640, 2], swifty: true,
+      snap: STORY + 'he-thinks-about-the-shoes.png', snapFocus: [1300, 640, 2], swifty: true,
       sheet: 'panel', still: true, kb: null, origin: '50% 50%', lamps: [], dust: null,
       setup: setupGuide,
       play: playPercentOfMP,
     },
     {
       id: 'return', title: 'Back Home', sub: 'How was your shopping?',
-      bg: ASSETS + 'boy return home .png',
+      bg: STORY + 'boy-returns-home.png',
       kb: { origin: '50% 30%', from: 'scale(1.02)', to: 'scale(1.05) translate(4px, 3px)' }, // a slow drift, both faces in view
       lamps: [[1030, 250, 300]],   // the daylight through the far window
       dust: [560, 80, 1300, 720],  // specks floating in the sunlight
@@ -450,14 +451,14 @@
     },
     {
       id: 'partymoney', title: '₹5,000 for the Party', sub: 'Here’s ₹5,000.',
-      bg: ASSETS + 'father gave him money.png',
+      bg: STORY + 'father-gives-him-money.png',
       kb: { origin: '55% 40%', from: 'scale(1.02)', to: 'scale(1.05) translate(-4px, 3px)' },
       lamps: [[1856, 250, 300]], dust: [1100, 60, 1900, 640],
       play: playPartyMoney,
     },
     {
       id: 'partydeal', title: 'Find the Best Deals', sub: 'Then I’m definitely finding the best offers!',
-      bg: ASSETS + 'boy stand and talk .png',
+      bg: STORY + 'boy-stands-and-talks.png',
       kb: { origin: '52% 30%', from: 'scale(1.02)', to: 'scale(1.05) translate(4px, 3px)' }, // a slow drift, both faces in view
       lamps: [[1520, 300, 300]], dust: [700, 80, 1500, 640],
       play: playPartyDeal,
@@ -499,7 +500,7 @@
   ];
   const LAST = SCENES.length - 1;
   SCENES.forEach((scene, i) => { scene.num = i ? String(i) : '★'; }); // each screen's number is its place
-  // The revamp (Bookstore Journey - Revamp Brief.docx) covers the story, every screen after the start: `v2` (css: .is-v2).
+  // The revamp (docs/briefs/Bookstore Journey - Revamp Brief.docx) covers the story, every screen after the start: `v2` (css: .is-v2).
   // (The screens after 31 were taken out on 2026-10-23, at the user's word, to be made again: the talk about school, the
   // shopping challenge and its four streets, the receipt, back home, and the recap. They are in git's history.)
   SCENES.forEach((scene, i) => { if (i >= 1) scene.v2 = true; });
@@ -518,7 +519,7 @@
     btn.type = 'button';
     btn.setAttribute('aria-label', 'Start the story');
     const img = el('img', '', btn);
-    img.src = ASSETS + 'ui/start-button.png'; // (a square cut of "start button.png", its disc the old button's size)
+    img.src = ASSETS + 'ui/start-button.png'; // (a square cut of "source/start button.png", its disc the old button's size)
     img.alt = '';
     img.draggable = false;
     btn.addEventListener('click', startStory);
@@ -1172,7 +1173,7 @@
     await speak(ctx, thanks, 'thanks', 'boy');
     ctx.advance(3000); // then out of the bookstore
   }
-  // His bubble: right of his face, between the two of them, its tail at his mouth (aniket give money to shopkeeper.png,
+  // His bubble: right of his face, between the two of them, its tail at his mouth (story/aniket-gives-money-to-shopkeeper.png,
   // stage px), as on screen 4.
   const THANKS_AT = { anchor: [746, 300], corner: 'bl', tip: [694, 368] }; // (clear of the ₹800 badge above the money)
 
@@ -1758,7 +1759,7 @@
   }
 
   // Screen 13's pictures over the prices: 16:9, centred on the term, just above the formula's strip.
-  const PAY_FOCUS = [990, 500, 1.5]; // the notes handed over, both faces in view (aniket give money to shopkeeper.png)
+  const PAY_FOCUS = [990, 500, 1.5]; // the notes handed over, both faces in view (story/aniket-gives-money-to-shopkeeper.png)
   function overTerm(term) {
     const t = stageRect(term);
     const strip = stageRect(term.closest('.fr-strip'));
@@ -1802,7 +1803,7 @@
     fr.term(2);
     const sp = overTerm(fr.longTerms[2]);
     const pay = el('div', 'scene-snap', scene.ui, { left: `${sp.left}px`, top: `${sp.top}px`, width: `${sp.width}px`, height: `${sp.height}px` });
-    Object.assign(el('img', '', pay), { src: ASSETS + 'aniket give money to shopkeeper.png', alt: '', draggable: false });
+    Object.assign(el('img', '', pay), { src: STORY + 'aniket-gives-money-to-shopkeeper.png', alt: '', draggable: false });
     focusOn(pay, PAY_FOCUS);
     Sound.bloop();
     FX.reveal(pay, [{ opacity: 0, transform: 'translateY(24px) scale(.92)' }, { opacity: 1, transform: 'none' }], { duration: 600, easing: 'cubic-bezier(.2,.8,.3,1)' });
@@ -2041,9 +2042,9 @@
   }, SHOE_SAY);
   const PRICE_CARD = { x: 1346, y: 634, w: 196, h: 152, round: 16 }; // the white ₹1800 card on the sneakers (stage px)
   const PRICE_CARD_FACE = [1259, 566, 173, 135]; // that card's face, with a little round it: x, y, w, h (stage px)
-  // The ₹1800 tent card on the stand, with a little round it, on the picture of screens 22 and 35 (he saw a shoe.png):
+  // The ₹1800 tent card on the stand, with a little round it, on the picture of screens 22 and 35 (story/he-sees-a-shoe.png):
   // their clips redraw the price roughly, so the picture's is laid over them.
-  const TENT_CARD = { 'he saw a shoe.png': [1196, 538, 236, 130] };
+  const TENT_CARD = { 'story/he-sees-a-shoe.png': [1196, 538, 236, 130] };
   function tentCard(scene) {
     pictureOver(scene, TENT_CARD[scene.bg.slice(ASSETS.length)]);
   }
@@ -2895,7 +2896,7 @@
   // or `flat`), where it is on the picture (picture px of 1672 × 941: the thing and its tag, what the player taps), and
   // its picture for the card and the shopping list. ₹4,470 in all, ₹530 left of ₹5,000.
   const PARTY_BUDGET = 5000;
-  const PARTY_WALLET = ASSETS + 'ui/shop/wallet.png';
+  const PARTY_WALLET = ASSETS + 'ui/wallet.png';
   const PARTY_JOY = { base: PARTY + 'joystick-base.png', knob: PARTY + 'joystick-knob.png' }; // (the user's controller, cut out of their picture)
   const PARTY_ITEMS = [
     { id: 'shirt', name: 'Shirt', icon: PARTY + 'icon-shirt.png', shop: 'shirtshop', a: 'this shirt',
@@ -3558,7 +3559,7 @@
   // The story pictures, brought to life (the revamp brief, rule 1)
   // ======================================================================
   // Short videos made from the story's pictures with Higgsfield (Seedance 2.5; the prompts are in "Animation Video
-  // Prompts.md"), kept in game assets/video/ and listed in js/video_clips.js: the game plays only the clips there are, and
+  // Prompts.md"), kept in assets/video/ and listed in js/video_clips.js: the game plays only the clips there are, and
   // where one isn't made yet the still picture stays, as before (so it does with reduced motion). On a screen with clips,
   // its quiet loop plays while nobody speaks and each line's talking clip as the line is said; every clip of a screen
   // starts on its picture, so each takes over from another without a jump. (The clips made with Gemini don't end on it:
