@@ -1,0 +1,836 @@
+[
+ {
+  "id": "vo001",
+  "speaker": "Aniket",
+  "line": "Dad, I want to buy a book and a new pair of sneakers from the mall.",
+  "spoken": "Dad, I want to buy a book and a new pair of sneakers from the mall."
+ },
+ {
+  "id": "vo002",
+  "speaker": "Father",
+  "line": "Sure. But compare the prices and buy wisely.",
+  "spoken": "Sure. But compare the prices and buy wisely."
+ },
+ {
+  "id": "vo003",
+  "speaker": "Aniket",
+  "line": "I will!",
+  "spoken": "I will!"
+ },
+ {
+  "id": "vo004",
+  "speaker": "Aniket",
+  "line": "This book looks interesting!",
+  "spoken": "This book looks interesting!"
+ },
+ {
+  "id": "vo005",
+  "speaker": "Aniket",
+  "line": "How much is this book?",
+  "spoken": "How much is this book?"
+ },
+ {
+  "id": "vo006",
+  "speaker": "Shopkeeper",
+  "line": "It’s ₹800!",
+  "spoken": "It's eight hundred rupees!"
+ },
+ {
+  "id": "vo139",
+  "speaker": "Aniket",
+  "line": "It is too costly, uncle.",
+  "spoken": "It is too costly, uncle."
+ },
+ {
+  "id": "vo140",
+  "speaker": "Shopkeeper",
+  "line": "Check the printed price on the book.",
+  "spoken": "Check the printed price on the book."
+ },
+ {
+  "id": "vo141",
+  "speaker": "Aniket",
+  "line": "Oh! The price printed on it is ₹1000.",
+  "spoken": "Oh! The price printed on it is one thousand rupees."
+ },
+ {
+  "id": "vo142",
+  "speaker": "Swifty",
+  "line": "The price printed on an item",
+  "spoken": "The price printed on an item"
+ },
+ {
+  "id": "vo143",
+  "speaker": "Swifty",
+  "line": "is called its marked price.",
+  "spoken": "is called its marked price."
+ },
+ {
+  "id": "vo144",
+  "speaker": "Swifty",
+  "line": "Not quite! Check the price printed on the book.",
+  "spoken": "Not quite! Check the price printed on the book."
+ },
+ {
+  "id": "vo145",
+  "speaker": "Swifty",
+  "line": "Correct! The price printed on the book, ₹1000, is its marked price.",
+  "spoken": "Correct! The price printed on the book, one thousand rupees, is its marked price."
+ },
+ {
+  "id": "vo146",
+  "speaker": "Shopkeeper",
+  "line": "See, the price printed on the book is ₹1000,",
+  "spoken": "See, the price printed on the book is one thousand rupees,"
+ },
+ {
+  "id": "vo147",
+  "speaker": "Shopkeeper",
+  "line": "but I am selling it to you at ₹800.",
+  "spoken": "but I am selling it to you at eight hundred rupees."
+ },
+ {
+  "id": "vo148",
+  "speaker": "Shopkeeper",
+  "line": "I gave you a discount.",
+  "spoken": "I gave you a discount."
+ },
+ {
+  "id": "vo149",
+  "speaker": "Aniket",
+  "line": "Discount? What is that?",
+  "spoken": "Discount? What is that?"
+ },
+ {
+  "id": "vo150",
+  "speaker": "Swifty",
+  "line": "The reduction given on the marked price of an item",
+  "spoken": "The reduction given on the marked price of an item"
+ },
+ {
+  "id": "vo151",
+  "speaker": "Swifty",
+  "line": "is called a discount.",
+  "spoken": "is called a discount."
+ },
+ {
+  "id": "vo152",
+  "speaker": "Swifty",
+  "line": "Not quite! ₹800 is the shopkeeper’s selling price.",
+  "spoken": "Not quite! Eight hundred rupees is the shopkeeper's selling price."
+ },
+ {
+  "id": "vo153",
+  "speaker": "Swifty",
+  "line": "Yes! Aniket paid ₹200 less than the marked price.",
+  "spoken": "Yes! Aniket paid two hundred rupees less than the marked price."
+ },
+ {
+  "id": "vo026",
+  "speaker": "Swifty",
+  "line": "Marked Price,",
+  "spoken": "Marked Price,"
+ },
+ {
+  "id": "vo027",
+  "speaker": "Swifty",
+  "line": "minus Selling Price,",
+  "spoken": "minus Selling Price,"
+ },
+ {
+  "id": "vo028",
+  "speaker": "Swifty",
+  "line": "equals Discount.",
+  "spoken": "equals Discount."
+ },
+ {
+  "id": "vo029",
+  "speaker": "Swifty",
+  "line": "So, the discount is ₹200.",
+  "spoken": "So, the discount is two hundred rupees."
+ },
+ {
+  "id": "vo030",
+  "speaker": "Swifty",
+  "line": "Discount",
+  "spoken": "Discount"
+ },
+ {
+  "id": "vo031",
+  "speaker": "Swifty",
+  "line": "equals Marked Price,",
+  "spoken": "equals Marked Price,"
+ },
+ {
+  "id": "vo032",
+  "speaker": "Swifty",
+  "line": "minus Selling Price.",
+  "spoken": "minus Selling Price."
+ },
+ {
+  "id": "vo138",
+  "speaker": "Swifty",
+  "line": "Let’s write it in short.",
+  "spoken": "Let’s write it in short."
+ },
+ {
+  "id": "vo034",
+  "speaker": "Swifty",
+  "line": "D for Discount,",
+  "spoken": "D for Discount,"
+ },
+ {
+  "id": "vo035",
+  "speaker": "Swifty",
+  "line": "MP for Marked Price,",
+  "spoken": "M P for Marked Price,"
+ },
+ {
+  "id": "vo036",
+  "speaker": "Swifty",
+  "line": "SP for Selling Price.",
+  "spoken": "S P for Selling Price."
+ },
+ {
+  "id": "vo037",
+  "speaker": "Swifty",
+  "line": "So, D",
+  "spoken": "So, D"
+ },
+ {
+  "id": "vo038",
+  "speaker": "Swifty",
+  "line": "= MP",
+  "spoken": "equals M P"
+ },
+ {
+  "id": "vo039",
+  "speaker": "Swifty",
+  "line": "− SP.",
+  "spoken": "minus S P."
+ },
+ {
+  "id": "vo154",
+  "speaker": "Aniket",
+  "line": "Thank you, uncle!",
+  "spoken": "Thank you, uncle!"
+ },
+ {
+  "id": "vo155",
+  "speaker": "Swifty",
+  "line": "Aniket bought the book and understood the discount.",
+  "spoken": "Aniket bought the book and understood the discount."
+ },
+ {
+  "id": "vo156",
+  "speaker": "Swifty",
+  "line": "Let’s help Aniket buy the sneakers!",
+  "spoken": "Let's help Aniket buy the sneakers!"
+ },
+ {
+  "id": "vo157",
+  "speaker": "Aniket",
+  "line": "Wow, nice sneakers! I love them.",
+  "spoken": "Wow, nice sneakers! I love them."
+ },
+ {
+  "id": "vo048",
+  "speaker": "Aniket",
+  "line": "The price tagged on it is ₹1800.",
+  "spoken": "The price tagged on it is one thousand eight hundred rupees."
+ },
+ {
+  "id": "vo158",
+  "speaker": "Swifty",
+  "line": "Not quite! Check the price tagged on the sneakers.",
+  "spoken": "Not quite! Check the price tagged on the sneakers."
+ },
+ {
+  "id": "vo159",
+  "speaker": "Swifty",
+  "line": "Correct! ₹1800 is the price tagged on the sneakers: their marked price.",
+  "spoken": "Correct! One thousand eight hundred rupees is the price tagged on the sneakers: their marked price."
+ },
+ {
+  "id": "vo046",
+  "speaker": "Aniket",
+  "line": "What does 30% OFF mean here?",
+  "spoken": "What does thirty percent off mean here?"
+ },
+ {
+  "id": "vo049",
+  "speaker": "Aniket",
+  "line": "If this is a discount, how much do I actually have to pay?",
+  "spoken": "If this is a discount, how much do I actually have to pay?"
+ },
+ {
+  "id": "vo050",
+  "speaker": "Swifty",
+  "line": "30% OFF means",
+  "spoken": "Thirty percent off means"
+ },
+ {
+  "id": "vo160",
+  "speaker": "Swifty",
+  "line": "30% discount here.",
+  "spoken": "thirty percent discount here."
+ },
+ {
+  "id": "vo161",
+  "speaker": "Swifty",
+  "line": "To calculate how much Aniket has to pay for these sneakers,",
+  "spoken": "To calculate how much Aniket has to pay for these sneakers,"
+ },
+ {
+  "id": "vo053",
+  "speaker": "Swifty",
+  "line": "let’s first recall how percentages work.",
+  "spoken": "let’s first recall how percentages work."
+ },
+ {
+  "id": "vo054",
+  "speaker": "Swifty",
+  "line": "a is what percent of b?",
+  "spoken": "A is what percent of B?"
+ },
+ {
+  "id": "vo055",
+  "speaker": "Swifty",
+  "line": "a is the part,",
+  "spoken": "A is the part,"
+ },
+ {
+  "id": "vo056",
+  "speaker": "Swifty",
+  "line": "and b is the whole.",
+  "spoken": "and B is the whole."
+ },
+ {
+  "id": "vo057",
+  "speaker": "Swifty",
+  "line": "To find the percentage,",
+  "spoken": "To find the percentage,"
+ },
+ {
+  "id": "vo058",
+  "speaker": "Swifty",
+  "line": "divide the part by the whole,",
+  "spoken": "divide the part by the whole,"
+ },
+ {
+  "id": "vo059",
+  "speaker": "Swifty",
+  "line": "then multiply by 100.",
+  "spoken": "then multiply by one hundred."
+ },
+ {
+  "id": "vo060",
+  "speaker": "Swifty",
+  "line": "Put the part on top,",
+  "spoken": "Put the part on top,"
+ },
+ {
+  "id": "vo061",
+  "speaker": "Swifty",
+  "line": "and the whole below.",
+  "spoken": "and the whole below."
+ },
+ {
+  "id": "vo062",
+  "speaker": "Swifty",
+  "line": "Then put a % sign after it.",
+  "spoken": "Then put a percent sign after it."
+ },
+ {
+  "id": "vo162",
+  "speaker": "Swifty",
+  "line": "Let’s have some practice!",
+  "spoken": "Let's have some practice!"
+ },
+ {
+  "id": "vo064",
+  "speaker": "Swifty",
+  "line": "125 is what percent of 500?",
+  "spoken": "One hundred and twenty-five is what percent of five hundred?"
+ },
+ {
+  "id": "vo065",
+  "speaker": "Swifty",
+  "line": "125 is the part,",
+  "spoken": "One hundred and twenty-five is the part,"
+ },
+ {
+  "id": "vo066",
+  "speaker": "Swifty",
+  "line": "and 500 is the whole.",
+  "spoken": "and five hundred is the whole."
+ },
+ {
+  "id": "vo067",
+  "speaker": "Swifty",
+  "line": "125 ÷ 500 × 100",
+  "spoken": "One hundred and twenty-five divided by five hundred, times one hundred"
+ },
+ {
+  "id": "vo068",
+  "speaker": "Swifty",
+  "line": "= 25%.",
+  "spoken": "equals twenty-five percent."
+ },
+ {
+  "id": "vo069",
+  "speaker": "Swifty",
+  "line": "So, 125 is 25% of 500!",
+  "spoken": "So, one hundred and twenty-five is twenty-five percent of five hundred!"
+ },
+ {
+  "id": "vo070",
+  "speaker": "Swifty",
+  "line": "250 is what percent of 1000?",
+  "spoken": "Two hundred and fifty is what percent of one thousand?"
+ },
+ {
+  "id": "vo071",
+  "speaker": "Swifty",
+  "line": "Not quite!",
+  "spoken": "Not quite!"
+ },
+ {
+  "id": "vo137",
+  "speaker": "Swifty",
+  "line": "Try again!",
+  "spoken": "Try again!"
+ },
+ {
+  "id": "vo075",
+  "speaker": "Swifty",
+  "line": "Correct!",
+  "spoken": "Correct!"
+ },
+ {
+  "id": "vo074",
+  "speaker": "Swifty",
+  "line": "250 ÷ 1000 × 100 = 25%.",
+  "spoken": "Two hundred and fifty divided by one thousand, times one hundred, equals twenty-five percent."
+ },
+ {
+  "id": "vo072",
+  "speaker": "Swifty",
+  "line": "250 is the part,",
+  "spoken": "Two hundred and fifty is the part,"
+ },
+ {
+  "id": "vo073",
+  "speaker": "Swifty",
+  "line": "1000 is the whole.",
+  "spoken": "one thousand is the whole."
+ },
+ {
+  "id": "vo076",
+  "speaker": "Swifty",
+  "line": "So, 250 is 25% of 1000.",
+  "spoken": "So, two hundred and fifty is twenty-five percent of one thousand."
+ },
+ {
+  "id": "vo091",
+  "speaker": "Swifty",
+  "line": "Now, let’s find out how much money Aniket needs to pay.",
+  "spoken": "Now, let’s find out how much money Aniket needs to pay."
+ },
+ {
+  "id": "vo163",
+  "speaker": "Swifty",
+  "line": "How much does Aniket have to pay?",
+  "spoken": "How much does Aniket have to pay?"
+ },
+ {
+  "id": "vo080",
+  "speaker": "Swifty",
+  "line": "Let’s see how to work it out!",
+  "spoken": "Let’s see how to work it out!"
+ },
+ {
+  "id": "vo081",
+  "speaker": "Swifty",
+  "line": "30% means",
+  "spoken": "Thirty percent means"
+ },
+ {
+  "id": "vo082",
+  "speaker": "Swifty",
+  "line": "30 out of 100.",
+  "spoken": "thirty out of one hundred."
+ },
+ {
+  "id": "vo083",
+  "speaker": "Swifty",
+  "line": "So, 30% of ₹1800 =",
+  "spoken": "So, thirty percent of one thousand eight hundred rupees equals"
+ },
+ {
+  "id": "vo084",
+  "speaker": "Swifty",
+  "line": "30/100 × 1800",
+  "spoken": "thirty over one hundred, times one thousand eight hundred"
+ },
+ {
+  "id": "vo085",
+  "speaker": "Swifty",
+  "line": "1800 ÷ 100 = 18,",
+  "spoken": "One thousand eight hundred divided by one hundred equals eighteen,"
+ },
+ {
+  "id": "vo086",
+  "speaker": "Swifty",
+  "line": "and 18 × 30 = 540.",
+  "spoken": "and eighteen times thirty equals five hundred and forty."
+ },
+ {
+  "id": "vo087",
+  "speaker": "Swifty",
+  "line": "So, it’s ₹540!",
+  "spoken": "So, it’s five hundred and forty rupees!"
+ },
+ {
+  "id": "vo164",
+  "speaker": "Swifty",
+  "line": "So, the discount is ₹540.",
+  "spoken": "So, the discount is five hundred and forty rupees."
+ },
+ {
+  "id": "vo094",
+  "speaker": "Swifty",
+  "line": "To find how much you have to pay,",
+  "spoken": "To find how much you have to pay,"
+ },
+ {
+  "id": "vo095",
+  "speaker": "Swifty",
+  "line": "subtract the discount from the marked price.",
+  "spoken": "subtract the discount from the marked price."
+ },
+ {
+  "id": "vo096",
+  "speaker": "Swifty",
+  "line": "Your turn! Drag each amount into its box.",
+  "spoken": "Your turn! Drag each amount into its box."
+ },
+ {
+  "id": "vo097",
+  "speaker": "Swifty",
+  "line": "Not quite! The MP box is for the marked price, ₹1800.",
+  "spoken": "Not quite! The M P box is for the marked price, one thousand eight hundred rupees."
+ },
+ {
+  "id": "vo098",
+  "speaker": "Swifty",
+  "line": "Not quite! The Discount box is for the discount, ₹540.",
+  "spoken": "Not quite! The Discount box is for the discount, five hundred and forty rupees."
+ },
+ {
+  "id": "vo099",
+  "speaker": "Swifty",
+  "line": "₹1800 − ₹540",
+  "spoken": "One thousand eight hundred rupees minus five hundred and forty rupees"
+ },
+ {
+  "id": "vo100",
+  "speaker": "Swifty",
+  "line": "= ₹1260.",
+  "spoken": "equals one thousand two hundred and sixty rupees."
+ },
+ {
+  "id": "vo101",
+  "speaker": "Swifty",
+  "line": "So, you pay ₹1260 for the sneakers!",
+  "spoken": "So, you pay one thousand two hundred and sixty rupees for the sneakers!"
+ },
+ {
+  "id": "vo102",
+  "speaker": "Aniket",
+  "line": "So, after a 30% discount,",
+  "spoken": "So, after a thirty percent discount,"
+ },
+ {
+  "id": "vo103",
+  "speaker": "Aniket",
+  "line": "I will pay ₹1260.",
+  "spoken": "I will pay one thousand two hundred and sixty rupees."
+ },
+ {
+  "id": "vo104",
+  "speaker": "Swifty",
+  "line": "540 is what percent of 1800?",
+  "spoken": "Five hundred and forty is what percent of one thousand eight hundred?"
+ },
+ {
+  "id": "vo105",
+  "speaker": "Swifty",
+  "line": "540 is the part,",
+  "spoken": "Five hundred and forty is the part,"
+ },
+ {
+  "id": "vo106",
+  "speaker": "Swifty",
+  "line": "and 1800 is the whole.",
+  "spoken": "and one thousand eight hundred is the whole."
+ },
+ {
+  "id": "vo107",
+  "speaker": "Swifty",
+  "line": "540 ÷ 1800 × 100",
+  "spoken": "Five hundred and forty divided by one thousand eight hundred, times one hundred"
+ },
+ {
+  "id": "vo108",
+  "speaker": "Swifty",
+  "line": "= 30%.",
+  "spoken": "equals thirty percent."
+ },
+ {
+  "id": "vo109",
+  "speaker": "Swifty",
+  "line": "So, 540 is 30% of 1800!",
+  "spoken": "So, five hundred and forty is thirty percent of one thousand eight hundred!"
+ },
+ {
+  "id": "vo110",
+  "speaker": "Swifty",
+  "line": "Here, the part is the discount,",
+  "spoken": "Here, the part is the discount,"
+ },
+ {
+  "id": "vo111",
+  "speaker": "Swifty",
+  "line": "and the whole is the marked price.",
+  "spoken": "and the whole is the marked price."
+ },
+ {
+  "id": "vo112",
+  "speaker": "Swifty",
+  "line": "So, Discount % = Discount ÷ Marked Price × 100.",
+  "spoken": "So, Discount percentage equals Discount divided by Marked Price, times one hundred."
+ },
+ {
+  "id": "vo127",
+  "speaker": "Father",
+  "line": "How was your shopping?",
+  "spoken": "How was your shopping?"
+ },
+ {
+  "id": "vo128",
+  "speaker": "Aniket",
+  "line": "Great! I learnt about marked price, discount and discount percentage.",
+  "spoken": "Great! I learnt about marked price, discount and discount percentage."
+ },
+ {
+  "id": "vo165",
+  "speaker": "Aniket",
+  "line": "Wow! Rohan’s birthday party is tonight!",
+  "spoken": "Wow! Rohan's birthday party is tonight!"
+ },
+ {
+  "id": "vo166",
+  "speaker": "Aniket",
+  "line": "I need a new outfit for the party!",
+  "spoken": "I need a new outfit for the party!"
+ },
+ {
+  "id": "vo132",
+  "speaker": "Father",
+  "line": "Here’s ₹5,000.",
+  "spoken": "Here’s five thousand rupees."
+ },
+ {
+  "id": "vo133",
+  "speaker": "Father",
+  "line": "Use what you have learnt and find the best deals.",
+  "spoken": "Use what you have learnt and find the best deals."
+ },
+ {
+  "id": "vo134",
+  "speaker": "Father",
+  "line": "Whatever is left after buying everything is yours.",
+  "spoken": "Whatever is left after buying everything is yours."
+ },
+ {
+  "id": "vo135",
+  "speaker": "Aniket",
+  "line": "Really?",
+  "spoken": "Really?"
+ },
+ {
+  "id": "vo136",
+  "speaker": "Aniket",
+  "line": "Then I’m definitely finding the best offers!",
+  "spoken": "Then I’m definitely finding the best offers!"
+ },
+ {
+  "id": "vo167",
+  "speaker": "Aniket",
+  "line": "The mall! Let’s go shopping!",
+  "spoken": "The mall! Let's go shopping!"
+ },
+ {
+  "id": "vo168",
+  "speaker": "Swifty",
+  "line": "Use the arrows to walk into a shop!",
+  "spoken": "Use the arrows to walk into a shop!"
+ },
+ {
+  "id": "vo169",
+  "speaker": "Swifty",
+  "line": "This shirt is ₹1,500, with 20% off.",
+  "spoken": "This shirt is one thousand five hundred rupees, with twenty percent off."
+ },
+ {
+  "id": "vo170",
+  "speaker": "Swifty",
+  "line": "What is the sale price of this shirt?",
+  "spoken": "What is the sale price of this shirt?"
+ },
+ {
+  "id": "vo171",
+  "speaker": "Swifty",
+  "line": "Not quite! Find the 20% discount first. 20% of ₹1,500 = ₹300.",
+  "spoken": "Not quite! Find the twenty percent discount first. twenty percent of one thousand five hundred rupees is three hundred rupees."
+ },
+ {
+  "id": "vo172",
+  "speaker": "Swifty",
+  "line": "Great! The sale price is ₹1,200. Do you want to buy this shirt?",
+  "spoken": "Great! The sale price is one thousand two hundred rupees. Do you want to buy this shirt?"
+ },
+ {
+  "id": "vo193",
+  "speaker": "Swifty",
+  "line": "Take your time and look around!",
+  "spoken": "Take your time and look around!"
+ },
+ {
+  "id": "vo173",
+  "speaker": "Swifty",
+  "line": "Great! You bought the shirt!",
+  "spoken": "Great! You bought the shirt!"
+ },
+ {
+  "id": "vo175",
+  "speaker": "Swifty",
+  "line": "This bottomwear is ₹1,200, with 10% off.",
+  "spoken": "This bottomwear is one thousand two hundred rupees, with ten percent off."
+ },
+ {
+  "id": "vo176",
+  "speaker": "Swifty",
+  "line": "What is the sale price of this bottomwear?",
+  "spoken": "What is the sale price of this bottomwear?"
+ },
+ {
+  "id": "vo177",
+  "speaker": "Swifty",
+  "line": "Not quite! Find the 10% discount first. 10% of ₹1,200 = ₹120.",
+  "spoken": "Not quite! Find the ten percent discount first. ten percent of one thousand two hundred rupees is one hundred and twenty rupees."
+ },
+ {
+  "id": "vo178",
+  "speaker": "Swifty",
+  "line": "Great! The sale price is ₹1,080. Do you want to buy this bottomwear?",
+  "spoken": "Great! The sale price is one thousand eighty rupees. Do you want to buy this bottomwear?"
+ },
+ {
+  "id": "vo179",
+  "speaker": "Swifty",
+  "line": "Great! You bought the bottomwear!",
+  "spoken": "Great! You bought the bottomwear!"
+ },
+ {
+  "id": "vo181",
+  "speaker": "Swifty",
+  "line": "This watch is ₹1,000, with 20% off.",
+  "spoken": "This watch is one thousand rupees, with twenty percent off."
+ },
+ {
+  "id": "vo182",
+  "speaker": "Swifty",
+  "line": "What is the sale price of this watch?",
+  "spoken": "What is the sale price of this watch?"
+ },
+ {
+  "id": "vo183",
+  "speaker": "Swifty",
+  "line": "Not quite! Find the 20% discount first. 20% of ₹1,000 = ₹200.",
+  "spoken": "Not quite! Find the twenty percent discount first. twenty percent of one thousand rupees is two hundred rupees."
+ },
+ {
+  "id": "vo184",
+  "speaker": "Swifty",
+  "line": "Great! The sale price is ₹800. Do you want to buy this watch?",
+  "spoken": "Great! The sale price is eight hundred rupees. Do you want to buy this watch?"
+ },
+ {
+  "id": "vo185",
+  "speaker": "Swifty",
+  "line": "Great! You bought the watch!",
+  "spoken": "Great! You bought the watch!"
+ },
+ {
+  "id": "vo187",
+  "speaker": "Swifty",
+  "line": "These sunglasses are ₹800, with 20% off.",
+  "spoken": "These sunglasses are eight hundred rupees, with twenty percent off."
+ },
+ {
+  "id": "vo188",
+  "speaker": "Swifty",
+  "line": "What is the sale price of these sunglasses?",
+  "spoken": "What is the sale price of these sunglasses?"
+ },
+ {
+  "id": "vo189",
+  "speaker": "Swifty",
+  "line": "Not quite! Find the 20% discount first. 20% of ₹800 = ₹160.",
+  "spoken": "Not quite! Find the twenty percent discount first. twenty percent of eight hundred rupees is one hundred and sixty rupees."
+ },
+ {
+  "id": "vo190",
+  "speaker": "Swifty",
+  "line": "Great! The sale price is ₹640. Do you want to buy these sunglasses?",
+  "spoken": "Great! The sale price is six hundred and forty rupees. Do you want to buy these sunglasses?"
+ },
+ {
+  "id": "vo191",
+  "speaker": "Swifty",
+  "line": "Great! You bought the sunglasses!",
+  "spoken": "Great! You bought the sunglasses!"
+ },
+ {
+  "id": "vo194",
+  "speaker": "Swifty",
+  "line": "Total amount: ₹3,720.",
+  "spoken": "Total amount: three thousand seven hundred and twenty rupees."
+ },
+ {
+  "id": "vo195",
+  "speaker": "Swifty",
+  "line": "Money left: ₹1,280.",
+  "spoken": "Money left: one thousand two hundred and eighty rupees."
+ },
+ {
+  "id": "vo196",
+  "speaker": "Swifty",
+  "line": "Wow! You found the best deals for the party!",
+  "spoken": "Wow! You found the best deals for the party!"
+ },
+ {
+  "id": "vo197",
+  "speaker": "Swifty",
+  "line": "You have successfully helped Aniket get ready for the party!",
+  "spoken": "You have successfully helped Aniket get ready for the party!"
+ },
+ {
+  "id": "vo198",
+  "speaker": "Swifty",
+  "line": "Wow! You did it!",
+  "spoken": "Wow! You did it!"
+ }
+]

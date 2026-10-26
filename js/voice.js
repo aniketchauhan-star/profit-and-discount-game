@@ -1,14 +1,14 @@
 /* ==========================================================================
    Bookstore Journey — voices
-   The characters speak their lines in Indian English, recorded with the TTS
-   studio "Ai Wala Human By Aamir": Swifty as Female Teacher (Standard), Aniket
-   as Male Child (Energetic), the shopkeeper as Male Teacher (Formal). Each clip
-   is found by the exact text its line shows (js/vo_lines.js; see
-   docs/VOICEOVER.md). A line without a clip, a browser that can't play Ogg
-   Opus, or ?vo=0 in the address uses the text-to-speech voices already on the
-   player's device instead (Web Speech API): Rishi on a Mac, Heera / Ravi or
-   Neerja / Prabhat on Windows, the Indian English voices on Android and
-   Chromebooks.
+   The characters speak their lines in Indian English: Swifty in the user's own
+   recording (2026-10-26), Aniket, his father and the shopkeeper in voices made
+   with an open-source voice model, each cloned from his voice in the TTS studio
+   "Ai Wala Human By Aamir" (see docs/VOICEOVER.md). Each clip is found by the
+   exact text its line shows (js/vo_lines.js). A line without a clip, a browser
+   that can't play Ogg Opus, or ?vo=0 in the address uses the text-to-speech
+   voices already on the player's device instead (Web Speech API): Rishi on a
+   Mac, Heera / Ravi or Neerja / Prabhat on Windows, the Indian English voices
+   on Android and Chromebooks.
    ========================================================================== */
 (function () {
   'use strict';

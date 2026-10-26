@@ -1,0 +1,82 @@
+The price printed on an item is called its marked price.
+Not quite! Check the price printed on the book.
+Correct! The price printed on the book, ₹1000, is its marked price.
+The reduction given on the marked price of an item is called a discount.
+Not quite! ₹800 is the shopkeeper’s selling price.
+Yes! Aniket paid ₹200 less than the marked price.
+Marked Price, minus Selling Price, equals Discount.
+So, the discount is ₹200.
+Discount equals Marked Price, minus Selling Price.
+Let’s write it in short.
+D for Discount, MP for Marked Price, SP for Selling Price.
+So, D = MP − SP.
+Aniket bought the book and understood the discount.
+Let’s help Aniket buy the sneakers!
+Not quite! Check the price tagged on the sneakers.
+Correct! ₹1800 is the price tagged on the sneakers: their marked price.
+30% OFF means 30% discount here.
+To calculate how much Aniket has to pay for these sneakers, let’s first recall how percentages work.
+a is what percent of b?
+a is the part, and b is the whole.
+To find the percentage, divide the part by the whole, then multiply by 100.
+Put the part on top, and the whole below.
+Then put a % sign after it.
+Let’s have some practice!
+125 is what percent of 500?
+125 is the part, and 500 is the whole.
+125 ÷ 500 × 100 = 25%.
+So, 125 is 25% of 500!
+250 is what percent of 1000?
+Not quite!
+Try again!
+Correct! 250 ÷ 1000 × 100 = 25%.
+Not quite! 250 is the part, 1000 is the whole. 250 ÷ 1000 × 100 = 25%.
+So, 250 is 25% of 1000.
+Now, let’s find out how much money Aniket needs to pay.
+How much does Aniket have to pay?
+Correct!
+Let’s see how to work it out!
+30% means 30 out of 100.
+So, 30% of ₹1800 = 30/100 × 1800
+1800 ÷ 100 = 18, and 18 × 30 = 540.
+So, it’s ₹540!
+So, the discount is ₹540.
+To find how much you have to pay, subtract the discount from the marked price.
+Your turn! Drag each amount into its box.
+Not quite! The MP box is for the marked price, ₹1800.
+Not quite! The Discount box is for the discount, ₹540.
+₹1800 − ₹540 = ₹1260.
+So, you pay ₹1260 for the sneakers!
+540 is what percent of 1800?
+540 is the part, and 1800 is the whole.
+540 ÷ 1800 × 100 = 30%.
+So, 540 is 30% of 1800!
+Here, the part is the discount, and the whole is the marked price.
+So, Discount % = Discount ÷ Marked Price × 100.
+Use the arrows to walk into a shop!
+This shirt is ₹1,500, with 20% off.
+What is the sale price of this shirt?
+Not quite! Find the 20% discount first. 20% of ₹1,500 = ₹300.
+Great! The sale price is ₹1,200. Do you want to buy this shirt?
+Take your time and look around!
+Great! You bought the shirt!
+This bottomwear is ₹1,200, with 10% off.
+What is the sale price of this bottomwear?
+Not quite! Find the 10% discount first. 10% of ₹1,200 = ₹120.
+Great! The sale price is ₹1,080. Do you want to buy this bottomwear?
+Great! You bought the bottomwear!
+This watch is ₹1,000, with 20% off.
+What is the sale price of this watch?
+Not quite! Find the 20% discount first. 20% of ₹1,000 = ₹200.
+Great! The sale price is ₹800. Do you want to buy this watch?
+Great! You bought the watch!
+These sunglasses are ₹800, with 20% off.
+What is the sale price of these sunglasses?
+Not quite! Find the 20% discount first. 20% of ₹800 = ₹160.
+Great! The sale price is ₹640. Do you want to buy these sunglasses?
+Great! You bought the sunglasses!
+Total amount: ₹3,720.
+Money left: ₹1,280.
+Wow! You found the best deals for the party!
+You have successfully helped Aniket get ready for the party!
+Wow! You did it!

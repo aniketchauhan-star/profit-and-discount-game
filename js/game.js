@@ -469,7 +469,7 @@
     },
     {
       id: 'mallfloor', title: 'Inside the Mall', sub: 'Walk to a shop with the arrows',
-      bg: PARTY + 'mall-map.webp',
+      bg: PARTY + 'mall-map.png', // (the user's new map, 2026-10-26)
       kb: null, origin: '50% 50%', still: true, lamps: [], dust: null,
       next: () => (partyDone() ? 'partydone' : PARTY_ITEMS.find(it => !Party.bought.has(it.id)).shop),
       setup: mallSetup,
@@ -488,7 +488,7 @@
       })),
     {
       id: 'partydone', title: 'All Set for the Party!', sub: 'Total ₹3,720, ₹1,280 left',
-      bg: PARTY + 'mall-map.webp',
+      bg: PARTY + 'mall-map.png',
       kb: null, origin: '50% 50%', still: true, lamps: [], dust: null,
       back: () => 'mallfloor',
       setup: scene => allBlur(scene),
@@ -2905,8 +2905,8 @@
     ctx.advance(NEXT_IN); // then back home (the discount percentage's screen and its checkpoint were taken out on 2026-10-22)
   }
 
-  // Back home: his father asks how the shopping went, Aniket says what he learnt, and his father hints at another
-  // shopping job. One of them talks at a time; the story so far ends here.
+  // Back home: his father asks how the shopping went, and Aniket says what he learnt. One of them talks at a time.
+  // (His father's "That’s useful, because you have another shopping job." was taken out on 2026-10-26, at the user's word.)
   async function playReturn(ctx, scene) {
     const L = scene.layer;
     const say = async (bubble, id, who) => {
@@ -2921,14 +2921,10 @@
     await ctx.wait(900);
     await ask.hide();
     await ctx.wait(250);
-    const learnt = await say({
+    await say({
       anchor: [722, 376], corner: 'bl', tip: [645, 282], // on the wall right of his face, the tail at his mouth
       text: 'Great! I learnt\nabout marked price,\ndiscount and discount\npercentage.',
     }, 'home-learnt', 'boy');
-    await ctx.wait(900);
-    await learnt.hide();
-    await ctx.wait(250);
-    await say(Object.assign({ text: 'That’s useful, because\nyou have another\nshopping job.' }, DAD), 'home-next', 'dad');
     ctx.advance(3000); // then the party invite (Party Prep)
   }
 
@@ -3098,16 +3094,23 @@
   }
 
   // ---------- The mall (screen 36): walked with the arrows ----------
-  // The map seen from above (picture px): where he can walk (the floor between the shops), each shop's doorway (where he
-  // goes in, walking up into it), where he comes out (facing out), and the corner of its sign (the ✓ once bought).
+  // The map seen from above (picture px; the user's new map of 2026-10-26: the four shops round the top of a round plaza,
+  // the escalators between them, a railing round the bottom). Where he can walk: the floor, an outline (round the
+  // planters, short of the railing, and above the arrows, so he never goes under them). Each shop: its doorway's
+  // threshold (left to right; the shop's floor is beyond it), how tall the doorway is (its glow), and the corner of its
+  // sign (the ✓ once bought).
   const MALL = {
-    walk: [[600, 150, 1075, 430], [95, 383, 1590, 432], [590, 430, 1090, 941], [300, 812, 590, 872], [1090, 812, 1380, 872]],
+    floor: [[102, 520], [115, 515], [298, 414], [388, 414], [388, 360], [665, 296], [668, 306], [752, 306], [756, 292],
+      [914, 292], [918, 306], [982, 306], [1000, 300], [1290, 368], [1292, 404], [1352, 404], [1352, 422], [1388, 420],
+      [1560, 510], [1568, 518], [1568, 630], [1500, 668], [1400, 714], [1312, 744], [1312, 690], [1158, 690], [1156, 792],
+      [1100, 808], [1000, 826], [900, 836], [836, 838], [750, 834], [700, 828], [600, 813], [518, 792], [514, 690],
+      [336, 690], [336, 612], [102, 612]],
     start: [836, 610], // (in the middle of the plaza, above Swifty's bubble)
     shops: {
-      shirt: { door: [300, 383, 470, 412], out: [385, 424], badge: [512, 112] },
-      pants: { door: [1200, 383, 1380, 412], out: [1290, 424], badge: [1484, 128] },
-      sunglasses: { door: [260, 812, 450, 840], out: [355, 862], badge: [500, 540] },
-      watch: { door: [1150, 812, 1330, 840], out: [1240, 862], badge: [1462, 548] },
+      sunglasses: { door: [[115, 515], [298, 414]], tall: 170, badge: [300, 176] },
+      shirt: { door: [[388, 360], [665, 296]], tall: 160, badge: [660, 120] },
+      pants: { door: [[1000, 300], [1290, 368]], tall: 165, badge: [1316, 135] },
+      watch: { door: [[1388, 420], [1560, 510]], tall: 180, badge: [1636, 232] },
     },
   };
   const TOP_SHEET = {
@@ -3121,8 +3124,31 @@
   const WALK_SPEED = 140; // stage px a second
   const WALK_EASE = 6;
   const WALK_PER = { up: 12, down: 12, left: 17, right: 17 }; // px a frame
-  const inBox = ([x0, y0, x1, y1], [x, y]) => { const [a, b] = pp(x0, y0); const [c, d] = pp(x1, y1); return x >= a && x <= c && y >= b && y <= d; };
-  const onFloor = p => MALL.walk.some(box => inBox(box, p));
+  // On the floor (stage px): a line from the point to the right crosses the outline an odd number of times.
+  const FLOOR = MALL.floor.map(p => pp(...p));
+  const onFloor = ([x, y]) => FLOOR.reduce((inside, [x0, y0], i) => {
+    const [x1, y1] = FLOOR[(i + 1) % FLOOR.length];
+    return (y0 > y) !== (y1 > y) && x < x0 + ((y - y0) * (x1 - x0)) / (y1 - y0) ? !inside : inside;
+  }, false);
+  // Each shop's door (stage px): its threshold (from `a`, `len` long, along `along`), the way in (`inward`: square to the
+  // threshold, into the shop), and where he stands when he comes out (`out`: in front of its middle). He is at the door
+  // while his feet are within DOOR_NEAR of the threshold.
+  const DOOR_NEAR = 46;
+  const DOOR_OUT = 69;
+  const DOORS = Object.fromEntries(Object.entries(MALL.shops).map(([id, shop]) => {
+    const [a, b] = shop.door.map(p => pp(...p));
+    const len = Math.hypot(b[0] - a[0], b[1] - a[1]);
+    const along = [(b[0] - a[0]) / len, (b[1] - a[1]) / len];
+    const inward = [along[1], -along[0]];
+    const out = [(a[0] + b[0]) / 2 - inward[0] * DOOR_OUT, (a[1] + b[1]) / 2 - inward[1] * DOOR_OUT];
+    return [id, { a, len, along, inward, out, tall: shop.tall * PK }];
+  }));
+  const atDoor = (door, [x, y]) => {
+    const dx = x - door.a[0];
+    const dy = y - door.a[1];
+    const u = dx * door.along[0] + dy * door.along[1]; // along the threshold
+    return u >= 0 && u <= door.len && Math.abs(dx * door.inward[0] + dy * door.inward[1]) <= DOOR_NEAR;
+  };
 
   // The map (from its first frame): the bar on top, a ✓ on every shop already done, and Aniket where he is: at the bottom
   // when he comes in, or outside the shop he has just come out of.
@@ -3133,8 +3159,8 @@
       const [x, y] = pp(...MALL.shops[it.id].badge);
       FX.doneBadge(scene.layer, { x, y, instant: true });
     });
-    const from = Party.from && MALL.shops[Party.from];
-    const [x, y] = from ? pp(...from.out) : pp(...MALL.start);
+    const from = Party.from && DOORS[Party.from];
+    const [x, y] = from ? from.out : pp(...MALL.start);
     scene.walker = new FX.TopWalker(scene.layer, TOP_SHEET, { scale: 0.78, per: WALK_PER });
     scene.walker.place(x, y);
     scene.walker.stand(from ? 'down' : 'up');
@@ -3143,15 +3169,17 @@
   async function playMall(ctx, scene) {
     const walker = scene.walker;
     const pad = FX.arrowPad(scene.ui); // (the user, 2026-10-23: arrows, not a joystick)
-    Game.steering = true; // (the arrow keys and W A S D walk him here: see wireUI)
-    const glows = {};
-    Object.entries(MALL.shops).forEach(([id, shop]) => {
-      const [x0, y0] = pp(shop.door[0], shop.door[1] - 120);
-      const [x1, y1] = pp(shop.door[2], shop.door[1]);
-      glows[id] = el('div', 'mall-door', scene.layer, { left: `${x0}px`, top: `${y0}px`, width: `${x1 - x0}px`, height: `${y1 - y0}px` });
+    const steer = {}; // (this run's: a run cut short, as by opening this screen again, switches off only its own)
+    Game.steering = steer; // (the arrow keys and W A S D walk him here: see wireUI)
+    const glows = {}; // (each over its doorway: up from the threshold, slanting with it)
+    Object.entries(DOORS).forEach(([id, door]) => {
+      glows[id] = el('div', 'mall-door', scene.layer, {
+        left: `${door.a[0]}px`, top: `${door.a[1] - door.tall}px`, width: `${door.len * door.along[0]}px`, height: `${door.tall}px`,
+        transformOrigin: '0 100%', transform: `skewY(${Math.atan2(door.along[1], door.along[0])}rad)`,
+      });
     });
     let swifty = null;
-    const cleanup = () => { pad.destroy(); Game.steering = false; };
+    const cleanup = () => { pad.destroy(); if (Game.steering === steer) Game.steering = false; };
     try {
       if (!Party.from) { // the first time in: how to walk, and what to buy (he can walk meanwhile)
         swifty = partyBird(ctx, scene, { at: { x: 540, y: 1090, s: 0.62 }, upTo: 1220, size: 36 }); // (right of the arrows, under the shops)
@@ -3191,7 +3219,7 @@
             const dx = vel[0] * dt;
             const dy = vel[1] * dt;
             let q = [p[0] + dx, p[1] + dy];
-            if (!onFloor(q)) { // (along a shop's wall: he slides along it, or stops)
+            if (!onFloor(q)) { // (at the floor's edge, a shop's front, a planter or the railing: he slides along it, or stops)
               if (onFloor([p[0] + dx, p[1]])) q = [p[0] + dx, p[1]];
               else if (onFloor([p[0], p[1] + dy])) q = [p[0], p[1] + dy];
               else q = p;
@@ -3206,14 +3234,15 @@
             vel = [0, 0];
             walker.stand(way);
           }
-          // at a shop's door: it glows; walking up into it, in he goes (or, if done already, a note says so)
+          // at a shop's door: it glows; walking into it (towards the shop: up, or up and to its side), in he goes (or, if
+          // done already, a note says so)
           let at = null;
-          Object.entries(MALL.shops).forEach(([id, shop]) => {
-            const here = inBox(shop.door, [walker.x, walker.y]);
+          Object.entries(DOORS).forEach(([id, door]) => {
+            const here = atDoor(door, [walker.x, walker.y]);
             glows[id].classList.toggle('is-on', here && !Party.bought.has(id));
             if (here) at = id;
           });
-          if (at && v.y < -0.3) {
+          if (at && v.x * DOORS[at].inward[0] + v.y * DOORS[at].inward[1] > 0.3) {
             if (!Party.bought.has(at)) return resolve(at);
             if (!toast) {
               const it = PARTY_ITEMS.find(x => x.id === at);
@@ -3478,7 +3507,7 @@
     offmeans: { idle: 's25-idle', lines: { 'off-what': 's25-aniket-1', 'shoe-ask': 's25-aniket-2' } },
     final: { idle: 's23-idle', lines: { 'final-1': 's22-aniket-1', 'final-2': 's22-aniket-3' } },
     boxed: { idle: 's36-box', once: true },
-    return: { idle: 's40-idle', hold: true, lines: { 'home-ask': 's40-father-1', 'home-learnt': 's40-aniket', 'home-next': 's40-father-2' } },
+    return: { idle: 's40-idle', hold: true, lines: { 'home-ask': 's40-father-1', 'home-learnt': 's40-aniket' } },
     // (Party Prep: the father's ₹5,000 and his advice, in the clips made for the screens that had them before)
     partymoney: { lines: { money: 's43-father' } },
     partydeal: {

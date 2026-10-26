@@ -4209,14 +4209,8 @@ kbd {
 /* 25 and 26: three answers in a row, big */
 .is-v2 :is(.qp-answers, .pqp-answers) .pq-opt { width: 388px !important; height: 200px; padding: 0 30px 0 22px; font-size: 96px; }
 .is-v2 :is(.qp-answers, .pqp-answers) .pq-opt .q-chip { width: 112px; height: 112px; font-size: 58px; }
-/* 28 and 29: their answers are longer (names, four-figure amounts: "fix the number should inside the boxes"), so one under
-   another, as wide as the question */
-.is-v2[data-scene="topay"] .pqp-answers .pq-choices { flex-direction: column; gap: 22px; }
-.is-v2[data-scene="topay"] .pqp-answers .pq-opt { width: 100% !important; height: 112px; font-size: 68px; }
-.is-v2[data-scene="topay"] .pqp-answers .pq-opt .q-chip { width: 88px; height: 88px; font-size: 46px; }
-.is-v2[data-scene="topay"] .pqp-answers .pq-choices { gap: 18px; }
-.is-v2[data-scene="topay"] .pqp-answers .pq-opt { height: 100px; }
-.is-v2[data-scene="topay"] .pqp-answers { min-height: 336px; }
+/* Screen 25's amounts (₹2340, ₹1260, ₹540): three in a row, as on Screen 24, each box just wide enough for its amount (the
+   user, 2026-10-26: "lots of empty space here", of the boxes one under another as wide as the question) */
 .is-v2[data-scene="topay"] .pqp-question { font-size: 70px; }
 /* 23, 24 and 32: the question's strip as wide as what is under it; 32 in the middle of the panel too (Swifty has no
    bubble there, so her corner isn't kept) */
@@ -4371,9 +4365,8 @@ kbd {
 .is-v2 .practice-host .pqp-answers .pq-opt .q-chip { width: 80px; height: 80px; font-size: 42px; }
 .is-v2 .practice-host .pqp-side > :is(.q-slot, .pqp-hint) { position: static; translate: none; margin: 0; min-height: 0; }
 .is-v2 .practice-host .pqp-hint { padding: 14px 28px 10px; font-size: 40px; }
-.is-v2[data-scene="topay"] .practice-host .pqp-answers { min-height: 336px; }
-.is-v2[data-scene="topay"] .practice-host .pqp-answers .pq-choices { gap: 18px; }
-.is-v2[data-scene="topay"] .practice-host .pqp-answers .pq-opt { width: 100% !important; height: 100px; font-size: 56px; }
+.is-v2[data-scene="topay"] .practice-host .pqp-answers .pq-opt { width: 290px !important; height: 130px; padding: 0 22px 0 14px; font-size: 56px; }
+.is-v2[data-scene="topay"] .practice-host .pqp-answers .pq-opt .q-chip { width: 72px; height: 72px; font-size: 38px; }
 .is-v2[data-scene="topay"] .practice-host .pqp-question { font-size: 54px; }
 /* 25 and 27: the working (and the bar under it) on the small panel itself */
 .is-v2 .practice-host .mp:has(> .ws-panel) { display: flex; flex-direction: column; align-items: center; gap: 30px; padding: 34px 44px 40px; border-radius: 32px; background: var(--paper); box-shadow: 0 24px 60px var(--deep-45); pointer-events: auto; }
