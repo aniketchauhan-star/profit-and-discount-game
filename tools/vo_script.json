@@ -1239,5 +1239,143 @@
     "line": "Wow! You did it!",
     "spoken": "Wow! You did it!",
     "speaker": "Swifty"
+  },
+  {
+    "id": "vo199",
+    "line": "Which shirt is the better deal? Tap it!",
+    "spoken": "Which shirt is the better deal? Tap it!",
+    "speaker": "Swifty"
+  },
+  {
+    "id": "vo200",
+    "line": "Which bottomwear is the better deal? Tap it!",
+    "spoken": "Which bottomwear is the better deal? Tap it!",
+    "speaker": "Swifty"
+  },
+  {
+    "id": "vo201",
+    "line": "Which watch is the better deal? Tap it!",
+    "spoken": "Which watch is the better deal? Tap it!",
+    "speaker": "Swifty"
+  },
+  {
+    "id": "vo202",
+    "line": "Which sunglasses are the better deal? Tap them!",
+    "spoken": "Which sunglasses are the better deal? Tap them!",
+    "speaker": "Swifty"
+  },
+  {
+    "id": "vo203",
+    "line": "Not quite! Work out both sale prices.",
+    "spoken": "Not quite! Work out both sale prices.",
+    "speaker": "Swifty"
+  },
+  {
+    "id": "vo204",
+    "line": "Blue shirt: ₹1,200 − ₹240 = ₹960.",
+    "spoken": "Blue shirt: one thousand two hundred rupees minus two hundred and forty rupees equals nine hundred and sixty rupees.",
+    "speaker": "Swifty"
+  },
+  {
+    "id": "vo205",
+    "line": "Green shirt: ₹1,000 − ₹150 = ₹850.",
+    "spoken": "Green shirt: one thousand rupees minus one hundred and fifty rupees equals eight hundred and fifty rupees.",
+    "speaker": "Swifty"
+  },
+  {
+    "id": "vo206",
+    "line": "Jeans: ₹1,800 − ₹540 = ₹1,260.",
+    "spoken": "Jeans: one thousand eight hundred rupees minus five hundred and forty rupees equals one thousand two hundred and sixty rupees.",
+    "speaker": "Swifty"
+  },
+  {
+    "id": "vo207",
+    "line": "Trousers: ₹1,600 − ₹300 = ₹1,300.",
+    "spoken": "Trousers: one thousand six hundred rupees minus three hundred rupees equals one thousand three hundred rupees.",
+    "speaker": "Swifty"
+  },
+  {
+    "id": "vo208",
+    "line": "Silver watch: ₹2,000 − ₹400 = ₹1,600.",
+    "spoken": "Silver watch: two thousand rupees minus four hundred rupees equals one thousand six hundred rupees.",
+    "speaker": "Swifty"
+  },
+  {
+    "id": "vo209",
+    "line": "Brown watch: ₹1,800 − ₹250 = ₹1,550.",
+    "spoken": "Brown watch: one thousand eight hundred rupees minus two hundred and fifty rupees equals one thousand five hundred and fifty rupees.",
+    "speaker": "Swifty"
+  },
+  {
+    "id": "vo210",
+    "line": "Black sunglasses: ₹1,200 − ₹240 = ₹960.",
+    "spoken": "Black sunglasses: one thousand two hundred rupees minus two hundred and forty rupees equals nine hundred and sixty rupees.",
+    "speaker": "Swifty"
+  },
+  {
+    "id": "vo211",
+    "line": "Brown sunglasses: ₹900 − ₹90 = ₹810.",
+    "spoken": "Brown sunglasses: nine hundred rupees minus ninety rupees equals eight hundred and ten rupees.",
+    "speaker": "Swifty"
+  },
+  {
+    "id": "vo212",
+    "line": "Correct! The green shirt costs ₹110 less.",
+    "spoken": "Correct! The green shirt costs one hundred and ten rupees less.",
+    "speaker": "Swifty"
+  },
+  {
+    "id": "vo213",
+    "line": "Correct! The jeans cost ₹40 less.",
+    "spoken": "Correct! The jeans cost forty rupees less.",
+    "speaker": "Swifty"
+  },
+  {
+    "id": "vo214",
+    "line": "Correct! The brown watch costs ₹50 less.",
+    "spoken": "Correct! The brown watch costs fifty rupees less.",
+    "speaker": "Swifty"
+  },
+  {
+    "id": "vo215",
+    "line": "Correct! The brown sunglasses cost ₹150 less.",
+    "spoken": "Correct! The brown sunglasses cost one hundred and fifty rupees less.",
+    "speaker": "Swifty"
+  },
+  {
+    "id": "vo216",
+    "line": "Great! You bought the green shirt!",
+    "spoken": "Great! You bought the green shirt!",
+    "speaker": "Swifty"
+  },
+  {
+    "id": "vo217",
+    "line": "Great! You bought the jeans!",
+    "spoken": "Great! You bought the jeans!",
+    "speaker": "Swifty"
+  },
+  {
+    "id": "vo218",
+    "line": "Great! You bought the brown watch!",
+    "spoken": "Great! You bought the brown watch!",
+    "speaker": "Swifty"
+  },
+  {
+    "id": "vo219",
+    "line": "Great! You bought the brown sunglasses!",
+    "spoken": "Great! You bought the brown sunglasses!",
+    "speaker": "Swifty"
+  },
+  {
+    "id": "vo220",
+    "line": "Total amount: ₹4,470.",
+    "spoken": "Total amount: four thousand four hundred and seventy rupees.",
+    "speaker": "Swifty"
+  },
+  {
+    "id": "vo221",
+    "line": "Money left: ₹530.",
+    "spoken": "Money left: five hundred and thirty rupees.",
+    "speaker": "Swifty"
   }
 ]

@@ -9,6 +9,8 @@
   const STAGE_H = 1080;
   const ASSETS = 'game assets/';
   const PARTY = ASSETS + 'party/'; // Party Prep's pictures, after screen 31 (the user's of 2026-10-23)
+  // Its shops' pictures (the user's showrooms of 2026-10-26: two of a kind in each, their prices on their tags).
+  const PARTY_SHOWROOMS = { shirt: 'shirt showroom .png', pants: 'bottom wear showroom.png', watch: 'watch showroom.png', sunglasses: 'glass showroom.png' };
   const reducedMotion = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
   const $ = sel => document.querySelector(sel);
   const sleep = ms => new Promise(r => setTimeout(r, ms));
@@ -475,11 +477,11 @@
       setup: mallSetup,
       play: playMall,
     },
-    ...[['shirtshop', 'The Shirts Shop', 'shirt', 'shop-shirts'], ['pantsshop', 'The Bottomwear Shop', 'pants', 'shop-bottomwear'],
-      ['watchshop', 'The Watch Shop', 'watch', 'shop-watches'], ['sunshop', 'The Sunglasses Shop', 'sunglasses', 'shop-sunglasses']]
-      .map(([id, title, buys, pic]) => ({
-        id, title, sub: 'Work out the sale price, and buy it', buys,
-        bg: PARTY + pic + '.webp',
+    ...[['shirtshop', 'The Shirts Shop', 'shirt'], ['pantsshop', 'The Bottomwear Shop', 'pants'],
+      ['watchshop', 'The Watch Shop', 'watch'], ['sunshop', 'The Sunglasses Shop', 'sunglasses']]
+      .map(([id, title, buys]) => ({
+        id, title, sub: 'Pick the better deal, and buy it', buys,
+        bg: PARTY + PARTY_SHOWROOMS[buys], // (the user's showrooms of 2026-10-26)
         kb: null, origin: '50% 50%', still: true, lamps: [], dust: null,
         next: () => (partyDone() ? 'partydone' : 'mallfloor'), // (back out into the mall, by its door)
         back: () => 'mallfloor',
@@ -487,7 +489,7 @@
         play: playShop,
       })),
     {
-      id: 'partydone', title: 'All Set for the Party!', sub: 'Total ₹3,720, ₹1,280 left',
+      id: 'partydone', title: 'All Set for the Party!', sub: 'Total ₹4,470, ₹530 left',
       bg: PARTY + 'mall-map.png',
       kb: null, origin: '50% 50%', still: true, lamps: [], dust: null,
       back: () => 'mallfloor',
@@ -2931,28 +2933,41 @@
   // ======================================================================
   // Party Prep (after screen 31: the user's pictures of 2026-10-23)
   // ======================================================================
-  // What Aniket buys for the party, at what price and discount (as the user's party designs had them: ₹3,720 in all,
-  // ₹1,280 left of ₹5,000), and on each shop's picture: where the thing is (its gold ring, picture px of 1672 × 941) and
-  // where its tag hangs (stage px); the amounts offered for its sale price.
+  // What Aniket buys for the party. In each shop (the user's showrooms of 2026-10-26) two of a kind are on show, each
+  // with its price and its discount printed on its tag (a percentage or an amount off): the better deal is the one that
+  // costs less after its discount (the user, 2026-10-26: "Pick the better deal"). Each: its price, its discount (`pct`
+  // or `flat`), where it is on the picture (picture px of 1672 × 941: the thing and its tag, what the player taps), and
+  // its picture for the card and the shopping list. ₹4,470 in all, ₹530 left of ₹5,000.
   const PARTY_BUDGET = 5000;
   const PARTY_WALLET = ASSETS + 'ui/shop/wallet.png';
   const PARTY_ITEMS = [
-    { id: 'shirt', name: 'Shirt', icon: PARTY + 'icon-shirt.png', mp: 1500, off: 20, shop: 'shirtshop', a: 'this shirt',
-      question: 'What is the sale price of this shirt?', options: [1500, 1300, 1200, 1050],
-      ring: [470, 222, 622, 402], tag: [728, 286] },
-    { id: 'pants', name: 'Bottomwear', icon: PARTY + 'icon-pants.png', mp: 1200, off: 10, shop: 'pantsshop', a: 'this bottomwear',
-      question: 'What is the sale price of this bottomwear?', options: [1080, 1100, 1200, 1320],
-      ring: [1236, 452, 1452, 704], tag: [1380, 520] },
-    { id: 'watch', name: 'Watch', icon: PARTY + 'icon-watch.png', mp: 1000, off: 20, shop: 'watchshop', a: 'this watch',
-      question: 'What is the sale price of this watch?', options: [1200, 900, 800, 980],
-      ring: [570, 232, 736, 458], tag: [870, 300] },
-    { id: 'sunglasses', name: 'Sunglasses', icon: PARTY + 'icon-sunglasses.png', mp: 800, off: 20, shop: 'sunshop', a: 'these sunglasses',
-      question: 'What is the sale price of these sunglasses?', options: [720, 640, 960, 780],
-      ring: [782, 486, 892, 542], tag: [1056, 470] },
+    { id: 'shirt', name: 'Shirt', icon: PARTY + 'icon-shirt.png', shop: 'shirtshop', a: 'this shirt',
+      ask: 'Which shirt is the better deal? Tap it!', deals: [
+        { name: 'Blue shirt', mp: 1200, pct: 20, spot: [548, 182, 768, 545], pic: 'deal-shirt-blue.webp' },
+        { name: 'Green shirt', mp: 1000, flat: 150, spot: [833, 182, 1053, 545], pic: 'deal-shirt-green.webp' },
+      ] },
+    { id: 'pants', name: 'Bottomwear', icon: PARTY + 'icon-pants.png', shop: 'pantsshop', a: 'this bottomwear',
+      ask: 'Which bottomwear is the better deal? Tap it!', deals: [
+        { name: 'Jeans', mp: 1800, pct: 30, spot: [676, 160, 848, 562], pic: 'deal-pants-jeans.webp', plural: true },
+        { name: 'Trousers', mp: 1600, flat: 300, spot: [930, 160, 1104, 562], pic: 'deal-pants-trousers.webp', plural: true },
+      ] },
+    { id: 'watch', name: 'Watch', icon: PARTY + 'icon-watch.png', shop: 'watchshop', a: 'this watch',
+      ask: 'Which watch is the better deal? Tap it!', deals: [
+        { name: 'Silver watch', mp: 2000, pct: 20, spot: [556, 340, 700, 540], pic: 'deal-watch-silver.webp' },
+        { name: 'Brown watch', mp: 1800, flat: 250, spot: [832, 340, 976, 540], pic: 'deal-watch-brown.webp' },
+      ] },
+    { id: 'sunglasses', name: 'Sunglasses', icon: PARTY + 'icon-sunglasses.png', shop: 'sunshop', a: 'these sunglasses',
+      ask: 'Which sunglasses are the better deal? Tap them!', deals: [
+        { name: 'Black sunglasses', mp: 1200, pct: 20, spot: [628, 422, 808, 514], pic: 'deal-sun-black.webp', plural: true },
+        { name: 'Brown sunglasses', mp: 900, pct: 10, spot: [866, 422, 1046, 514], pic: 'deal-sun-brown.webp', plural: true },
+      ] },
   ];
+  PARTY_ITEMS.forEach(it => it.deals.forEach(d => { d.pic = PARTY + d.pic; }));
   const inr = FX.inr;
-  const partyOff = it => (it.mp * it.off) / 100;
-  const partyPay = it => it.mp - partyOff(it);
+  const dealOff = d => (d.pct ? (d.mp * d.pct) / 100 : d.flat);
+  const dealPay = d => d.mp - dealOff(d);
+  const bestDeal = it => it.deals.reduce((best, d) => (dealPay(d) < dealPay(best) ? d : best));
+  const partyPay = it => dealPay(bestDeal(it));
   // What Aniket has bought (ids), and which shop he came out of (where he stands on the map then). Fresh at the message.
   const Party = { bought: new Set(), from: null };
   const partyMoney = () => PARTY_BUDGET - PARTY_ITEMS.filter(it => Party.bought.has(it.id)).reduce((sum, it) => sum + partyPay(it), 0);
@@ -2962,11 +2977,14 @@
   const PK = STAGE_W / 1672;
   const pp = (x, y) => [Math.round(x * PK), Math.round(y * PK)];
 
-  // The bar on top (the mall and its shops): the wallet and the shopping list.
+  // The bar on top (the mall and its shops): the wallet and the shopping list (what was bought: its picture, ticked).
   function partyBar(scene) {
     scene.bar = FX.partyHud(scene.ui, {
       wallet: PARTY_WALLET, money: partyMoney(),
-      items: PARTY_ITEMS.map(it => ({ icon: it.icon, name: it.name, done: Party.bought.has(it.id) })),
+      items: PARTY_ITEMS.map(it => {
+        const done = Party.bought.has(it.id);
+        return { icon: done ? bestDeal(it).pic : it.icon, name: done ? bestDeal(it).name : it.name, done };
+      }),
     });
   }
 
@@ -3268,95 +3286,124 @@
   }
 
   // ---------- A shop (screens 37–40) ----------
-  // Its picture: the thing to buy ringed, its price tag hanging on it; Swifty says what it costs. The question (its sale
-  // price) on a card: a wrong answer, "Not quite!" and a hint on the card (read out), another try; the right one, the
-  // sale price worked out, Buy or Keep Looking. Buy: PAID, the money comes out of the wallet, its picture goes onto the
-  // shopping list (ticked), and back out into the mall (or, all bought, on to the end).
+  // Two of a kind on show, each with its price and discount printed on its tag (the user's showrooms of 2026-10-26).
+  // Both light up, each a button; Swifty asks which is the better deal. A wrong one: crossed out, and on a card her
+  // voice works out both sale prices (each line lit as it is said); the right one: ticked, sparkles, and a card with the
+  // two worked out side by side, the better one ticked, and Buy. Buy: PAID, the money comes out of the wallet, its
+  // picture goes onto the shopping list (ticked), and back out into the mall (or, all bought, on to the end).
   function shopSetup(scene) {
     Party.from = scene.buys; // (back out into the mall, he stands at this shop's door)
     partyBar(scene);
     const it = PARTY_ITEMS.find(x => x.id === scene.buys);
-    const [tx, ty] = it.tag;
-    const tag = el('div', 'shop-tag', scene.layer, { left: `${tx}px`, top: `${ty}px` });
-    tag.innerHTML = `<span class="tg-price">${inr(it.mp)}</span><span class="tg-off">${it.off}%<br>OFF</span>`;
-    tag.style.opacity = '0';
-    scene.tag = tag;
+    scene.spots = it.deals.map(d => {
+      const [x0, y0] = pp(d.spot[0], d.spot[1]);
+      const [x1, y1] = pp(d.spot[2], d.spot[3]);
+      const b = el('button', 'deal-spot', scene.ui, { left: `${x0}px`, top: `${y0}px`, width: `${x1 - x0}px`, height: `${y1 - y0}px` });
+      b.type = 'button';
+      b.setAttribute('aria-label', `${d.name}: ${inr(d.mp)}, ${d.pct ? `${d.pct}%` : inr(d.flat)} off`);
+      el('span', 'ds-mark', b);
+      b.style.opacity = '0';
+      return b;
+    });
   }
+
+  // "Blue shirt: ₹1,200 − ₹240 = ₹960." (a deal's sale price worked out, as said and as written on the hint card)
+  const dealSum = d => `${d.name}: ${inr(d.mp)} − ${inr(dealOff(d))} = ${inr(dealPay(d))}.`;
 
   async function playShop(ctx, scene) {
     const k = PARTY_ITEMS.findIndex(x => x.id === scene.buys);
     const it = PARTY_ITEMS[k];
-    const off = partyOff(it);
-    const pay = partyPay(it);
+    const best = bestDeal(it);
     const bar = scene.bar;
-    const swifty = partyBird(ctx, scene, { upTo: it.id === 'pants' ? 1180 : 1060 });
+    const spots = scene.spots;
+    const swifty = partyBird(ctx, scene, { upTo: 1180 });
+    // a tap counts at once, even while she still asks (as the price card's buttons do)
+    let tapped = null;
+    let waiting = null;
+    spots.forEach((b, i) => b.addEventListener('click', () => {
+      if (b.disabled) return;
+      if (waiting) {
+        const w = waiting;
+        waiting = null;
+        w(i);
+      } else if (tapped === null) {
+        tapped = i;
+      }
+    }));
+    const choose = () => new Promise(resolve => {
+      if (tapped === null) waiting = resolve;
+      else {
+        resolve(tapped);
+        tapped = null;
+      }
+    });
     await ctx.wait(700);
-    const [x0, y0] = pp(it.ring[0], it.ring[1]);
-    const [x1, y1] = pp(it.ring[2], it.ring[3]);
-    FX.ring(scene.layer, { x: (x0 + x1) / 2, y: (y0 + y1) / 2, w: x1 - x0 + 30, h: y1 - y0 + 30, round: 24 });
     Sound.sparkle();
-    await ctx.wait(300);
-    Sound.pop();
-    FX.reveal(scene.tag, [{ opacity: 0, transform: 'rotate(-30deg) scale(.4)' }, { opacity: 1, transform: 'rotate(8deg) scale(1.05)', offset: 0.6 },
-      { opacity: 1, transform: 'rotate(-3deg)', offset: 0.8 }, { opacity: 1, transform: 'none' }], { duration: reducedMotion ? 1 : 900, easing: 'ease-out' });
-    await ctx.wait(500);
+    spots.forEach((b, i) => FX.reveal(b, [{ opacity: 0, transform: 'scale(1.25)' }, { opacity: 1, transform: 'none' }],
+      { duration: reducedMotion ? 1 : 600, delay: reducedMotion ? 0 : i * 160, easing: 'cubic-bezier(.2,.8,.3,1)' }));
+    await ctx.wait(800);
     if (Party.bought.has(it.id)) { // (here again, from the scene list: it is bought already)
+      spots.forEach((b, i) => { b.disabled = true; b.classList.add(it.deals[i] === best ? 'is-right' : 'is-done'); });
       await swifty.say(`${it.id}-had`, `You bought ${it.a} already!`);
       ctx.advance(3000);
       return;
     }
-    await swifty.say(`${it.id}-intro`, [{ t: `${it.a[0].toUpperCase()}${it.a.slice(1)} ${it.id === 'sunglasses' ? 'are' : 'is'} ` }, { t: inr(it.mp), em: true }, { t: `, with ${it.off}% off.` }]);
-    await ctx.wait(500);
+    await swifty.say(`${it.id}-which`, [{ t: it.ask.replace(/Tap (it|them)!$/, '') }, { t: it.ask.match(/Tap (it|them)!$/)[0], cls: 'key' }]); // (the space ends the first part: a coloured part keeps no space before it)
     await swifty.hide();
-    const q = FX.shopQuestion(scene.ui, { question: it.question, options: it.options, tag: { icon: it.icon, price: it.mp, off: it.off } });
-    await q.open();
-    await readLit(ctx, `${it.id}-ask`, it.question, [q.question]);
+    let hint = null;
     for (;;) {
-      const i = await q.answer();
+      const i = await choose();
       if (!ctx.alive()) return;
-      if (it.options[i] === pay) {
-        q.right(i);
-        const r = stageRect(q.buttons[i]);
-        FX.burst(scene.ui, r.left + r.width / 2, r.top + r.height / 2, { count: 18, dist: [110, 230], size: [14, 28] });
+      const r = stageRect(spots[i]);
+      if (it.deals[i] === best) {
+        spots[i].classList.add('is-right');
+        spots.forEach(b => { b.disabled = true; });
+        Sound.correct();
+        FX.burst(scene.ui, r.left + r.width / 2, r.top + r.height / 2, { count: 20, dist: [110, 240], size: [14, 28] });
         break;
       }
-      const tip = `Find the ${it.off}% discount first.`;
-      const hint = q.wrong(i, { tip, sum: [{ t: `${it.off}% of ${inr(it.mp)} = ` }, { t: inr(off), cls: 'is-red' }] });
-      await ctx.wait(500);
-      await readLit(ctx, `${it.id}-hint`, `Not quite! ${tip} ${it.off}% of ${inr(it.mp)} = ${inr(off)}.`, [hint]);
+      // the other one: crossed out; her voice works both out, on a card (her voice alone: she isn't there)
+      spots[i].classList.add('is-wrong');
+      spots[i].disabled = true;
+      Sound.wrong();
+      await ctx.wait(600);
+      hint = el('div', 'deal-hint', scene.ui);
+      const strip = hintStrip(hint, [[{ t: 'Not quite! Work out both sale prices.' }], ...it.deals.map(d => [{ t: `${d.name}: `, cls: 'hs-name' },
+        { t: `${inr(d.mp)} − ${inr(dealOff(d))} = ` }, { t: inr(dealPay(d)), em: true }, { t: '.' }])]);
+      FX.reveal(hint, [{ opacity: 0, transform: 'translateY(24px) scale(.96)' }, { opacity: 1, transform: 'none' }], { duration: reducedMotion ? 1 : 420, easing: 'cubic-bezier(.2,.8,.3,1)' });
+      await ctx.wait(reducedMotion ? 60 : 450);
+      await readLit(ctx, 'deal-hint', 'Not quite! Work out both sale prices.', [strip.parts[0]]);
+      for (const [n, d] of it.deals.entries()) await readLit(ctx, `${it.id}-sum-${n}`, dealSum(d), [strip.parts[n + 1]]);
     }
-    await ctx.wait(900);
-    await q.close();
-    const card = FX.priceCard(scene.ui, {
-      icon: it.icon, cls: `pc2--buy pc2--${it.id}`,
-      rows: [{ label: 'Original Price', value: inr(it.mp) }, { label: `Discount (${it.off}%)`, value: `− ${inr(off)}`, cls: 'is-off' }],
-      total: { label: 'Sale Price', value: inr(pay) },
-      buttons: [{ label: 'Buy', tone: 'buy', icon: 'cart' }, { label: 'Keep Looking', tone: 'look', icon: 'search' }],
+    await ctx.wait(700);
+    if (hint) {
+      const old = hint;
+      FX.settle(old.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 300, fill: 'forwards' })).then(() => old.remove());
+    }
+    // the two worked out side by side, the better one ticked; Buy
+    const card = FX.dealCard(scene.ui, {
+      cls: `dc--${it.id}`,
+      deals: it.deals.map(d => ({ name: d.name, pic: d.pic, mp: d.mp, off: dealOff(d), pct: d.pct || null, pay: dealPay(d), best: d === best })),
     });
     await card.open();
-    const ask = [{ t: 'Great!', cls: 'stress' }, { t: ' The sale price is ' }, { t: inr(pay), em: true }, { t: `. Do you want to buy ${it.a}?` }];
-    await swifty.say(`${it.id}-great`, ask);
-    for (;;) {
-      const b = await card.choose();
-      if (!ctx.alive()) return;
-      if (b === 0) break;
-      await card.hide(); // Keep Looking: a look round the shop, and it comes back
-      await swifty.say('look-around', 'Take your time and look around!', 300);
-      await ctx.wait(900);
-      await card.show();
-      await swifty.say(`${it.id}-great`, ask);
-    }
+    const other = it.deals.find(d => d !== best);
+    await swifty.say(`${it.id}-right`, [{ t: 'Correct!', cls: 'stress' }, { t: ` The ${best.name.toLowerCase()} ${best.plural ? 'cost' : 'costs'} ` },
+      { t: inr(dealPay(other) - dealPay(best)), em: true }, { t: ' less.' }]);
+    await card.choose();
+    if (!ctx.alive()) return;
     // Buy: paid; the money comes out of the wallet, and the thing goes onto the list, ticked.
     await swifty.hide();
     card.stamp('PAID');
     Sound.kaching();
     Party.bought.add(it.id);
     const counting = bar.count(partyMoney());
-    await flyToList(ctx, scene, card.el.querySelector('.pc2-pic img'), bar.slots[k], it.icon);
+    await flyToList(ctx, scene, card.bestPic, bar.slots[k], best.pic);
+    const slotPic = bar.slots[k].querySelector('img');
+    if (slotPic) slotPic.src = best.pic; // (the list shows what was bought)
     bar.tick(k);
     await counting;
     await ctx.wait(400);
-    await swifty.say(`${it.id}-done`, [{ t: 'Great!', cls: 'stress' }, { t: ` You bought ${it.id === 'pants' ? 'the bottomwear' : `the ${it.name.toLowerCase()}`}!` }]);
+    await swifty.say(`${it.id}-done`, [{ t: 'Great!', cls: 'stress' }, { t: ` You bought the ${best.name.toLowerCase()}!` }]);
     ctx.advance(3000); // back out into the mall (or on to the end)
   }
 
@@ -3384,7 +3431,7 @@
   async function playPartyDone(ctx, scene) {
     const total = PARTY_BUDGET - partyMoney();
     const bought = PARTY_ITEMS.filter(it => Party.bought.has(it.id));
-    const items = (bought.length ? bought : PARTY_ITEMS).map(it => ({ name: it.name, icon: it.icon, mp: it.mp, pay: partyPay(it) }));
+    const items = (bought.length ? bought : PARTY_ITEMS).map(it => ({ name: bestDeal(it).name, icon: bestDeal(it).pic, mp: bestDeal(it).mp, pay: partyPay(it) }));
     const shown = bought.length ? total : PARTY_ITEMS.reduce((sum, it) => sum + partyPay(it), 0); // (from the scene list: the whole list)
     const table = FX.partyTable(scene.ui, { title: 'All Set for the Party!', items, total: shown, left: PARTY_BUDGET - shown });
     const swifty = partyBird(ctx, scene, { upTo: 1080 }); // (left of the table)
@@ -3406,7 +3453,7 @@
     table.el.remove();
     const mission = FX.partyMission(scene.ui, {
       title: 'MISSION COMPLETE!', text: 'You have successfully helped Aniket get ready for the party!',
-      items: PARTY_ITEMS.map(it => ({ name: it.name, icon: it.icon })),
+      items: PARTY_ITEMS.map(it => ({ name: bestDeal(it).name, icon: bestDeal(it).pic })),
     });
     FX.confetti(scene.ui);
     const tiles = mission.tiles(ctx); // (they come in with the card: it is never empty)
@@ -4452,7 +4499,7 @@
     const label = $('#loader-text');
     const images = SCENES.flatMap(s => [s.bg, s.react]).filter(Boolean).concat(
       ASSETS + 'ui/start-button.png', WALK_RIG.src, SWIFTY.fly.src, SWIFTY.stand.src, ART.money, ART.book,
-      ASSETS + 'ui/sneakers.png', DOORWAY.src, STAND, TOP_SHEET.src, PARTY_WALLET, ...PARTY_ITEMS.map(it => it.icon)
+      ASSETS + 'ui/sneakers.png', DOORWAY.src, STAND, TOP_SHEET.src, PARTY_WALLET, ...PARTY_ITEMS.flatMap(it => [it.icon, ...it.deals.map(d => d.pic)])
     );
     const fonts = document.fonts
       ? Promise.race([Promise.all([ // the fonts, before the first words appear (no swapping in later)

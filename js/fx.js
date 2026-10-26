@@ -5479,6 +5479,85 @@
     };
   }
 
+  /**
+   * Two deals side by side (a shop's better deal: the user, 2026-10-26): for each, its picture, its name, its price
+   * less its discount worked out ("₹1,200 − 20% (₹240)"), and what it costs then, big; the better one ticked, green,
+   * "Better deal" on it; and Buy under them. choose() resolves when Buy is pressed (a press while Swifty still speaks
+   * counts); stamp() puts PAID across the better one. bestPic: its picture (to fly onto the shopping list).
+   *  deals [{ name, pic, mp, off, pct, pay, best }]
+   */
+  function dealCard(parent, { deals, cls = '' }) {
+    const root = el('div', classes('pc2 dc', cls), parent);
+    const card = el('div', 'pc2-card dc-card', root);
+    let bestPic = null;
+    let bestRow = null;
+    deals.forEach(d => {
+      const row = el('div', d.best ? 'dc-row is-best' : 'dc-row', card);
+      const pic = el('div', 'dc-pic', row);
+      const img = Object.assign(el('img', '', pic), { src: d.pic, alt: '' });
+      el('b', 'dc-name', row).textContent = d.name;
+      el('b', 'dc-pay', row).textContent = inr(d.pay);
+      el('span', 'dc-sum', row).textContent = `${inr(d.mp)} − ${d.pct ? `${d.pct}% (${inr(d.off)})` : inr(d.off)}`;
+      if (d.best) {
+        const badge = el('span', 'dc-badge', row);
+        badge.innerHTML = `${ICON_CHECK}<span>Better deal</span>`;
+        bestPic = img;
+        bestRow = row;
+      }
+    });
+    const buttons = el('div', 'pc2-buttons', card);
+    const buy = el('button', 'pc2-btn pc2-btn--buy', buttons);
+    buy.type = 'button';
+    buy.innerHTML = `${PARTY_ICONS.cart}<span>Buy</span>`;
+    let choosing = null;
+    let early = false;
+    buy.addEventListener('click', () => {
+      if (root.classList.contains('is-paid')) return;
+      Sound.click();
+      if (choosing) {
+        const resolve = choosing;
+        choosing = null;
+        resolve();
+      } else if (!early) {
+        early = true;
+        buy.classList.add('is-pressed');
+      }
+    });
+    root.style.opacity = '0';
+    return {
+      el: root,
+      card,
+      bestPic,
+      open: () => springIn(root, 620),
+      choose() {
+        if (early) {
+          early = false;
+          buy.classList.remove('is-pressed');
+          return Promise.resolve();
+        }
+        return new Promise(resolve => { choosing = resolve; });
+      },
+      // Paid: a stamp across the better deal, and Buy goes.
+      stamp(text = 'PAID') {
+        root.classList.add('is-paid');
+        const st = el('div', 'pc2-stamp dc-stamp', bestRow || card);
+        st.textContent = text;
+        Sound.stamp();
+        reveal(st, [{ opacity: 0, transform: 'scale(2.2) rotate(-14deg)' }, { opacity: 1, transform: 'scale(.95) rotate(-10deg)', offset: 0.7 },
+          { opacity: 1, transform: 'rotate(-10deg)' }], { duration: 480, easing: 'cubic-bezier(.3,.7,.4,1)' });
+        const h = buttons.offsetHeight; // (Buy goes, and its room closes up: no empty card under the deals)
+        buttons.style.overflow = 'hidden';
+        settle(buttons.animate([{ opacity: 1, height: `${h}px`, marginTop: getComputedStyle(buttons).marginTop }, { opacity: 0, height: '0px', marginTop: '0px' }],
+          { duration: reducedMotion ? 1 : 420, easing: 'ease-in-out', fill: 'forwards' }));
+      },
+      async close() {
+        await settle(root.animate([{ opacity: 1, transform: 'none' }, { opacity: 0, transform: 'translateY(24px) scale(.96)' }],
+          { duration: 320, easing: 'ease-in', fill: 'forwards' }));
+        root.remove();
+      },
+    };
+  }
+
   /** A green ✓ badge on a shop that is done (its item bought). */
   function doneBadge(parent, { x, y, instant = false }) {
     const b = el('div', 'pm-done', parent, { left: px(x - 34), top: px(y - 34) });
@@ -5573,7 +5652,7 @@
   window.FX = {
     CANCELLED, el, fracText, rand, settle, reveal, flyAcross, glow, motes, twinkles, burst, shine, exclaim, bubble, thought, badge, ring, question, definitions, pricePanel,
     reduction, definitionCard, checkpoint, formulaNote, concept, barModel, grid100, formulaPanel, formulaReveal, summaryPanel, productCard, productQuestion, meansPanel, workedSheet, summarySheet, strike, stickTag, choices, percentFormula, questionPanel, challengePanel, walletPanel, shopPicker, street, streetVeil, questionBar, offerCard, flyPicture, purchaseSlip, confetti, celebration, receipt, twoAmounts, missionPanel, recapCards, takeaway, Bird, Walker,
-    inr, partyHud, shopQuestion, priceCard, doneBadge, partyTable, partyMission, arrowPad, TopWalker,
+    inr, partyHud, shopQuestion, priceCard, dealCard, doneBadge, partyTable, partyMission, arrowPad, TopWalker,
     setPace(p) { pace = p; },
   };
 })();
