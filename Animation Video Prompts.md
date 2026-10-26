@@ -13,17 +13,17 @@ Screen numbers are the brief's (as in `PROMPT.md`).
 
 **The review meeting of 2026-10-21** (`docs/MEETING-2026-10-21.md`): in the clips made with Gemini the people change from clip to clip, the lips move a little after the words, and the picture is soft, so **all 32 are to be made again on Higgsfield**, in 1080p, the people exactly as in the pictures and their faces showing what they say; the game keeps the Gemini takes until then. The meeting also asked for a new clip, **`s03-walk-in`**: Aniket walks up to the bookstore and the door opens for him (the game plays it on Screen 3 as soon as it is made). The same day the user asked for another, **`s05-pickup`**: on Screen 5, before "This book looks interesting!", Aniket picks the book up from the display (made backwards, see its prompt; the game plays it first on Screen 5 as soon as it is made). Everything to make is in `Animation Video Prompts - Left to Make.md`.
 
-**42 clips play in the game.** (Screens 2, 4, 9, 24 and 44 were taken out on 2026-10-21: the clips `s04-to-s05` and `s24-idle` were removed, and `s09-to-s10`, `s24-to-s25` and `s43-to-s44` aren't needed.)
+**29 clips play in the game.** (Screens 2, 4, 9, 24 and 44 were taken out on 2026-10-21: the clips `s04-to-s05` and `s24-idle` were removed, and `s09-to-s10`, `s24-to-s25` and `s43-to-s44` aren't needed. The screens after 31 were made again as Party Prep on 2026-10-23, and on 2026-10-26 the clips of the ones that went were removed from the folder too, with their prompts: `s40-father-2`, `s41-idle`, `s41-father-1`, `s42-to-s43`, `s46-idle` and the eight of Screen 56, and your Gemini take `outgoing.mp4`. They are in git's history.)
 - **Screens 1, 5, 6, 7 and 8** (made on Higgsfield): `s01-idle`, `s01-aniket-1`, `s01-father`, `s01-aniket-2`, `s05-idle`, `s05-aniket`, `s06-idle`, `s06-aniket`, `s06-shopkeeper` and `s07-idle`. Screen 8 uses `s07-idle` too (the same picture). Until Screen 14 has its own clips, the shopkeeper there also talks with `s06-shopkeeper`.
 - **Screens 20 and 21** (your Gemini take `outgoing.mp4`, cut in two 4.6 s in, where Aniket walks past the open door, as in your screenshot of Screen 21): `s20-out` and `s21-walk`, with a cut between the two screens. The take sits 15 px higher than the picture, so `tools/gemini_clean.py` was given its framing (`--framing 1.0226,0.6,-15`), and its sparkle is covered with the floor just left of it (`--star-from -60,-3`): under the sparkle, the take draws the glass's base lower than the picture does. On Screen 5, the clips show the book stand a little smaller and higher up than the picture (about 24 px); the names on the books move with it. On Screen 25, `s25-idle` and `s25-aniket-1` blur the price on the white card into "e1800", and on Screens 22 and 35 the clips redraw the ₹1800 tent card's price roughly: the game lays the picture's card over them (`s23-zoom`, whose camera moves, draws it well).
-- **Screens 22, 23, 25, 35, 36, 40, 41, 42 → 43, 43, 45, 46 and 56** (made with Gemini, 30 clips): `s22-aniket-1`, `s22-aniket-2`, `s22-aniket-3`, `s23-idle`, `s23-zoom`, `s25-idle`, `s25-aniket-1`, `s25-aniket-2`, `s36-box`, `s40-idle`, `s40-father-1`, `s40-aniket`, `s40-father-2`, `s41-idle`, `s41-father-1`, `s42-to-s43`, `s43-father`, `s45-idle`, `s45-father-1`, `s45-aniket-1`, `s45-aniket-2`, `s46-idle` and all eight of Screen 56. Until `s41-father-2` and `s45-father-2` are made, the father says those lines with `s41-father-1` and `s45-father-1`.
+- **Screens 22, 23, 25, 35, 36, 40, 43 and 45** (made with Gemini, 17 clips): `s22-aniket-1`, `s22-aniket-2`, `s22-aniket-3`, `s23-idle`, `s23-zoom`, `s25-idle`, `s25-aniket-1`, `s25-aniket-2`, `s36-box`, `s40-idle`, `s40-father-1`, `s40-aniket`, `s43-father`, `s45-idle`, `s45-father-1`, `s45-aniket-1` and `s45-aniket-2`. Until `s45-father-2` is made, the father says that line with `s45-father-1`.
 
 From the Gemini batch:
 - **Cleaned** with `tools/gemini_clean.py`: the Gemini sparkle is gone, and each clip sits exactly on its picture again (Gemini shows the picture about 2% closer, and in `s25-aniket-2` and `s45-aniket-2` the camera also pushed in; it is held still now; `s23-zoom` keeps its camera move, which is the point of it). Then `tools/enhance_clips.py --ai` redrew each one at 1920 × 1080, the stage's size, with **Real-ESRGAN** (its model for cartoon video, `realesr-animevideov3`, at twice the size, then brought to 1080p), so outlines, faces and printed words are sharp instead of blurred when the browser stretches a 720p clip: about 1.5 MB each now. The tool is a free download (github.com/xinntao/Real-ESRGAN/releases, v0.2.5.0, `realesrgan-ncnn-vulkan-20220424-macos.zip`); give its folder to `--ai`. Without it, `tools/enhance_clips.py` sharpens instead (a light denoise, Lanczos, sharpening on the lines), and `--import --gemini` does that by itself for new takes.
 - **`s23-zoom`, repaired by hand:** where its camera moves in, the cleaner covered the sparkle with the wrong spot of the picture, so a white, yellow or purple star showed on the stand (frames 51–68, 81–94 and 123–124). In those frames, that spot was taken from the nearest frame without one, fitted to the camera and blended in. If the clip is ever made or cleaned again, check the stand under the sparkle.
 - **The shoe shop is all video, no still picture** (Screens 22, 23, 25 and 35). Your three takes for Screen 22 start on Aniket pointing, so Screen 22 now shows that picture, `he saw a shoe.png`, and plays them, with `s23-idle` between the lines; `shoes shop enter.png` is no longer used. Screen 23 plays `s23-zoom`: Aniket points, and the camera moves in on the ₹1800 and 30% OFF tags. Screen 25 has its quiet loop, `s25-idle` (from the quiet end of the take for `s25-aniket-1`). Screen 35 reuses Screen 22's clips: `s23-idle`, then `s22-aniket-1` for "So, after a 30% discount," and `s22-aniket-3` for "I will pay ₹1260." So `s22-to-s23` and `s23-to-s24` are no longer needed, nor clips of Screen 35's own.
-- **Started a little later:** `s40-aniket` and `s40-father-2` begin once Aniket has finished stepping in (0.7 s and 0.6 s into the take), and `s45-aniket-1` and `s45-aniket-2` once the father's hand is down (0.75 s and 0.5 s). Otherwise Aniket, or the father's hand, would jump back at each new line. On Screens 40 and 45 the last clip also stays on its last frame between lines. Gemini wrote "Really?" on the screen in `s45-aniket-1`; it is covered.
-- **Loops:** `s25-idle` and `s46-idle` play forwards and then backwards, so they loop without a jump.
+- **Started a little later:** `s40-aniket` begins once Aniket has finished stepping in (0.7 s into the take), and `s45-aniket-1` and `s45-aniket-2` once the father's hand is down (0.75 s and 0.5 s). Otherwise Aniket, or the father's hand, would jump back at each new line. On Screens 40 and 45 the last clip also stays on its last frame between lines. Gemini wrote "Really?" on the screen in `s45-aniket-1`; it is covered.
+- **Loop:** `s25-idle` plays forwards and then backwards, so it loops without a jump.
 - **Not used:** a take of Aniket pointing (it ends with his arm down, turned away), the take for `s24-to-s25` (he crosses his arms), and a second take of `s45-idle` (the camera pushes in). Gemini's original files (with the sparkle) were moved to the Trash, so they don't weigh down the folder.
 - **To make on Higgsfield:** the movements (Gemini can't be given an end frame).
 
@@ -100,26 +100,12 @@ camera movement, zoom, pan, shake, cut, morphing, melting, warping, flicker, fac
 | s40-idle | 40 | boy return home .png | same | 5 s | both smile, back home |
 | s40-father-1 | 40 | boy return home .png | same | 4 s | Dad: "How was your shopping?" |
 | s40-aniket | 40 | boy return home .png | same | 7 s | Aniket: "Great! I learnt about marked price, discount and discount percentage." |
-| s40-father-2 | 40 | boy return home .png | same | 5 s | Dad: "That's useful, because you have another shopping job." |
-| s41-idle | 41 | boy and his father talking.png | same | 5 s | both at the table |
-| s41-father-1 | 41 | boy and his father talking.png | same | 4 s | Dad: "Your new school session starts in a few days." |
-| s41-father-2 | 41 | boy and his father talking.png | same | 4 s | Dad: "You still need some things for school." |
-| s42-to-s43 | 42 → 43 | father gave him list.png | father gave him money.png | 5 s | the list handed over, then the notes held out |
 | s43-father | 43 | father gave him money.png | same | 4 s | Dad: "Here's ₹5,000." |
 | s45-idle | 45 | boy stand and talk .png | same | 5 s | both listen |
 | s45-father-1 | 45 | boy stand and talk .png | same | 5 s | Dad: "Use what you have learnt and find the best deals." |
 | s45-father-2 | 45 | boy stand and talk .png | same | 5 s | Dad: "Whatever is left after buying everything is yours." |
 | s45-aniket-1 | 45 | boy stand and talk .png | same | 4 s | Aniket: "Really?" |
 | s45-aniket-2 | 45 | boy stand and talk .png | same | 4 s | Aniket: "Then I'm definitely finding the best offers!" |
-| s46-idle | 46 | game begins.png | same | 5 s | Aniket breathes, gives a small wave |
-| s56-idle | 56 | return home shopping list .png | same | 5 s | both smile |
-| s56-father-1 | 56 | return home shopping list .png | same | 4 s | Dad: "Did you get everything?" |
-| s56-aniket-1 | 56 | return home shopping list .png | same | 4 s | Aniket: "Yes!" |
-| s56-father-2 | 56 | return home shopping list .png | same | 4 s | Dad: "How much did you spend?" |
-| s56-aniket-2 | 56 | return home shopping list .png | same | 4 s | Aniket: "₹4,340." |
-| s56-father-3 | 56 | return home shopping list .png | same | 4 s | Dad: "So you still have ₹660 left!" |
-| s56-aniket-3 | 56 | return home shopping list .png | same | 4 s | Aniket: "And I got the best deal for every item!" |
-| s56-father-4 | 56 | return home shopping list .png | same | 5 s | Dad: "Well done! You really did shop wisely." |
 
 No clips are needed for:
 - Screen 2: it stays still, as the brief says.
@@ -352,39 +338,7 @@ Save as `game assets/video/s40-aniket.mp4` · start frame `boy return home .png`
 At home, the boy on the left (green T-shirt, navy backpack, a blue book held against his chest, a blue-and-white shopping bag in his other hand) answers his father happily: "Great! I learnt about marked price, discount and discount percentage." His lips move in time with these words from the very first second, with natural mouth shapes; his eyebrows rise, his head nods, and he lifts the shopping bag a little to show it, then lowers it back to where it was. He finishes speaking by about 6 seconds, then smiles with his mouth closed. The father on the right listens with a smile and blinks, holding his cup and newspaper still. Start and end on exactly this picture with the boy's mouth closed. Camera locked: no zoom, pan or shake. Same 2D cartoon illustration style as the picture (clean outlines, soft flat colours, warm light). Every face, hairstyle, outfit, body shape and colour stays exactly the same. Everything not described stays perfectly still. The wall signs stay sharp and in place. No added text, captions or speech bubbles.
 ```
 
-#### s40-father-2.mp4
-Save as `game assets/video/s40-father-2.mp4` · start frame `boy return home .png` · end frame: the same picture · 5 s · sound off
-```text
-At home, the father at the dining table on the right (light-blue shirt, moustache) replies to his son with a knowing smile: "That's useful, because you have another shopping job." His lips move under his moustache in time with these words from the very first second, with natural mouth shapes; his eyebrows lift playfully and his head nods once. He finishes speaking by about 4 seconds, then smiles with his mouth closed, holding his cup and newspaper still. The boy on the left listens, curious, and blinks. Start and end on exactly this picture with the father's mouth closed. Camera locked: no zoom, pan or shake. Same 2D cartoon illustration style as the picture (clean outlines, soft flat colours, warm light). Every face, hairstyle, outfit, body shape and colour stays exactly the same. Everything not described stays perfectly still. The wall signs stay sharp and in place. No added text, captions or speech bubbles.
-```
-
-### Screen 41: school starts soon
-
-#### s41-idle.mp4
-Save as `game assets/video/s41-idle.mp4` · start frame `boy and his father talking.png` · end frame: the same picture · 5 s · sound off
-```text
-A boy (green T-shirt) and his father (light-blue shirt, moustache) sit facing each other at a wooden dining table. Both breathe gently and blink once or twice. Nobody talks. The father's raised hand stays where it is; the boy's hands rest on the table. Start and end on exactly this picture, so the clip loops seamlessly. Camera locked: no zoom, pan or shake. Same 2D cartoon illustration style as the picture (clean outlines, soft flat colours, warm light). Every face, hairstyle, outfit, body shape and colour stays exactly the same. Everything not described stays perfectly still. No added text, captions or speech bubbles.
-```
-
-#### s41-father-1.mp4
-Save as `game assets/video/s41-father-1.mp4` · start frame `boy and his father talking.png` · end frame: the same picture · 4 s · sound off
-```text
-At a wooden dining table, the father on the right (light-blue shirt, moustache) tells his son, calm and caring: "Your new school session starts in a few days." His lips move under his moustache in time with these words from the very first second, with natural mouth shapes; his head nods, and his raised open hand makes a small explaining gesture and returns to exactly where it was; his other hand stays on the table. He finishes speaking by about 3.5 seconds, then smiles with his mouth closed. The boy on the left listens, nods once and blinks. Start and end on exactly this picture with the father's mouth closed. Camera locked: no zoom, pan or shake. Same 2D cartoon illustration style as the picture (clean outlines, soft flat colours, warm light). Every face, hairstyle, outfit, body shape and colour stays exactly the same. Everything not described stays perfectly still. No added text, captions or speech bubbles.
-```
-
-#### s41-father-2.mp4
-Save as `game assets/video/s41-father-2.mp4` · start frame `boy and his father talking.png` · end frame: the same picture · 4 s · sound off
-```text
-At a wooden dining table, the father on the right (light-blue shirt, moustache) adds, calm and caring: "You still need some things for school." His lips move under his moustache in time with these words from the very first second, with natural mouth shapes; his raised open hand makes a small gesture and returns to exactly where it was; his other hand stays on the table. He finishes speaking by about 3 seconds, then smiles with his mouth closed. The boy on the left listens and blinks. Start and end on exactly this picture with the father's mouth closed. Camera locked: no zoom, pan or shake. Same 2D cartoon illustration style as the picture (clean outlines, soft flat colours, warm light). Every face, hairstyle, outfit, body shape and colour stays exactly the same. Everything not described stays perfectly still. No added text, captions or speech bubbles.
-```
-
-### Screens 42–43: the list, the money
-
-#### s42-to-s43.mp4
-Save as `game assets/video/s42-to-s43.mp4` · start frame `father gave him list.png` · end frame `father gave him money.png` · 5 s · sound off
-```text
-At home by the dining table, the father (light-blue shirt, moustache) hands a shopping list to his son (green T-shirt, navy backpack). The boy takes it, glances at it happily and puts it away. Then the father picks up a fan of ₹500 notes and holds it out to him, and the boy reaches out an open hand. Nobody talks. One smooth, natural sequence, ending exactly on the last frame. Camera locked: no zoom, pan or shake. Same 2D cartoon illustration style as the pictures (clean outlines, soft flat colours, warm light). Both faces, hair, clothes and colours stay exactly the same. The ₹500 notes look like the ones in the last frame. Everything else stays perfectly still. No added text, captions or speech bubbles.
-```
+### Screen 43: the money
 
 #### s43-father.mp4
 Save as `game assets/video/s43-father.mp4` · start frame `father gave him money.png` · end frame: the same picture · 4 s · sound off
@@ -422,64 +376,4 @@ At home, the boy standing on the right (green T-shirt, navy backpack, one hand o
 Save as `game assets/video/s45-aniket-2.mp4` · start frame `boy stand and talk .png` · end frame: the same picture · 4 s · sound off
 ```text
 At home, the boy standing on the right (green T-shirt, navy backpack, one hand on a strap, the other in his pocket) says excitedly, with a determined nod: "Then I'm definitely finding the best offers!" His lips move in time with these words from the very first second, with natural mouth shapes, and he squeezes his backpack strap. He finishes speaking by about 3.5 seconds, then grins with his mouth closed. The father at the table on the left listens with a smile and blinks. Start and end on exactly this picture with the boy's mouth closed. Camera locked: no zoom, pan or shake. Same 2D cartoon illustration style as the picture (clean outlines, soft flat colours, warm light). Every face, hairstyle, outfit, body shape and colour stays exactly the same. Everything not described stays perfectly still. The wall signs stay sharp and in place. No added text, captions or speech bubbles.
-```
-
-### Screen 46: Game Begins
-
-The game puts its "Game Begins" panel over the right side of this picture, so only small, calm movements on the left.
-
-#### s46-idle.mp4
-Save as `game assets/video/s46-idle.mp4` · start frame `game begins.png` · end frame: the same picture · 5 s · sound off
-```text
-Outside his house (number 27), a boy (green T-shirt, navy backpack, both hands on his straps) stands ready to go shopping, smiling. He breathes gently and blinks; then he lifts one hand off his strap, gives a small, friendly wave, and puts it back on the strap. Nobody talks. Small, calm movements only. The leaves of the plants sway very slightly. Start and end on exactly this picture, so the clip loops seamlessly. Camera locked: no zoom, pan or shake. Same 2D cartoon illustration style as the picture (clean outlines, soft flat colours, warm light). The boy's face, hair, clothes and colours stay exactly the same. The house number "27" stays sharp. Everything not described stays perfectly still. No added text, captions or speech bubbles.
-```
-
-### Screen 56: back home after shopping
-
-#### s56-idle.mp4
-Save as `game assets/video/s56-idle.mp4` · start frame `return home shopping list .png` · end frame: the same picture · 5 s · sound off
-```text
-At home, a boy on the left (green T-shirt, navy backpack, holding a blue-and-white shopping bag) and his father at the dining table on the right (light-blue shirt, moustache, a white tea cup, a newspaper) smile at each other. Both breathe gently and blink once or twice. Nobody talks. The table and everything on it stay still. Start and end on exactly this picture, so the clip loops seamlessly. Camera locked: no zoom, pan or shake. Same 2D cartoon illustration style as the picture (clean outlines, soft flat colours, warm light). Every face, hairstyle, outfit, body shape and colour stays exactly the same. Everything not described stays perfectly still. The wall signs stay sharp and in place. No added text, captions or speech bubbles.
-```
-
-#### s56-father-1.mp4
-Save as `game assets/video/s56-father-1.mp4` · start frame `return home shopping list .png` · end frame: the same picture · 4 s · sound off
-```text
-At home, the father at the dining table on the right (light-blue shirt, moustache, a white tea cup, a newspaper) looks at his son and asks: "Did you get everything?" His lips move under his moustache in time with these words from the very first second, with natural mouth shapes, and his eyebrows lift. He finishes speaking by about 2 seconds, then smiles with his mouth closed, holding his cup still. The boy on the left (green T-shirt, navy backpack, a blue-and-white shopping bag in his hand) listens with a smile and blinks. Start and end on exactly this picture with the father's mouth closed. Camera locked: no zoom, pan or shake. Same 2D cartoon illustration style as the picture (clean outlines, soft flat colours, warm light). Every face, hairstyle, outfit, body shape and colour stays exactly the same. Everything not described stays perfectly still. The wall signs stay sharp and in place. No added text, captions or speech bubbles.
-```
-
-#### s56-aniket-1.mp4
-Save as `game assets/video/s56-aniket-1.mp4` · start frame `return home shopping list .png` · end frame: the same picture · 4 s · sound off
-```text
-At home, the boy on the left (green T-shirt, navy backpack, a blue-and-white shopping bag in his hand) answers his father happily: "Yes!" His lips move in time with this one word in the very first second, with a big nod. Then he grins with his mouth closed until the end. The father at the table on the right smiles and blinks, holding his cup still. Start and end on exactly this picture with the boy's mouth closed. Camera locked: no zoom, pan or shake. Same 2D cartoon illustration style as the picture (clean outlines, soft flat colours, warm light). Every face, hairstyle, outfit, body shape and colour stays exactly the same. Everything not described stays perfectly still. The wall signs stay sharp and in place. No added text, captions or speech bubbles.
-```
-
-#### s56-father-2.mp4
-Save as `game assets/video/s56-father-2.mp4` · start frame `return home shopping list .png` · end frame: the same picture · 4 s · sound off
-```text
-At home, the father at the dining table on the right (light-blue shirt, moustache, a white tea cup, a newspaper) asks his son, curious: "How much did you spend?" His lips move under his moustache in time with these words from the very first second, with natural mouth shapes, and he tilts his head a little. He finishes speaking by about 2 seconds, then smiles with his mouth closed, holding his cup still. The boy on the left listens with a smile and blinks. Start and end on exactly this picture with the father's mouth closed. Camera locked: no zoom, pan or shake. Same 2D cartoon illustration style as the picture (clean outlines, soft flat colours, warm light). Every face, hairstyle, outfit, body shape and colour stays exactly the same. Everything not described stays perfectly still. The wall signs stay sharp and in place. No added text, captions or speech bubbles.
-```
-
-#### s56-aniket-2.mp4
-Save as `game assets/video/s56-aniket-2.mp4` · start frame `return home shopping list .png` · end frame: the same picture · 4 s · sound off
-```text
-At home, the boy on the left (green T-shirt, navy backpack, a blue-and-white shopping bag in his hand) answers proudly: "Four thousand three hundred and forty rupees." His lips move in time with these words from the very first second, with natural mouth shapes, and he nods once. He finishes speaking by about 3 seconds, then smiles with his mouth closed. The father at the table on the right listens with a smile and blinks. Start and end on exactly this picture with the boy's mouth closed. Camera locked: no zoom, pan or shake. Same 2D cartoon illustration style as the picture (clean outlines, soft flat colours, warm light). Every face, hairstyle, outfit, body shape and colour stays exactly the same. Everything not described stays perfectly still. The wall signs stay sharp and in place. No added text, captions or speech bubbles.
-```
-
-#### s56-father-3.mp4
-Save as `game assets/video/s56-father-3.mp4` · start frame `return home shopping list .png` · end frame: the same picture · 4 s · sound off
-```text
-At home, the father at the dining table on the right (light-blue shirt, moustache, a white tea cup, a newspaper) says to his son, pleased: "So you still have six hundred and sixty rupees left!" His lips move under his moustache in time with these words from the very first second, with natural mouth shapes, and his eyebrows lift happily. He finishes speaking by about 3 seconds, then smiles with his mouth closed, holding his cup still. The boy on the left listens with a big smile and blinks. Start and end on exactly this picture with the father's mouth closed. Camera locked: no zoom, pan or shake. Same 2D cartoon illustration style as the picture (clean outlines, soft flat colours, warm light). Every face, hairstyle, outfit, body shape and colour stays exactly the same. Everything not described stays perfectly still. The wall signs stay sharp and in place. No added text, captions or speech bubbles.
-```
-
-#### s56-aniket-3.mp4
-Save as `game assets/video/s56-aniket-3.mp4` · start frame `return home shopping list .png` · end frame: the same picture · 4 s · sound off
-```text
-At home, the boy on the left (green T-shirt, navy backpack, a blue-and-white shopping bag in his hand) says proudly: "And I got the best deal for every item!" His lips move in time with these words from the very first second, with natural mouth shapes; he lifts the shopping bag a little and lowers it back to where it was. He finishes speaking by about 3 seconds, then grins with his mouth closed. The father at the table on the right listens with a proud smile and blinks. Start and end on exactly this picture with the boy's mouth closed. Camera locked: no zoom, pan or shake. Same 2D cartoon illustration style as the picture (clean outlines, soft flat colours, warm light). Every face, hairstyle, outfit, body shape and colour stays exactly the same. Everything not described stays perfectly still. The wall signs stay sharp and in place. No added text, captions or speech bubbles.
-```
-
-#### s56-father-4.mp4
-Save as `game assets/video/s56-father-4.mp4` · start frame `return home shopping list .png` · end frame: the same picture · 5 s · sound off
-```text
-At home, the father at the dining table on the right (light-blue shirt, moustache, a white tea cup, a newspaper) says to his son, proud of him: "Well done! You really did shop wisely." His lips move under his moustache in time with these words from the very first second, with natural mouth shapes, and he nods warmly. He finishes speaking by about 3.5 seconds, then smiles with his mouth closed, holding his cup still. The boy on the left beams and blinks. Start and end on exactly this picture with the father's mouth closed. Camera locked: no zoom, pan or shake. Same 2D cartoon illustration style as the picture (clean outlines, soft flat colours, warm light). Every face, hairstyle, outfit, body shape and colour stays exactly the same. Everything not described stays perfectly still. The wall signs stay sharp and in place. No added text, captions or speech bubbles.
 ```

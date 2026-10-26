@@ -3,3 +3,11 @@
 
 # Raw video downloads (HEVC with sound): the game uses the converted copies in "game assets/video/"
 videos\ /
+
+# Half-finished downloads and conversions
+*.part
+*.part.*
+
+# Stray copies this synced Desktop folder leaves when a file is written over or renamed ("name 2.png", "main 2")
+* [2-9]
+* [2-9].*

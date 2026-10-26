@@ -1062,8 +1062,7 @@
   // the screen has said everything (ctx.advance), they all show again (see showAll). The answers and the amounts to drag
   // never dim: the player uses them.
   const UNITS = ['.cn-note', '.cn-term', '.cn-meaning', '.cmp-box:not(.ws-box)', '.fm-book', '.fm-box', '.bm', '.fr-strip',
-    '.fr-short', '.ck-say', '.ck-card', '.ck .f-note', '.def', '.mp-def', '.pf-question', '.pqp-question', '.pf-box',
-    '.pf-sheet', '.ta-card', '.rk-card', '.tk-offer', '.qcard-back'].join(', ');
+    '.fr-short', '.pf-question', '.pqp-question', '.pf-box', '.pf-sheet', '.qcard-back'].join(', ');
   let dimTurn = 0; // (a later line, or showAll, cancels a dimming still waiting)
   function dimOthers(nodes, turn = ++dimTurn, tries = 16) {
     const scene = nodes.length ? nodes[0].closest('.scene') : null;
@@ -1546,11 +1545,6 @@
   };
   const REVEAL_LINE = {
     anchor: [1256, 296], corner: 'br', tip: [1318, 370], // between them, clear of both heads, the tail at his mouth
-    text: [
-      { t: 'The price printed on\nthe book is ' }, { t: '₹1000', em: true }, { t: ',', end: true },
-      { t: '\nbut you paid only ' }, { t: '₹800', em: true }, { t: '.', end: true },
-      { t: '\nSo, you got a ' }, { t: '₹200', em: true }, { t: ' ' }, { t: 'discount.', cls: 'key' },
-    ],
     voice: 'man', rotate: 1.5,
   };
 
@@ -1565,44 +1559,6 @@
   const revealPart = (scene, i) => FX.bubble(scene.layer, Object.assign({}, REVEAL_LINE, { text: REVEAL_PARTS[i] }));
 
   async function playReveal(ctx, scene) {
-    if (scene.v2) return playRevealParts(ctx, scene);
-    const card = FX.reduction(scene.ui, REDUCTION_CARD);
-    await ctx.wait(500);
-    const line = FX.bubble(scene.layer, REVEAL_LINE);
-    await line.show();
-    const [said1000, said800, said200] = line.el.querySelectorAll('.em'); // the prices in his bubble
-    // A price lifts out of his bubble and flies to the card (FX.flyAcross).
-    const fly = async (from, to, ms) => {
-      await FX.flyAcross(scene.ui, from, to, { ms, lift: 70 }); // a low arc, out over the bubble's right side
-      await ctx.wait(0); // (stops here if the player has left meanwhile)
-    };
-
-    // "The price printed on the book is ₹1000,": the ₹1000 flies out to the card, which swings in to catch it; it is
-    // pasted into the top box.
-    await speakPart(ctx, line, 0, 'reveal-1', 'The price printed on the book is ₹1000,', 'man');
-    const flying = fly(said1000, card.prices.from, 1000);
-    card.enter();
-    await flying;
-    await card.pasteFrom();
-    await ctx.wait(400);
-
-    // "but you paid only ₹800.": the red arrow grows down, and the ₹800 flies into the bottom box.
-    await speakPart(ctx, line, 1, 'reveal-2', 'but you paid only ₹800.', 'man');
-    await card.arrowDown();
-    await fly(said800, card.prices.to, 900);
-    await card.pasteTo();
-    await ctx.wait(400);
-
-    // "So, you got a ₹200 discount.": the ₹200 flies beside the arrow: "₹200 reduced".
-    await speakPart(ctx, line, 2, 'reveal-3', 'So, you got a ₹200 discount.', 'man');
-    await fly(said200, card.prices.cut, 800);
-    await card.pasteCut();
-    line.emphasize(); // "discount." pulses: the new word
-    Sound.ding();
-    ctx.advance(3000); // then Aniket wonders what it means
-  }
-
-  async function playRevealParts(ctx, scene) {
     const card = FX.reduction(scene.ui, REDUCTION_CARD);
     await ctx.wait(500);
     const fly = async (from, to, ms) => {
@@ -1651,7 +1607,7 @@
     instantly(scene, () => scene.el.classList.add('is-feathered'));
     scene.oldCard = FX.reduction(scene.ui, REDUCTION_CARD);
     scene.oldCard.showNow();
-    scene.oldLine = scene.v2 ? revealPart(scene, 2) : FX.bubble(scene.layer, REVEAL_LINE);
+    scene.oldLine = revealPart(scene, 2);
     scene.oldLine.showNow();
   }
 

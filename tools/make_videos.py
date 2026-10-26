@@ -49,9 +49,8 @@ REDO = {
 # made again in 1080p, the people exactly as in the pictures, their faces showing what they say.
 GEMINI_MADE = [
     's20-out', 's21-walk', 's22-aniket-1', 's22-aniket-2', 's22-aniket-3', 's23-idle', 's23-zoom', 's25-idle', 's25-aniket-1',
-    's25-aniket-2', 's36-box', 's40-idle', 's40-father-1', 's40-aniket', 's40-father-2', 's41-idle', 's41-father-1', 's42-to-s43',
-    's43-father', 's45-idle', 's45-father-1', 's45-aniket-1', 's45-aniket-2', 's46-idle', 's56-idle', 's56-father-1', 's56-aniket-1',
-    's56-father-2', 's56-aniket-2', 's56-father-3', 's56-aniket-3', 's56-father-4',
+    's25-aniket-2', 's36-box', 's40-idle', 's40-father-1', 's40-aniket', 's43-father', 's45-idle', 's45-father-1', 's45-aniket-1',
+    's45-aniket-2',
 ]
 REMAKE = {name: ('Make it again on Higgsfield (the meeting of 2026-10-21): the Gemini take is in the game for now, but its '
                  'people change from clip to clip and it is soft. Keep the people exactly as in the picture, and their faces '

@@ -2,7 +2,7 @@
    Bookstore Journey — the line log, for the language check (docs/VOICEOVER.md)
    Only with ?log=right, ?log=wrong or ?log=1 in the address. It saves every line
    as it appears, screen by screen: each line a character says (in a bubble, a
-   thought, on the question bar, or with no bubble), with its clip, and the words
+   thought, or with no bubble), with its clip, and the words
    written on the screen (titles, cards, questions, answers, buttons). The log is
    kept in this browser across reloads, so the game can be played once with every
    answer right (?log=right) and once with every answer wrong, drag mistakes too
@@ -74,9 +74,9 @@
 
   function kindOf(line) {
     const squash = s => s.replace(/\s+/g, ''); // (a bubble's kept line break has no space in its text)
-    for (const b of document.querySelectorAll('#stage .bubble, #stage .qb-line')) {
+    for (const b of document.querySelectorAll('#stage .bubble')) {
       if (!squash(b.textContent).includes(squash(line))) continue;
-      return b.classList.contains('qb-line') ? 'Question bar' : b.classList.contains('thought') ? 'Thought cloud' : 'Speech bubble';
+      return b.classList.contains('thought') ? 'Thought cloud' : 'Speech bubble';
     }
     return 'Spoken (no bubble)';
   }
@@ -96,7 +96,7 @@
       for (const c of node.childNodes) {
         if (c.nodeType === 3) put(c.textContent, owner);
         else if (c.nodeType === 1 && c.tagName === 'BR') put(' ', owner);
-        else if (c.nodeType === 1 && !c.matches('.bubble, .qb-line')) {
+        else if (c.nodeType === 1 && !c.matches('.bubble')) {
           const cs = getComputedStyle(c);
           if (cs.display === 'none' || cs.visibility === 'hidden' || cs.opacity === '0') continue;
           walk(c, /^(inline|contents)/.test(cs.display) ? owner : c);
@@ -135,22 +135,18 @@
       rowsVisit = visit;
       rowOf = new Map();
     }
-    const bar = document.querySelector('.qb.is-up');
-    const book = document.querySelector('#notebook[aria-hidden="false"]');
-    [[where.el, 'On-screen text'], [bar, 'Question bar (task)'], [book, 'Notebook']].forEach(([root, type]) => {
-      if (!root) return;
-      linesOf(root).forEach(({ owner, text }) => {
-        if (seen.has(text)) return;
-        const row = rowOf.get(owner);
-        if (row && row.t === type && within(row.x, text)) {
-          seen.delete(row.x); // (its shorter text may still come elsewhere on the screen, e.g. a card's title)
-          seen.add(row.x = text);
-          save();
-          return;
-        }
-        add(where, 'On screen', type, text, '');
-        rowOf.set(owner, rows[rows.length - 1]);
-      });
+    const type = 'On-screen text';
+    linesOf(where.el).forEach(({ owner, text }) => {
+      if (seen.has(text)) return;
+      const row = rowOf.get(owner);
+      if (row && row.t === type && within(row.x, text)) {
+        seen.delete(row.x); // (its shorter text may still come elsewhere on the screen, e.g. a card's title)
+        seen.add(row.x = text);
+        save();
+        return;
+      }
+      add(where, 'On screen', type, text, '');
+      rowOf.set(owner, rows[rows.length - 1]);
     });
   }
   setInterval(look, 400);

@@ -144,138 +144,6 @@
     "speaker": "Swifty"
   },
   {
-    "id": "vo007",
-    "line": "Not quite! The shopkeeper sold the book for ₹800.",
-    "spoken": "Not quite! The shopkeeper sold the book for eight hundred rupees.",
-    "speaker": "Swifty"
-  },
-  {
-    "id": "vo008",
-    "line": "Cost Price. C P.",
-    "spoken": "Cost Price. C P.",
-    "speaker": "Swifty",
-    "devanagari": "कॉस्ट प्राइस. सी पी."
-  },
-  {
-    "id": "vo009",
-    "line": "Price at which an item is bought.",
-    "spoken": "Price at which an item is bought.",
-    "speaker": "Swifty",
-    "devanagari": "प्राइस एट विच एन आइटम इज बॉट"
-  },
-  {
-    "id": "vo010",
-    "line": "Selling Price. S P.",
-    "spoken": "Selling Price. S P.",
-    "speaker": "Swifty",
-    "devanagari": "सेलिंग प्राइस. एस पी."
-  },
-  {
-    "id": "vo011",
-    "line": "Price at which an item is sold.",
-    "spoken": "Price at which an item is sold.",
-    "speaker": "Swifty",
-    "devanagari": "प्राइस एट विच एन आइटम इज सोल्ड।"
-  },
-  {
-    "id": "vo012",
-    "line": "Here, ₹800 is the shopkeeper’s selling price.",
-    "spoken": "Here, eight hundred rupees is the shopkeeper’s Selling Price.",
-    "speaker": "Swifty",
-    "devanagari": "हियर, एट हंड्रेड रुपीस इज द शॉपकीपर्स सेलिंग प्राइस।"
-  },
-  {
-    "id": "vo013",
-    "line": "Correct! The shopkeeper sold the book for ₹800, so ₹800 is the selling price.",
-    "spoken": "Correct! The shopkeeper sold the book for eight hundred rupees, so eight hundred rupees is the Selling Price.",
-    "speaker": "Swifty",
-    "devanagari": "करेक्ट! द शॉपकीपर सोल्ड द बुक फॉर एइट हंड्रेड रुपीस, सो एइट हंड्रेड रुपीस इज़ द सेलिंग प्राइस."
-  },
-  {
-    "id": "vo014",
-    "line": "₹1000? What is this?",
-    "spoken": "One thousand rupees? What is this?",
-    "speaker": "Aniket",
-    "devanagari": "वन थाउज़ेंड रुपीज़? वॉट इज़ दिस?"
-  },
-  {
-    "id": "vo015",
-    "line": "₹1000 is the price written on the book.",
-    "spoken": "One thousand rupees is the price written on the book.",
-    "speaker": "Swifty",
-    "devanagari": "वन थाउजेंड रुपीज इज द प्राइस रिटन ऑन द बुक।"
-  },
-  {
-    "id": "vo016",
-    "line": "It is called the marked price (MP).",
-    "spoken": "It is called the Marked Price, M P.",
-    "speaker": "Swifty",
-    "devanagari": "इट इज कॉल्ड द मार्क्ड प्राइस, एम पी।"
-  },
-  {
-    "id": "vo017",
-    "line": "Marked Price. The price marked or printed on an article is called its Marked Price.",
-    "spoken": "Marked Price. The price marked, or printed, on an article is called its Marked Price.",
-    "speaker": "Swifty",
-    "devanagari": "मार्क्ड प्राइस। द प्राइस मार्क्ड, ऑर प्रिंटेड, ऑन एन आर्टिकल इज कॉल्ड इट्स मार्क्ड प्राइस।"
-  },
-  {
-    "id": "vo018",
-    "line": "The marked price is ₹1000.",
-    "spoken": "The Marked Price is one thousand rupees.",
-    "speaker": "Swifty",
-    "devanagari": "द मार्क्ड प्राइस इज वन थाउजेंड रुपीज।"
-  },
-  {
-    "id": "vo019",
-    "line": "But the book was sold for ₹800. That is the selling price.",
-    "spoken": "But the book was sold for eight hundred rupees. That is the Selling Price.",
-    "speaker": "Swifty",
-    "devanagari": "बट द बुक वॉज़ सोल्ड फॉर एट हंड्रेड रुपीज़। दैट इज़ द सेलिंग प्राइस।"
-  },
-  {
-    "id": "vo020",
-    "line": "Why is the selling price less than the marked price?",
-    "spoken": "Why is the selling price less than the marked price?",
-    "speaker": "Swifty",
-    "devanagari": "वाय इज द सेलिंग प्राइस लेस दैन द मार्क्ड प्राइस?"
-  },
-  {
-    "id": "vo021",
-    "line": "The price printed on the book is ₹1000,",
-    "spoken": "The price printed on the book is one thousand rupees,",
-    "speaker": "Shopkeeper",
-    "devanagari": "द प्राइस प्रिंटेड ऑन द बुक इज वन थाउजेंड रुपीज,"
-  },
-  {
-    "id": "vo022",
-    "line": "but you paid only ₹800.",
-    "spoken": "but you paid only eight hundred rupees.",
-    "speaker": "Shopkeeper",
-    "devanagari": "बट यू पेड ओनली एट हंड्रेड रुपिस।"
-  },
-  {
-    "id": "vo023",
-    "line": "So, you got a ₹200 discount.",
-    "spoken": "So, you got a two hundred rupee discount.",
-    "speaker": "Shopkeeper",
-    "devanagari": "सो, यू गॉट ए टू हंड्रेड रूपी डिस्काउंट।"
-  },
-  {
-    "id": "vo024",
-    "line": "Discount? What does that mean?",
-    "spoken": "Discount? What does that mean?",
-    "speaker": "Aniket",
-    "devanagari": "डिस्काउंट? वॉट डज़ दैट मीन?"
-  },
-  {
-    "id": "vo025",
-    "line": "Discount. The reduction given on the marked price of an item is called a discount.",
-    "spoken": "Discount. The reduction given on the marked price of an item is called a discount.",
-    "speaker": "Swifty",
-    "devanagari": "डिस्काउंट। द रिडक्शन गिवन ऑन द मार्क्ड प्राइस ऑफ एन आइटम इज कॉल्ड ए डिस्काउंट।"
-  },
-  {
     "id": "vo026",
     "line": "Marked Price,",
     "spoken": "Marked Price,",
@@ -318,13 +186,6 @@
     "speaker": "Swifty"
   },
   {
-    "id": "vo033",
-    "line": "We can write it in short.",
-    "spoken": "We can write it in short.",
-    "speaker": "Swifty",
-    "devanagari": "वी कैन राइट इट इन शॉर्ट।"
-  },
-  {
     "id": "vo034",
     "line": "D for Discount,",
     "spoken": "D for Discount,",
@@ -361,65 +222,16 @@
     "speaker": "Swifty"
   },
   {
-    "id": "vo040",
-    "line": "Let’s remember!",
-    "spoken": "Let’s remember!",
-    "speaker": "Swifty",
-    "devanagari": "लेट्स रिमेम्बर!"
-  },
-  {
-    "id": "vo041",
-    "line": "Marked price is the price written on an item.",
-    "spoken": "Marked price is the price written on an item.",
-    "speaker": "Swifty",
-    "devanagari": "मार्क्ड प्राइस इज द प्राइस रिटन ऑन एन आइटम।"
-  },
-  {
-    "id": "vo042",
-    "line": "Selling price is the price at which it is sold.",
-    "spoken": "Selling price is the price at which it is sold.",
-    "speaker": "Swifty",
-    "devanagari": "सेलिंग प्राइस इज द प्राइस एट व्हिच इट इज सोल्ड."
-  },
-  {
-    "id": "vo043",
-    "line": "Discount is the amount reduced from the marked price.",
-    "spoken": "Discount is the amount reduced from the marked price.",
-    "speaker": "Swifty",
-    "devanagari": "डिस्काउंट इज द अमाउंट रिड्यूस्ड फ्रॉम द मार्क्ड प्राइस।"
-  },
-  {
-    "id": "vo044",
-    "line": "And remember the formula: Discount = MP − SP!",
-    "spoken": "And remember the formula: Discount equals M P minus S P!",
-    "speaker": "Swifty",
-    "devanagari": "एंड रिमेंबर द फॉर्मूला: डिस्काउंट इक्वल्स एम पी माइनस एस पी!"
-  },
-  {
     "id": "vo157",
     "line": "Wow, nice sneakers! I love them.",
     "spoken": "Wow, nice sneakers! I love them.",
     "speaker": "Aniket"
   },
   {
-    "id": "vo045",
-    "line": "These sneakers look good!",
-    "spoken": "These sneakers look good!",
-    "speaker": "Aniket",
-    "devanagari": "दीज़ स्नीकर्स लुक गुड!"
-  },
-  {
     "id": "vo046",
     "line": "What does 30% OFF mean here?",
     "spoken": "What does thirty percent off mean here?",
     "speaker": "Aniket"
-  },
-  {
-    "id": "vo047",
-    "line": "Is this also a discount?",
-    "spoken": "Is this also a discount?",
-    "speaker": "Aniket",
-    "devanagari": "इज़ दिस ऑल्सो अ डिस्काउंट?"
   },
   {
     "id": "vo048",
@@ -452,13 +264,6 @@
     "speaker": "Swifty"
   },
   {
-    "id": "vo051",
-    "line": "30% Discount.",
-    "spoken": "thirty percent discount.",
-    "speaker": "Swifty",
-    "devanagari": "थर्टी परसेंट डिस्काउंट."
-  },
-  {
     "id": "vo160",
     "line": "30% discount here.",
     "spoken": "thirty percent discount here.",
@@ -469,13 +274,6 @@
     "line": "To calculate how much Aniket has to pay for these sneakers,",
     "spoken": "To calculate how much Aniket has to pay for these sneakers,",
     "speaker": "Swifty"
-  },
-  {
-    "id": "vo052",
-    "line": "To find the discount amount,",
-    "spoken": "To find the discount amount,",
-    "speaker": "Swifty",
-    "devanagari": "टू फाइंड द डिस्काउंट अमाउंट,"
   },
   {
     "id": "vo053",
@@ -536,13 +334,6 @@
     "line": "Then put a % sign after it.",
     "spoken": "Then put a percent sign after it.",
     "speaker": "Swifty"
-  },
-  {
-    "id": "vo063",
-    "line": "Let’s take an example!",
-    "spoken": "Let’s take an example!",
-    "speaker": "Swifty",
-    "devanagari": "लेट्स टेक एन एग्जांपल!"
   },
   {
     "id": "vo064",
@@ -629,27 +420,6 @@
     "speaker": "Swifty"
   },
   {
-    "id": "vo077",
-    "line": "Now, back to Aniket’s sneakers!",
-    "spoken": "Now, back to Aniket’s sneakers!",
-    "speaker": "Swifty",
-    "devanagari": "नाउ, बैक टू अनिकेत्स स्नीकर्स!"
-  },
-  {
-    "id": "vo078",
-    "line": "Now, what is 30% of ₹1800?",
-    "spoken": "Now, what is thirty percent of one thousand eight hundred rupees?",
-    "speaker": "Swifty",
-    "devanagari": "नाउ, वट इज थर्टी परसेंट ऑफ वन थाउजेंड ऐट हंड्रेड रुपीज?"
-  },
-  {
-    "id": "vo079",
-    "line": "30% of ₹1800 is ₹540.",
-    "spoken": "Thirty percent of one thousand eight hundred rupees is five hundred and forty rupees.",
-    "speaker": "Swifty",
-    "devanagari": "थर्टी परसेंट ऑफ वन थाउजेंड ऐट हंड्रेड रुपीस इज फाइव हंड्रेड एंड फॉर्टी रुपीस।"
-  },
-  {
     "id": "vo080",
     "line": "Let’s see how to work it out!",
     "spoken": "Let’s see how to work it out!",
@@ -704,27 +474,6 @@
     "speaker": "Swifty"
   },
   {
-    "id": "vo088",
-    "line": "What does ₹540 represent here?",
-    "spoken": "What does five hundred and forty rupees represent here?",
-    "speaker": "Swifty",
-    "devanagari": "वॉट डज़ फाइव हंड्रेड एंड फोर्टी रुपीज़ रिप्रेजेंट हियर?"
-  },
-  {
-    "id": "vo089",
-    "line": "₹540 is the money taken off ₹1800.",
-    "spoken": "Five hundred and forty rupees is the money taken off one thousand eight hundred rupees.",
-    "speaker": "Swifty",
-    "devanagari": "फाइव हंड्रेड एंड फोर्टी रुपीज इज द मनी टेकन ऑफ वन थाउजेंड एट हंड्रेड रुपीज।"
-  },
-  {
-    "id": "vo090",
-    "line": "That’s the discount!",
-    "spoken": "That’s the discount!",
-    "speaker": "Swifty",
-    "devanagari": "दैट्स द डिस्काउंट!"
-  },
-  {
     "id": "vo091",
     "line": "Now, let’s find out how much money Aniket needs to pay.",
     "spoken": "Now, let’s find out how much money Aniket needs to pay.",
@@ -735,20 +484,6 @@
     "line": "How much does Aniket have to pay?",
     "spoken": "How much does Aniket have to pay?",
     "speaker": "Swifty"
-  },
-  {
-    "id": "vo092",
-    "line": "What will be the Selling Price?",
-    "spoken": "What will be the Selling Price?",
-    "speaker": "Swifty",
-    "devanagari": "वॉट विल बी द सेलिंग प्राइस?"
-  },
-  {
-    "id": "vo093",
-    "line": "Hint: SP = MP − Discount.",
-    "spoken": "Hint: S P equals M P minus Discount.",
-    "speaker": "Swifty",
-    "devanagari": "हिंट: एस पी इक्वल्स एम पी माइनस डिस्काउंट."
   },
   {
     "id": "vo094",
@@ -865,103 +600,6 @@
     "speaker": "Swifty"
   },
   {
-    "id": "vo113",
-    "line": "Discount percentage tells us what percent",
-    "spoken": "Discount percentage tells us what percent",
-    "speaker": "Swifty",
-    "devanagari": "डिस्काउंट परसेंटेज टेल्स अस वॉट परसेंट"
-  },
-  {
-    "id": "vo114",
-    "line": "of the marked price is taken off.",
-    "spoken": "of the marked price is taken off.",
-    "speaker": "Swifty"
-  },
-  {
-    "id": "vo115",
-    "line": "The discount is ₹540,",
-    "spoken": "The discount is five hundred and forty rupees,",
-    "speaker": "Swifty",
-    "devanagari": "द डिस्काउंट इज फाइव हंड्रेड एंड फोर्टी रूपीस,"
-  },
-  {
-    "id": "vo116",
-    "line": "and the marked price is ₹1800.",
-    "spoken": "and the marked price is one thousand eight hundred rupees.",
-    "speaker": "Swifty",
-    "devanagari": "एंड द मार्क्ड प्राइस इज वन थाउजेंड एट हंड्रेड रुपीस।"
-  },
-  {
-    "id": "vo117",
-    "line": "That’s the 30% off on the tag!",
-    "spoken": "That’s the thirty percent off on the tag!",
-    "speaker": "Swifty",
-    "devanagari": "दैट्स द थर्टी परसेंट ऑफ ऑन द टैग!"
-  },
-  {
-    "id": "vo118",
-    "line": "Let’s sum up the sneakers!",
-    "spoken": "Let’s sum up the sneakers!",
-    "speaker": "Swifty",
-    "devanagari": "लेट्स सम अप द स्नीकर्स!"
-  },
-  {
-    "id": "vo119",
-    "line": "Marked Price: ₹1800.",
-    "spoken": "Marked price: one thousand eight hundred rupees.",
-    "speaker": "Swifty",
-    "devanagari": "मार्कड प्राइस वन थाउजेंड एट हंड्रेड रुपीज"
-  },
-  {
-    "id": "vo120",
-    "line": "Discount: 30%,",
-    "spoken": "Discount: thirty percent,",
-    "speaker": "Swifty",
-    "devanagari": "डिस्काउंट थर्टी परसेंट,"
-  },
-  {
-    "id": "vo121",
-    "line": "which is ₹540.",
-    "spoken": "which is five hundred and forty rupees.",
-    "speaker": "Swifty",
-    "devanagari": "विच इज़ फाइव हंड्रेड एंड फोर्टी रुपीज़।"
-  },
-  {
-    "id": "vo122",
-    "line": "Selling Price: ₹1260.",
-    "spoken": "Selling price: one thousand two hundred and sixty rupees.",
-    "speaker": "Swifty",
-    "devanagari": "सेलिंग प्राइस वन थाउजेंड टू हंड्रेड एंड सिक्सटी रुपीस"
-  },
-  {
-    "id": "vo123",
-    "line": "Discount = MP − SP,",
-    "spoken": "Discount equals M P minus S P,",
-    "speaker": "Swifty",
-    "devanagari": "डिस्काउंट इक्वल्स एम पी माइनस एस पी,"
-  },
-  {
-    "id": "vo124",
-    "line": "SP = MP − Discount,",
-    "spoken": "S P equals M P minus Discount,",
-    "speaker": "Swifty",
-    "devanagari": "एस पी इक्वल्स एम पी माइनस डिस्काउंट,"
-  },
-  {
-    "id": "vo125",
-    "line": "and Discount % = Discount ÷ MP × 100.",
-    "spoken": "and Discount percentage equals Discount divided by M P, times one hundred.",
-    "speaker": "Swifty",
-    "devanagari": "एंड डिस्काउंट परसेंटेज इक्वल्स डिस्काउंट डिवाइडेड बाय एम पी, टाइम्स वन हंड्रेड।"
-  },
-  {
-    "id": "vo126",
-    "line": "Now you can work out any discount!",
-    "spoken": "Now you can work out any discount!",
-    "speaker": "Swifty",
-    "devanagari": "नाउ यू कैन वर्क आउट एनी डिस्काउंट!"
-  },
-  {
     "id": "vo127",
     "line": "How was your shopping?",
     "spoken": "How was your shopping?",
@@ -972,27 +610,6 @@
     "line": "Great! I learnt about marked price, discount and discount percentage.",
     "spoken": "Great! I learnt about marked price, discount and discount percentage.",
     "speaker": "Aniket"
-  },
-  {
-    "id": "vo129",
-    "line": "That’s useful, because you have another shopping job.",
-    "spoken": "That’s useful, because you have another shopping job.",
-    "speaker": "Father",
-    "devanagari": "दैट्स यूज़फुल, बिकॉज़ यू हैव अनदर शॉपिंग जॉब।"
-  },
-  {
-    "id": "vo130",
-    "line": "Your new school session starts in a few days.",
-    "spoken": "Your new school session starts in a few days.",
-    "speaker": "Father",
-    "devanagari": "योर न्यू स्कूल सेशन स्टार्ट्स इन अ फ्यू डेज़।"
-  },
-  {
-    "id": "vo131",
-    "line": "You still need some things for school.",
-    "spoken": "You still need some things for school.",
-    "speaker": "Father",
-    "devanagari": "यू स्टिल नीड सम थिंग्स फॉर स्कूल।"
   },
   {
     "id": "vo132",
@@ -1055,75 +672,9 @@
     "speaker": "Aniket"
   },
   {
-    "id": "vo168",
-    "line": "Use the arrows to walk into a shop!",
-    "spoken": "Use the arrows to walk into a shop!",
-    "speaker": "Swifty"
-  },
-  {
-    "id": "vo169",
-    "line": "This shirt is ₹1,500, with 20% off.",
-    "spoken": "This shirt is one thousand five hundred rupees, with twenty percent off.",
-    "speaker": "Swifty"
-  },
-  {
-    "id": "vo170",
-    "line": "What is the sale price of this shirt?",
-    "spoken": "What is the sale price of this shirt?",
-    "speaker": "Swifty"
-  },
-  {
-    "id": "vo171",
-    "line": "Not quite! Find the 20% discount first. 20% of ₹1,500 = ₹300.",
-    "spoken": "Not quite! Find the twenty percent discount first. twenty percent of one thousand five hundred rupees is three hundred rupees.",
-    "speaker": "Swifty"
-  },
-  {
-    "id": "vo172",
-    "line": "Great! The sale price is ₹1,200. Do you want to buy this shirt?",
-    "spoken": "Great! The sale price is one thousand two hundred rupees. Do you want to buy this shirt?",
-    "speaker": "Swifty"
-  },
-  {
-    "id": "vo173",
-    "line": "Great! You bought the shirt!",
-    "spoken": "Great! You bought the shirt!",
-    "speaker": "Swifty"
-  },
-  {
     "id": "vo174",
     "line": "You bought this shirt already!",
     "spoken": "You bought this shirt already!",
-    "speaker": "Swifty"
-  },
-  {
-    "id": "vo175",
-    "line": "This bottomwear is ₹1,200, with 10% off.",
-    "spoken": "This bottomwear is one thousand two hundred rupees, with ten percent off.",
-    "speaker": "Swifty"
-  },
-  {
-    "id": "vo176",
-    "line": "What is the sale price of this bottomwear?",
-    "spoken": "What is the sale price of this bottomwear?",
-    "speaker": "Swifty"
-  },
-  {
-    "id": "vo177",
-    "line": "Not quite! Find the 10% discount first. 10% of ₹1,200 = ₹120.",
-    "spoken": "Not quite! Find the ten percent discount first. ten percent of one thousand two hundred rupees is one hundred and twenty rupees.",
-    "speaker": "Swifty"
-  },
-  {
-    "id": "vo178",
-    "line": "Great! The sale price is ₹1,080. Do you want to buy this bottomwear?",
-    "spoken": "Great! The sale price is one thousand eighty rupees. Do you want to buy this bottomwear?",
-    "speaker": "Swifty"
-  },
-  {
-    "id": "vo179",
-    "line": "Great! You bought the bottomwear!",
-    "spoken": "Great! You bought the bottomwear!",
     "speaker": "Swifty"
   },
   {
@@ -1133,93 +684,15 @@
     "speaker": "Swifty"
   },
   {
-    "id": "vo181",
-    "line": "This watch is ₹1,000, with 20% off.",
-    "spoken": "This watch is one thousand rupees, with twenty percent off.",
-    "speaker": "Swifty"
-  },
-  {
-    "id": "vo182",
-    "line": "What is the sale price of this watch?",
-    "spoken": "What is the sale price of this watch?",
-    "speaker": "Swifty"
-  },
-  {
-    "id": "vo183",
-    "line": "Not quite! Find the 20% discount first. 20% of ₹1,000 = ₹200.",
-    "spoken": "Not quite! Find the twenty percent discount first. twenty percent of one thousand rupees is two hundred rupees.",
-    "speaker": "Swifty"
-  },
-  {
-    "id": "vo184",
-    "line": "Great! The sale price is ₹800. Do you want to buy this watch?",
-    "spoken": "Great! The sale price is eight hundred rupees. Do you want to buy this watch?",
-    "speaker": "Swifty"
-  },
-  {
-    "id": "vo185",
-    "line": "Great! You bought the watch!",
-    "spoken": "Great! You bought the watch!",
-    "speaker": "Swifty"
-  },
-  {
     "id": "vo186",
     "line": "You bought this watch already!",
     "spoken": "You bought this watch already!",
     "speaker": "Swifty"
   },
   {
-    "id": "vo187",
-    "line": "These sunglasses are ₹800, with 20% off.",
-    "spoken": "These sunglasses are eight hundred rupees, with twenty percent off.",
-    "speaker": "Swifty"
-  },
-  {
-    "id": "vo188",
-    "line": "What is the sale price of these sunglasses?",
-    "spoken": "What is the sale price of these sunglasses?",
-    "speaker": "Swifty"
-  },
-  {
-    "id": "vo189",
-    "line": "Not quite! Find the 20% discount first. 20% of ₹800 = ₹160.",
-    "spoken": "Not quite! Find the twenty percent discount first. twenty percent of eight hundred rupees is one hundred and sixty rupees.",
-    "speaker": "Swifty"
-  },
-  {
-    "id": "vo190",
-    "line": "Great! The sale price is ₹640. Do you want to buy these sunglasses?",
-    "spoken": "Great! The sale price is six hundred and forty rupees. Do you want to buy these sunglasses?",
-    "speaker": "Swifty"
-  },
-  {
-    "id": "vo191",
-    "line": "Great! You bought the sunglasses!",
-    "spoken": "Great! You bought the sunglasses!",
-    "speaker": "Swifty"
-  },
-  {
     "id": "vo192",
     "line": "You bought these sunglasses already!",
     "spoken": "You bought these sunglasses already!",
-    "speaker": "Swifty"
-  },
-  {
-    "id": "vo193",
-    "line": "Take your time and look around!",
-    "spoken": "Take your time and look around!",
-    "speaker": "Swifty"
-  },
-  {
-    "id": "vo194",
-    "line": "Total amount: ₹3,720.",
-    "spoken": "Total amount: three thousand seven hundred and twenty rupees.",
-    "speaker": "Swifty"
-  },
-  {
-    "id": "vo195",
-    "line": "Money left: ₹1,280.",
-    "spoken": "Money left: one thousand two hundred and eighty rupees.",
     "speaker": "Swifty"
   },
   {

@@ -655,76 +655,6 @@ button:focus-visible, .switch input:focus-visible + .switch-track {
   mask-composite: intersect;
 }
 
-/* ---------- Definitions (screen 8, after a wrong answer, on the big panel) ----------
-   Big and clear: the two cards fill the panel left of Swifty's stand (clear of her bubbles, which start at x 1380). */
-
-.defs {
-  position: absolute;
-  inset: 0;
-  display: grid;
-  place-items: center;
-  padding: 116px 530px 64px 50px; /* keeps clear of the top buttons, and of Swifty's stand and bubbles on the right */
-}
-.defs-panel { position: relative; pointer-events: auto; } /* no frame of its own: the cards sit right on the big panel */
-.defs-row { display: flex; gap: 44px; }
-
-.def {
-  width: 610px;
-  padding: 38px 30px 42px;
-  border: 6px solid var(--ink);
-  border-radius: 40px;
-  box-shadow: 0 12px 0 var(--ink);
-  text-align: center;
-  color: var(--ink);
-}
-.def--blue { background: linear-gradient(180deg, #ecf6ff 0%, #cfe6ff 100%); }
-.def--yellow { background: linear-gradient(180deg, #fff8d6 0%, #ffe28a 100%); }
-.def-title {
-  font-size: 60px;
-  font-weight: 800;
-  line-height: 1.1;
-}
-.def--blue .def-title, .def--blue .def-text .hl { color: #17457e; }
-.def--yellow .def-title, .def--yellow .def-text .hl { color: #7a4600; }
-.def-pics {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-  margin: 30px 0 32px;
-}
-.def-pic {
-  width: 214px;
-  height: 171px;
-  border: 5px solid var(--ink);
-  border-radius: 26px;
-  overflow: hidden;
-  background: #fff;
-  box-shadow: 0 7px 0 var(--ink);
-}
-.def-pic img { display: block; width: 100%; height: 100%; object-fit: cover; }
-.def-arrow { flex: none; width: 62px; height: 40px; overflow: visible; }
-.defs .def-arrow { width: 76px; height: 49px; }
-.def-arrow path {
-  fill: none;
-  stroke: var(--ink);
-  stroke-width: 7;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  stroke-dasharray: 1;
-  stroke-dashoffset: 0;
-}
-.def-text {
-  font-size: 54px;
-  font-weight: 700;
-  line-height: 1.2;
-  text-wrap: balance;
-}
-.def-text .hl { font-weight: 800; }
-.def--blue .hl::before { background: linear-gradient(90deg, #b9dcff, #94c8ff); }
-.def--yellow .hl::before { background: linear-gradient(90deg, #ffd25c, #ffbf2e); }
-
-
 /* ---------- Marked Price panel (screen 11) ---------- */
 
 .mp {
@@ -734,22 +664,6 @@ button:focus-visible, .switch input:focus-visible + .switch-track {
   place-items: center;
   padding: 116px 70px 64px; /* keeps clear of the top buttons */
 }
-.mp-panel {
-  position: relative;
-  display: grid;
-  grid-template-columns: 420px 560px;
-  column-gap: 80px;
-  padding: 30px 70px 46px 70px;
-  border: 5px solid var(--ink);
-  border-radius: 48px;
-  background:
-    radial-gradient(circle, rgba(27, 42, 51, .08) 1.6px, transparent 2.2px) 0 0 / 28px 28px,
-    linear-gradient(180deg, #fffdf7 0%, #fff3d9 100%);
-  box-shadow: 0 16px 0 var(--ink), 0 44px 90px rgba(4, 18, 22, .45);
-  pointer-events: auto;
-}
-.mp-left { position: relative; height: 700px; }
-.mp-book { position: absolute; left: 10px; bottom: 0; width: 400px; } /* Swifty perches on its top edge */
 .mp-book-art {
   display: block;
   width: 100%;
@@ -765,89 +679,6 @@ button:focus-visible, .switch input:focus-visible + .switch-track {
 .mp-sticker-card { fill: #fff; stroke: var(--ink); stroke-width: 4; }
 .mp-sticker text { font-family: var(--font); font-size: 31px; font-weight: 800; fill: var(--ink); text-anchor: middle; }
 .mp-bars rect { fill: var(--ink); }
-
-.mp-side {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 36px;
-  height: 700px;
-  padding-bottom: 6px;
-}
-.mp-talk { flex: 1; } /* left free for Swifty's speech bubble */
-.mp-zoom { flex: none; width: 290px; height: 290px; } /* the price sticker, zoomed */
-.mp-zoom-art {
-  display: block;
-  width: 100%;
-  height: 100%;
-  overflow: visible;
-  filter: drop-shadow(0 10px 0 var(--ink)) drop-shadow(0 22px 30px rgba(4, 18, 22, .25));
-}
-.mp-zoom-rim { fill: none; stroke: var(--ink); stroke-width: 10; }
-.mp-zoom-shine { fill: none; stroke: rgba(255, 255, 255, .75); stroke-width: 10; stroke-linecap: round; }
-.mp-zoom-sticker .mp-sticker-card { stroke-width: 6; }
-.mp-zoom-sticker text { font-family: var(--font); font-size: 60px; font-weight: 800; fill: var(--ink); text-anchor: middle; }
-.mp-pill {
-  display: inline-flex;
-  align-items: baseline;
-  gap: 14px;
-  padding: 20px 42px 14px;
-  border: 5px solid var(--ink);
-  border-radius: 999px;
-  background: linear-gradient(180deg, #ffe0e8 0%, #ffb3c8 100%);
-  box-shadow: 0 9px 0 var(--ink), 0 22px 40px rgba(194, 24, 91, .22);
-  color: var(--ink);
-  font-size: 52px;
-  font-weight: 800;
-  line-height: 1;
-  white-space: nowrap;
-}
-.mp-abbr { color: #c2185b; }
-/* Screens 12 and 13 line their right side up with the book: top ≈ the book's top, bottom = its bottom. */
-.mp-side--define,
-.mp-side--compare { justify-content: flex-end; gap: 0; padding-bottom: 8px; }
-
-/* Screen 12: the definition card */
-.mp-def {
-  display: flex;
-  flex-direction: column;
-  width: 560px;
-  height: 520px;
-  border: 5px solid var(--ink);
-  border-radius: 36px;
-  background: #fff;
-  box-shadow: 0 10px 0 var(--ink), 0 26px 44px rgba(4, 18, 22, .18);
-  overflow: hidden;
-}
-.mp-def-head {
-  flex: none;
-  padding: 30px 28px 22px;
-  border-bottom: 5px solid var(--ink);
-  background: linear-gradient(180deg, #4a8fe7 0%, #2361c4 100%);
-  color: #fff;
-  font-size: 54px;
-  font-weight: 800;
-  line-height: 1;
-  text-align: center;
-  text-shadow: 0 4px 0 rgba(10, 40, 90, .45);
-}
-.mp-def-abbr { margin-left: 12px; color: #ffe066; }
-.mp-def-text {
-  margin: auto 0; /* centred in the space under the header */
-  padding: 10px 44px 16px;
-  color: var(--ink);
-  font-size: 46px;
-  font-weight: 700;
-  line-height: 1.34;
-}
-.mp-def-text .stress { color: #2361c4; white-space: nowrap; }
-.mp-def-text .w { /* each word appears as it is read out */
-  display: inline-block;
-  opacity: 0;
-  transform: translateY(14px);
-  transition: opacity .35s ease, transform .5s cubic-bezier(.2, .8, .3, 1);
-}
-.mp-def-text .w.on { opacity: 1; transform: none; }
 
 /* Screen 13: Marked Price → Selling Price */
 .cmp-box {
@@ -871,12 +702,6 @@ button:focus-visible, .switch input:focus-visible + .switch-track {
 .cmp-label { font-size: 44px; font-weight: 800; line-height: 1; }
 .cmp-box--yellow .cmp-label { color: #6b4a00; }
 .cmp-box--blue .cmp-label { color: #17457e; }
-.cmp-mid {
-  position: relative;
-  flex: none;
-  width: 440px;
-  height: 162px;
-}
 .cmp-arrow { /* starts below the top box's shadow, stops short of the bottom box */
   position: absolute;
   left: 50%;
@@ -904,12 +729,6 @@ button:focus-visible, .switch input:focus-visible + .switch-track {
     linear-gradient(180deg, #fffdf6 0%, #fff3da 100%);
   box-shadow: inset 0 0 0 7px rgba(255, 255, 255, .45);
 }
-.scene-sheet { /* screen 8: after an answer, the big panel slides up over the picture, under the card (game.js: sheetUp) */
-  position: absolute;
-  inset: 0;
-  box-shadow: 0 -18px 40px rgba(4, 18, 22, .3);
-  pointer-events: none;
-}
 .sheet-stand {
   position: absolute;
   left: 1542px;
@@ -920,12 +739,11 @@ button:focus-visible, .switch input:focus-visible + .switch-track {
 }
 /* On a sheet, the panels have no frame of their own: what is on them sits right on the big panel (cards and
    sheets keep theirs). The price panel (screens 11–13) moves left, clear of Swifty's stand. */
-.scene.is-sheet :is(.mp-panel, .fm-panel, .fr-panel, .pf-panel, .qp-panel, .pqp-panel, .ws-panel, .ss-panel) {
+.scene.is-sheet :is(.fm-panel, .fr-panel, .pf-panel, .qp-panel, .pqp-panel, .ws-panel) {
   border-color: transparent;
   background: none;
   box-shadow: none;
 }
-.scene.is-sheet .mp-panel { margin-right: 300px; }
 
 /* A red price box (the discount) */
 .cmp-box--red { background: linear-gradient(180deg, #fff3f1 0%, #ffcfc9 100%); }
@@ -939,33 +757,9 @@ button:focus-visible, .switch input:focus-visible + .switch-track {
   100% { box-shadow: 0 10px 0 var(--ink), 0 0 0 26px rgba(229, 57, 53, 0); }
 }
 
-/* Screen 16: a definition on a card of its own (Swifty reads it from her stand) */
-.dd {
-  position: absolute;
-  inset: 0;
-  display: grid;
-  place-items: center;
-  padding: 116px 70px 120px; /* clear of the top buttons */
-}
-.mp-def.dd-card {
-  width: 900px;
-  height: auto;
-  margin-right: 230px; /* left of centre, clear of Swifty on her stand */
-  pointer-events: auto;
-}
-.dd-card .mp-def-head { padding: 34px 28px 24px; font-size: 64px; }
-.mp-def-text.dd-text {
-  margin: 0;
-  padding: 52px 110px 60px 70px;
-  font-size: 54px;
-  line-height: 1.38;
-}
-.dd-text .stress { display: inline-block; color: #d32f2f; }
-.dd-text .stress.pulse { animation: em-pulse .7s cubic-bezier(.3, 1.6, .5, 1); }
-
 /* Screens 17–19: the panel sits on the left; Swifty stands in the bottom-right corner, with her speech
    bubbles above her head. */
-.fm-panel, .fr-panel, .sm-panel { margin-right: 420px; }
+.fm-panel, .fr-panel { margin-right: 420px; }
 
 /* Screen 17: the book, then Marked Price − Selling Price = Discount, built one piece at a time */
 .fm-panel {
@@ -1118,189 +912,7 @@ button:focus-visible, .switch input:focus-visible + .switch-track {
 }
 .fr-term.is-ping, .fr-op.is-ping { animation: fm-pop .8s cubic-bezier(.3, 1.6, .5, 1); }
 
-
-/* Screen 19: Let's remember! (three cards joined by arrows, and the formula) */
-.sm-panel {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 30px;
-  padding: 34px 40px 40px;
-  border: 5px solid var(--ink);
-  border-radius: 48px;
-  background:
-    radial-gradient(circle, rgba(27, 42, 51, .08) 1.6px, transparent 2.2px) 0 0 / 28px 28px,
-    linear-gradient(180deg, #fffdf7 0%, #fff3d9 100%);
-  box-shadow: 0 16px 0 var(--ink), 0 44px 90px rgba(4, 18, 22, .45);
-  pointer-events: auto;
-}
-.sm-title {
-  padding: 18px 54px 12px;
-  border: 5px solid var(--ink);
-  border-radius: 26px;
-  background: linear-gradient(180deg, #4a8fe7 0%, #2361c4 100%);
-  box-shadow: 0 7px 0 var(--ink);
-  color: #fff;
-  font-size: 50px;
-  font-weight: 800;
-  line-height: 1;
-  text-shadow: 0 4px 0 rgba(10, 40, 90, .45);
-}
-.sm-row { display: flex; align-items: center; gap: 12px; }
-.sm-row .def-arrow { width: 56px; height: 36px; }
-.sm-card {
-  display: flex;
-  flex-direction: column;
-  width: 350px;
-  min-height: 330px;
-  border: 5px solid var(--ink);
-  border-radius: 30px;
-  background: #fff;
-  box-shadow: 0 10px 0 var(--ink), 0 22px 40px rgba(4, 18, 22, .14);
-  overflow: hidden;
-  text-align: center;
-}
-.sm-head {
-  padding: 22px 16px 14px;
-  border-bottom: 5px solid var(--ink);
-  font-size: 40px;
-  font-weight: 800;
-  line-height: 1;
-}
-.sm-card--mp .sm-head { background: linear-gradient(180deg, #fff3c9 0%, #ffd970 100%); }
-.sm-card--sp .sm-head { background: linear-gradient(180deg, #e8f3ff 0%, #b9dbff 100%); }
-.sm-card--d .sm-head { background: linear-gradient(180deg, #ffe7e3 0%, #ffbdb5 100%); }
-.sm-value {
-  margin: 22px 0 10px;
-  font-size: 76px;
-  font-weight: 800;
-  line-height: 1;
-}
-.sm-desc {
-  padding: 0 18px 24px;
-  color: var(--ink);
-  font-size: 29px;
-  font-weight: 700;
-  line-height: 1.25;
-  white-space: pre-line; /* the descriptions carry their own line breaks */
-}
-.sm-formula {
-  display: flex;
-  align-items: baseline;
-  gap: 20px;
-  padding: 22px 56px 12px;
-  border: 5px solid var(--ink);
-  border-radius: 30px;
-  background: linear-gradient(180deg, #f1f8ff 0%, #c9e3fb 100%);
-  box-shadow: 0 9px 0 var(--ink);
-  font-size: 60px;
-  font-weight: 800;
-  line-height: 1;
-}
-.sm-op { color: var(--ink); }
-/* Screen 19 on the sheet: no panel; the recap looks made by hand (a taped-on title, index cards, pencil arrows,
-   a sticky note), left of Swifty's stand, big and easy to read (it fills the panel left of her bubbles, which start at
-   x 1445). Little tilts use the `rotate` property, so they add to the pop-in animations. */
-.sm-panel.sm-panel--note {
-  position: absolute;
-  left: 55px;
-  top: 140px;
-  width: 1380px; /* centred on x 745 */
-  height: 820px;
-  justify-content: center;
-  gap: 36px;
-  margin: 0;
-  padding: 0;
-  border: 0;
-  background: none;
-  box-shadow: none;
-}
-.sm-panel--note .sm-title { /* written in blue marker on a strip of paper, taped on */
-  position: relative;
-  padding: 16px 48px 6px;
-  border: 0;
-  border-radius: 3px;
-  background: #fffdf6;
-  box-shadow: 0 1px 0 rgba(60, 40, 10, .08), 0 10px 18px rgba(60, 40, 10, .18);
-  color: #1f4fbf;
-  font-family: var(--hand);
-  font-size: 64px;
-  font-weight: 700;
-  text-shadow: none;
-  rotate: -1.5deg;
-}
-.sm-panel--note .sm-title::before,
-.sm-panel--note .sm-card::before { /* a strip of washi tape, its ends torn */
-  content: '';
-  position: absolute;
-  top: -17px;
-  left: 50%;
-  width: 118px;
-  height: 34px;
-  margin-left: -59px;
-  background: rgba(255, 210, 90, .8);
-  clip-path: polygon(0 0, 100% 0, 97% 25%, 100% 50%, 97% 75%, 100% 100%, 0 100%, 3% 75%, 0 50%, 3% 25%);
-  rotate: 2deg;
-}
-.sm-panel--note .sm-row { gap: 8px; }
-.sm-panel--note .sm-row .def-arrow { width: 64px; height: 41px; } /* sized with the cards */
-.sm-panel--note .sm-card { /* an index card: a red line under the heading, faint blue lines below (one under each line of
-  writing: every 52 px from 100 px down); taped on, a little askew */
-  position: relative;
-  width: 384px;
-  min-height: 300px;
-  border: 0;
-  border-radius: 4px;
-  background:
-    repeating-linear-gradient(180deg, transparent 0 50px, rgba(80, 140, 210, .2) 50px 52px) 0 100px / 100% calc(100% - 100px) no-repeat,
-    #fffefa;
-  box-shadow: 0 1px 0 rgba(60, 40, 10, .08), 0 12px 22px rgba(60, 40, 10, .2);
-  overflow: visible;
-}
-.sm-panel--note .sm-card--mp { rotate: -1.8deg; }
-.sm-panel--note .sm-card--sp { rotate: 1.2deg; }
-.sm-panel--note .sm-card--d { rotate: -.8deg; }
-.sm-panel--note .sm-card--sp::before { background: rgba(120, 180, 240, .75); rotate: -3deg; }
-.sm-panel--note .sm-card--d::before { background: rgba(240, 125, 115, .75); rotate: 1deg; }
-.sm-panel--note .sm-head {
-  padding: 28px 14px 8px;
-  border-bottom: 3px solid rgba(225, 80, 80, .55);
-  background: none;
-  font-family: var(--hand);
-  font-size: 50px;
-  font-weight: 700;
-}
-.sm-panel--note .sm-value { margin: 18px 0 4px; font-size: 70px; }
-.sm-panel--note .sm-desc { padding: 0 14px 24px; color: #34434c; font-family: var(--hand); font-size: 37px; font-weight: 400; line-height: 52px; }
-.sm-panel--note .sm-card--general { min-height: 0; } /* no amount (the idea in general): the card fits its words, one blank line under them */
-.sm-panel--note .sm-card--general .sm-desc { padding: 8px 14px 56px; }
-.sm-panel--note .sm-formula { /* on a sticky note */
-  font-size: 66px;
-  border: 0;
-  border-radius: 2px;
-  background: linear-gradient(180deg, #fff6a8 0%, #ffe679 100%);
-  box-shadow: 0 1px 0 rgba(80, 60, 0, .08), 0 14px 20px rgba(80, 60, 0, .22);
-  rotate: 1.2deg;
-}
-.def-arrow.is-sketch path { stroke: #4b5056; stroke-width: 4.5; } /* drawn in pencil */
-
 /* Screen 27: the sneakers on a card, with their price tag and discount tag (Swifty in her corner) */
-.pc-panel {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 34px;
-  margin-right: 420px; /* as on screens 17–19: room on the right for Swifty and her speech bubbles */
-  padding: 40px 40px 46px;
-  border: 5px solid var(--ink);
-  border-radius: 48px;
-  background:
-    radial-gradient(circle, rgba(27, 42, 51, .08) 1.6px, transparent 2.2px) 0 0 / 28px 28px,
-    linear-gradient(180deg, #fffdf7 0%, #fff3d9 100%);
-  box-shadow: 0 16px 0 var(--ink), 0 44px 90px rgba(4, 18, 22, .45);
-  pointer-events: auto;
-}
 .pc-photo { /* a product photo: the sneakers sharp, the shop softly blurred behind them */
   width: 800px;
   height: 350px;
@@ -1543,45 +1155,6 @@ button:focus-visible, .switch input:focus-visible + .switch-track {
 .pq-choices--stack .pq-opt .q-label { flex: 1; padding: 6px 70px 0 0; } /* centred, balancing the letter chip */
 .pq-opt.is-ping { animation: tag-pop .8s cubic-bezier(.3, 1.6, .5, 1); }
 
-/* Screen 26: 30% OFF means 30% Discount, written big: the red tag, "means" over an arrow, and a card, line for line */
-.mn-panel {
-  display: flex;
-  align-items: center;
-  gap: 64px;
-  margin-right: 330px; /* room on the right for Swifty on her stand (she has no bubble here) */
-  pointer-events: auto;
-}
-.mn-panel .pc-off-pos { rotate: -3deg; } /* with its own 3°, it stands upright, level with the card */
-.mn-tag { padding: 30px 46px 14px; border-width: 6px; border-radius: 30px; box-shadow: 0 12px 0 var(--ink); font-size: 118px; }
-.mn-means { display: flex; flex-direction: column; align-items: center; gap: 4px; }
-.mn-word { color: #1d2a6b; font-size: 66px; font-weight: 800; line-height: 1; }
-.mn-arrow { width: 200px; height: 56px; overflow: visible; }
-.mn-arrow path {
-  fill: none;
-  stroke: var(--ink);
-  stroke-width: 9;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  stroke-dasharray: 1;
-  stroke-dashoffset: 0;
-}
-.mn-card { /* the same lines said another way: on a white card, like the price tag */
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 30px 56px 14px;
-  border: 6px solid var(--ink);
-  border-radius: 30px;
-  background: linear-gradient(180deg, #ffffff 0%, #fff4d6 100%);
-  box-shadow: 0 12px 0 var(--ink), 0 26px 40px rgba(60, 40, 10, .18);
-  color: #1d2a6b;
-  font-size: 118px;
-  font-weight: 800;
-  line-height: .98;
-}
-.mn-card-line { display: block; }
-.mn-tag.is-ping, .mn-card.is-ping, .mn-word.is-ping { animation: tag-pop .8s cubic-bezier(.3, 1.6, .5, 1); }
-
 /* Screens 31 and 33: the sneakers and a question about them. The panel sits further left than the others: the
    Next button goes between it and Swifty, level with the last answer. */
 .pqp-panel {
@@ -1758,79 +1331,6 @@ button:focus-visible, .switch input:focus-visible + .switch-track {
 .stick-tag--green { background: linear-gradient(180deg, #4fd27f 0%, #1f9a55 100%); text-shadow: 0 3px 0 rgba(10, 60, 30, .35); }
 .tone-pay { color: #1f9a55; } /* the new price (screen 35) */
 
-/* Screen 39: the sneakers, summed up: a table of the four amounts, and the three rules (Swifty in her corner) */
-.ss-panel {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 26px;
-  margin-right: 420px; /* as on screens 17–19: room on the right for Swifty and her speech bubbles */
-  padding: 34px 44px 44px;
-  border: 5px solid var(--ink);
-  border-radius: 48px;
-  background:
-    radial-gradient(circle, rgba(27, 42, 51, .08) 1.6px, transparent 2.2px) 0 0 / 28px 28px,
-    linear-gradient(180deg, #fffdf7 0%, #fff3d9 100%);
-  box-shadow: 0 16px 0 var(--ink), 0 44px 90px rgba(4, 18, 22, .45);
-  pointer-events: auto;
-}
-.ss-title { /* as on screen 19's summary */
-  padding: 16px 50px 10px;
-  border: 5px solid var(--ink);
-  border-radius: 24px;
-  background: linear-gradient(180deg, #4a8fe7 0%, #2361c4 100%);
-  box-shadow: 0 7px 0 var(--ink);
-  color: #fff;
-  font-size: 46px;
-  font-weight: 800;
-  line-height: 1;
-  text-shadow: 0 4px 0 rgba(10, 40, 90, .45);
-  white-space: nowrap;
-}
-.ss-table {
-  display: grid;
-  grid-template-columns: auto auto;
-  border: 5px solid var(--ink);
-  border-radius: 26px;
-  overflow: hidden;
-  box-shadow: 0 10px 0 var(--ink);
-  font-size: 42px;
-  font-weight: 800;
-  line-height: 1;
-}
-.ss-label { padding: 20px 30px 12px; white-space: nowrap; }
-.ss-label--mp { background: #fff3c9; color: #7a4600; }
-.ss-label--d { background: #ffe2de; color: #d32f2f; }
-.ss-label--sp { background: #e2efff; color: #17457e; }
-.ss-value {
-  min-width: 250px;
-  padding: 20px 36px 12px;
-  border-left: 4px solid var(--ink);
-  background: #fff;
-  color: var(--ink);
-  text-align: center;
-  white-space: nowrap;
-}
-.ss-row { border-top: 4px solid var(--ink); } /* between the rows */
-.ss-rules { /* the rules, on a pink box (as on the storyboard and screen 18's strip) */
-  display: grid;
-  grid-template-columns: auto auto auto;
-  align-items: center;
-  column-gap: 16px;
-  row-gap: 14px;
-  padding: 24px 44px 26px;
-  border: 5px solid var(--ink);
-  border-radius: 26px;
-  background: linear-gradient(180deg, #ffe7ee 0%, #ffc9d7 100%);
-  box-shadow: 0 9px 0 var(--ink);
-  color: var(--ink);
-  font-size: 42px;
-  font-weight: 800;
-  line-height: 1;
-}
-.ss-rules .pf-label { justify-self: end; color: var(--ink); } /* each rule's left side sits right up to its = sign */
-.ss-panel .is-ping { animation: tag-pop .8s cubic-bezier(.3, 1.6, .5, 1); }
-
 /* Screen 14: ₹1000 → (₹200 reduced) → ₹800, on a card on the right */
 .red-pos {
   position: absolute;
@@ -1872,18 +1372,6 @@ button:focus-visible, .switch input:focus-visible + .switch-track {
   0%, 100% { filter: drop-shadow(0 0 0 rgba(229, 57, 53, 0)); }
   50%      { filter: drop-shadow(0 0 12px rgba(229, 57, 53, .6)); }
 }
-
-.mp-link { position: absolute; left: 0; top: 0; overflow: visible; pointer-events: none; }
-.mp-link path {
-  fill: none;
-  stroke: var(--ink);
-  stroke-width: 6;
-  stroke-linecap: round;
-  stroke-dasharray: 1;
-  stroke-dashoffset: 0;
-}
-.mp-link-dot { fill: #ffd23f; stroke: var(--ink); stroke-width: 4; }
-.mp-link-dot--end { fill: #ff8fb0; }
 
 /* ---------- Pulsing ring around a spot (the ₹1000 sticker) ---------- */
 
@@ -2246,17 +1734,6 @@ button:focus-visible, .switch input:focus-visible + .switch-track {
 .si-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .si-thumb--sheet { background: #fff6e2; box-shadow: inset 0 0 0 3px #0f3b45; }
 .si-thumb--sheet img { object-fit: contain; padding: 16px 4px 3px 34px; }
-.si-thumb--bar::after { /* the question bar along the top, Swifty's teal frame on its left */
-  content: '';
-  position: absolute;
-  left: 18px;
-  right: 14px;
-  top: 3px;
-  height: 8px;
-  border-radius: 4px;
-  background: radial-gradient(circle 5px at 3px 50%, #21b8ae 0 4px, transparent 5px), #fff;
-  box-shadow: 0 0 0 1px #9fc4ef;
-}
 .si-now {
   position: absolute;
   left: 3px;
@@ -2401,1070 +1878,16 @@ kbd {
   #rotate-hint.is-dismissed { display: none; }
 }
 
-/* ---------- Reduced motion ---------- */
-
-/* ---------- The shopping challenge's opening panel ("Game Begins", screen 46) ----------
-   The panel on the right of the picture, its pieces cut from the design's panel sheet (game assets/ui/begin/), the
-   shopping list drawn in the sheet's colours: just the banner and its ribbon, the wallet, the four items side by side
-   and the button, with room round each. Positions are stage px within the panel's box (the panel itself from y 90,
-   under the banner). */
-.cp { position: absolute; left: 1000px; top: 105px; width: 848px; height: 863px; pointer-events: none; }
-.cp-panel { /* the cream panel (made at this size from the sheet's: panel.png) */
-  position: absolute;
-  left: 0;
-  top: 90px;
-  width: 848px;
-  height: 773px;
-  filter: drop-shadow(0 14px 18px rgba(40, 25, 10, .24));
-}
-.cp img { display: block; user-select: none; -webkit-user-drag: none; }
-.cp-banner { position: absolute; left: 44px; top: 0; width: 760px; }
-.cp-ribbon { position: absolute; left: 141px; top: 111px; width: 566px; }
-.cp-wallet { position: absolute; left: 209px; top: 240px; width: 430px; }
-.cp-wallet img { width: 100%; }
-.cp-glint { /* a band of light that runs once across the wallet's navy pill (its rounded shape) */
-  position: absolute;
-  left: 27%;
-  right: 1.5%;
-  top: 12%;
-  bottom: 13%;
-  border-radius: 999px;
-  background: linear-gradient(105deg, transparent 38%, rgba(255, 255, 255, .5) 50%, transparent 62%) 160% 0 / 250% 100% no-repeat;
-  opacity: 0;
-}
-.cp-glint.is-on { animation: cp-glint 1.1s ease-in-out forwards; }
-@keyframes cp-glint {
-  0%   { opacity: 1; background-position: 160% 0; }
-  100% { opacity: 1; background-position: -60% 0; }
-}
-.cp-list-title { /* the list's title, on the panel itself */
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 404px;
-  color: #13204a;
-  font-size: 34px;
-  font-weight: 800;
-  line-height: 44px;
-  text-align: center;
-}
-.cp-items { position: absolute; left: 62px; top: 460px; width: 724px; display: flex; gap: 20px; }
-.cp-item { /* an item: a small card in the sheet's cream, with a soft tan edge; its picture, its name under it */
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
-  padding: 16px 6px 14px;
-  border: 3px solid #e2c29d;
-  border-radius: 24px;
-  background: #fbeacf;
-  box-shadow: inset 0 2px 0 rgba(255, 255, 255, .65), 0 2px 8px rgba(150, 100, 60, .12);
-  color: #13204a;
-}
-.cp-icon { width: 104px; height: 96px; object-fit: contain; }
-.cp-label { font-size: 27px; font-weight: 800; line-height: 1.08; text-align: center; white-space: pre-line; }
-.cp-start {
-  position: absolute;
-  left: 164px;
-  top: 700px;
-  width: 520px;
-  padding: 0;
-  border: 0;
-  background: none;
-  cursor: pointer;
-  pointer-events: auto;
-}
-.cp-start img { width: 100%; transition: transform .12s ease; }
-.cp-start:hover img { transform: translateY(-2px); }
-.cp-start:active img { transform: translateY(4px); }
-.cp-start.is-calling { animation: cp-call 1.8s ease-in-out .3s infinite; }
-@keyframes cp-call { /* a soft gold glow round the button, following its shape (the button holds still) */
-  0%, 100% { filter: drop-shadow(0 0 0 rgba(255, 200, 61, 0)); }
-  50%      { filter: drop-shadow(0 0 16px rgba(255, 200, 61, .95)); }
-}
-
-/* ---------- Choosing a shop (screen 47) ----------
-   As in the design: on its light blue, the four shops' cards (2×2) on the left, and the wallet and the shopping
-   list on a white panel on the right, all moved down a little to clear Back / Next (the hint to tap a shop sits
-   between them). The pictures are cut from the design's sheet (game assets/ui/shop/); the cards, their pills and
-   sparks, the panel and the tags are drawn in its colours. Positions are stage px. */
-.scene:is(.look-shops, .look-street, .look-party) .scene-world::before { /* soft circles on a light sky blue, lavender towards two corners; a little
-  bigger than the screen, as it drifts with the mouse like the pictures do (the cards and the panel hold still) */
-  content: '';
-  position: absolute;
-  inset: -30px;
-  background:
-    radial-gradient(circle at 1% 3%, rgba(255, 255, 255, .26) 0 104px, rgba(255, 255, 255, 0) 107px),
-    radial-gradient(circle at -1% 36%, rgba(200, 194, 250, .32) 0 84px, rgba(200, 194, 250, 0) 87px),
-    radial-gradient(circle at 3% 93%, rgba(200, 194, 250, .32) 0 190px, rgba(200, 194, 250, 0) 193px),
-    radial-gradient(circle at 79% -5%, rgba(255, 255, 255, .24) 0 124px, rgba(255, 255, 255, 0) 127px),
-    radial-gradient(circle at 93% 104%, rgba(255, 255, 255, .28) 0 172px, rgba(255, 255, 255, 0) 175px),
-    radial-gradient(circle at 57% 101%, rgba(255, 255, 255, .2) 0 128px, rgba(255, 255, 255, 0) 131px),
-    radial-gradient(90% 70% at 0% 100%, #dad9fd, rgba(218, 217, 253, 0) 70%),
-    radial-gradient(60% 55% at 100% 0%, #d8e2fd, rgba(216, 226, 253, 0) 75%),
-    radial-gradient(55% 60% at 0% 0%, #c4e5fd, rgba(196, 229, 253, 0) 80%),
-    #d3ecfd;
-}
-.sp { position: absolute; inset: 0; }
-.sp img { display: block; user-select: none; -webkit-user-drag: none; }
-.sp-hint-pos { position: absolute; left: 120px; top: 30px; width: 1107px; display: flex; justify-content: center; }
-.sp-hint { /* "Tap to Select", as on the sheet: pale blue, a blue edge, navy words */
-  height: 58px;
-  padding: 0 32px;
-  border: 3px solid #5a9fd6;
-  border-radius: 29px;
-  background: linear-gradient(180deg, #fbfdff 0 12%, #ddf0fe 30%, #daeffe 82%, #e4f4fd);
-  box-shadow: 0 6px 16px rgba(60, 120, 200, .22);
-  color: #12305e;
-  font-size: 30px;
-  font-weight: 800;
-  line-height: 56px;
-  white-space: nowrap;
-}
-.sp-hint.is-bobbing { animation: sp-bob 1.6s ease-in-out infinite; }
-.sp-hint.is-done { opacity: 0; transform: translateY(-14px); transition: opacity .35s ease, transform .35s ease; }
-@keyframes sp-bob {
-  0%, 100% { transform: none; }
-  50%      { transform: translateY(-7px); }
-}
-.sp-grid {
-  position: absolute;
-  left: 120px;
-  top: 135px;
-  display: grid;
-  grid-template-columns: 526px 526px;
-  grid-auto-rows: 423px;
-  gap: 39px 55px;
-}
-/* Each shop's colours: its card (edge, fill from top to bottom), its sparks, its pill, its glow when picked,
-   and its line on the list when picked. */
-.sp-card--yellow, .sp-row--yellow {
-  --edge: #f7bd47; --edge-low: #f0ad38; --top: #fff5c8; --mid: #feecb5; --low: #fde9a9; --spark: #fdb629;
-  --pill: #fdbb33; --pill-ink: #10295a; --glow: rgba(253, 187, 51, .75); --shade: rgba(190, 140, 40, .2); --tint: #fff1c4;
-}
-.sp-card--pink, .sp-row--pink {
-  --edge: #ef88a9; --edge-low: #e97b9f; --top: #fed9e7; --mid: #fdcfe0; --low: #fdc4d9; --spark: #fc7098;
-  --pill: #f76391; --pill-ink: #fff; --glow: rgba(247, 99, 145, .6); --shade: rgba(200, 80, 120, .18); --tint: #fde1eb;
-}
-.sp-card--green, .sp-row--green {
-  --edge: #7ccba4; --edge-low: #6fc196; --top: #d9fbe4; --mid: #c7f5d4; --low: #bdf2cb; --spark: #45b160;
-  --pill: #389f56; --pill-ink: #fff; --glow: rgba(69, 177, 96, .55); --shade: rgba(60, 150, 90, .18); --tint: #d8f6e0;
-}
-.sp-card--purple, .sp-row--purple {
-  --edge: #b6a2f5; --edge-low: #a88cf0; --top: #ece0fe; --mid: #e1d2fd; --low: #d9c7fd; --spark: #a475f1;
-  --pill: #965fe3; --pill-ink: #fff; --glow: rgba(150, 95, 227, .55); --shade: rgba(120, 80, 200, .18); --tint: #ebe1fe;
-}
-.sp-card {
-  position: relative;
-  overflow: visible;
-  width: 526px;
-  height: 423px;
-  padding: 0;
-  border: 3px solid var(--edge);
-  border-bottom-color: var(--edge-low);
-  border-radius: 46px;
-  background: linear-gradient(180deg, var(--top), var(--mid) 46%, var(--low));
-  box-shadow: inset 0 3px 0 rgba(255, 255, 255, .85), inset 0 0 0 3px rgba(255, 255, 255, .3), 0 12px 26px var(--shade);
-  color: inherit;
-  font: inherit;
-  cursor: pointer;
-  pointer-events: auto;
-  -webkit-tap-highlight-color: transparent;
-  transition: translate .25s ease, box-shadow .25s ease;
-}
-.sp-card::before { /* the glossy little arc in the top-left corner */
-  content: '';
-  position: absolute;
-  left: 13px;
-  top: 12px;
-  width: 58px;
-  height: 58px;
-  border: 6px solid transparent;
-  border-top-color: rgba(255, 255, 255, .85);
-  border-radius: 50%;
-  transform: rotate(-45deg);
-  pointer-events: none;
-}
-.sp-card:hover:not(.is-picked) {
-  translate: 0 -4px;
-  box-shadow: inset 0 3px 0 rgba(255, 255, 255, .85), inset 0 0 0 3px rgba(255, 255, 255, .3), 0 0 22px 4px var(--glow), 0 14px 28px var(--shade);
-}
-.sp-card:focus-visible { outline: 5px solid #12305e; outline-offset: 6px; }
-.sp-card.is-picked { /* as on the sheet: the card glows in its colour */
-  translate: 0 -8px;
-  box-shadow: inset 0 3px 0 rgba(255, 255, 255, .85), inset 0 0 0 3px rgba(255, 255, 255, .3), 0 0 0 4px var(--edge), 0 0 38px 12px var(--glow), 0 20px 30px var(--shade);
-}
-.sp-sparks { position: absolute; inset: 0; pointer-events: none; }
-.sp-spark { position: absolute; width: 38px; height: 13px; border-radius: 7px; background: var(--spark); }
-.sp-icon { /* stands on the pill */
-  position: absolute;
-  left: 50%;
-  bottom: 119px;
-  translate: -50% 0;
-  filter: drop-shadow(0 6px 6px rgba(20, 40, 90, .14));
-  pointer-events: none;
-}
-.sp-card--uniform .sp-icon { height: 266px; }
-.sp-card--shoes .sp-icon { height: 240px; }
-.sp-card--bag .sp-icon { height: 278px; }
-.sp-card--bottle .sp-icon { height: 276px; }
-.sp-name {
-  position: absolute;
-  left: 50%;
-  bottom: 23px;
-  width: 355px;
-  height: 88px;
-  translate: -50% 0;
-  border-radius: 44px;
-  background: var(--pill);
-  color: var(--pill-ink);
-  font-size: 58px;
-  font-weight: 800;
-  line-height: 96px;
-  text-align: center;
-  pointer-events: none;
-}
-.sp-tag { /* "Selected", as on the sheet: yellow, an orange edge, on the card's top edge */
-  position: absolute;
-  left: 50%;
-  top: -31px;
-  height: 56px;
-  padding: 0 28px;
-  translate: -50% 0;
-  border: 3px solid #f99c05;
-  border-radius: 28px;
-  background: linear-gradient(180deg, #fef3a0 0 20%, #fed84c 44%, #fed84c 80%, #fee77a);
-  box-shadow: 0 0 16px rgba(254, 190, 40, .6), 0 4px 8px rgba(120, 80, 10, .2);
-  color: #10295a;
-  font-size: 28px;
-  font-weight: 800;
-  line-height: 54px;
-  white-space: nowrap;
-  opacity: 0;
-  transform: scale(.4);
-  transition: opacity .2s ease, transform .4s cubic-bezier(.2, .8, .3, 1.5);
-  pointer-events: none;
-}
-.sp-card.is-picked .sp-tag { opacity: 1; transform: none; }
-.sp-panel {
-  position: absolute;
-  left: 1293px;
-  top: 112px;
-  width: 598px;
-  height: 928px;
-  border-radius: 44px;
-  background: #f5f9fe;
-  box-shadow: inset 0 0 0 3px rgba(255, 255, 255, .95), 0 0 0 1px rgba(170, 205, 245, .55), 0 18px 40px rgba(70, 130, 210, .22);
-  color: #10284f;
-}
-.sp-wallet { position: absolute; left: 27px; top: 32px; width: 544px; height: 210px; border-radius: 34px; background: #d1eafd; }
-.sp-wallet-icon { position: absolute; left: 31px; top: 50%; width: 164px; translate: 0 -50%; filter: drop-shadow(0 6px 6px rgba(70, 40, 20, .18)); }
-.sp-amount { /* the money: ₹5,000 */
-  position: absolute;
-  left: 210px;
-  top: 52px;
-  width: 316px;
-  height: 106px;
-  border-radius: 53px;
-  background: #f2f8fe;
-  color: #11315c;
-  font-size: 72px;
-  font-weight: 800;
-  line-height: 116px;
-  text-align: center;
-  white-space: nowrap;
-}
-.sp-rule { position: absolute; left: 45px; top: 265px; width: 508px; height: 4px; border-radius: 2px; background: #d9e3f4; }
-.sp-title { position: absolute; left: 49px; top: 286px; font-size: 58px; font-weight: 800; line-height: 80px; white-space: nowrap; }
-.sp-row {
-  position: absolute;
-  left: 37px;
-  width: 526px;
-  height: 111px;
-  border-radius: 24px;
-  background: #edf3fa;
-  transition: background .3s ease, box-shadow .3s ease;
-}
-.sp-row--uniform { top: 379px; }
-.sp-row--shoes { top: 508px; }
-.sp-row--bag { top: 637px; }
-.sp-row--bottle { top: 766px; }
-.sp-row.is-picked { background: var(--tint); box-shadow: inset 0 0 0 3px var(--edge); }
-.sp-check { position: absolute; left: 25px; top: 50%; width: 60px; translate: 0 -50%; }
-.sp-row-icon { position: absolute; left: 158px; top: 50%; translate: -50% -50%; }
-.sp-row--uniform .sp-row-icon { height: 88px; }
-.sp-row--shoes .sp-row-icon { width: 98px; }
-.sp-row--bag .sp-row-icon { height: 90px; }
-.sp-row--bottle .sp-row-icon { height: 100px; }
-.sp-row-label { position: absolute; left: 243px; top: 0; font-size: 41px; font-weight: 800; line-height: 117px; white-space: nowrap; }
-.si-thumb--shops { /* the scene list's tiny copy: four coloured cards and the white panel, on the light blue */
-  background:
-    linear-gradient(#fde7a6, #fde7a6) 5px 5px / 19px 13px no-repeat,
-    linear-gradient(#fdc6da, #fdc6da) 26px 5px / 19px 13px no-repeat,
-    linear-gradient(#c3f3cf, #c3f3cf) 5px 20px / 19px 13px no-repeat,
-    linear-gradient(#dccafd, #dccafd) 26px 20px / 19px 13px no-repeat,
-    linear-gradient(#f7fbff, #f7fbff) 49px 4px / 16px 30px no-repeat,
-    #cfe9fd;
-}
-
-/* A shop whose item is bought (screen 47): light grey, its picture greyed out, a big green tick on it; its button is
-   disabled, so it can't be picked again. */
-.sp-card.is-bought {
-  --edge: #d3d8df; --edge-low: #c6ccd5; --top: #f4f6f8; --mid: #edf0f3; --low: #e6e9ed;
-  --pill: #bcc3cd; --pill-ink: #fff; --shade: rgba(90, 100, 120, .14);
-  cursor: default;
-}
-.sp-card.is-bought:hover { translate: none; box-shadow: inset 0 3px 0 rgba(255, 255, 255, .85), inset 0 0 0 3px rgba(255, 255, 255, .3), 0 12px 26px var(--shade); }
-.sp-card.is-bought .sp-sparks { display: none; }
-.sp-card.is-bought .sp-icon { filter: grayscale(1); opacity: .42; }
-.sp-done { /* the big green tick, over its greyed picture */
-  position: absolute;
-  z-index: 1;
-  left: 50%;
-  top: 92px;
-  width: 150px;
-  translate: -50% 0;
-  filter: drop-shadow(0 8px 10px rgba(20, 90, 50, .3));
-  pointer-events: none;
-}
-.sp-row.is-ticked { background: #e4f6e9; }
-.sp-row.is-ticked .sp-row-label { color: #1f7a45; }
-/* The wallet and the list on the streets, as in the street's design: two white cards in the top-left corner (right of
-   the screens button), the wallet above, then "Shopping List" and a line for each item. */
-.sp-panel--street { left: 108px; top: 24px; width: 256px; height: 312px; border-radius: 0; background: none; box-shadow: none; }
-.sp-panel--street::before { /* the list's card */
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 86px;
-  width: 256px;
-  height: 226px;
-  border-radius: 20px;
-  background: #fff;
-  box-shadow: 0 0 0 3px #cfe3fb, 0 10px 20px rgba(30, 80, 160, .18);
-}
-.sp-panel--street .sp-wallet { left: 0; top: 0; width: 256px; height: 76px; border-radius: 20px; background: #fff; box-shadow: 0 0 0 3px #cfe3fb, 0 10px 20px rgba(30, 80, 160, .18); }
-.sp-panel--street .sp-wallet-icon { left: 12px; width: 70px; }
-.sp-panel--street .sp-amount { left: 92px; top: 0; width: auto; height: 76px; border-radius: 0; background: none; font-size: 44px; line-height: 84px; text-align: left; }
-.sp-panel--street .sp-rule { display: none; }
-.sp-panel--street .sp-title { left: 18px; top: 96px; font-size: 28px; line-height: 38px; }
-.sp-panel--street .sp-row { left: 9px; width: 238px; height: 42px; border-radius: 12px; background: none; }
-.sp-panel--street .sp-row--uniform { top: 138px; }
-.sp-panel--street .sp-row--shoes { top: 181px; }
-.sp-panel--street .sp-row--bag { top: 224px; }
-.sp-panel--street .sp-row--bottle { top: 267px; }
-.sp-panel--street .sp-row.is-picked { background: var(--tint); box-shadow: inset 0 0 0 2px var(--edge); }
-.sp-panel--street .sp-row.is-ticked { background: #e4f6e9; }
-.sp-panel--street .sp-check { left: 9px; width: 28px; }
-.sp-panel--street .sp-row-icon { left: 64px; }
-.sp-panel--street .sp-row--uniform .sp-row-icon { height: 34px; }
-.sp-panel--street .sp-row--shoes .sp-row-icon { width: 40px; }
-.sp-panel--street .sp-row--bag .sp-row-icon { height: 34px; }
-.sp-panel--street .sp-row--bottle .sp-row-icon { height: 36px; }
-.sp-panel--street .sp-row-label { left: 96px; font-size: 25px; line-height: 44px; }
-.si-thumb--street { /* the scene list's tiny copy of a street: three shops on the pavement, the road below, under a blue sky */
-  background:
-    linear-gradient(#f26457, #f26457) 5px 8px / 17px 7px no-repeat,
-    linear-gradient(#fdf0d2, #fdf0d2) 6px 15px / 15px 13px no-repeat,
-    linear-gradient(#3b8ee0, #3b8ee0) 26px 8px / 17px 7px no-repeat,
-    linear-gradient(#fdf0d2, #fdf0d2) 27px 15px / 15px 13px no-repeat,
-    linear-gradient(#9b5de5, #9b5de5) 47px 8px / 17px 7px no-repeat,
-    linear-gradient(#fdf0d2, #fdf0d2) 48px 15px / 15px 13px no-repeat,
-    linear-gradient(#e9cbc1, #e9cbc1) 0 28px / 100% 4px no-repeat,
-    linear-gradient(#7c8fb0, #7c8fb0) 0 32px / 100% 8px no-repeat,
-    linear-gradient(180deg, #58c2f9, #b8e8fd);
-}
-
-/* ---------- The shopping game's streets (screens 48–51) ----------
-/* ---------- The shopping game's streets (screens 48–51) ----------
-   As in the street's design: the street's picture (game background.png: the sky, the town, the pavement and the road),
-   two clouds drifting across the sky, and three shop fronts on the pavement (x 240–1692: the pictures cut from "new
-   shops for game .png", with the game's words and things on them); the wallet and the list on two white cards in the
-   top-left corner, Aniket on the road on the left, and the question bar along the top (Swifty speaks from it). Cards
-   come up over the street (x 390–1670): an offer to check, the three offers compared, a purchase. */
-.st { position: absolute; inset: 0; isolation: isolate; } /* what is layered inside the street stays under the cards over it */
-.st-backdrop { position: absolute; inset: 0; background: #8fd3fb center / cover no-repeat; } /* the picture: set by FX.street */
-.st-cloud { /* a cloud: a flat base with two puffs on top, drifting slowly across the sky, behind the street */
-  position: absolute;
-  left: 0;
-  width: 250px;
-  height: 70px;
-  border-radius: 35px;
-  background: #fff;
-  box-shadow: inset 0 -12px 0 rgba(205, 231, 251, .8);
-  animation: st-drift 95s linear infinite;
-  pointer-events: none;
-}
-.st-cloud::before, .st-cloud::after { content: ''; position: absolute; border-radius: 50%; background: #fff; }
-.st-cloud::before { left: 38px; top: -50px; width: 104px; height: 104px; }
-.st-cloud::after { left: 118px; top: -34px; width: 86px; height: 86px; }
-.st-cloud--1 { top: 232px; translate: 330px 0; animation-delay: -26s; }
-.st-cloud--2 { top: 284px; translate: 1460px 0; scale: .8; animation-duration: 125s; animation-delay: -96s; }
-@keyframes st-drift {
-  from { translate: -300px 0; }
-  to   { translate: 1980px 0; }
-}
-/* The pieces cut from the streets' asset sheet ("sheet .png", in game assets/ui/street/), with the game's words on them */
-.art-label { position: relative; display: block; flex: none; }
-.art-pic { display: block; width: 100%; height: auto; user-select: none; -webkit-user-drag: none; pointer-events: none; }
-.art-words { position: absolute; left: 50%; top: 50%; display: flex; flex-direction: column; align-items: center; translate: -50% -50%; text-align: center; white-space: nowrap; pointer-events: none; }
-.tg-price { width: 4.8em; } /* the white tag: "Marked Price" and the amount, under its string hole (its size follows its font size) */
-.tg-price .art-words { top: 63.5%; color: #1c2a4f; }
-.tg-label { color: #5a6b8c; font-size: .44em; font-weight: 800; line-height: 1.15; }
-.tg-value { font-size: 1em; font-weight: 800; line-height: 1; }
-.tg-offer { width: 5.3em; } /* the red tag: the offer, right of its eyelet, tilted with it */
-.tg-offer .art-words { left: 57.5%; top: 49%; rotate: 3.5deg; color: #fff; text-shadow: 0 2px 0 rgba(90, 10, 10, .35); }
-.tg-line { font-size: .9em; font-weight: 800; line-height: 1; }
-.tg-price.is-ping, .tg-offer.is-ping { animation: tag-pop .8s cubic-bezier(.3, 1.6, .5, 1); }
-.st-shop--coral, .oc-card--coral { --shop: #f26457; --shop-deep: #d9473b; --shop-soft: #ffb3a9; --shop-ink: #9e2c22; }
-.st-shop--blue, .oc-card--blue { --shop: #3b8ee0; --shop-deep: #2a72c2; --shop-soft: #a9cff5; --shop-ink: #174f97; }
-.st-shop--purple, .oc-card--purple { --shop: #9b5de5; --shop-deep: #7d42c9; --shop-soft: #d4b8f6; --shop-ink: #55279b; }
-.st-shop { /* a shop front (the picture, 452 × 470: its base on the pavement), and the game's words and things on it */
-  position: absolute;
-  top: 322px;
-  width: 452px;
-  height: 470px;
-  padding: 0;
-  border: 0;
-  background: none;
-  color: inherit;
-  font: inherit;
-  cursor: pointer;
-  pointer-events: auto;
-  -webkit-tap-highlight-color: transparent;
-  transition: translate .25s ease, opacity .4s ease, filter .4s ease;
-}
-.st-shop--0 { left: 240px; }
-.st-shop--1 { left: 740px; }
-.st-shop--2 { left: 1240px; }
-.st-shop:disabled { cursor: default; }
-.st-shop.is-open:hover { translate: 0 -6px; }
-.st-shop:focus-visible { outline: 5px solid #12305e; outline-offset: 8px; border-radius: 24px; }
-.st-glow { /* a soft gold glow behind it: pulsing while it is still to check, steady on the best deal */
-  position: absolute;
-  left: 20px;
-  right: 20px;
-  top: 10px;
-  bottom: 16px;
-  border-radius: 40px;
-  background: #ffc83d;
-  filter: blur(28px);
-  opacity: 0;
-  transition: opacity .4s ease;
-}
-.st-shop.is-open .st-glow { animation: st-call 2.4s ease-in-out infinite; }
-@keyframes st-call {
-  0%, 100% { opacity: 0; }
-  50%      { opacity: .55; }
-}
-.st-shop.is-best .st-glow { opacity: .8; animation: none; }
-.st-shop.is-faded { opacity: .6; filter: saturate(.6); }
-.st-art { /* the shop front, cut from "new shops for game .png" (494 × 514) */
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  filter: drop-shadow(0 12px 12px rgba(40, 60, 100, .18));
-  user-select: none;
-  -webkit-user-drag: none;
-  pointer-events: none;
-}
-.st-board-name { /* on the sign: white, outlined in the shop's ink */
-  position: absolute;
-  z-index: 1;
-  left: 64px;
-  right: 64px;
-  top: 57px;
-  height: 52px;
-  color: #fff;
-  font-size: 42px;
-  font-weight: 800;
-  line-height: 58px;
-  text-align: center;
-  white-space: nowrap;
-  text-shadow: 0 4px 0 var(--shop-ink), 3px 0 0 var(--shop-ink), -3px 0 0 var(--shop-ink), 0 -3px 0 var(--shop-ink), 2px 2px 0 var(--shop-ink), -2px 2px 0 var(--shop-ink), 2px -2px 0 var(--shop-ink), -2px -2px 0 var(--shop-ink);
-}
-.st-display { /* the window's glass: the item on the left, its price tag hanging on the right and the offer under it */
-  position: absolute;
-  z-index: 1;
-  left: 75px;
-  top: 232px;
-  width: 302px;
-  height: 199px;
-  overflow: hidden;
-}
-.st-item { position: absolute; left: 16px; bottom: 10px; width: auto; height: 138px; filter: drop-shadow(0 6px 6px rgba(20, 40, 90, .22)); }
-.st--shoes .st-item { left: 8px; bottom: 24px; height: 118px; }
-.st--bag .st-item { left: 20px; height: 136px; }
-.st--bottle .st-item { left: 48px; height: 142px; }
-.st--uniform .st-item { top: 44px; bottom: auto; height: 132px; } /* it hangs on its hanger */
-.st-hanger { position: absolute; left: 21px; top: 14px; width: 112px; height: 56px; fill: none; stroke: #7d8aa1; stroke-width: 3.5; stroke-linecap: round; stroke-linejoin: round; } /* behind the uniform: its hook shows above the collar */
-.st-price { /* the marked price, on a cream tag hanging from a string */
-  position: absolute;
-  right: 14px;
-  top: 30px;
-  rotate: -4deg;
-  padding: 18px 13px 6px;
-  border: 3px solid #c9a35e;
-  border-radius: 10px;
-  background: #fff7de;
-  box-shadow: 0 3px 0 rgba(120, 90, 30, .25);
-  color: #1c2a4f;
-  font-size: 30px;
-  font-weight: 800;
-  line-height: 1;
-  white-space: nowrap;
-}
-.st-price::before { content: ''; position: absolute; left: 50%; bottom: calc(100% - 9px); width: 2px; height: 48px; margin-left: -1px; background: #6b5130; } /* the string, down to its hole */
-.st-price::after { content: ''; position: absolute; left: 50%; top: 6px; width: 8px; height: 8px; margin-left: -4px; border-radius: 50%; background: #6b5130; }
-.st-offer { /* the shop's offer, on a red tag */
-  position: absolute;
-  right: 20px;
-  bottom: 12px;
-  rotate: -7deg;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 8px 15px 6px;
-  border-radius: 12px;
-  background: linear-gradient(180deg, #f7483b, #d7271f);
-  box-shadow: 0 4px 0 #a3170f, 0 7px 10px rgba(120, 20, 10, .3);
-  color: #fff;
-  font-weight: 800;
-  line-height: 1;
-  text-shadow: 0 2px 0 rgba(100, 10, 5, .4);
-  white-space: nowrap;
-}
-.st-offer-big { font-size: 37px; }
-.st-offer-small { font-size: 23px; }
-.st-pay { position: absolute; z-index: 5; left: 50%; top: 482px; width: 262px; translate: -50% 0; } /* what you pay there, on the green badge */
-.st-pay .art-words { color: #fff; font-size: 28px; font-weight: 800; text-shadow: 0 2px 0 rgba(10, 60, 30, .35); }
-.st-best { position: absolute; z-index: 5; left: 50%; top: -84px; width: 290px; translate: -50% 0; } /* "Best deal!", on the yellow ribbon */
-:is(.st-best, .tk-stamp) .art-words { top: 37%; color: #7a3d00; font-weight: 800; }
-.st-best .art-words { font-size: 30px; }
-.st-buy { /* "Buy for ₹1,300", on the yellow button */
-  position: absolute;
-  z-index: 5;
-  left: 50%;
-  top: 476px;
-  width: 300px;
-  padding: 0;
-  border: 0;
-  background: none;
-  translate: -50% 0;
-  font: inherit;
-  cursor: pointer;
-  pointer-events: auto;
-  animation: cp-call 1.6s ease-in-out .4s infinite;
-}
-.st-buy .art-words { top: 46%; color: #1c2a4f; font-size: 34px; font-weight: 800; }
-.st-buy:active { translate: -50% 3px; }
-.st-buy:disabled { animation: none; cursor: default; }
-.st-buy.is-out { opacity: .45; filter: grayscale(.85); } /* a wrong pick, crossed out */
-.st-buy.is-out .art-words { text-decoration: line-through; text-decoration-thickness: 4px; }
-.st-buy.is-guide:not(:disabled) { animation: cp-call 1.1s ease-in-out infinite; } /* the one left to pick glows */
-.st-sold { /* SOLD, stamped on the window */
-  position: absolute;
-  z-index: 2;
-  left: 50%;
-  top: 46%;
-  translate: -50% -50%;
-  rotate: -10deg;
-  padding: 8px 22px 0;
-  border: 6px solid #d42a2a;
-  border-radius: 14px;
-  background: rgba(255, 255, 255, .82);
-  color: #d42a2a;
-  font-size: 54px;
-  font-weight: 800;
-  letter-spacing: 4px;
-  line-height: 1;
-}
-.st-veil { /* while a card is up: a calm backdrop over the street, the wallet, the list and Aniket (all eyes on the card;
-  the question bar stays over it). The game's light blue with soft circles, as on the Shopping Area. */
-  position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(circle at 6% 10%, rgba(255, 255, 255, .34) 0 120px, rgba(255, 255, 255, 0) 123px),
-    radial-gradient(circle at 94% 14%, rgba(255, 255, 255, .26) 0 150px, rgba(255, 255, 255, 0) 153px),
-    radial-gradient(circle at 3% 92%, rgba(200, 194, 250, .32) 0 190px, rgba(200, 194, 250, 0) 193px),
-    radial-gradient(circle at 97% 70%, rgba(200, 194, 250, .26) 0 140px, rgba(200, 194, 250, 0) 143px),
-    radial-gradient(75% 65% at 50% 42%, #e6f4ff 0%, rgba(230, 244, 255, 0) 100%),
-    #cde8fc;
-  pointer-events: auto; /* nothing behind it can be tapped */
-}
-
-/* ---------- The question bar (the shopping game's own screens: the streets, Shopping Complete and the receipt, 44–49) ----------
-   At the top of the screen and always fully on it, in the top row between the wallet and Back / Next (over the screens,
-   under the buttons and the scene list): Swifty's face in a round frame on its left corner, her name on a tab under it,
-   and what she says (or what to do) on a white bar. One bar for all those screens: it slides up with the first and stays put from one to the next. (On the
-   big panel's screens she stands on her books instead, as on every teaching screen.) */
-.qb {
-  position: absolute;
-  z-index: 20;
-  left: 386px;
-  width: 1102px; /* to x 1488, clear of Back / Next */
-  top: 22px;
-  height: 132px; /* big: the question is read from it */
-  border-radius: 34px;
-  background: linear-gradient(180deg, #ffffff 0%, #f3f8ff 100%);
-  box-shadow: 0 0 0 4px #cfe3fb, 0 12px 26px rgba(30, 80, 160, .24);
-  opacity: 0;
-  transform: translateY(-180px); /* it slides down into place */
-  transition: transform .55s cubic-bezier(.2, .8, .3, 1), opacity .35s ease;
-  pointer-events: none;
-}
-.qb.is-up { opacity: 1; transform: none; }
-.qb-face { /* Swifty, her face filling a round frame inside the bar's left end; it glows while she talks */
-  position: absolute;
-  left: 12px;
-  top: 12px;
-  width: 108px;
-  height: 108px;
-  overflow: hidden;
-  border-radius: 50%;
-  background: radial-gradient(circle at 50% 30%, #f2fbff 0%, #bfe6fb 100%);
-  box-shadow: inset 0 0 0 4px #8fd3f5;
-  transition: box-shadow .25s ease;
-}
-.qb.is-talking .qb-face { box-shadow: inset 0 0 0 4px #21b8ae, 0 0 16px 4px rgba(33, 184, 174, .45); }
-.qb-box { position: absolute; left: 140px; right: 30px; top: 0; bottom: 0; }
-.qb-line, .qb-task { /* what she says, typed as she says it (see .ch); or what to do */
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 50%;
-  translate: 0 -50%;
-  color: #10285a;
-  font-size: 34px; /* one line, always (see FX.questionBar) */
-  font-weight: 800;
-  line-height: 1.15;
-  white-space: nowrap;
-  overflow: hidden;
-}
-.qb-task { color: #2d4f8c; transition: opacity .25s ease; } /* the question or what to do: a deep blue (her lines are navy) */
-.qb-task.is-hidden { opacity: 0; }
-@media (prefers-reduced-motion: reduce) {
-  .qb { transform: none; transition: opacity .3s ease; }
-}
-/* The receipt, on the bar's screens: centred, under the bar. */
-
-/* A card over the street: one shop's offer, checked */
-.oc { position: absolute; inset: 0; pointer-events: none; }
-.oc-card { /* big, centred in the space under the question bar (y 154–1080) */
-  position: absolute;
-  left: 160px;
-  top: 214px;
-  width: 1600px;
-  height: 790px;
-  overflow: hidden;
-  border: 6px solid var(--ink);
-  border-radius: 46px;
-  background: #fbfdff;
-  box-shadow: 0 14px 0 var(--ink), 0 34px 70px rgba(30, 50, 90, .3);
-  pointer-events: auto;
-}
-.oc-band { /* the shop's name, on its colour */
-  display: flex;
-  align-items: center;
-  height: 104px;
-  padding: 8px 52px 0;
-  border-bottom: 6px solid var(--ink);
-  background: linear-gradient(180deg, var(--shop), var(--shop-deep));
-  color: #fff;
-  text-shadow: 0 3px 0 rgba(0, 0, 0, .15);
-}
-.oc-shop { font-size: 62px; font-weight: 800; }
-.oc-body { display: grid; grid-template-columns: 600px 1fr; height: calc(100% - 104px); }
-.oc-side {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 34px;
-  border-right: 5px dashed #e6d5b8;
-  background: radial-gradient(circle, rgba(27, 42, 51, .07) 1.6px, transparent 2.2px) 0 0 / 28px 28px, #fff8ea;
-}
-.oc-frame { display: grid; place-items: center; width: 440px; height: 320px; border: 6px solid #fff; border-radius: 28px; background: linear-gradient(160deg, #eaf6ff, #cfe7fb); box-shadow: inset 0 0 0 2px #b9d6f0, 0 8px 14px rgba(40, 60, 100, .12); }
-.oc-pic { max-width: 370px; max-height: 270px; filter: drop-shadow(0 8px 8px rgba(20, 40, 90, .18)); }
-.oc-tags { display: flex; align-items: center; gap: 22px; font-size: 48px; }
-.oc-main { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 30px; padding: 24px 48px; }
-.oc-question { /* the question, above the answers, on a purple strip (as the questions on screens 28–30) */
-  padding: 18px 54px 10px;
-  border: 6px solid var(--ink);
-  border-radius: 30px;
-  background: linear-gradient(180deg, #f4eaff 0%, #d8bbf7 100%);
-  box-shadow: 0 8px 0 var(--ink);
-  color: #23205f;
-  font-size: 58px;
-  font-weight: 800;
-  line-height: 1;
-  white-space: nowrap;
-}
-.oc-answers { display: flex; flex-direction: column; gap: 28px; }
-.gm-opt { position: relative; justify-content: center; width: 640px; height: 124px; padding: 0 30px; font-size: 64px; }
-.gm-opt .q-label { flex: none; padding: 6px 0 0; }
-.gm-mark { /* ✓ or ✗ on a white disc, once picked */
-  position: absolute;
-  right: 22px;
-  top: 50%;
-  display: none;
-  place-items: center;
-  width: 68px;
-  height: 68px;
-  translate: 0 -50%;
-  border: 5px solid var(--ink);
-  border-radius: 50%;
-  background: #fff;
-}
-.gm-mark svg { width: 38px; height: 38px; fill: none; stroke-width: 7; stroke-linecap: round; stroke-linejoin: round; }
-.gm-opt:is(.is-correct, .is-wrong, .is-out) .gm-mark { display: grid; }
-.gm-opt.is-correct .gm-mark svg { stroke: #1f9a5a; }
-.gm-opt:is(.is-wrong, .is-out) .gm-mark svg { stroke: #e0483b; }
-.gm-opt.is-out { opacity: .42; }
-.gm-opt.is-out .q-label { text-decoration: line-through; text-decoration-thickness: 6px; }
-.gm-opt.is-guide { animation: buy-call 1.4s ease-in-out infinite; } /* the one left to pick glows */
-@keyframes buy-call { /* a soft gold glow round the button (its dark shadow stays) */
-  0%, 100% { box-shadow: 0 8px 0 var(--ink), 0 0 0 0 rgba(255, 196, 61, .75); }
-  50%      { box-shadow: 0 8px 0 var(--ink), 0 0 0 14px rgba(255, 196, 61, 0); }
-}
-.gm-opt.is-guide:not(:disabled) { background: linear-gradient(180deg, #fffbe6 0%, #ffe9a3 100%); }
-.oc-work { /* the working, line by line, = signs lined up */
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  padding: 24px 44px;
-  border: 5px solid #d8e3f2;
-  border-radius: 28px;
-  background: #fff;
-}
-.oc-line { display: grid; grid-template-columns: 470px 60px 290px; align-items: baseline; color: #1c2a4f; font-size: 58px; font-weight: 800; line-height: 1.15; white-space: nowrap; }
-.oc-left { text-align: right; }
-.oc-eq { text-align: center; color: #5a6b8c; }
-.oc-right { text-align: left; color: #1f6fd6; }
-.oc-line--text { grid-template-columns: 1fr; text-align: center; color: #8a5a00; }
-.oc-result { width: 520px; rotate: -2deg; } /* what you pay, stamped, on the green badge */
-.oc-result .art-words { flex-direction: row; align-items: baseline; gap: 18px; color: #fff; text-shadow: 0 3px 0 rgba(10, 60, 30, .3); }
-.oc-result-label { font-size: 42px; font-weight: 800; }
-.oc-result-value { font-size: 74px; font-weight: 800; line-height: 1; }
-
-/* A picture flying across (the money to the shop, the item to the list) */
-.fly-pic { position: absolute; z-index: 20; object-fit: contain; filter: drop-shadow(0 10px 10px rgba(20, 40, 90, .25)); pointer-events: none; }
-
-/* "Uniform purchased!" and the wallet's sum */
-.ps-slip { /* big, as the cards: under the question bar, over the street */
-  position: absolute;
-  left: 1030px;
-  top: 230px;
-  translate: -50% 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 14px;
-  padding: 32px 76px 40px;
-  border: 6px solid var(--ink);
-  border-radius: 42px;
-  background: #fff;
-  box-shadow: 0 12px 0 var(--ink), 0 34px 70px rgba(30, 50, 90, .3);
-}
-.ps-pic { height: 170px; filter: drop-shadow(0 6px 6px rgba(20, 40, 90, .18)); }
-.ps-title { color: #1f9a55; font-size: 68px; font-weight: 800; line-height: 1.1; }
-.ps-sum { display: flex; align-items: baseline; gap: 16px; color: #1c2a4f; font-size: 58px; font-weight: 800; white-space: nowrap; }
-.ps-op { color: #5a6b8c; }
-.ps-cost { color: #d42a2a; }
-.ps-left { padding: 2px 16px 0; border-radius: 16px; background: #fff1a8; color: #1f7a45; }
-.ps-word { color: #1f7a45; font-size: 46px; text-transform: uppercase; }
-
 /* Confetti, for a celebration */
 .confetti { position: absolute; z-index: 30; inset: 0; overflow: hidden; pointer-events: none; }
 .confetti i { position: absolute; border-radius: 3px; }
 
-/* ---------- The end of the shopping game (screens 52–59) ---------- */
-.si-thumb--party { /* the scene list's tiny copy: a banner and confetti on the light blue */
-  background:
-    linear-gradient(#2f7fdc, #2f7fdc) 12px 7px / 44px 10px no-repeat,
-    linear-gradient(#fff, #fff) 16px 21px / 36px 11px no-repeat,
-    radial-gradient(circle, #ffb238 2px, transparent 2.6px) 3px 3px / 13px 11px,
-    #d3ecfd;
-}
-.cl { position: absolute; inset: 0; pointer-events: none; }
-.cl-banner { /* a big banner: gold words on blue (or green) */
-  position: absolute;
-  left: 780px;
-  top: 140px;
-  translate: -50% 0;
-  padding: 14px 66px 2px;
-  border: 6px solid #fff;
-  border-radius: 40px;
-  background: linear-gradient(180deg, #4b9cf1 0%, #1f63c4 100%);
-  box-shadow: 0 0 0 4px #17488f, 0 18px 30px rgba(20, 50, 110, .35);
-  white-space: nowrap;
-}
-.cl-banner--green { background: linear-gradient(180deg, #47c983 0%, #1f8f52 100%); box-shadow: 0 0 0 4px #16683b, 0 18px 30px rgba(20, 90, 50, .35); }
-.cl--wide .cl-banner { left: 960px; top: 108px; }
-.cl-title { color: #ffd84d; font-size: 84px; font-weight: 800; line-height: 1.12; letter-spacing: 1px; text-shadow: 0 5px 0 #9a5200, 0 0 2px #9a5200; }
-.cl-text {
-  position: absolute;
-  left: 780px;
-  top: 300px;
-  translate: -50% 0;
-  padding: 10px 44px 4px;
-  border-radius: 999px;
-  background: #fff;
-  box-shadow: 0 8px 18px rgba(40, 80, 140, .18);
-  color: #1c2a4f;
-  font-size: 44px;
-  font-weight: 800;
-  white-space: nowrap;
-}
-/* Screen 52 (Shopping Complete): the banner and its line at the top; on the left the Shopping Area's panel, smaller (the
-   wallet: what is left; the list: every line ticked), and on the right the four things bought, each on a card in its
-   shop's colour (as on the Shopping Area), ticked. All of it under the question bar. */
-.cl--done .cl-banner { left: 960px; top: 182px; padding: 8px 52px 0; }
-.cl--done .cl-title { font-size: 58px; }
-.cl--done .cl-text { left: 960px; top: 280px; padding: 6px 38px 0; font-size: 36px; }
-.cl-board { /* the panel (598 × 928) at 60% */
-  position: absolute;
-  left: 412px;
-  top: 372px;
-  width: 598px;
-  height: 928px;
-  transform: scale(.6);
-  transform-origin: 0 0;
-}
-.cl-board .sp-panel { left: 0; top: 0; }
-.cl-board .sp-amount { color: #1f7a45; }
-.cl-board-left { /* "LEFT", under the money */
-  position: absolute;
-  left: 210px;
-  top: 162px;
-  width: 316px;
-  color: #1f7a45;
-  font-size: 34px;
-  font-weight: 800;
-  line-height: 1;
-  text-align: center;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-}
-.cl-grid { position: absolute; left: 835px; top: 374px; display: grid; grid-template-columns: 320px 320px; grid-auto-rows: 262px; gap: 28px 32px; }
-.cl-card { /* a thing bought, on its card in its shop's colour (the colours: .sp-card--yellow …) */
-  position: relative;
-  border: 3px solid var(--edge);
-  border-bottom-color: var(--edge-low);
-  border-radius: 34px;
-  background: linear-gradient(180deg, var(--top), var(--mid) 46%, var(--low));
-  box-shadow: inset 0 3px 0 rgba(255, 255, 255, .85), inset 0 0 0 3px rgba(255, 255, 255, .3), 0 10px 22px var(--shade);
-}
-.cl-pic { position: absolute; left: 50%; bottom: 80px; width: auto; translate: -50% 0; filter: drop-shadow(0 6px 6px rgba(20, 40, 90, .16)); }
-.cl-card--uniform .cl-pic { height: 160px; }
-.cl-card--shoes .cl-pic { height: 134px; }
-.cl-card--bag .cl-pic { height: 162px; }
-.cl-card--bottle .cl-pic { height: 162px; }
-.cl-name { /* its name, on its pill */
-  position: absolute;
-  left: 50%;
-  bottom: 14px;
-  width: 220px;
-  height: 54px;
-  translate: -50% 0;
-  border-radius: 27px;
-  background: var(--pill);
-  color: var(--pill-ink);
-  font-size: 35px;
-  font-weight: 800;
-  line-height: 60px;
-  text-align: center;
-}
-.cl-tick { position: absolute; right: -20px; top: -22px; width: 78px; filter: drop-shadow(0 4px 6px rgba(20, 90, 50, .3)); }
-
-/* The receipt: white paper, its bottom edge perforated, printed row by row */
-.rc { position: absolute; inset: 0; filter: drop-shadow(0 18px 22px rgba(30, 50, 90, .25)); pointer-events: none; }
-.rc-paper {
-  position: absolute;
-  left: 170px;
-  top: 112px;
-  width: 1000px;
-  padding: 34px 56px 64px;
-  background: #fffefb;
-  -webkit-mask: radial-gradient(circle 10px at 50% 100%, transparent 96%, #000) 0 0 / 24px 100% repeat-x;
-  mask: radial-gradient(circle 10px at 50% 100%, transparent 96%, #000) 0 0 / 24px 100% repeat-x;
-  color: #1c2a4f;
-}
-.rc-kind { color: #8a96ab; font-size: 24px; font-weight: 800; letter-spacing: 8px; text-align: center; }
-.rc-title { padding-bottom: 16px; border-bottom: 4px dashed #c9d3e2; font-size: 50px; font-weight: 800; text-align: center; }
-.rc-table { display: grid; grid-template-columns: 1.25fr 1fr 1fr 1fr; align-items: center; margin-top: 18px; }
-.rc-head { padding: 6px 0 12px; border-bottom: 3px dashed #c9d3e2; color: #5a6b8c; font-size: 26px; font-weight: 800; text-align: right; }
-.rc-cell { padding: 14px 0 10px; border-bottom: 2px dotted #d9e1ec; font-size: 38px; font-weight: 800; text-align: right; white-space: nowrap; }
-.rc-col0 { text-align: left; }
-.rc-cell.rc-col0 { display: flex; align-items: center; gap: 16px; }
-.rc-cell.rc-col2 { color: #d32f2f; }
-.rc-cell.rc-col3 { color: #1f7a45; }
-.rc-pic { width: 62px; height: 54px; object-fit: contain; }
-.rc-cell.rc-total { padding-top: 20px; border-top: 6px double #1c2a4f; border-bottom: 0; font-size: 44px; }
-.rc-cell.is-ping { animation: tag-pop .8s cubic-bezier(.3, 1.6, .5, 1); }
-
-/* Two different amounts, on two cards (on the big panel, Swifty in her corner) */
-.ta-panel { display: flex; flex-direction: column; align-items: center; gap: 34px; margin-right: 420px; pointer-events: auto; }
-.ta-title, .rk-title { /* on a purple strip, as the questions */
-  padding: 14px 50px 6px;
-  border: 5px solid var(--ink);
-  border-radius: 26px;
-  background: linear-gradient(180deg, #f4eaff 0%, #d8bbf7 100%);
-  box-shadow: 0 7px 0 var(--ink);
-  color: #23205f;
-  font-size: 52px;
-  font-weight: 800;
-  line-height: 1.05;
-  white-space: nowrap;
-}
-.ta-row { display: flex; align-items: center; gap: 28px; }
-.ta-not { color: #5a6b8c; font-size: 96px; font-weight: 800; line-height: 1; }
-.ta-card {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 16px;
-  width: 520px;
-  min-height: 480px;
-  padding: 30px 32px 34px;
-  border: 5px solid var(--ink);
-  border-radius: 36px;
-  box-shadow: 0 10px 0 var(--ink);
-  text-align: center;
-}
-.ta-card--off { background: linear-gradient(180deg, #fff6f4 0%, #ffd6cf 100%); }
-.ta-card--left { background: linear-gradient(180deg, #f2fcf5 0%, #c9f0d6 100%); }
-.ta-term { color: #1c2a4f; font-size: 40px; font-weight: 800; line-height: 1.1; }
-.ta-value { font-size: 108px; font-weight: 800; line-height: 1; }
-.ta-card--off .ta-value { color: #d32f2f; }
-.ta-card--left .ta-value { color: #1f7a45; }
-.ta-value.is-ping { animation: tag-pop .8s cubic-bezier(.3, 1.6, .5, 1); }
-.ta-text { color: #34434c; font-size: 31px; font-weight: 700; line-height: 1.25; }
-.ta-sum { margin-top: auto; padding: 8px 22px 2px; border-radius: 14px; background: rgba(255, 255, 255, .8); color: #1c2a4f; font-size: 32px; font-weight: 800; white-space: nowrap; }
-
-/* Back home: the four new things on the table */
-/* The mission's result */
-.ms-card {
-  position: absolute;
-  left: 960px;
-  top: 276px;
-  translate: -50% 0;
-  display: grid;
-  grid-template-columns: 540px 700px;
-  gap: 50px;
-  padding: 40px 50px 44px;
-  border: 5px solid var(--ink);
-  border-radius: 44px;
-  background: #fff;
-  box-shadow: 0 12px 0 var(--ink), 0 30px 60px rgba(30, 50, 90, .25);
-}
-.ms-list { display: flex; flex-direction: column; justify-content: center; gap: 18px; }
-.ms-item { display: flex; align-items: center; gap: 22px; padding: 10px 24px; border-radius: 22px; background: #e4f6e9; }
-.ms-tick { width: 62px; }
-.ms-pic { width: 84px; height: 76px; object-fit: contain; }
-.ms-name { color: #1c2a4f; font-size: 40px; font-weight: 800; white-space: nowrap; }
-.ms-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
-.ms-stat {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  padding: 20px 14px;
-  border: 5px solid var(--ink);
-  border-radius: 28px;
-  box-shadow: 0 8px 0 var(--ink);
-  text-align: center;
-}
-.ms-stat--blue { background: linear-gradient(180deg, #f1f8ff 0%, #c9e3fb 100%); }
-.ms-stat--orange { background: linear-gradient(180deg, #fff8ee 0%, #ffd9a8 100%); }
-.ms-stat--green { background: linear-gradient(180deg, #f2fcf5 0%, #c9f0d6 100%); }
-.ms-stat--pink { background: linear-gradient(180deg, #fff4f6 0%, #ffd0dc 100%); }
-.ms-label { color: #34434c; font-size: 30px; font-weight: 800; line-height: 1.1; }
-.ms-value { color: #1c2a4f; font-size: 66px; font-weight: 800; line-height: 1; }
-
-/* What we learnt: four cards (on the big panel, Swifty in her corner) */
-.rk-panel { display: flex; flex-direction: column; align-items: center; gap: 28px; margin-right: 420px; pointer-events: auto; }
-.rk-grid { display: grid; grid-template-columns: 620px 620px; gap: 28px 30px; }
-.rk-card {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 12px;
-  min-height: 236px;
-  padding: 22px 32px 26px;
-  border: 5px solid var(--ink);
-  border-radius: 32px;
-  box-shadow: 0 9px 0 var(--ink);
-}
-.rk-card--mp { background: linear-gradient(180deg, #fffaf0 0%, #ffe9a8 100%); }
-.rk-card--d { background: linear-gradient(180deg, #fff6f4 0%, #ffd6cf 100%); }
-.rk-card--pct { background: linear-gradient(180deg, #fff4fa 0%, #f6cfe6 100%); }
-.rk-card--sp { background: linear-gradient(180deg, #f3f9ff 0%, #c9e3fb 100%); }
-.rk-term { font-size: 46px; font-weight: 800; line-height: 1.05; }
-.rk-card--mp .rk-term { color: #7a4600; }
-.rk-card--d .rk-term { color: #d32f2f; }
-.rk-card--pct .rk-term { color: #b0185f; }
-.rk-card--sp .rk-term { color: #17457e; }
-.rk-text { color: #34434c; font-size: 31px; font-weight: 700; line-height: 1.25; }
-.rk-formula { align-self: flex-start; padding: 8px 18px 4px; white-space: pre-line; border: 3px solid rgba(27, 42, 51, .18); border-radius: 14px; background: rgba(255, 255, 255, .85); color: #1c2a4f; font-size: 30px; font-weight: 800; line-height: 1.25; }
-.rk-card.is-ping { animation: tag-pop .8s cubic-bezier(.3, 1.6, .5, 1); }
-
-/* The takeaway: two offers compared, and the banner (on the big panel, Swifty in her corner) */
-.tk-panel { display: flex; flex-direction: column; align-items: center; gap: 46px; margin-right: 420px; pointer-events: auto; }
-.tk-row { display: flex; align-items: center; gap: 40px; }
-.tk-vs { color: #5a6b8c; font-size: 64px; font-weight: 800; }
-.tk-offer {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 20px;
-  width: 430px;
-  padding: 36px 30px 32px;
-  border: 5px solid var(--ink);
-  border-radius: 36px;
-  background: #fff;
-  box-shadow: 0 10px 0 var(--ink);
-  transition: box-shadow .4s ease;
-}
-.tk-offer.is-best { box-shadow: 0 10px 0 var(--ink), 0 0 0 8px #ffc83d, 0 0 50px 16px rgba(255, 200, 61, .6); }
-.tg-offer.tk-off { font-size: 54px; }
-.tk-mp { color: #5a6b8c; font-size: 30px; font-weight: 800; }
-.tk-pay { display: flex; align-items: baseline; gap: 12px; padding: 10px 26px 4px; border-radius: 18px; background: #e4f6e9; color: #1f7a45; }
-.tk-pay-label { font-size: 30px; font-weight: 800; }
-.tk-pay-value { font-size: 62px; font-weight: 800; line-height: 1; }
-.tk-stamp { position: absolute; top: -44px; right: -56px; width: 236px; rotate: -7deg; } /* "Best deal!", on the yellow ribbon */
-.tk-stamp .art-words { font-size: 28px; }
-.tk-banner {
-  padding: 22px 60px 14px;
-  border: 6px solid #fff;
-  border-radius: 36px;
-  background: linear-gradient(180deg, #47c983 0%, #1f8f52 100%);
-  box-shadow: 0 0 0 4px #16683b, 0 16px 30px rgba(20, 90, 50, .35);
-  color: #fff;
-  font-size: 54px;
-  font-weight: 800;
-  text-shadow: 0 3px 0 rgba(10, 60, 30, .35);
-  white-space: nowrap;
-}
-
 @media (prefers-reduced-motion: reduce) {
   .mote, .twinkle { display: none; }
-  .glow, .thought-puff-bob, .start-btn, .badge-rays,
-  .exclaim-inner, .walker.is-idle .walker-body, #btn-next.is-ready, .rotate-phone,
-  .spot-ring::after, .red-tag.is-pulsing,
-  .cmp-box.is-key, .fm-box.is-ping, .fm-op.is-ping, .fm-box.is-ping::after,
-  .fr-term.is-ping, .fr-op.is-ping, .pc-price.is-ping, .pc-off.is-ping, .pc-off-line.is-ping, .mn-panel .is-ping, .pqp-hint.is-ping,
-  .pf-hint.is-ping, .pf-q-value.is-ping, .pq-opt.is-ping, .ws-panel .is-ping, .ss-panel .is-ping,
-  .ws-drag, .ws-slot.is-waiting, .ws-slot.is-wrong {
+  .glow, .thought-puff-bob, .start-btn, .badge-rays, .exclaim-inner, .walker.is-idle .walker-body, #btn-next.is-ready, .rotate-phone, .spot-ring::after, .red-tag.is-pulsing, .cmp-box.is-key, .fm-box.is-ping, .fm-op.is-ping, .fm-box.is-ping::after, .fr-term.is-ping, .fr-op.is-ping, .pc-price.is-ping, .pc-off.is-ping, .pc-off-line.is-ping, .pqp-hint.is-ping, .pf-hint.is-ping, .pf-q-value.is-ping, .pq-opt.is-ping, .ws-panel .is-ping, .ws-drag, .ws-slot.is-waiting, .ws-slot.is-wrong {
     animation: none !important;
   }
   .qcard-pos { transition: none; }
-  .cp-glint, .cp-start.is-calling, .sp-hint.is-bobbing, .st-shop.is-open .st-glow, .st-buy, .gm-opt.is-guide, .st-cloud { animation: none !important; }
 }
 
 /* ==========================================================================
@@ -3533,14 +1956,13 @@ kbd {
 .scene-snap img { transform-origin: var(--focus, 50% 50%); transform: scale(var(--zoom, 1)); }
 .snap-ghost { position: absolute; left: 0; top: 0; pointer-events: none; transform-origin: var(--focus, 50% 50%); transform: scale(var(--zoom, 1)); }
 .scene.is-snapping, .scene.has-sheet .scene-parallax { overflow: hidden; } /* round corners while it moves */
-.scene-sheet--snap { box-shadow: none; } /* screen 8's panel comes in under the picture (game.js: snapUp) */
 /* The content: under the photo, spread across the panel (x 96–1824, y 494–1024; the user, 2026-10-21: "all things
    should down side of the image and spread, no need space, but not overlap with Swifty"); on a screen with no photo,
    the whole panel (from y 116); on a screen where Swifty comes, clear of her corner and her bubbles (x 96–1340). Every
    panel sits right on the big panel, with no frame of its own. Its pieces are sized to fill it (see "Under the photo,
    across the panel", at the end). */
-.is-v2 :is(.mp, .dd, .defs) { padding: 494px 96px 56px; } /* (under the photo: 116 + 338 + 40) */
-.is-v2.is-sheet:not(.has-snap) :is(.mp, .dd) { padding-top: 116px; }
+.is-v2 .mp { padding: 494px 96px 56px; } /* (under the photo: 116 + 338 + 40) */
+.is-v2.is-sheet:not(.has-snap) .mp { padding-top: 116px; }
 /* A pop-up on a story screen (game.js popUp, the meeting of 2026-10-21): the picture blurs and dims behind it, and the
    card springs up in the middle, as big as what is in it (later things, e.g. a tag flying in, are drawn over it) */
 .pop-veil {
@@ -3565,8 +1987,8 @@ kbd {
   pointer-events: auto;
 }
 .is-v2 .pop-card .mp { position: static; display: block; padding: 0; }
-.is-v2.has-swifty :is(.mp, .dd, .defs) { padding-right: 580px; }
-.is-v2 :is(.mp-panel, .fm-panel, .fr-panel, .sm-panel, .pc-panel, .pf-panel, .qp-panel, .mn-panel, .pqp-panel, .ws-panel, .ss-panel) {
+.is-v2.has-swifty .mp { padding-right: 580px; }
+.is-v2 :is(.fm-panel, .fr-panel, .pf-panel, .qp-panel, .pqp-panel, .ws-panel) {
   margin: 0 !important;
   padding: 0;
   border: 0;
@@ -3643,42 +2065,8 @@ kbd {
   0%   { box-shadow: var(--paper-shadow), 0 0 0 0 var(--d-glow); }
   100% { box-shadow: var(--paper-shadow), 0 0 0 24px var(--d-glow-0); }
 }
-.is-v2 :is(.cmp-arrow path, .def-arrow path) { fill: var(--arrow); stroke: none; } /* one colour for every arrow */
-.is-v2 .def-arrow path { fill: none; stroke: var(--muted); }
+.is-v2 :is(.cmp-arrow path) { fill: var(--arrow); stroke: none; } /* one colour for every arrow */
 .is-v2 .fly-chip--card { border: 0; box-shadow: var(--paper-shadow); }
-
-/* Definitions on lined index cards: the name in its colour over the red margin line, the words on faint blue lines */
-.is-v2 :is(.mp-def, .mp-def.dd-card, .def) {
-  height: auto;
-  border: 0;
-  border-radius: 6px;
-  background-color: var(--white);
-  box-shadow: var(--paper-shadow);
-  rotate: -.6deg;
-}
-.is-v2 :is(.mp-def, .mp-def.dd-card) { width: 960px; }
-.is-v2 :is(.mp-def-head, .dd-card .mp-def-head) {
-  padding: 30px 52px 14px;
-  border-bottom: 3px solid var(--margin); /* an index card's red line */
-  background: none;
-  color: var(--mp);
-  font-size: 54px;
-  text-align: left;
-  text-shadow: none;
-}
-.is-v2 .dd-card .mp-def-head { color: var(--d); }
-.is-v2 .mp-def-abbr { color: var(--mp); opacity: .7; }
-.is-v2 :is(.mp-def-text, .mp-def-text.dd-text) {
-  margin: 0;
-  padding: 16px 52px 34px;
-  background-image: repeating-linear-gradient(to bottom, transparent 0 66px, var(--grid) 66px 68px, transparent 68px 70px);
-  background-origin: content-box;
-  font-size: 46px;
-  font-weight: 600;
-  line-height: 70px;
-}
-.is-v2 .mp-def-text .stress { color: var(--mp); font-weight: 800; }
-.is-v2 .dd-text .stress { color: var(--d); }
 
 /* Working on graph paper; the answer circled in red pen */
 .is-v2 :is(.pf-sheet, .pf-sheet.ws-sheet) {
@@ -3705,7 +2093,7 @@ kbd {
 .is-v2 .pf-sheet:not(.ws-sheet) { padding-bottom: 35px; }
 
 /* Formulas on a yellow sticky note */
-.is-v2 :is(.fr-short, .sm-formula) {
+.is-v2 .fr-short {
   border: 0;
   border-radius: 3px;
   background: var(--note);
@@ -3764,42 +2152,8 @@ kbd {
 .is-v2 .qback-tick svg { stroke: var(--white); }
 .is-v2 .qback-text { font-weight: 600; }
 .is-v2 .qback-text .hl { color: var(--ink); }
-.is-v2 :is(.qback-text, .def-text) .stress { color: var(--sp); }
+.is-v2 .qback-text .stress { color: var(--sp); }
 .is-v2 .qcard-pos.is-center { transform: translate(-674px, -50%) translate(0, 30px); } /* the middle of the content (x 576–1340, y 116–1024) */
-/* Screen 8, after a wrong answer: Cost Price (no colour of its own) and Selling Price (blue), on index cards */
-.is-v2 .def { padding: 26px 26px 30px; }
-.is-v2 .def-title { font-size: 50px; }
-.is-v2 .def--neutral .def-title, .is-v2 .def--neutral .def-text .hl { color: var(--ink); }
-.is-v2 .def--blue .def-title, .is-v2 .def--blue .def-text .hl { color: var(--sp); }
-.is-v2 .def-pics { margin: 18px 0 20px; }
-.is-v2 .def-pic { border: 0; box-shadow: 0 6px 16px var(--ink-16); }
-.is-v2 .def-text { font-size: 44px; font-weight: 600; }
-.is-v2 .defs-row { gap: 36px; }
-.is-v2 .def { width: 360px; }
-
-/* Screen 11: the lens and its name side by side */
-.is-v2 .mp-left, .is-v2 .mp-talk { display: none; }
-.is-v2 .mp-panel { grid-template-columns: auto; }
-.is-v2 .mp-side { height: auto; gap: 40px; padding: 0; }
-.is-v2 .mp-side--lens { flex-direction: row; align-items: center; gap: 64px; }
-.is-v2 .mp-zoom { width: 330px; height: 330px; }
-.is-v2 .mp-zoom-art { filter: drop-shadow(0 16px 26px var(--ink-22)); }
-.is-v2 .mp-zoom-rim { stroke: var(--ink); stroke-width: 7; }
-.is-v2 .mp-link path { stroke: var(--muted); stroke-width: 5; }
-.is-v2 .mp-link-dot { fill: var(--hl); stroke: var(--muted); stroke-width: 3; }
-.is-v2 .mp-pill { /* the new word, on a taped note */
-  position: relative;
-  padding: 26px 48px 18px;
-  border: 0;
-  border-radius: 5px;
-  background: var(--mp-tint);
-  box-shadow: var(--paper-shadow);
-  color: var(--mp);
-  font-size: 62px;
-  rotate: -1.5deg;
-}
-.is-v2 .mp-pill::before { content: ''; position: absolute; left: 50%; top: -15px; width: 110px; height: 30px; margin-left: -55px; background: var(--tape); rotate: -3deg; }
-.is-v2 .mp-abbr { color: var(--mp); opacity: .7; }
 
 /* Screen 17: the book, the bar, and ₹1000 − ₹800 = ₹200 */
 .is-v2 .fm-book { width: 220px; }
@@ -3813,11 +2167,6 @@ kbd {
 /* Screen 14: the card on the right of the counter */
 .is-v2 .red-card { border: 0; border-radius: 6px; background: var(--white); box-shadow: 0 18px 44px var(--deep-28); }
 .is-v2 .red-tag { color: var(--d); text-shadow: none; }
-/* Screen 26: 30% OFF means a 30% discount */
-.is-v2 .mn-word { color: var(--ink); }
-.is-v2 .mn-arrow path { stroke: var(--ink-2); }
-.is-v2 .mn-card { position: relative; border: 0; border-radius: 5px; background: var(--white); box-shadow: var(--paper-shadow); color: var(--ink); rotate: 1deg; }
-.is-v2 .mn-card::before { content: ''; position: absolute; left: 50%; top: -15px; width: 120px; height: 32px; margin-left: -60px; background: var(--tape); rotate: 2deg; }
 /* The sneakers: a photo with its tags */
 .is-v2 .pc-photo { border: 0; border-radius: 14px; box-shadow: 0 0 0 8px var(--white), 0 14px 30px var(--ink-22); }
 .is-v2 .pc-price { border-width: .045em; box-shadow: 0 .2em .4em var(--deep-28); color: var(--ink); }
@@ -3833,68 +2182,6 @@ kbd {
 /* Screens 32, 34 and 38: the working */
 .is-v2 .ws-slot { background-color: var(--white); }
 .is-v2 .ws-slot.is-over, .is-v2 .ws-slot.is-picked { background-color: var(--band); }
-
-/* ---------- Checkpoints (rule 8): FX.checkpoint ---------- */
-.ck { position: absolute; inset: 0; pointer-events: none; }
-.ck-head { position: absolute; left: 96px; top: 141px; } /* the topic, where it was under the "Checkpoint 2 of 4" label (taken out) */
-.ck-title { color: var(--ink); font-size: 56px; font-weight: 800; line-height: 1.05; }
-.ck-tick { display: inline-block; margin-left: 18px; color: var(--ok); opacity: 0; transform: scale(.3); transition: opacity .3s ease, transform .5s cubic-bezier(.3, 1.6, .5, 1); }
-.ck-tick.is-on { opacity: 1; transform: none; }
-.ck-body {
-  position: absolute;
-  left: 96px;
-  top: 252px;
-  width: 1244px;
-  display: flex;
-  flex-direction: column;
-  gap: 38px;
-  pointer-events: auto;
-}
-.ck-say { align-self: flex-start; margin: 0 0 -14px -8px; padding: 2px 8px 0; border-radius: 8px; color: var(--ink-2); font-size: 38px; font-weight: 700; line-height: 1.15; }
-.is-v2 .ck-say.is-said { background: var(--hl); box-shadow: none !important; color: var(--ink); }
-.ck-cards { display: flex; gap: 34px; align-items: stretch; }
-.ck-card { /* a lined index card */
-  flex: 1;
-  padding: 22px 30px 26px;
-  border-radius: 6px;
-  background-color: var(--white);
-  background-image: repeating-linear-gradient(to bottom, transparent 0 46px, var(--grid) 46px 48px);
-  background-position: 0 92px;
-  box-shadow: var(--paper-shadow);
-  rotate: -.8deg;
-}
-.ck-card:nth-child(2) { rotate: .6deg; }
-.ck-card:nth-child(3) { rotate: -.3deg; }
-.ck-term { padding-bottom: 10px; border-bottom: 3px solid var(--margin); font-size: 40px; font-weight: 800; line-height: 1.1; }
-.ck-value { margin-top: 12px; font-size: 56px; font-weight: 800; line-height: 1; }
-.ck-text { margin-top: 12px; color: var(--ink); font-size: 34px; font-weight: 600; line-height: 48px; }
-.ck-card--mp :is(.ck-term, .ck-value) { color: var(--mp); }
-.ck-card--sp :is(.ck-term, .ck-value) { color: var(--sp); }
-.ck-card--d :is(.ck-term, .ck-value) { color: var(--d); }
-.ck-card--part :is(.ck-term, .ck-value) { color: var(--part); }
-.ck-card--whole :is(.ck-term, .ck-value) { color: var(--whole); }
-.ck-card--ink :is(.ck-term, .ck-value) { color: var(--ink); }
-.ck-foot { display: flex; align-items: center; gap: 44px; }
-.ck-example { color: var(--ink); font-size: 38px; font-weight: 600; }
-.ck-ex-label { display: block; margin-bottom: 6px; color: var(--teal); font-size: 26px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; }
-.ck-ex-text .hl { font-weight: 800; }
-.ck-actions { display: flex; gap: 22px; }
-.ck-btn { /* pressable, like the answers: a white face on a teal border, standing on a deep-teal edge */
-  height: 84px;
-  padding: 6px 34px 0;
-  border: 3px solid var(--teal);
-  border-radius: 42px;
-  background: linear-gradient(180deg, var(--white) 55%, var(--teal-tint) 100%);
-  box-shadow: 0 6px 0 var(--teal-deep), 0 12px 20px var(--ink-14);
-  color: var(--teal);
-  font: 800 38px/1 var(--font);
-  cursor: pointer;
-  transition: transform .15s ease, box-shadow .15s ease, background-color .2s ease;
-}
-.ck-btn:hover { transform: translateY(-3px); background: var(--teal-tint); box-shadow: 0 9px 0 var(--teal-deep), 0 16px 26px var(--ink-16); }
-.ck-btn:active { transform: translateY(5px); box-shadow: 0 1px 0 var(--teal-deep), 0 4px 8px var(--ink-10); }
-.ck-btn--go, .ck-btn--go:hover { border-color: var(--teal-deep); background: var(--teal); color: var(--white); }
-.ck-btn:focus-visible { outline: 5px solid var(--hl); outline-offset: 4px; }
 
 /* A formula on a yellow sticky note (FX.formulaNote): on a checkpoint, and what to remember after a wrong answer */
 .f-note {
@@ -3928,7 +2215,6 @@ kbd {
   pointer-events: none;
 }
 .remember small { display: block; margin-bottom: 10px; color: var(--teal); font-size: 24px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; }
-
 
 /* ---------- The Concept layout (FX.concept): the value on a taped note, the new word, one line of meaning ---------- */
 .cn { display: flex; flex-direction: column; align-items: center; gap: 30px; text-align: center; }
@@ -4002,35 +2288,6 @@ kbd {
 .is-v2 .pqp-panel { grid-template-columns: auto; }
 .is-v2 :is(.pqp-question, .pf-question) { font-size: 50px; }
 .is-v2 .pqp-answers { min-width: 0; min-height: 0; }
-/* Screen 26: what the tag means, sized to the room left of Swifty */
-.is-v2 .mn-panel { gap: 36px; }
-.is-v2 .mn-tag { padding: 24px 36px 12px; font-size: 88px; }
-.is-v2 .mn-card { padding: 24px 40px 12px; font-size: 88px; }
-.is-v2 .mn-word { font-size: 52px; }
-.is-v2 .mn-arrow { width: 140px; }
-/* Checkpoints: centred on the panel and big, filling its room (the meeting of 2026-10-21; the user, 2026-10-22: "these
-   things should cover the empty space"); Swifty doesn't come on either */
-.ck { display: flex; flex-direction: column; justify-content: center; gap: 40px; padding: 116px 96px 64px; }
-.ck-head, .ck-body { position: relative; left: auto; top: auto; }
-.ck-head { display: none; } /* no topic heading over the cards (the user, 2026-10-22: "remove this text") */
-.ck-body { width: 100%; gap: 40px; }
-.ck-title { font-size: 64px; }
-.ck-say { font-size: 58px; }
-/* Its cards one under the other, each a wide index card with its words in one line (the user, 2026-10-21: "the lines
-   should be written in a full line"): the term in its colour, the red margin line, its amount, what it means */
-.ck-cards { flex-direction: column; gap: 30px; }
-.ck-card {
-  display: grid;
-  grid-template-columns: 500px auto 1fr;
-  align-items: center;
-  padding: 36px 52px 32px 52px;
-  background-image: none;
-}
-.ck-term { align-self: stretch; display: flex; align-items: center; padding: 0 36px 0 0; border-bottom: 0; border-right: 3px solid var(--margin); font-size: 72px; }
-.ck-value { margin: 0 0 0 44px; font-size: 88px; }
-.ck-text { margin: 0 0 0 44px; font-size: 58px; line-height: 1.2; }
-/* A checkpoint's text in four sizes only (the brief's rule 5): 58 text, 72 terms, 88 the amounts and the formula */
-.ck .f-note { gap: 24px; padding: 34px 52px 24px; font-size: 88px; }
 
 /* The line log (js/linelog.js, only with ?log= in the address): what it is doing, bottom left, outside the stage */
 .dev-log {
@@ -4058,35 +2315,7 @@ kbd {
    (Screen numbers in this part are the game's counter as it was on 2026-10-22, n / 53, before Screens 10 and 13 were
    taken out: from 11 on, one or two lower now.)
    ========================================================================== */
-/* Definitions (screens 9 and 13): a lined index card as wide as the panel */
-.is-v2 :is(.mp-def, .mp-def.dd-card) { width: 1728px; margin: 0; }
-.is-v2 :is(.mp-def-head, .dd-card .mp-def-head) { padding: 40px 72px 20px; font-size: 68px; }
-.is-v2 :is(.mp-def-text, .mp-def-text.dd-text) {
-  padding: 24px 72px 44px;
-  background-image: repeating-linear-gradient(to bottom, transparent 0 104px, var(--grid) 104px 106px, transparent 106px 108px);
-  font-size: 66px;
-  line-height: 108px;
-}
-
-/* Screen 6, a wrong answer: Cost Price and Selling Price on two wide cards, one under the other (the name and what it
-   means on the left, in one line each; the two pictures on the right) */
-.is-v2 .defs-row { flex-direction: column; gap: 34px; }
-.is-v2 .def {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  grid-template-rows: auto auto;
-  align-items: center;
-  column-gap: 40px;
-  row-gap: 14px;
-  width: 1244px;
-  padding: 30px 44px 32px 52px;
-  text-align: left;
-}
-.is-v2 .def-title { grid-area: 1 / 1; align-self: end; font-size: 60px; }
-.is-v2 .def-text { grid-area: 2 / 1; align-self: start; font-size: 48px; white-space: nowrap; } /* (one line: it fits) */
-.is-v2 .def-pics { grid-area: 1 / 2 / 3 / 3; margin: 0; gap: 14px; }
-.is-v2 .def-pic { width: 170px; height: 136px; }
-/* …and the question card waits in the middle of that room (x 96–1340, y 494–1024) while Swifty gives her hint (before the revamp's pop-up) */
+/* The question card waits in the middle of that room (x 96–1340, y 494–1024) while Swifty gives her hint (before the revamp's pop-up) */
 .is-v2 .qcard-pos.is-center { transform: translate(-866px, -50%) translate(0, 172px); }
 /* A right answer: no panel; the picture blurs and dims (game.js answerRight), the card comes to the middle of the screen
    and turns over wide, as tall as what is on it, the reason in full lines */
@@ -4118,7 +2347,6 @@ kbd {
 .is-v2 .fr-strip { gap: 26px; padding: 30px 64px 26px; font-size: 74px; }
 .is-v2 .fr-short { gap: 36px; padding: 40px 84px 26px; font-size: 168px; }
 
-
 /* Colours that stand out on the cream panel (the user, 2026-10-21: "it should properly fully visible in this panel"):
    every note and box has a firm tint and an edge in its own colour (at least 3:1 against the panel), a white card a soft
    edge, a sticky note and a rule band a golden one; the question strips a teal one. (The colours: :root, above.) */
@@ -4132,9 +2360,8 @@ kbd {
 .is-v2 .pf-box--whole { border: 3px solid var(--whole-edge); }
 .is-v2 :is(.pf-question, .pqp-question) { border: 3px solid var(--teal-edge); }
 .is-v2 :is(.ws-band, .ws-band--yellow, .pqp-hint) { border: 3px solid var(--band-edge); }
-.is-v2 :is(.fr-short, .sm-formula), .f-note { border: 3px solid var(--band-edge); }
-.is-v2 :is(.mp-def, .mp-def.dd-card, .def, .fr-strip, .pf-sheet, .pf-sheet.ws-sheet), .ck-card { border: 2px solid var(--card-edge); }
-.is-v2 .def.def--blue.def--blue { background: var(--sp-tint); border-color: var(--sp-edge); }
+.is-v2 .fr-short, .f-note { border: 3px solid var(--band-edge); }
+.is-v2 :is(.fr-strip, .pf-sheet, .pf-sheet.ws-sheet) { border: 2px solid var(--card-edge); }
 
 /* Screens 23, 24 and 32: the question on top; under it, side by side, the part and the whole and the working (on 24,
    after them, the 10 × 10 grid when it comes) */
@@ -4186,9 +2413,8 @@ kbd {
 
 /* Straight, not tilted (the user, 2026-10-21: "why this is tilted angle it should straight"): every note, card, box and
    tag with words on it sits square (only the strips of tape on the notes, and the red pen's circle, keep a slant) */
-.is-v2 :is(.cmp-box, .cmp-box--blue, .cmp-box--red, .mp-def, .mp-def.dd-card, .def, .fr-short, .sm-formula, .mp-pill, .mn-card, .pf-box--part, .pf-box--whole, .cn-note),
-.ck-card, .ck-card:nth-child(n), .f-note { rotate: none; }
-.is-v2 .pc-off-pos, .is-v2 .mn-panel .pc-off-pos { transform: none; rotate: none; }
+.is-v2 :is(.cmp-box, .cmp-box--blue, .cmp-box--red, .fr-short, .pf-box--part, .pf-box--whole, .cn-note), .f-note { rotate: none; }
+.is-v2 .pc-off-pos { transform: none; rotate: none; }
 .is-v2 .pc-hang { rotate: none; }
 .stick-tag { transform: none; }
 
@@ -4223,18 +2449,6 @@ kbd {
 .is-v2 .qcard-back.is-wrong .qback-head { background: var(--muted-tint); color: var(--ink); }
 .is-v2 .qcard-back.is-wrong .qback-tick { background: var(--muted); }
 .is-v2 .qcard-back.is-wrong .qback-tick svg { stroke: var(--white); }
-.is-v2 .pop-card--defs { display: flex; flex-direction: column; align-items: center; gap: 30px; padding: 48px 56px 44px; }
-.is-v2 .pop-card .defs { position: static; display: block; padding: 0; }
-.is-v2 .pop-card .defs-row { gap: 26px; }
-.is-v2 .pop-card .def { width: 1400px; padding-top: 24px; padding-bottom: 24px; }
-.is-v2 .pop-card .def-title { font-size: 56px; }
-.is-v2 .pop-card .def-text { font-size: 44px; }
-.is-v2 .pop-card .def-pics { gap: 14px; }
-.is-v2 .pop-card .def-pic { width: 250px; height: 200px; } /* big, so the money and the book are clear (the user, 2026-10-22) */
-.is-v2 .pop-card .def-arrow { width: 70px; height: 46px; }
-.pop-line { color: var(--ink); font-size: 50px; font-weight: 700; line-height: 1.2; }
-.pop-line .em { color: inherit; font-weight: 800; } /* (bold, no colour of its own, as in the bubbles) */
-.pop-line .stress { color: var(--sp); font-weight: 800; }
 
 /* Screen 6, a wrong answer: Swifty in the picture's bottom-left corner, pointing at her bubble on her right, "✗ Not quite!"
    (game.js notQuite; the user's picture, 2026-10-22) */
@@ -4268,27 +2482,6 @@ kbd {
 .is-v2[data-scene="pctofmp"] .pf-sheet { font-size: 41px; }
 .is-v2[data-scene="pctofmp"] .pf-question { font-size: 46px; }
 
-/* Screen 6, a wrong answer, at the end: what it means here, on the picture, over the money he hands over (game.js
-   answerWrongPop: PAID_NOTE, the tip of its pointer) */
-.pic-note {
-  position: absolute;
-  translate: -50% calc(-100% - 22px);
-  width: 560px;
-  padding: 20px 30px 22px;
-  border-radius: 18px;
-  background: var(--paper);
-  box-shadow: 0 14px 30px var(--ink-22);
-  color: var(--ink);
-  font-size: 46px;
-  font-weight: 700;
-  line-height: 1.25;
-  text-align: center;
-  text-wrap: balance;
-}
-.pic-note::after { content: ''; position: absolute; left: 50%; bottom: -20px; margin-left: -18px; border: 18px solid transparent; border-bottom: 0; border-top: 22px solid var(--paper); }
-.pic-note .em { color: inherit; font-weight: 800; } /* (bold, no colour of its own) */
-.pic-note .stress { color: var(--sp); font-weight: 800; }
-
 /* Screens 8 and 9 (game.js setupMarked, setupMpDef; the user, 2026-10-22): on the story picture, everything blurs and dims
    but the book's ₹1000 tag (a round spotlight: --x, --y, --r); the panel in the middle, between the tag and Swifty */
 .spot-veil {
@@ -4311,23 +2504,6 @@ kbd {
 .is-v2 .pop-card--tag .cn-value { font-size: 120px; }
 .is-v2 .pop-card--tag .cn-term { font-size: 72px; white-space: nowrap; }
 .is-v2 .pop-card--tag .cn-meaning { font-size: 48px; white-space: nowrap; }
-.is-v2 .pop-card--tag .dd { position: static; display: block; padding: 0; }
-.is-v2 .pop-card--tag :is(.mp-def, .mp-def.dd-card) { width: 640px; box-shadow: none; }
-.is-v2 .pop-card--tag .dd-card .mp-def-head { padding: 20px 48px 14px; font-size: 60px; }
-.is-v2 .pop-card--tag .mp-def-text.dd-text { padding: 16px 48px 30px; font-size: 54px; line-height: 88px;
-  background-image: repeating-linear-gradient(to bottom, transparent 0 84px, var(--grid) 84px 86px, transparent 86px 88px); }
-.is-v2 .dd-card.is-mp .mp-def-head, .is-v2 .dd-card.is-mp .dd-text .stress { color: var(--mp); }
-
-/* Screen 11, after Aniket's thought (game.js playDiscount; the user, 2026-10-22): the definition of a discount on a wide
-   panel in the middle of the screen, over the blurred picture (her voice reads it: no Swifty), its words in two full lines */
-.is-v2 .pop-card--def { left: 960px; top: 540px; padding: 44px 52px; }
-.is-v2 .pop-card--def .dd { position: static; display: block; padding: 0; }
-.is-v2 .pop-card--def :is(.mp-def, .mp-def.dd-card) { width: 1180px; box-shadow: none; }
-.is-v2 .pop-card--def .dd-card .mp-def-head { padding: 22px 56px 16px; font-size: 64px; }
-.is-v2 .pop-card--def .mp-def-text.dd-text { padding: 18px 56px 32px; font-size: 56px; line-height: 92px;
-  background-image: repeating-linear-gradient(to bottom, transparent 0 88px, var(--grid) 88px 90px, transparent 90px 92px); }
-.is-v2 .pop-card--tag.pop-card--wide { left: 1290px; } /* (screen 9: no Swifty, so the room right of the tag is all its) */
-.is-v2 .pop-card--tag.pop-card--wide :is(.mp-def, .mp-def.dd-card) { width: 920px; }
 
 /* Screens 21, 22 and 23 (game.js practiceHost; the user, 2026-10-22: "remove the panel, show it in the image; a small panel
    on the image of the shoes"): the shoe shop's picture, sharp (no blur on these: the user, 2026-10-21), and the working on
@@ -4445,62 +2621,8 @@ kbd {
    The mall on its map, Aniket walked with four arrows, and its shops, each with a card for the sale price. Drawn in the
    game's party look: navy words, cream cards with a gold edge, white pills, green and orange buttons. Stage px. */
 .scene { --pp-ink: #1d2f6f; --pp-cream: #fffaf0; --pp-gold: #f3c34f; --pp-red: #e0303f; --pp-green: #17923d; }
-.pq2 { position: absolute; z-index: 4; font-family: 'Baloo 2', system-ui, sans-serif; pointer-events: auto; } /* (.scene-ui lets presses through) */
-.pq2-card { position: relative; padding: 44px 40px 32px; border: 6px solid var(--pp-gold); border-radius: 34px; background: var(--pp-cream);
-  box-shadow: 0 22px 50px rgba(15, 25, 55, .38); }
-.pq2-card--tag { display: grid; grid-template-columns: 290px 1fr; gap: 30px; align-items: center; }
-.pq2-ribbon { position: absolute; top: -36px; left: 50%; translate: -50% 0; padding: 4px 48px 10px; border-radius: 18px; background: linear-gradient(#ff6070, #dc2c3c);
-  color: #fff; font-size: 48px; font-weight: 800; white-space: nowrap; box-shadow: 0 6px 0 #a51e2c, 0 12px 20px rgba(0, 0, 0, .2); }
-.pq2-question { margin-bottom: 22px; color: var(--pp-ink); font-size: 40px; font-weight: 800; line-height: 1.25; text-align: center; text-wrap: balance; }
-.pq2-hint { margin-bottom: 22px; border-radius: 18px; overflow: hidden; box-shadow: 0 0 0 2px #f1e3b8; }
-.pq2-tip { display: flex; align-items: center; gap: 14px; padding: 10px 20px; background: #fff1bd; color: var(--pp-ink); font-size: 34px; font-weight: 700; line-height: 1.2; }
-.pq2-bulb svg { display: block; width: 52px; height: 52px; }
-.pq2-bulb .pb-glass { fill: #ffd23f; stroke: #c98a00; stroke-width: 2; }
-.pq2-bulb .pb-base { fill: none; stroke: #7d6b48; stroke-width: 3; stroke-linecap: round; }
-.pq2-bulb .pb-ray { fill: none; stroke: #f5a623; stroke-width: 2.5; stroke-linecap: round; }
-.pq2-sum { padding: 10px 20px 12px; background: #fff; color: var(--pp-ink); font-size: 40px; font-weight: 800; text-align: center; }
-.pq2-sum .is-red { color: var(--pp-red); font-size: 46px; }
-.pq2-options { display: grid; grid-template-columns: 1fr 1fr; gap: 18px 22px; }
-.pq2-opt { position: relative; height: 90px; border: 3px solid #c6d6ee; border-radius: 22px; background: #fff; color: var(--pp-ink);
-  font: inherit; font-size: 42px; font-weight: 800; box-shadow: 0 5px 0 #c6d6ee; cursor: pointer; transition: translate .12s ease, border-color .15s ease; }
-.pq2-opt:hover:not(:disabled) { translate: 0 -3px; border-color: #86aee8; }
-.pq2-opt:disabled { cursor: default; }
-.pq2-opt.is-picked { border-color: #2fb35a; background: #f1fff3; box-shadow: 0 0 0 5px rgba(47, 179, 90, .22), 0 5px 0 #2fb35a; }
-.pq2-opt.is-wrong { border-color: #e5484d; background: #fff4f4; color: #9aa5ab; text-decoration: line-through; text-decoration-thickness: 4px; box-shadow: 0 5px 0 #e5484d; }
-.pq2-opt.is-right { border-color: #2fb35a; background: #e8f9ea; color: #12803a; box-shadow: 0 5px 0 #2fb35a; }
-.pq2-x { position: absolute; top: -20px; right: -16px; display: grid; place-items: center; width: 48px; height: 48px; border: 4px solid #fff; border-radius: 50%; background: #e5484d; }
-.pq2-x svg { width: 28px; height: 28px; fill: none; stroke: #fff; stroke-width: 7; stroke-linecap: round; stroke-linejoin: round; }
-.pq2-x.pq2-tick { background: #2fb35a; }
-.pq2-check { display: flex; align-items: center; gap: 6px; height: 80px; margin: 26px auto 0; padding: 0 30px 0 44px; border: 4px solid #fff; border-radius: 40px;
-  background: linear-gradient(#8593ab, #5c6a83); color: #fff; font: inherit; font-size: 40px; font-weight: 800; box-shadow: 0 6px 0 #3f4b60, 0 12px 22px rgba(0, 0, 0, .22); cursor: pointer; }
-.pq2-check.is-ready { background: linear-gradient(#4592ff, #1a5fd6); box-shadow: 0 6px 0 #0f3f99, 0 12px 22px rgba(0, 0, 0, .22); animation: party-pulse 1.4s ease-in-out infinite; }
-.pq2-check:disabled { cursor: default; }
-.pq2-check svg { width: 40px; height: 40px; fill: none; stroke: #fff; stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; }
-.pq2-item { position: relative; display: grid; place-items: center; height: 360px; border: 3px solid #dbe6f7; border-radius: 26px; background: radial-gradient(circle at 50% 42%, #fff, #e9f1ff); }
-.pq2-item-pic { max-width: 230px; max-height: 210px; object-fit: contain; filter: drop-shadow(0 8px 10px rgba(20, 40, 90, .25)); }
-.pq2-tag { position: absolute; right: 12px; bottom: 12px; width: 124px; padding: 8px 6px 8px; border: 2px solid #e2e2e2; border-radius: 12px; background: #fff;
-  text-align: center; box-shadow: 0 6px 12px rgba(0, 0, 0, .18); }
-.pq2-tag-price { display: block; color: #1b1b1b; font-size: 30px; font-weight: 800; line-height: 1.1; }
-.pq2-tag-off { display: block; margin-top: 6px; padding: 6px 0 4px; border-radius: 6px; background: #ffd400; color: var(--pp-red); font-size: 28px; font-weight: 900; line-height: .95; }
 .pc2 { position: absolute; z-index: 4; font-family: 'Baloo 2', system-ui, sans-serif; pointer-events: auto; }
-.pc2.has-ribbon { padding-top: 76px; }
 .pc2-card { position: relative; padding: 34px 38px 30px; border: 6px solid var(--pp-gold); border-radius: 34px; background: var(--pp-cream); box-shadow: 0 22px 50px rgba(15, 25, 55, .38); }
-.pc2.has-ribbon .pc2-card { padding-top: 56px; }
-.pc2-ribbon { position: absolute; top: 40px; left: 50%; z-index: 2; translate: -50% 0; padding: 6px 56px 12px; border-radius: 16px; background: linear-gradient(#45d163, #179b35);
-  color: #fff; font-size: 48px; font-weight: 800; white-space: nowrap; box-shadow: 0 6px 0 #0e6b23, 0 12px 20px rgba(0, 0, 0, .2); }
-.pc2-medal { position: absolute; top: -14px; left: 50%; z-index: 3; display: grid; place-items: center; width: 96px; height: 96px; margin-left: -48px;
-  border: 6px solid #ffd54a; border-radius: 50%; background: radial-gradient(#47d466, #149030); box-shadow: 0 0 30px rgba(255, 213, 74, .8); }
-.pc2-medal svg { width: 58px; height: 58px; fill: none; stroke: #fff; stroke-width: 7; stroke-linecap: round; stroke-linejoin: round; }
-.pc2-top { display: grid; grid-template-columns: 250px 1fr; gap: 30px; align-items: center; }
-.pc2-pic { display: grid; place-items: center; height: 230px; border-radius: 24px; background: #e1f4ec; }
-.pc2-pic img { max-width: 200px; max-height: 190px; object-fit: contain; filter: drop-shadow(0 6px 8px rgba(20, 40, 90, .22)); }
-.pc2-row { display: flex; justify-content: space-between; gap: 18px; padding: 2px 0; color: var(--pp-ink); font-size: 36px; font-weight: 700; line-height: 1.3; white-space: nowrap; }
-.pc2-row.is-off .pc2-value { color: var(--pp-red); font-weight: 800; }
-.pc2-value { font-weight: 800; white-space: nowrap; }
-.pc2-line { height: 3px; margin: 12px 0; border-radius: 2px; background: #c9d4e6; }
-.pc2-total { align-items: baseline; font-size: 38px; }
-.pc2-total .pc2-value { color: var(--pp-green); font-size: 58px; }
-.pc2-note { margin-top: 22px; color: var(--pp-ink); font-size: 40px; font-weight: 800; line-height: 1.3; text-align: center; }
 .pc2-buttons { display: flex; gap: 24px; margin-top: 28px; }
 .pc2-btn { flex: 1; display: flex; align-items: center; justify-content: center; gap: 12px; height: 96px; white-space: nowrap; border: 4px solid #fff; border-radius: 26px; color: #fff;
   font: inherit; font-size: 44px; font-weight: 800; box-shadow: 0 7px 0 var(--dk), 0 14px 26px rgba(0, 0, 0, .25); cursor: pointer; transition: translate .12s ease; }
@@ -4508,10 +2630,8 @@ kbd {
 .pc2-btn.is-pressed { translate: 0 5px; box-shadow: 0 2px 0 var(--dk), 0 6px 12px rgba(0, 0, 0, .2); }
 .pc2.is-paid .pc2-btn { pointer-events: none; }
 .pc2-btn--buy { --dk: #0e6b1f; background: linear-gradient(#3ccd52, #179a2c); }
-.pc2-btn--look { --dk: #b35700; background: linear-gradient(#ffb03a, #f47d00); font-size: 36px; }
 .pc2-btn svg { width: 48px; height: 48px; fill: none; stroke: #fff; stroke-width: 3.2; stroke-linecap: round; stroke-linejoin: round; }
 .pc2-btn svg circle { fill: #fff; stroke: none; }
-.pc2-btn--look svg circle { fill: none; stroke: #fff; }
 .pc2-stamp { position: absolute; right: 50px; bottom: 34px; padding: 4px 28px 0; border: 7px solid var(--pp-green); border-radius: 18px; background: rgba(255, 255, 255, .78);
   color: var(--pp-green); font-size: 70px; font-weight: 900; letter-spacing: 4px; rotate: -10deg; }
 .pm-done { position: absolute; z-index: 2; display: grid; place-items: center; width: 68px; height: 68px; border: 5px solid #fff; border-radius: 50%; background: #1fa84a;
@@ -4567,26 +2687,6 @@ kbd {
 .ph-slot.is-done .ph-tick { opacity: 1; }
 .ph-tick svg { width: 20px; height: 20px; fill: none; stroke: #fff; stroke-width: 7; stroke-linecap: round; stroke-linejoin: round; }
 
-/* the arrows (bottom left): four round buttons in a cross, pressed in while held */
-.apad { position: absolute; left: 56px; bottom: 44px; z-index: 7; width: 312px; height: 312px; pointer-events: auto; touch-action: none; user-select: none; }
-.apad::before { content: ''; position: absolute; left: 104px; top: 104px; width: 104px; height: 104px; border-radius: 50%; background: rgba(255, 255, 255, .7);
-  box-shadow: inset 0 0 0 4px rgba(22, 82, 198, .25), 0 6px 14px rgba(10, 30, 80, .25); }
-.apad-btn { position: absolute; display: grid; place-items: center; width: 104px; height: 104px; padding: 0; border: 5px solid #fff; border-radius: 32px;
-  background: radial-gradient(circle at 40% 30%, #6fb0ff, #1656d0 72%); box-shadow: 0 7px 0 #0d3a8f, 0 12px 20px rgba(0, 0, 0, .3);
-  cursor: pointer; touch-action: none; -webkit-tap-highlight-color: transparent; transition: transform .08s ease, box-shadow .08s ease, background .08s ease; }
-.apad-btn svg { width: 52px; height: 52px; fill: #fff; filter: drop-shadow(0 2px 0 rgba(10, 40, 120, .45)); }
-.apad-btn--up { left: 104px; top: 0; }
-.apad-btn--down { left: 104px; bottom: 0; }
-.apad-btn--left { left: 0; top: 104px; }
-.apad-btn--right { right: 0; top: 104px; }
-.apad-btn--right svg { rotate: 90deg; }
-.apad-btn--down svg { rotate: 180deg; }
-.apad-btn--left svg { rotate: -90deg; }
-.apad-btn:hover { background: radial-gradient(circle at 40% 30%, #82bcff, #1d60dc 72%); }
-.apad-btn.is-down { transform: translateY(6px); box-shadow: 0 1px 0 #0d3a8f, 0 4px 10px rgba(0, 0, 0, .25); background: radial-gradient(circle at 40% 30%, #4f95f5, #0f45b4 72%); }
-.apad-btn:focus-visible { outline: 5px solid #ffd84d; outline-offset: 3px; }
-.apad.is-pulsing .apad-btn { animation: apad-call 1.2s ease-in-out infinite; }
-@keyframes apad-call { 50% { box-shadow: 0 7px 0 #0d3a8f, 0 0 0 8px rgba(255, 216, 77, .75), 0 0 26px rgba(255, 216, 77, .9); } }
 /* The mall's controller (the user's picture of 2026-10-26: a round base, a knob with four arrows), bottom left, where the
    arrows were: press anywhere on it, or drag the knob; it springs back when let go. The first time, in the spotlight, it
    glows. */
@@ -4625,14 +2725,6 @@ kbd {
 .mall-toast { position: absolute; left: 50%; top: 130px; z-index: 8; translate: -50% 0; padding: 12px 34px 10px; border-radius: 30px; background: #1fa84a; color: #fff;
   font-family: 'Baloo 2', system-ui, sans-serif; font-size: 38px; font-weight: 800; box-shadow: 0 8px 20px rgba(0, 0, 0, .25); }
 
-/* a thing's price tag, hanging on it in its shop */
-.shop-tag { position: absolute; z-index: 2; display: flex; flex-direction: column; align-items: center; width: 150px; padding: 26px 8px 10px;
-  border: 3px solid #e2e2e2; border-radius: 16px; background: #fff; box-shadow: 0 10px 18px rgba(0, 0, 0, .28); transform-origin: 50% 0;
-  font-family: 'Baloo 2', system-ui, sans-serif; text-align: center; }
-.shop-tag::before { content: ''; position: absolute; top: 9px; left: 50%; width: 14px; height: 14px; margin-left: -7px; border: 3px solid #b9b9b9; border-radius: 50%; }
-.shop-tag .tg-price { color: #1b1b1b; font-size: 38px; font-weight: 800; line-height: 1.1; }
-.shop-tag .tg-off { width: 100%; margin-top: 8px; padding: 8px 0 6px; border-radius: 8px; background: #ffd400; color: var(--pp-red); font-size: 32px; font-weight: 900; line-height: .95; }
-
 /* the party message, out of his phone */
 .invite-card { position: absolute; left: 120px; top: 170px; z-index: 3; width: 470px; overflow: hidden; border: 6px solid #fff; border-radius: 34px;
   background: linear-gradient(160deg, #4a2bd6, #8a3bd8 55%, #d4479c); box-shadow: 0 22px 50px rgba(20, 10, 60, .45); color: #fff;
@@ -4645,14 +2737,6 @@ kbd {
 .ic-dot--place { border-radius: 50% 50% 50% 0; rotate: -45deg; background: #e0303f; }
 .ic-row:last-child { margin-bottom: 24px; }
 
-/* where the cards sit in each shop: clear of what is to buy (and of Swifty, bottom left) */
-.scene:is([data-scene="shirtshop"], [data-scene="watchshop"], [data-scene="sunshop"]) :is(.pq2, .pc2) { left: 1110px; top: 150px; width: 780px; }
-.scene[data-scene="pantsshop"] :is(.pq2, .pc2) { left: 150px; top: 140px; width: 900px; }
-.scene:is([data-scene="shirtshop"], [data-scene="watchshop"], [data-scene="sunshop"], [data-scene="pantsshop"]) .pq2-card--tag { grid-template-columns: 240px 1fr; gap: 26px; }
-.scene:is([data-scene="shirtshop"], [data-scene="watchshop"], [data-scene="sunshop"], [data-scene="pantsshop"]) .pq2-item { height: 320px; }
-.scene:is([data-scene="shirtshop"], [data-scene="watchshop"], [data-scene="sunshop"], [data-scene="pantsshop"]) .pq2-item-pic { max-width: 200px; max-height: 190px; }
-.scene:is([data-scene="shirtshop"], [data-scene="watchshop"], [data-scene="sunshop"], [data-scene="pantsshop"]) .pc2-top { grid-template-columns: 220px 1fr; gap: 26px; }
-.scene:is([data-scene="shirtshop"], [data-scene="watchshop"], [data-scene="sunshop"], [data-scene="pantsshop"]) .pc2-pic img { max-width: 180px; max-height: 180px; }
 /* the end: the table, then Mission Complete, in the middle of the mall (blurred) */
 .scene[data-scene="partydone"] .pt { left: 1100px; top: 150px; }
 .scene[data-scene="partydone"] .pmc { left: 1150px; top: 110px; }
