@@ -5309,26 +5309,37 @@
 
   /**
    * A spotlight on what to look at (the user, 2026-10-26: "focus on the things I want to see"): the rest of the screen
-   * darkened and blurred, a round (or oval) hole with a soft edge where it isn't. on({ x, y, rx, ry }) brings it in (or
-   * glides the hole there), off() takes it away. It never takes a press.
+   * darkened and blurred, a hole with a soft edge where it isn't: an oval, or with `round`, a rectangle with rounded
+   * corners (round the things on show in a shop). on({ x, y, rx, ry, round }) brings it in (or glides the hole there);
+   * on([…, …]) makes a hole round each (the things on show and a card to read beside them). off() takes it away. It
+   * never takes a press.
    */
   function focusVeil(parent) {
     const veil = el('div', 'focus-veil', parent);
-    const SOFT = 70; // the hole's soft edge (px)
+    const SOFT = 26; // how soft the hole's edge is (the blur's spread, px)
+    const W = 1920;
+    const H = 1080; // (the veil covers the stage: its px)
     const wait = ms => new Promise(resolve => setTimeout(resolve, ms)); // (its fade, in css)
     let now = null;
     let gliding = 0;
-    const draw = ({ x, y, rx, ry }) => {
-      const g = `radial-gradient(${rx + SOFT}px ${ry + SOFT}px at ${x}px ${y}px, transparent ${(100 * rx) / (rx + SOFT)}%, #000 100%)`;
-      veil.style.webkitMaskImage = g;
-      veil.style.maskImage = g;
+    const shape = ({ x, y, rx, ry, round }) => (round === null
+      ? `<ellipse cx='${x}' cy='${y}' rx='${rx}' ry='${ry}'/>`
+      : `<rect x='${x - rx}' y='${y - ry}' width='${2 * rx}' height='${2 * ry}' rx='${Math.min(round, rx, ry)}'/>`);
+    const draw = holes => {
+      const hole = holes.map(shape).join('');
+      const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='${W}' height='${H}'><defs><filter id='s' x='-50%' y='-50%' width='200%' height='200%'>` +
+        `<feGaussianBlur stdDeviation='${SOFT}'/></filter><mask id='m'><rect width='${W}' height='${H}' fill='white'/><g fill='black' filter='url(#s)'>${hole}</g></mask></defs>` +
+        `<rect width='${W}' height='${H}' mask='url(#m)'/></svg>`;
+      const url = `url("data:image/svg+xml;utf8,${encodeURIComponent(svg)}")`;
+      veil.style.webkitMaskImage = url;
+      veil.style.maskImage = url;
     };
     return {
       el: veil,
-      on(spot, ms = 650) {
-        const to = { x: spot.x, y: spot.y, rx: spot.rx, ry: spot.ry ?? spot.rx };
+      on(spots, ms = 650) {
+        const to = [].concat(spots).map(sp => ({ x: sp.x, y: sp.y, rx: sp.rx, ry: sp.ry ?? sp.rx, round: sp.round ?? null }));
         cancelAnimationFrame(gliding);
-        if (!now || !veil.classList.contains('is-on') || reducedMotion) {
+        if (!now || now.length !== to.length || !veil.classList.contains('is-on') || reducedMotion) { // (a hole more or less: at once)
           now = to;
           draw(now);
           veil.classList.add('is-on');
@@ -5340,7 +5351,9 @@
           const step = t => {
             const k = Math.min(1, (t - t0) / ms);
             const e = k < 0.5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2;
-            now = { x: from.x + (to.x - from.x) * e, y: from.y + (to.y - from.y) * e, rx: from.rx + (to.rx - from.rx) * e, ry: from.ry + (to.ry - from.ry) * e };
+            const mix = (a, b) => a + (b - a) * e;
+            // (an oval and a rectangle: the hole takes the new one's shape at once, and glides)
+            now = to.map((b, n) => ({ x: mix(from[n].x, b.x), y: mix(from[n].y, b.y), rx: mix(from[n].rx, b.rx), ry: mix(from[n].ry, b.ry), round: b.round }));
             draw(now);
             if (k < 1 && veil.isConnected) gliding = requestAnimationFrame(step);
             else resolve();

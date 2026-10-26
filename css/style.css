@@ -4604,9 +4604,12 @@ kbd {
 @keyframes joy-glow { 50% { box-shadow: 0 0 0 9px rgba(170, 238, 255, .95), 0 0 74px 30px rgba(80, 200, 255, .85); } }
 /* The spotlight (FX.focusVeil; the user, 2026-10-26: "focus on the things I want to see"): the screen dark and blurred,
    but for a soft-edged hole on Swifty while she talks, on the controller, on a card */
-.focus-veil { position: absolute; inset: 0; z-index: 9; background: rgba(6, 12, 34, .6); -webkit-backdrop-filter: blur(5px); backdrop-filter: blur(5px);
+.focus-veil { position: absolute; inset: 0; z-index: 9; background: rgba(6, 12, 34, .68); -webkit-backdrop-filter: blur(7px); backdrop-filter: blur(7px);
   opacity: 0; transition: opacity .45s ease; pointer-events: none; }
 .focus-veil.is-on { opacity: 1; }
+/* (in the shops, where the spotlight stays on the two things on show, the bar on top and what flies onto its list stay bright) */
+.scene[data-scene$="shop"] .ph { z-index: 10; }
+.scene[data-scene$="shop"] .party-fly { z-index: 11; }
 
 /* Aniket seen from above, his shadow under his feet (on the map's own layer: he walks under the bar, the arrows and the bubbles) */
 .scene[data-scene="mallfloor"] .scene-layer { isolation: isolate; }

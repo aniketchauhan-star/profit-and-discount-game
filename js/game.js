@@ -3337,7 +3337,7 @@
   // The camera on the two things (the user, 2026-10-26: "first we see the full room, then zoom, then show only these
   // two"): the picture eases in until both, with their tags, fill the room left of the cards (and above Swifty's bubble).
   // map() takes a point on the picture as it was (stage px) to where it is then.
-  const SHOP_VIEW = [70, 130, 1250, 735]; // stage px
+  const SHOP_VIEW = [60, 110, 1250, 790]; // stage px
   function shopCamera(it) {
     const xs = it.deals.flatMap(d => [d.spot[0], d.spot[2]]).map(v => v * PK);
     const ys = it.deals.flatMap(d => [d.spot[1], d.spot[3]]).map(v => v * PK);
@@ -3352,6 +3352,12 @@
     const tx = clamp((vx0 + vx1) / 2 - ox - s * ((x0 + x1) / 2 - ox), ox);
     const ty = clamp((vy0 + vy1) / 2 - oy - s * ((y0 + y1) / 2 - oy), oy);
     return { transform: `translate(${tx}px, ${ty}px) scale(${s})`, map: ([x, y]) => [ox + tx + s * (x - ox), oy + ty + s * (y - oy)] };
+  }
+
+  // The spotlight's window round a card (a rectangle with round corners, a little room round it).
+  function boxOf(node, room = 28, round = 40) {
+    const r = stageRect(node);
+    return { x: r.left + r.width / 2, y: r.top + r.height / 2, rx: r.width / 2 + room, ry: r.height / 2 + room, round };
   }
 
   // "Blue shirt: ₹1,200 − ₹240 = ₹960." (a deal's sale price worked out, as said and as written on the hint card)
@@ -3400,6 +3406,13 @@
       const [x1, y1] = cam.map([d.spot[2] * PK, d.spot[3] * PK]);
       Object.assign(spots[i].style, { left: `${x0}px`, top: `${y0}px`, width: `${x1 - x0}px`, height: `${y1 - y0}px` });
     });
+    // only the two on show, in the spotlight: a bright window round them, the rest of the shop dark and blurred (the
+    // user, 2026-10-26: "need to see only the front two shirts, not the others", in every shop)
+    const sides = spots.map(b => ['left', 'top', 'width', 'height'].map(k => parseFloat(b.style[k])));
+    const [L, T] = [Math.min(...sides.map(b => b[0])) - 50, Math.min(...sides.map(b => b[1])) - 50];
+    const [R, B] = [Math.max(...sides.map(b => b[0] + b[2])) + 50, Math.max(...sides.map(b => b[1] + b[3])) + 50];
+    const onShow = { x: (L + R) / 2, y: (T + B) / 2, rx: (R - L) / 2, ry: (B - T) / 2, round: 48 };
+    veil.on(onShow);
     await ctx.wait(300);
     Sound.sparkle();
     spots.forEach((b, i) => FX.reveal(b, [{ opacity: 0, transform: 'scale(1.25)' }, { opacity: 1, transform: 'none' }],
@@ -3412,7 +3425,8 @@
       return;
     }
     await swifty.say(`${it.id}-which`, [{ t: it.ask.replace(/Tap (it|them)!$/, '') }, { t: it.ask.match(/Tap (it|them)!$/)[0], cls: 'key' }]); // (the space ends the first part: a coloured part keeps no space before it)
-    await swifty.hide();
+    await swifty.hide({ keepFocus: true });
+    veil.on(onShow); // (and the two again, to pick)
     let hint = null;
     for (;;) {
       const i = await choose();
@@ -3435,14 +3449,15 @@
         { t: `${inr(d.mp)} − ${inr(dealOff(d))} = ` }, { t: inr(dealPay(d)), em: true }, { t: '.' }])]);
       FX.reveal(hint, [{ opacity: 0, transform: 'translateY(24px) scale(.96)' }, { opacity: 1, transform: 'none' }], { duration: reducedMotion ? 1 : 420, easing: 'cubic-bezier(.2,.8,.3,1)' });
       await ctx.wait(reducedMotion ? 60 : 450);
-      veil.on(spotOf([hint], 1.25)); // (what she reads, in the spotlight)
+      veil.on(boxOf(hint)); // (what she reads, in the spotlight)
       await readLit(ctx, 'deal-hint', 'Not quite! Work out both sale prices.', [strip.parts[0]]);
       for (const [n, d] of it.deals.entries()) await readLit(ctx, `${it.id}-sum-${n}`, dealSum(d), [strip.parts[n + 1]]);
-      await veil.off(); // (and the two again, to pick)
+      veil.on([onShow, boxOf(hint)]); // (and the two again, to pick, the sums still there to read)
     }
     await ctx.wait(700);
     if (hint) {
       const old = hint;
+      veil.on(onShow);
       FX.settle(old.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 300, fill: 'forwards' })).then(() => old.remove());
     }
     // the two worked out side by side, the better one ticked; Buy
@@ -3455,11 +3470,12 @@
     await swifty.say(`${it.id}-right`, [{ t: 'Correct!', cls: 'stress' }, { t: ` The ${best.name.toLowerCase()} ${best.plural ? 'cost' : 'costs'} ` },
       { t: inr(dealPay(other) - dealPay(best)), em: true }, { t: ' less.' }]);
     await swifty.hide({ keepFocus: true });
-    veil.on(spotOf([card.el], 1.2)); // (then the card in the spotlight, till Buy is pressed)
+    veil.on(boxOf(card.el)); // (then the card in the spotlight, till Buy is pressed)
     await card.choose();
     if (!ctx.alive()) return;
-    // Buy: paid; the money comes out of the wallet, and the thing goes onto the list, ticked.
-    veil.off();
+    // Buy: paid; the money comes out of the wallet, and the thing goes onto the list, ticked (the bar on top, over the
+    // spotlight, stays bright).
+    veil.on([onShow, boxOf(card.el)]);
     card.stamp('PAID');
     Sound.kaching();
     Party.bought.add(it.id);
