@@ -11,7 +11,7 @@
   const STORY = ASSETS + 'story/'; // the story's pictures
   const PARTY = ASSETS + 'party/'; // Party Prep's pictures, after screen 31 (the user's of 2026-10-23)
   // Its shops' pictures (the user's showrooms of 2026-10-26: two of a kind in each, their prices on their tags).
-  const PARTY_SHOWROOMS = { shirt: 'shirt-showroom.png', pants: 'bottomwear-showroom.png', watch: 'watch-showroom.png', sunglasses: 'sunglasses-showroom.png' };
+  const PARTY_SHOWROOMS = { shirt: 'shirt-showroom.webp', pants: 'bottomwear-showroom.webp', watch: 'watch-showroom.webp', sunglasses: 'sunglasses-showroom.webp' };
   const reducedMotion = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
   const $ = sel => document.querySelector(sel);
   const sleep = ms => new Promise(r => setTimeout(r, ms));
@@ -28,7 +28,7 @@
   // old walk sheet (source/aniket-walk-clean.png), whose frame coordinates it keeps. anchorX, baselineY: the point on
   // the floor the screens place him by (as the sheet's frames had it); hip, knee, ankle: the joints; ground: the floor.
   const WALK_RIG = {
-    src: ASSETS + 'sprites/aniket-rig.png',
+    src: ASSETS + 'sprites/aniket-rig.webp',
     frameW: 358, frameH: 614, anchorX: 166, baselineY: 612,
     hip: [206, 375], knee: [215, 476], ankle: [234, 580], ground: 610,
     pieces: { // [atlas x, y, w, h, frame x, y], as tools/make_walk_rig.py prints them
@@ -56,14 +56,14 @@
   // the same way (each frame cut along its own outline, all frames lined up), 16px gap between frames.
   const SWIFTY = {
     fly: {
-      src: ASSETS + 'sprites/swifty-fly.png', frameW: 486, frameH: 374, gutter: 16,
+      src: ASSETS + 'sprites/swifty-fly.webp', frameW: 486, frameH: 374, gutter: 16,
       anchorX: 291, anchorY: 197,           // centre of her body
       bodyR: 116,                           // body radius, to match her size to the standing strip
       loop: [0, 1, 2, 3, 4, 5, 6, 7],
       flap: 3,                              // downstroke → wing-beat sound
     },
     stand: {
-      src: ASSETS + 'sprites/swifty-talk.png', frameW: 425, frameH: 408, gutter: 16,
+      src: ASSETS + 'sprites/swifty-talk.webp', frameW: 425, frameH: 408, gutter: 16,
       anchorX: 205, anchorY: 406,           // between her feet
       bodyY: 209, bodyR: 134,               // body centre above her feet, body radius
       crestY: 400,                          // the tip of her head feathers above her feet (the tallest frame)
@@ -76,21 +76,15 @@
     },
   };
 
-  // Pictures for the definitions panel, cropped from the scene artwork.
-  const ART = {
-    money: ASSETS + 'ui/money-in-hand.png',
-    book: ASSETS + 'ui/book.png',
-  };
-
   // The counter picture once more, with Aniket puzzled by the word "discount": it lines up exactly with
-  // "story/aniket-gives-a-book-to-shopkeeper.png" (only his face differs), so it can fade in over it.
-  const PUZZLED = STORY + 'what-is-a-discount.png';
+  // "story/aniket-gives-a-book-to-shopkeeper.webp" (only his face differs), so it can fade in over it.
+  const PUZZLED = STORY + 'what-is-a-discount.webp';
 
   // Sheets: the teaching screens are on one big cream panel that fills the screen (`sheet: 'panel'`, drawn by the
   // game: see buildScenes), with no picture behind it. A sheet slides up over the story picture before it, and
   // back down after (see slide); between two sheets only what is on them changes. Swifty's stand, a stack of
   // books (STAND, cut out of an illustration), sits in the bottom-right corner; she stands on it (CORNER).
-  const STAND = ASSETS + 'ui/book-stack.png';
+  const STAND = ASSETS + 'ui/book-stack.webp';
 
   // Shapes on the artwork (stage px).
   const TITLE_PLATE = [[410, 150], [740, 150], [745, 280], [985, 280], [1010, 330], [1010, 470], [960, 535], [290, 535], [245, 470], [250, 300], [405, 285]];
@@ -141,7 +135,7 @@
   const SCENES = [
     {
       id: 'title', title: 'Start', sub: 'Bookstore Journey',
-      bg: STORY + 'start-screen.png',
+      bg: STORY + 'start-screen.webp',
       kb: { origin: '60% 45%', from: 'scale(1.02)', to: 'scale(1.07) translate(-10px, -6px)' },
       lamps: [[826, 96, 300], [1442, 134, 320]],
       dust: [120, 140, 1000, 900],
@@ -149,7 +143,7 @@
     },
     {
       id: 'home', title: 'Talking to Dad', sub: 'Dad, I want to buy a book and a new pair of sneakers…',
-      bg: STORY + 'boy-talks-with-father.png',
+      bg: STORY + 'boy-talks-with-father.webp',
       kb: { origin: '50% 28%', from: 'scale(1.02)', to: 'scale(1.05) translate(-4px, 3px)' }, // a slow drift, both faces in view
       lamps: [[288, 360, 320]],    // the daylight through the open door
       dust: [180, 120, 1100, 760], // specks floating in the sunlight
@@ -157,7 +151,7 @@
     },
     {
       id: 'outside', title: 'The Bookstore', sub: 'Aniket walks to the store',
-      bg: STORY + 'bookstore-outside-view.png',
+      bg: STORY + 'bookstore-outside-view.webp',
       kb: { origin: '50% 62%', from: 'scale(1.02)', to: 'scale(1.06) translate(-6px, -4px)' },
       lamps: [[167, 321, 230], [767, 334, 170], [1313, 299, 170], [1666, 275, 170]], // the wall lamp; ceiling lights behind the glass
       dust: [420, 260, 1840, 820],
@@ -166,7 +160,7 @@
     },
     {
       id: 'browse', title: 'An Interesting Book', sub: 'This book looks interesting!',
-      bg: STORY + 'aniket-holds-the-book.png',
+      bg: STORY + 'aniket-holds-the-book.webp',
       kb: { origin: '54% 40%', from: 'scale(1.02)', to: 'scale(1.08)' },
       lamps: [[1065, 140, 300], [1570, 116, 300]],
       dust: [200, 80, 1800, 800],
@@ -176,7 +170,7 @@
     },
     {
       id: 'ask', title: 'How Much?', sub: 'How much is this book?',
-      bg: STORY + 'aniket-gives-a-book-to-shopkeeper.png',
+      bg: STORY + 'aniket-gives-a-book-to-shopkeeper.webp',
       kb: { origin: '50% 38%', from: 'scale(1.02)', to: 'scale(1.065) translate(-6px, 0)' },
       lamps: [[1472, 106, 330]],
       dust: [300, 60, 1500, 700],
@@ -184,7 +178,7 @@
     },
     {
       id: 'shock', title: 'The Printed Price', sub: 'Oh! The price printed on it is ₹1000.',
-      bg: STORY + 'shocked-aniket.png',
+      bg: STORY + 'shocked-aniket.webp',
       kb: { origin: '55% 80%', from: 'scale(1.02)', to: 'scale(1.065)' },
       lamps: [[1292, 128, 300]],
       dust: [150, 60, 1500, 760],
@@ -195,7 +189,7 @@
       id: 'mp', title: 'Marked Price', sub: 'The price printed on an item is its marked price',
       // On the story picture (the user, 2026-10-22): the camera moves in on the book, everything blurs but its price tag,
       // and Swifty comes in from the right to say what it is, on a panel (see setupMarked, playMarked).
-      bg: STORY + 'shocked-aniket.png',
+      bg: STORY + 'shocked-aniket.webp',
       kb: null, origin: '55% 80%', still: true, // (the camera of screen 7, carried over: the same origin; no parallax)
       lamps: [[1292, 128, 300]], dust: [150, 60, 1500, 760],
       shot: 'cover',
@@ -206,7 +200,7 @@
       id: 'mpcard', title: 'The Book’s Marked Price', sub: 'The marked price of the book is —',
       // The user's doc (2026-10-23): a question card, on the book as screen 6 ends (the camera on it, all blurred but its
       // ₹1000 tag); a wrong answer: "Check the price printed on the book.", and another try.
-      bg: STORY + 'shocked-aniket.png',
+      bg: STORY + 'shocked-aniket.webp',
       kb: null, origin: '55% 80%', still: true,
       lamps: [[1292, 128, 300]], dust: [150, 60, 1500, 760],
       shot: 'cover-tag',
@@ -215,7 +209,7 @@
     },
     {
       id: 'reveal', title: 'I Gave You a Discount', sub: 'Printed ₹1000, but selling it at ₹800',
-      bg: STORY + 'aniket-gives-a-book-to-shopkeeper.png',
+      bg: STORY + 'aniket-gives-a-book-to-shopkeeper.webp',
       kb: { origin: '50% 46%', from: QUIZ_CAMERA, to: QUIZ_DRIFT }, // framed left, like the question screen
       lamps: [[1472, 106, 330]],
       dust: [300, 60, 1500, 700],
@@ -226,7 +220,7 @@
     },
     {
       id: 'discount', title: 'What Is a Discount?', sub: 'Discount? What is that?',
-      bg: STORY + 'aniket-gives-a-book-to-shopkeeper.png',
+      bg: STORY + 'aniket-gives-a-book-to-shopkeeper.webp',
       react: PUZZLED, // fades in over the picture when he hears "discount" (see playDiscount)
       kb: { origin: '50% 46%', from: 'scale(1.02)', to: 'scale(1.065) translate(-6px, 0)' },
       lamps: [[1472, 106, 330]],
@@ -267,7 +261,7 @@
     },
     {
       id: 'pay', title: 'Thank You!', sub: 'The shopkeeper gives Aniket the book',
-      bg: STORY + 'aniket-gives-money-to-shopkeeper.png',
+      bg: STORY + 'aniket-gives-money-to-shopkeeper.webp',
       kb: { origin: '50% 46%', from: 'scale(1.02)', to: 'scale(1.075)' },
       lamps: [[1408, 86, 330]],
       dust: [300, 60, 1500, 700],
@@ -275,7 +269,7 @@
     },
     {
       id: 'exit', title: 'Coming Out of the Bookstore', sub: 'The doors swing open and Aniket comes out',
-      bg: STORY + 'bookstore-outside-view.png', // the bookstore from the mall, as on screen 3
+      bg: STORY + 'bookstore-outside-view.webp', // the bookstore from the mall, as on screen 3
       kb: { origin: '50% 62%', from: 'scale(1.02)', to: 'scale(1.06) translate(-6px, -4px)' },
       lamps: [[167, 321, 230], [767, 334, 170], [1313, 299, 170], [1666, 275, 170]], // the wall lamp; ceiling lights behind the glass
       dust: [420, 260, 1840, 820],
@@ -285,7 +279,7 @@
     },
     {
       id: 'leave', title: 'To the Shoe Shop', sub: 'Let’s help Aniket buy the sneakers!',
-      bg: STORY + 'bookstore-outside-view.png',
+      bg: STORY + 'bookstore-outside-view.webp',
       kb: { origin: '50% 62%', from: 'scale(1.02)', to: 'scale(1.06) translate(-6px, -4px)' },
       lamps: [[167, 321, 230], [767, 334, 170], [1313, 299, 170], [1666, 275, 170]],
       dust: [420, 260, 1840, 820],
@@ -295,7 +289,7 @@
     },
     {
       id: 'sneakers', title: 'The Shoe Shop', sub: 'Wow, nice sneakers! I love them.',
-      bg: STORY + 'he-sees-a-shoe.png', // Aniket at the stand, pointing at the sneakers: the picture his clips start on
+      bg: STORY + 'he-sees-a-shoe.webp', // Aniket at the stand, pointing at the sneakers: the picture his clips start on
       kb: { origin: '63% 66%', from: 'scale(1.02)', to: 'scale(1.07)' }, // eases in towards the price tags
       lamps: [[1740, 160, 260], [1740, 370, 260], [120, 60, 180]], // shelf lights, a ceiling light
       dust: [600, 40, 1900, 720],
@@ -305,7 +299,7 @@
     },
     {
       id: 'shoe', title: 'Tagged Price', sub: 'Aniket points at the ₹1800 tag',
-      bg: STORY + 'he-sees-a-shoe.png',
+      bg: STORY + 'he-sees-a-shoe.webp',
       kb: { origin: '63% 66%', from: 'scale(1.02)', to: 'scale(1.07)' }, // eases in towards the price tags
       lamps: [[1740, 160, 260], [1740, 370, 260], [120, 60, 180]], // shelf lights, a ceiling light
       dust: [600, 40, 1900, 720],
@@ -314,7 +308,7 @@
     },
     {
       id: 'confused', title: 'The Price Tag', sub: 'The price tagged on it is ₹1800.',
-      bg: STORY + 'he-thinks-about-the-shoes.png',
+      bg: STORY + 'he-thinks-about-the-shoes.webp',
       kb: null, origin: '50% 50%', still: true, // (still: the question card after it is on the same view, so the change is a plain dissolve)
       lamps: [[1740, 160, 260], [1740, 370, 260], [120, 60, 180]],
       dust: [600, 40, 1900, 720],
@@ -325,7 +319,7 @@
       id: 'smcard', title: 'The Sneakers’ Marked Price', sub: 'The marked price of the sneakers is —',
       // The user's doc (2026-10-23): a question card on the shoe shop, all blurred but the sneakers and their tags, the
       // card on the left; a wrong answer: "Check the price tagged on the sneakers.", and another try.
-      bg: STORY + 'he-thinks-about-the-shoes.png', // the shoe shop, the card on the left
+      bg: STORY + 'he-thinks-about-the-shoes.webp', // the shoe shop, the card on the left
       kb: null, origin: '50% 50%', still: true,
       lamps: [[1740, 160, 260], [1740, 370, 260], [120, 60, 180]], dust: null,
       setup: standFocus,
@@ -334,7 +328,7 @@
     {
       id: 'offmeans', title: 'What Does 30% OFF Mean?', sub: 'If this is a discount, how much do I actually have to pay?',
       // The user's doc (2026-10-23): Aniket sees the 30% OFF tag and wonders; Swifty: "30% OFF means 30% discount here."
-      bg: STORY + 'he-thinks-about-the-shoes.png',
+      bg: STORY + 'he-thinks-about-the-shoes.webp',
       kb: null, origin: '63% 66%', still: true, // (screen 19's camera origin: it ends on the same view, so that change is seamless)
       lamps: [[1740, 160, 260], [1740, 370, 260], [120, 60, 180]],
       dust: [600, 40, 1900, 720],
@@ -345,7 +339,7 @@
     {
       id: 'recall', title: 'Recall Percentages', sub: 'Let’s first recall how percentages work.',
       swifty: true,
-      bg: STORY + 'he-thinks-about-the-shoes.png', // the shop as screen 19 ends: the camera on the sneakers, the rest blurred
+      bg: STORY + 'he-thinks-about-the-shoes.webp', // the shop as screen 19 ends: the camera on the sneakers, the rest blurred
       kb: null, origin: '63% 66%', still: true, // (screen 19's camera origin, so the same view: a seamless cut)
       lamps: [[1740, 160, 260], [1740, 370, 260], [120, 60, 180]], dust: null,
       shot: 'stand',
@@ -354,7 +348,7 @@
     },
     {
       id: 'percentrule', title: 'Percentage Rule', sub: 'a is what percent of b?',
-      bg: STORY + 'he-thinks-about-the-shoes.png', // the shoe shop, the working on a small panel on it (practiceHost)
+      bg: STORY + 'he-thinks-about-the-shoes.webp', // the shoe shop, the working on a small panel on it (practiceHost)
       kb: null, origin: '50% 50%', still: true,
       lamps: [[1740, 160, 260], [1740, 370, 260], [120, 60, 180]], dust: null,
       setup: setupPracticeStart, // (from screen 20 it begins on 20's view, then blurs all and eases out: see zoomOutOfShoes)
@@ -362,7 +356,7 @@
     },
     {
       id: 'whatpercent', title: 'What Percent?', sub: '125 is what percent of 500?',
-      bg: STORY + 'he-thinks-about-the-shoes.png', // the shoe shop, the working on a small panel on it (practiceHost)
+      bg: STORY + 'he-thinks-about-the-shoes.webp', // the shoe shop, the working on a small panel on it (practiceHost)
       kb: null, origin: '50% 50%', still: true,
       lamps: [[1740, 160, 260], [1740, 370, 260], [120, 60, 180]], dust: null,
       setup: allBlur, // (the whole picture blurred, the panel in the middle: the user, 2026-10-22)
@@ -371,7 +365,7 @@
     {
       id: 'check', title: 'Quick CFU', sub: '250 is what percent of 1000?',
       swifty: true,
-      bg: STORY + 'he-thinks-about-the-shoes.png', // the shoe shop, the working on a small panel on it (practiceHost)
+      bg: STORY + 'he-thinks-about-the-shoes.webp', // the shoe shop, the working on a small panel on it (practiceHost)
       kb: null, origin: '50% 50%', still: true,
       lamps: [[1740, 160, 260], [1740, 370, 260], [120, 60, 180]], dust: null,
       setup: allBlur, // (the whole picture blurred, the panel in the middle, as 22 and 23: the user, 2026-10-23)
@@ -380,7 +374,7 @@
     {
       id: 'topay', title: 'How Much to Pay?', sub: 'How much does Aniket have to pay?',
       swifty: true,
-      bg: STORY + 'he-thinks-about-the-shoes.png', // the shoe shop, the question on a small panel on it (practiceHost)
+      bg: STORY + 'he-thinks-about-the-shoes.webp', // the shoe shop, the question on a small panel on it (practiceHost)
       kb: null, origin: '50% 50%', still: true,
       lamps: [[1740, 160, 260], [1740, 370, 260], [120, 60, 180]], dust: null,
       setup: standFocus, // (blurred but the sneakers and their tags, from the first frame)
@@ -389,7 +383,7 @@
     },
     {
       id: 'thirty', title: 'The Discount: 30% of ₹1800', sub: '30/100 × 1800 = ₹540',
-      bg: STORY + 'he-thinks-about-the-shoes.png', // the shoe shop, the working on a small panel on it (practiceHost)
+      bg: STORY + 'he-thinks-about-the-shoes.webp', // the shoe shop, the working on a small panel on it (practiceHost)
       kb: null, origin: '50% 50%', still: true,
       lamps: [[1740, 160, 260], [1740, 370, 260], [120, 60, 180]], dust: null,
       setup: standFocus, // (blurred but the sneakers and their tags, from the first frame)
@@ -398,7 +392,7 @@
     {
       id: 'paywork', title: 'The Amount to Pay', sub: 'SP = MP − Discount = ₹1260',
       swifty: true,
-      bg: STORY + 'he-thinks-about-the-shoes.png', // the shoe shop, the working on a small panel on it (practiceHost)
+      bg: STORY + 'he-thinks-about-the-shoes.webp', // the shoe shop, the working on a small panel on it (practiceHost)
       kb: null, origin: '50% 50%', still: true,
       lamps: [[1740, 160, 260], [1740, 370, 260], [120, 60, 180]], dust: null,
       setup: standFocus, // (blurred but the sneakers and their tags, from the first frame)
@@ -407,7 +401,7 @@
     },
     {
       id: 'final', title: 'Final Answer', sub: 'After a 30% discount, I will pay ₹1260.',
-      bg: STORY + 'he-sees-a-shoe.png', // the same view as screens 23–34: Aniket pointing at the tags
+      bg: STORY + 'he-sees-a-shoe.webp', // the same view as screens 23–34: Aniket pointing at the tags
       kb: { origin: '63% 66%', from: 'scale(1.02)', to: 'scale(1.07)' },
       lamps: [[1740, 160, 260], [1740, 370, 260], [120, 60, 180]],
       dust: [600, 40, 1900, 720],
@@ -417,7 +411,7 @@
     },
     {
       id: 'boxed', title: 'Here Are Your Sneakers', sub: 'The shopkeeper hands Aniket the sneakers in a box',
-      bg: STORY + 'shopkeeper-gives-the-sneakers-box.png',
+      bg: STORY + 'shopkeeper-gives-the-sneakers-box.webp',
       kb: { origin: '54% 56%', from: 'scale(1.02)', to: 'scale(1.07)' }, // eases in towards the box
       lamps: [[1760, 170, 240], [1760, 360, 240], [300, 85, 170]], // shelf lights, a ceiling light in the mall
       dust: [600, 40, 1900, 720],
@@ -425,14 +419,14 @@
     },
     {
       id: 'pctofmp', title: 'What Percent Is the Discount?', sub: '540 is what percent of 1800?',
-      snap: STORY + 'he-thinks-about-the-shoes.png', snapFocus: [1300, 640, 2], swifty: true,
+      snap: STORY + 'he-thinks-about-the-shoes.webp', snapFocus: [1300, 640, 2], swifty: true,
       sheet: 'panel', still: true, kb: null, origin: '50% 50%', lamps: [], dust: null,
       setup: setupGuide,
       play: playPercentOfMP,
     },
     {
       id: 'return', title: 'Back Home', sub: 'How was your shopping?',
-      bg: STORY + 'boy-returns-home.png',
+      bg: STORY + 'boy-returns-home.webp',
       kb: { origin: '50% 30%', from: 'scale(1.02)', to: 'scale(1.05) translate(4px, 3px)' }, // a slow drift, both faces in view
       lamps: [[1030, 250, 300]],   // the daylight through the far window
       dust: [560, 80, 1300, 720],  // specks floating in the sunlight
@@ -451,14 +445,14 @@
     },
     {
       id: 'partymoney', title: '₹5,000 for the Party', sub: 'Here’s ₹5,000.',
-      bg: STORY + 'father-gives-him-money.png',
+      bg: STORY + 'father-gives-him-money.webp',
       kb: { origin: '55% 40%', from: 'scale(1.02)', to: 'scale(1.05) translate(-4px, 3px)' },
       lamps: [[1856, 250, 300]], dust: [1100, 60, 1900, 640],
       play: playPartyMoney,
     },
     {
       id: 'partydeal', title: 'Find the Best Deals', sub: 'Then I’m definitely finding the best offers!',
-      bg: STORY + 'boy-stands-and-talks.png',
+      bg: STORY + 'boy-stands-and-talks.webp',
       kb: { origin: '52% 30%', from: 'scale(1.02)', to: 'scale(1.05) translate(4px, 3px)' }, // a slow drift, both faces in view
       lamps: [[1520, 300, 300]], dust: [700, 80, 1500, 640],
       play: playPartyDeal,
@@ -472,7 +466,7 @@
     },
     {
       id: 'mallfloor', title: 'Inside the Mall', sub: 'Walk to a shop with the arrows',
-      bg: PARTY + 'mall-map.png', // (the user's new map, 2026-10-26)
+      bg: PARTY + 'mall-map.webp', // (the user's new map, 2026-10-26)
       kb: null, origin: '50% 50%', still: true, lamps: [], dust: null,
       next: () => (partyDone() ? 'partydone' : PARTY_ITEMS.find(it => !Party.bought.has(it.id)).shop),
       setup: mallSetup,
@@ -491,7 +485,7 @@
       })),
     {
       id: 'partydone', title: 'All Set for the Party!', sub: 'Total ₹4,470, ₹530 left',
-      bg: PARTY + 'mall-map.png',
+      bg: PARTY + 'mall-map.webp',
       kb: null, origin: '50% 50%', still: true, lamps: [], dust: null,
       back: () => 'mallfloor',
       setup: scene => allBlur(scene),
@@ -510,6 +504,8 @@
   // leaves the scene, so every script simply stops where it is.
   // ======================================================================
 
+  const START_BUTTON = ASSETS + 'ui/start-button.webp'; // (a square cut of "source/start button.png", its disc the old button's size)
+
   async function playTitle(ctx, scene) {
     const L = scene.layer;
     FX.twinkles(L, [[380, 125], [760, 125], [570, 100], [870, 250], [230, 520], [420, 570], [900, 560]]); // round the title, off Aniket
@@ -519,7 +515,7 @@
     btn.type = 'button';
     btn.setAttribute('aria-label', 'Start the story');
     const img = el('img', '', btn);
-    img.src = ASSETS + 'ui/start-button.png'; // (a square cut of "source/start button.png", its disc the old button's size)
+    img.src = START_BUTTON;
     img.alt = '';
     img.draggable = false;
     btn.addEventListener('click', startStory);
@@ -631,7 +627,7 @@
   // does), a sheen, their edges, the pull handles and the fittings. They swing open into the shop on their hinges, the
   // left one on the doorway's left side and the right one on its right, drawn in perspective by doorLeaf (the same in
   // every browser). Anything put under them (under) is seen through the glass while they are closed.
-  const DOORWAY = { src: ASSETS + 'ui/bookstore-doorway.png', x: 694, y: 225 };
+  const DOORWAY = { src: ASSETS + 'ui/bookstore-doorway.webp', x: 694, y: 225 };
   // Each leaf, closed: its hinge (x, and its top and bottom there), its free edge (the same), its width, and the side
   // it swings from (+1: the hinge on the left, the leaf to its right; −1: the other way round).
   const DOOR_LEAVES = [
@@ -1173,7 +1169,7 @@
     await speak(ctx, thanks, 'thanks', 'boy');
     ctx.advance(3000); // then out of the bookstore
   }
-  // His bubble: right of his face, between the two of them, its tail at his mouth (story/aniket-gives-money-to-shopkeeper.png,
+  // His bubble: right of his face, between the two of them, its tail at his mouth (story/aniket-gives-money-to-shopkeeper.webp,
   // stage px), as on screen 4.
   const THANKS_AT = { anchor: [746, 300], corner: 'bl', tip: [694, 368] }; // (clear of the ₹800 badge above the money)
 
@@ -1759,7 +1755,7 @@
   }
 
   // Screen 13's pictures over the prices: 16:9, centred on the term, just above the formula's strip.
-  const PAY_FOCUS = [990, 500, 1.5]; // the notes handed over, both faces in view (story/aniket-gives-money-to-shopkeeper.png)
+  const PAY_FOCUS = [990, 500, 1.5]; // the notes handed over, both faces in view (story/aniket-gives-money-to-shopkeeper.webp)
   function overTerm(term) {
     const t = stageRect(term);
     const strip = stageRect(term.closest('.fr-strip'));
@@ -1803,7 +1799,7 @@
     fr.term(2);
     const sp = overTerm(fr.longTerms[2]);
     const pay = el('div', 'scene-snap', scene.ui, { left: `${sp.left}px`, top: `${sp.top}px`, width: `${sp.width}px`, height: `${sp.height}px` });
-    Object.assign(el('img', '', pay), { src: STORY + 'aniket-gives-money-to-shopkeeper.png', alt: '', draggable: false });
+    Object.assign(el('img', '', pay), { src: STORY + 'aniket-gives-money-to-shopkeeper.webp', alt: '', draggable: false });
     focusOn(pay, PAY_FOCUS);
     Sound.bloop();
     FX.reveal(pay, [{ opacity: 0, transform: 'translateY(24px) scale(.92)' }, { opacity: 1, transform: 'none' }], { duration: 600, easing: 'cubic-bezier(.2,.8,.3,1)' });
@@ -2042,9 +2038,9 @@
   }, SHOE_SAY);
   const PRICE_CARD = { x: 1346, y: 634, w: 196, h: 152, round: 16 }; // the white ₹1800 card on the sneakers (stage px)
   const PRICE_CARD_FACE = [1259, 566, 173, 135]; // that card's face, with a little round it: x, y, w, h (stage px)
-  // The ₹1800 tent card on the stand, with a little round it, on the picture of screens 22 and 35 (story/he-sees-a-shoe.png):
+  // The ₹1800 tent card on the stand, with a little round it, on the picture of screens 22 and 35 (story/he-sees-a-shoe.webp):
   // their clips redraw the price roughly, so the picture's is laid over them.
-  const TENT_CARD = { 'story/he-sees-a-shoe.png': [1196, 538, 236, 130] };
+  const TENT_CARD = { 'story/he-sees-a-shoe.webp': [1196, 538, 236, 130] };
   function tentCard(scene) {
     pictureOver(scene, TENT_CARD[scene.bg.slice(ASSETS.length)]);
   }
@@ -2129,7 +2125,7 @@
     return standFocus(scene, { x: x0, y: y0, w: x1 - x0, h: y1 - y0, round: STAND_FOCUS.round * SHOES_CAM.s, soft: STAND_FOCUS.soft }, opts);
   }
 
-  const SNEAKER_CARD = { photo: ASSETS + 'ui/sneakers.png', price: '₹1800', off: ['30%', 'OFF'], knot: [60, 49] };
+  const SNEAKER_CARD = { photo: ASSETS + 'ui/sneakers.webp', price: '₹1800', off: ['30%', 'OFF'], knot: [60, 49] };
 
   // A line read out while something happens on the panel `ms` into it (`at`).
   async function readWith(ctx, talk, id, text, ms, at, cues = []) {
@@ -2896,25 +2892,25 @@
   // or `flat`), where it is on the picture (picture px of 1672 × 941: the thing and its tag, what the player taps), and
   // its picture for the card and the shopping list. ₹4,470 in all, ₹530 left of ₹5,000.
   const PARTY_BUDGET = 5000;
-  const PARTY_WALLET = ASSETS + 'ui/wallet.png';
-  const PARTY_JOY = { base: PARTY + 'joystick-base.png', knob: PARTY + 'joystick-knob.png' }; // (the user's controller, cut out of their picture)
+  const PARTY_WALLET = ASSETS + 'ui/wallet.webp';
+  const PARTY_JOY = { base: PARTY + 'joystick-base.webp', knob: PARTY + 'joystick-knob.webp' }; // (the user's controller, cut out of their picture)
   const PARTY_ITEMS = [
-    { id: 'shirt', name: 'Shirt', icon: PARTY + 'icon-shirt.png', shop: 'shirtshop', a: 'this shirt',
+    { id: 'shirt', name: 'Shirt', icon: PARTY + 'icon-shirt.webp', shop: 'shirtshop', a: 'this shirt',
       ask: 'Which shirt is the better deal? Tap it!', deals: [
         { name: 'Blue shirt', mp: 1200, pct: 20, spot: [548, 182, 768, 545], pic: 'deal-shirt-blue.webp' },
         { name: 'Green shirt', mp: 1000, flat: 150, spot: [833, 182, 1053, 545], pic: 'deal-shirt-green.webp' },
       ] },
-    { id: 'pants', name: 'Bottomwear', icon: PARTY + 'icon-pants.png', shop: 'pantsshop', a: 'this bottomwear',
+    { id: 'pants', name: 'Bottomwear', icon: PARTY + 'icon-pants.webp', shop: 'pantsshop', a: 'this bottomwear',
       ask: 'Which bottomwear is the better deal? Tap it!', deals: [
         { name: 'Jeans', mp: 1800, pct: 30, spot: [676, 160, 848, 562], pic: 'deal-pants-jeans.webp', plural: true },
         { name: 'Trousers', mp: 1600, flat: 300, spot: [930, 160, 1104, 562], pic: 'deal-pants-trousers.webp', plural: true },
       ] },
-    { id: 'watch', name: 'Watch', icon: PARTY + 'icon-watch.png', shop: 'watchshop', a: 'this watch',
+    { id: 'watch', name: 'Watch', icon: PARTY + 'icon-watch.webp', shop: 'watchshop', a: 'this watch',
       ask: 'Which watch is the better deal? Tap it!', deals: [
         { name: 'Silver watch', mp: 2000, pct: 20, spot: [556, 340, 700, 540], pic: 'deal-watch-silver.webp' },
         { name: 'Brown watch', mp: 1800, flat: 250, spot: [832, 340, 976, 540], pic: 'deal-watch-brown.webp' },
       ] },
-    { id: 'sunglasses', name: 'Sunglasses', icon: PARTY + 'icon-sunglasses.png', shop: 'sunshop', a: 'these sunglasses',
+    { id: 'sunglasses', name: 'Sunglasses', icon: PARTY + 'icon-sunglasses.webp', shop: 'sunshop', a: 'these sunglasses',
       ask: 'Which sunglasses are the better deal? Tap them!', deals: [
         { name: 'Black sunglasses', mp: 1200, pct: 20, spot: [628, 422, 808, 514], pic: 'deal-sun-black.webp', plural: true },
         { name: 'Brown sunglasses', mp: 900, pct: 10, spot: [866, 422, 1046, 514], pic: 'deal-sun-brown.webp', plural: true },
@@ -3110,7 +3106,7 @@
     },
   };
   const TOP_SHEET = {
-    src: PARTY + 'aniket-topdown.png', frameW: 190, frameH: 238, anchorX: 95, anchorY: 207,
+    src: PARTY + 'aniket-topdown.webp', frameW: 190, frameH: 238, anchorX: 95, anchorY: 207,
     rows: { down: 0, up: 1, left: 2, right: 3 }, frames: { down: 10, up: 10, left: 7, right: 7 },
     stand: { down: [4, 0], up: [4, 1], right: [4, 2] },
   };
@@ -3826,6 +3822,7 @@
     starting: false,
     autoplay: readPref('bj.autoplay', true),
     moving: null,  // { from } while a movement clip plays in place of a screen change (see go, Clips)
+    waiting: -1,   // the screen go() waits to show until its pictures are in (see Pictures)
   };
 
   function makeCtx() {
@@ -3982,6 +3979,33 @@
       .catch(err => { if (err !== CANCELLED) console.error(err); });
   }
 
+  // A screen whose pictures aren't in yet: they come first (the loading bar shows, counting them, if they take a while);
+  // then the screen. Another go() meanwhile takes over (Game.waiting): this wait then leaves the bar alone.
+  function goWhenLoaded(i, opts) {
+    const scene = SCENES[i];
+    Game.waiting = i;
+    const srcs = Pictures.of(scene);
+    let done = 0;
+    const bar = () => {
+      const p = done / srcs.length;
+      $('#loader-fill').style.width = (p * 100).toFixed(0) + '%';
+      $('#loader-text').textContent = `Loading… ${(p * 100).toFixed(0)}%`;
+    };
+    const slow = setTimeout(() => {
+      if (Game.waiting !== i) return;
+      bar();
+      $('#loader').classList.remove('is-done');
+    }, 400);
+    srcs.forEach(src => Pictures.load(src).then(() => {
+      done++;
+      if (Game.waiting === i) bar();
+    }));
+    Pictures.get(scene, true).then(() => {
+      clearTimeout(slow);
+      if (Game.waiting === i) go(i, opts);
+    });
+  }
+
   // Cross-fade only between these neighbouring screens (at home → at the mall, Bookstore → sees the
   // book → holds it → How Much?, question → closer look at his new book, and into the shoe shop → at the
   // sneakers' stand → the discount on them → his questions about it, and his final answer → the sneakers in their
@@ -4040,6 +4064,10 @@
   // `jump`: chosen in the scene list, so it comes in straight away (no movement clip on the way).
   function go(i, { afterMove = false, jump = false } = {}) {
     if (i < 0 || i > LAST) return;
+    if (!SCENES[i].picturesIn) return goWhenLoaded(i, { afterMove, jump });
+    Game.waiting = -1;
+    $('#loader').classList.add('is-done'); // (if a wait for its pictures brought the loading bar up)
+    Pictures.ahead(i);
     const moving = Game.moving; // a movement clip was playing: the player moved on (or back) meanwhile, so it stops here
     if (moving) {
       Game.moving = null;
@@ -4285,6 +4313,10 @@
       return $('#panel').classList.contains('is-open');
     },
     openPanel() {
+      $('#scene-list').querySelectorAll('img[data-src]').forEach(img => {
+        img.src = img.dataset.src;
+        delete img.dataset.src;
+      });
       $('#panel').classList.add('is-open');
       $('#panel-scrim').classList.add('is-open');
       $('#panel').setAttribute('aria-hidden', 'false');
@@ -4335,6 +4367,63 @@
     } catch (e) { /* fullscreen not allowed here */ }
   }
 
+  // The pictures load as the player gets to them (the user's "smooth game and fast reload", 2026-10-27). The start screen
+  // shows as soon as its picture, the Start button and the fonts are in (the loading bar counts only those). From then
+  // on each screen loads the next three's pictures, the next one decoded too so it shows at once; the pictures most
+  // screens use (Swifty, Aniket, her books…) come with the first of them, Party Prep's with the way to the mall. A
+  // screen whose pictures aren't in yet (one jumped to from the scene list) waits for them: no screen shows without its
+  // picture (see go). A screen's picture elements get their src once its pictures are in (data-src until then).
+  const Pictures = {
+    loads: new Map(), // src → { loaded, decoded } (promises)
+    load(src, decode = false) {
+      let p = this.loads.get(src);
+      if (!p) {
+        const img = new Image();
+        p = {
+          loaded: new Promise(resolve => {
+            img.onload = () => resolve(img);
+            img.onerror = () => {
+              console.warn('Could not load', src);
+              resolve(null);
+            };
+            img.src = src;
+          }),
+        };
+        this.loads.set(src, p);
+      }
+      if (decode && !p.decoded) p.decoded = p.loaded.then(img => (img && img.decode ? img.decode().catch(() => {}) : null));
+      return decode ? p.decoded : p.loaded;
+    },
+    own: scene => [scene.bg, scene.react, scene.snap].filter(Boolean),
+    shared: () => [WALK_RIG.src, SWIFTY.fly.src, SWIFTY.stand.src, STAND, DOORWAY.src, SNEAKER_CARD.photo],
+    party: () => [TOP_SHEET.src, PARTY_WALLET, PARTY_JOY.base, PARTY_JOY.knob, ...PARTY_ITEMS.flatMap(it => [it.icon, ...it.deals.map(d => d.pic)])],
+    // What a screen needs: its own pictures; after the start screen, the shared ones; from the way to the mall, Party Prep's.
+    of(scene) {
+      const i = SCENES.indexOf(scene);
+      return [...this.own(scene), ...(i >= 1 ? this.shared() : []), ...(i >= SCENES.findIndex(s => s.id === 'tomall') ? this.party() : [])];
+    },
+    // A screen's pictures loaded (its own decoded too, with `decode`), then given to its elements (scene.picturesIn).
+    get(scene, decode = false) {
+      const own = this.own(scene);
+      const all = Promise.all(this.of(scene).map(src => this.load(src, decode && own.includes(src))));
+      if (!scene.pictures) {
+        scene.pictures = all.then(() => {
+          scene.el.querySelectorAll('img[data-src]').forEach(img => {
+            img.src = img.dataset.src;
+            delete img.dataset.src;
+          });
+          if (scene.backdropEl) scene.backdropEl.style.backgroundImage = `url("${scene.bg}")`;
+          scene.picturesIn = true;
+        });
+      }
+      return all.then(() => scene.pictures);
+    },
+    // On screen i: the next three screens' pictures (the next one's decoded).
+    ahead(i) {
+      for (let k = 1; k <= 3 && i + k <= LAST; k++) this.get(SCENES[i + k], k === 1);
+    },
+  };
+
   function buildScenes() {
     const host = $('#scenes');
     SCENES.forEach(scene => {
@@ -4342,7 +4431,7 @@
       scene.el.dataset.scene = scene.id;
       scene.el.setAttribute('aria-label', scene.title);
       if (scene.zoomOrigin) scene.el.style.setProperty('--zoom-origin', scene.zoomOrigin);
-      if (scene.backdrop) el('div', 'scene-backdrop', scene.el).style.backgroundImage = `url("${scene.bg}")`;
+      if (scene.backdrop) scene.backdropEl = el('div', 'scene-backdrop', scene.el); // (its picture: see Pictures)
       scene.parallax = el('div', 'scene-parallax', scene.el);
       scene.world = el('div', 'scene-world', scene.parallax);
       scene.world.style.setProperty('--kb-origin', scene.kb ? scene.kb.origin : scene.origin);
@@ -4355,7 +4444,7 @@
       const pic = scene.backdrop ? el('div', 'scene-pic scene-bg--feather', scene.world) : scene.world;
       [scene.bg, scene.react].filter(Boolean).forEach((src, i) => { // the picture, and a reaction to fade in over it
         const img = el('img', 'scene-bg' + (i ? ' scene-react' : ''), pic);
-        img.src = src;
+        img.dataset.src = src; // (its src once the screen's pictures are in: see Pictures)
         img.alt = '';
         img.draggable = false;
       });
@@ -4372,7 +4461,7 @@
       if (scene.snap) { // the story picture it came from, framed on the left, zoomed on what matters
         scene.el.classList.add('has-snap'); // (its content goes under it: css .has-snap)
         scene.snapEl = el('div', 'scene-snap', scene.el);
-        Object.assign(el('img', '', scene.snapEl), { src: scene.snap, alt: '', draggable: false });
+        Object.assign(el('img', '', scene.snapEl), { alt: '', draggable: false }).dataset.src = scene.snap;
         focusOn(scene.snapEl, scene.snapFocus);
       }
       // (No title or question on top: the meeting of 2026-10-21 took out the text at the top left of every screen.)
@@ -4398,7 +4487,7 @@
       const thumb = el('span', 'si-thumb', item);
       const picture = scene.react || scene.bg; // a screen's reaction picture shows best what it is about
       if (scene.sheet) thumb.classList.add('si-thumb--sheet'); // on the big panel: a little cream panel, with Swifty's stand
-      if (picture || scene.sheet) Object.assign(el('img', '', thumb), { src: picture || STAND, alt: '' });
+      if (picture || scene.sheet) Object.assign(el('img', '', thumb), { alt: '' }).dataset.src = picture || STAND; // (loaded when the list opens)
       el('span', 'si-now', thumb).textContent = 'NOW';
       const text = el('span', 'si-text', item);
       el('strong', '', text).textContent = scene.title;
@@ -4509,24 +4598,6 @@
     requestAnimationFrame(loop);
   }
 
-  function preload(urls, onProgress) {
-    let done = 0;
-    return Promise.all(urls.map(src => new Promise(resolve => {
-      const img = new Image();
-      const finish = () => {
-        done++;
-        onProgress(done / urls.length);
-        resolve();
-      };
-      img.onload = () => (img.decode ? img.decode().catch(() => {}) : Promise.resolve()).then(finish);
-      img.onerror = () => {
-        console.warn('Could not load', src);
-        finish();
-      };
-      img.src = src;
-    })));
-  }
-
   async function boot() {
     fit();
     window.addEventListener('resize', fit);
@@ -4537,10 +4608,7 @@
 
     const fill = $('#loader-fill');
     const label = $('#loader-text');
-    const images = SCENES.flatMap(s => [s.bg, s.react]).filter(Boolean).concat(
-      ASSETS + 'ui/start-button.png', WALK_RIG.src, SWIFTY.fly.src, SWIFTY.stand.src, ART.money, ART.book,
-      ASSETS + 'ui/sneakers.png', DOORWAY.src, STAND, TOP_SHEET.src, PARTY_WALLET, PARTY_JOY.base, PARTY_JOY.knob, ...PARTY_ITEMS.flatMap(it => [it.icon, ...it.deals.map(d => d.pic)])
-    );
+    const images = [...Pictures.own(SCENES[0]), START_BUTTON]; // (the start screen's: the rest load as the player plays)
     const fonts = document.fonts
       ? Promise.race([Promise.all([ // the fonts, before the first words appear (no swapping in later)
         document.fonts.load('800 40px "Baloo 2"', 'Ab₹'),
@@ -4548,13 +4616,16 @@
         document.fonts.load('400 28px Kalam', 'Ab'),
       ]), sleep(2500)]).catch(() => {})
       : Promise.resolve();
+    let done = 0;
     await Promise.all([
-      preload(images, p => {
-        fill.style.width = (p * 100).toFixed(0) + '%';
-        label.textContent = `Loading… ${(p * 100).toFixed(0)}%`;
-      }),
+      ...images.map(src => Pictures.load(src, true).then(() => {
+        done++;
+        fill.style.width = ((done / images.length) * 100).toFixed(0) + '%';
+        label.textContent = `Loading… ${((done / images.length) * 100).toFixed(0)}%`;
+      })),
       fonts,
     ]);
+    await Pictures.get(SCENES[0], true);
     $('#loader').classList.add('is-done');
     go(0);
   }

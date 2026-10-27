@@ -75,7 +75,7 @@ The brief is `docs/briefs/Bookstore Journey - Revamp Brief.docx` ("Changes for S
 - docs/PROMPT.md's facts: the discount's red starts at Screens 14–15, and Swifty's screens are the new ones.
 - docs/PROMPT.md is updated for every change.
 - Found while testing, and fixed: leaving a screen in the middle of a line could let the next line start on the following screen. For example, pressing "Got it, next" while "Hear it again" was reading made the next card's line play over Screen 20. A line now starts only while its screen is on.
-- Found while testing, and fixed (2026-10-24): in Party Prep's four shops, a press with the mouse or a finger went through the question card and the Buy / Keep Looking card to the shop's picture, so the amounts, Check, Buy and Keep Looking couldn't be pressed. The earlier tests had pressed them from inside the page, which skips this. Both cards now take presses (`.pq2`, `.pc2` in `css/style.css`), and a whole shop was played with mouse presses. Every story question was checked the same way and already took them.
+- Found while testing, and fixed (2026-10-24): in Party Prep's four shops, a press with the mouse or a finger went through the question card and the Buy / Keep Looking card to the shop's picture, so the amounts, Check, Buy and Keep Looking couldn't be pressed. The earlier tests had pressed them from inside the page, which skips this. Both cards now take presses (`.pq2`, `.pc2` in `css/style.css`), and a whole shop was played with mouse presses. Every story question was checked the same way and already took them. (Those two cards went when the shops became "pick the better deal", 2026-10-26; the deal cards that replaced them take presses the same way, and the tests press them with the mouse.)
 
 ## The brief's questions: what was done meanwhile
 
@@ -98,11 +98,11 @@ The brief is `docs/briefs/Bookstore Journey - Revamp Brief.docx` ("Changes for S
    pop-up over the blurred story for every teaching screen (tried on Screen 25's "30% OFF means 30% Discount"), and making the
    Gemini clips again on Higgsfield (the list: `docs/prompts/Animation Video Prompts - Left to Make.md`; it spends credits).
 
-1. **The rest of the animation clips:** 12 of 54 are still to make (`docs/prompts/Animation Video Prompts - Left to Make.md`): the movements on Higgsfield (Gemini can't be given an end frame), `s06-to-s07` again among them; Screens 10, 14 and 15; and the father's second lines on 41 and 45. Each one plays in the game as soon as it is brought in.
+1. **The rest of the animation clips:** 10 are still to make (`docs/prompts/Animation Video Prompts - Left to Make.md`; the clips of the screens taken out left the list on 2026-10-26): `s03-walk-in`, `s05-pickup`, the movement `s06-to-s07` (again, on Higgsfield: Gemini can't be given an end frame), Screens 10, 14 and 15 (`s10-aniket`, `s14-shopkeeper-1`–`3`, `s14-to-s15`, `s15-idle`) and the father's second line on 45 (`s45-father-2`). Each one plays in the game as soon as it is brought in. **Before making `s10-aniket` and `s14-shopkeeper-1`–`3`:** their prompts still give the words those lines had before the user's doc of 2026-10-23 ("₹1000? What is this?", "…but you paid only ₹800."); the game now says "Oh! The price printed on it is ₹1000." and "See, the price printed on the book is ₹1000, / but I am selling it to you at ₹800. / I gave you a discount.", so the prompts (and maybe their lengths) need the new words first.
 2. **The language review** with ChatGPT and the content team (above), then one recording batch.
 3. **Text sizes:** bring Screens 17, 27, 29–34 and 37 down to the checkpoints' four sizes (26 / 38 / 46 / 56). They use 6–9 now: the question on top, the bubbles, the working, the answers, the bar's labels and the key number. The checkpoints were done first, as the sample. The rest changes how those panels look, so it waits for your OK on them.
-4. **The older styles' colours** (mostly the shopping game's): still typed directly, not yet named variables.
-5. Screen 46's optional notebook cards ("your tools for shopping").
+4. **The older styles' colours:** still typed directly in places, not yet named variables (the shopping game's, most of them, went with it on 2026-10-26).
+5. ~~Screen 46's optional notebook cards ("your tools for shopping")~~: Screen 46 was taken out (2026-10-23).
 6. **Try the word highlight with a few children** (the brief's question 5).
 
 ## Animation: the clips

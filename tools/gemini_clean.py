@@ -240,7 +240,7 @@ def clean(src, dest, picture, end_picture=None, trim=None, pingpong=False, cover
                             '-i', '-', '-an', '-vf',
                             'scale=out_color_matrix=bt709:out_range=tv:flags=bicubic+accurate_rnd+full_chroma_int,format=yuv420p,'
                             'setparams=range=tv:colorspace=bt709:color_primaries=bt709:color_trc=iec61966-2-1',
-                            '-c:v', 'libx264', '-preset', 'slow', '-crf', '20', '-profile:v', 'high', '-pix_fmt', 'yuv420p',
+                            '-c:v', 'libx264', '-preset', 'slow', '-crf', '24', '-profile:v', 'high', '-pix_fmt', 'yuv420p',
                             '-colorspace', 'bt709', '-color_primaries', 'bt709', '-color_trc', 'iec61966-2-1', '-color_range', 'tv',
                             '-movflags', '+faststart', str(part)], stdin=subprocess.PIPE)
     sx, sy, sr = STAR[0] * w, STAR[1] * h, STAR[2] * w

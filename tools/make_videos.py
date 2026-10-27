@@ -105,7 +105,7 @@ def encode(src, dest, backwards=False):
     turned round if it was made backwards (see BACKWARDS)."""
     part = dest.with_suffix('.part.mp4')
     subprocess.run(['ffmpeg', '-v', 'error', '-y', '-i', str(src), '-an', '-vf', 'scale=1920:1080' + (',reverse' if backwards else ''), '-r', '24',
-                    '-c:v', 'libx264', '-preset', 'slow', '-crf', '20', '-pix_fmt', 'yuv420p', '-profile:v', 'high',
+                    '-c:v', 'libx264', '-preset', 'slow', '-crf', '24', '-pix_fmt', 'yuv420p', '-profile:v', 'high',
                     '-movflags', '+faststart', str(part)], check=True)
     part.replace(dest)
 
@@ -280,7 +280,13 @@ def upload(path, key, cache):
         return cache[path]
     slot = call(f'{API}/files/generate-upload-url', key, method='POST', body={'content_type': 'image/png'})
     headers = [f'{k}: {v}' for k, v in (slot.get('upload_headers') or {}).items()]
-    code, text = curl(slot['upload_url'], method='PUT', headers=headers, upload=PICTURES / path)  # (no key: storage)
+    picture = PICTURES / path
+    with tempfile.TemporaryDirectory() as tmp:
+        if picture.suffix != '.png':  # (the game's pictures are WebP: uploaded as PNG, made by macOS's sips)
+            png = Path(tmp) / (picture.stem + '.png')
+            subprocess.run(['sips', '-s', 'format', 'png', str(picture), '--out', str(png)], check=True, capture_output=True)
+            picture = png
+        code, text = curl(slot['upload_url'], method='PUT', headers=headers, upload=picture)  # (no key: storage)
     if code >= 400:
         raise RuntimeError(f'upload of {path} failed: HTTP {code} {text[:300]}')
     cache[path] = slot['public_url']

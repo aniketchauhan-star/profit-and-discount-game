@@ -27,7 +27,7 @@ MODEL = 'realesr-animevideov3-x2'
 # RGB → the clips' YUV (BT.709, TV range), marked sRGB: as tools/gemini_clean.py writes them.
 TO_CLIP = ('scale=1920:1080:flags=lanczos+accurate_rnd+full_chroma_int:out_color_matrix=bt709:out_range=tv,format=yuv420p,'
            'setparams=range=tv:colorspace=bt709:color_primaries=bt709:color_trc=iec61966-2-1')
-ENCODE = ['-c:v', 'libx264', '-preset', 'slow', '-crf', '20', '-profile:v', 'high', '-pix_fmt', 'yuv420p',
+ENCODE = ['-c:v', 'libx264', '-preset', 'slow', '-crf', '24', '-profile:v', 'high', '-pix_fmt', 'yuv420p',
           '-colorspace', 'bt709', '-color_primaries', 'bt709', '-color_trc', 'iec61966-2-1', '-color_range', 'tv',
           '-movflags', '+faststart']
 

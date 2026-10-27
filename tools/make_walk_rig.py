@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Cuts Aniket's walking figure into the pieces of a jointed cutout, for the game's walk (js/fx.js, Walker).
 
-  python3 tools/make_walk_rig.py      writes "assets/sprites/aniket-rig.png" and prints the pieces' places in it
+  python3 tools/make_walk_rig.py      writes "assets/sprites/aniket-rig.webp" and prints the pieces' places in it
 
 The pieces come from the first frame of the old walk sheet ("source/aniket-walk-clean.png"; its front leg is the
 near one): the upper body (with the far hand by the hip), the hips (the jeans' top, to the crotch: the game draws them
@@ -20,7 +20,7 @@ from PIL import Image, ImageDraw, ImageFilter
 
 ROOT = Path(__file__).resolve().parent.parent
 SHEET = ROOT / 'source' / 'aniket-walk-clean.png'
-OUT = ROOT / 'assets' / 'sprites' / 'aniket-rig.png'
+OUT = ROOT / 'assets' / 'sprites' / 'aniket-rig.webp'
 FW, FH = 358, 614
 FAR = 0.86  # the far leg's shade
 
@@ -74,7 +74,7 @@ def main():
         atlas[:h, x:x + w] = img
         places[name] = [x, 0, w, h, ox, oy]  # where in the atlas, and the piece's top-left in the frame
         x += w + 4
-    Image.fromarray(atlas).save(OUT, optimize=True)
+    Image.fromarray(atlas).save(OUT, lossless=True, quality=100, method=6, exact=True)  # (lossless WebP: every pixel kept)
     print(f'{OUT.relative_to(ROOT)}: {width} x {height}, {OUT.stat().st_size // 1024} KB')
     print('PIECES = {')
     for name, p in places.items():
