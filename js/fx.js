@@ -3158,8 +3158,9 @@
    * A spotlight on what to look at (the user, 2026-10-26: "focus on the things I want to see"): the rest of the screen
    * darkened and blurred, a hole with a soft edge where it isn't: an oval, or with `round`, a rectangle with rounded
    * corners (round the things on show in a shop). on({ x, y, rx, ry, round }) brings it in (or glides the hole there);
-   * on([…, …]) makes a hole round each (the things on show and a card to read beside them). off() takes it away. It
-   * never takes a press.
+   * on([…, …]) makes a hole round each (the things on show, a card beside them, Swifty while she talks). A hole more
+   * opens from its middle, a hole less closes to nothing, the others glide (holes are matched in their order: keep the
+   * same ones first). off() takes it away. It never takes a press.
    */
   function focusVeil(parent) {
     const veil = el('div', 'focus-veil', parent);
@@ -3186,13 +3187,15 @@
       on(spots, ms = 650) {
         const to = [].concat(spots).map(sp => ({ x: sp.x, y: sp.y, rx: sp.rx, ry: sp.ry ?? sp.rx, round: sp.round ?? null }));
         cancelAnimationFrame(gliding);
-        if (!now || now.length !== to.length || !veil.classList.contains('is-on') || reducedMotion) { // (a hole more or less: at once)
+        if (!now || !veil.classList.contains('is-on') || reducedMotion) { // (coming in: at once, as it fades in)
           now = to;
           draw(now);
           veil.classList.add('is-on');
           return wait(reducedMotion ? 0 : 450);
         }
-        const from = now;
+        const none = h => ({ x: h.x, y: h.y, rx: 0, ry: 0, round: h.round }); // (a hole of nothing, at its middle)
+        const from = [...now, ...to.slice(now.length).map(none)]; // a new hole opens from its middle…
+        const goal = [...to, ...now.slice(to.length).map(none)]; // …and one that goes closes to nothing
         const t0 = performance.now();
         return new Promise(resolve => {
           const step = t => {
@@ -3200,10 +3203,14 @@
             const e = k < 0.5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2;
             const mix = (a, b) => a + (b - a) * e;
             // (an oval and a rectangle: the hole takes the new one's shape at once, and glides)
-            now = to.map((b, n) => ({ x: mix(from[n].x, b.x), y: mix(from[n].y, b.y), rx: mix(from[n].rx, b.rx), ry: mix(from[n].ry, b.ry), round: b.round }));
+            now = goal.map((b, n) => ({ x: mix(from[n].x, b.x), y: mix(from[n].y, b.y), rx: mix(from[n].rx, b.rx), ry: mix(from[n].ry, b.ry), round: b.round }));
             draw(now);
             if (k < 1 && veil.isConnected) gliding = requestAnimationFrame(step);
-            else resolve();
+            else {
+              now = to; // (the closed holes go)
+              draw(now);
+              resolve();
+            }
           };
           gliding = requestAnimationFrame(step);
         });

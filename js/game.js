@@ -2954,8 +2954,10 @@
   // down when it goes (she is there only with a bubble). say() after say() changes the bubble; hide(). On the right
   // (`side: 'right'`; the user, 2026-10-26: "Swifty comes in on the right side") she slides in from its edge, her bubble
   // on her left. With `focus` (an FX.focusVeil) she and her words are in the spotlight while she talks (the user: "focus
-  // on Swifty when she is talking"); hide() takes it away too, unless asked to keep it (for what comes next).
-  function partyBird(ctx, scene, { at = null, side = 'left', upTo = 1000, downTo = 640, size = 40, focus = null } = {}) {
+  // on Swifty when she is talking"), beside what `lit()` gives (the spotlight's holes that stay: in a shop, the two things
+  // on show and the card up; the user, 2026-10-27: "every time Swifty says, show the shirts and Swifty"); hide() takes it
+  // away too, unless asked to keep it (for what comes next).
+  function partyBird(ctx, scene, { at = null, side = 'left', upTo = 1000, downTo = 640, size = 40, focus = null, lit = () => [] } = {}) {
     const right = side === 'right';
     const spot = at || (right ? { x: 1740, y: 1066, s: 0.74 } : NOT_QUITE);
     const away = right ? 'translateX(380px)' : 'translateY(320px)'; // (where she comes from, and goes back to)
@@ -2982,7 +2984,7 @@
           ? { anchor: [spot.x - 176, head], corner: 'mr', tip: [spot.x - 120, head + 6], text, size, voice: 'bird', within: [downTo, spot.x - 176] }
           : { anchor: [spot.x + 176, head], corner: 'ml', tip: [spot.x + 120, head + 6], text, size, voice: 'bird', within: [spot.x + 176, upTo] });
         await line.show();
-        if (focus) focus.on(spotOf([bird.root, line.el]));
+        if (focus) focus.on([...lit(), spotOf([bird.root, line.el])]);
         await Promise.all([speak(ctx, line, id, 'bird', bird), ctx.wait(ms)]);
         bird.point();
       },
@@ -3323,7 +3325,11 @@
     const bar = scene.bar;
     const spots = scene.spots;
     const veil = FX.focusVeil(scene.ui);
-    const swifty = partyBird(ctx, scene, { side: 'right', focus: veil });
+    // What the spotlight keeps lit: the two things on show, and beside them the card that is up (the user, 2026-10-27:
+    // "when a panel comes, show the two things and the panel, the rest faded"); Swifty joins them while she talks.
+    let shown = [];
+    const show = (...holes) => veil.on(shown = holes);
+    const swifty = partyBird(ctx, scene, { side: 'right', focus: veil, lit: () => shown });
     // a tap counts at once, even while she still asks (as the price card's buttons do)
     let tapped = null;
     let waiting = null;
@@ -3365,7 +3371,7 @@
     const [L, T] = [Math.min(...sides.map(b => b[0])) - 50, Math.min(...sides.map(b => b[1])) - 50];
     const [R, B] = [Math.max(...sides.map(b => b[0] + b[2])) + 50, Math.max(...sides.map(b => b[1] + b[3])) + 50];
     const onShow = { x: (L + R) / 2, y: (T + B) / 2, rx: (R - L) / 2, ry: (B - T) / 2, round: 48 };
-    veil.on(onShow);
+    show(onShow);
     await ctx.wait(300);
     Sound.sparkle();
     spots.forEach((b, i) => FX.reveal(b, [{ opacity: 0, transform: 'scale(1.25)' }, { opacity: 1, transform: 'none' }],
@@ -3379,7 +3385,7 @@
     }
     await swifty.say(`${it.id}-which`, [{ t: it.ask.replace(/Tap (it|them)!$/, '') }, { t: it.ask.match(/Tap (it|them)!$/)[0], cls: 'key' }]); // (the space ends the first part: a coloured part keeps no space before it)
     await swifty.hide({ keepFocus: true });
-    veil.on(onShow); // (and the two again, to pick)
+    show(onShow); // (and the two, to pick)
     let hint = null;
     for (;;) {
       const i = await choose();
@@ -3402,15 +3408,14 @@
         { t: `${inr(d.mp)} − ${inr(dealOff(d))} = ` }, { t: inr(dealPay(d)), em: true }, { t: '.' }])]);
       FX.reveal(hint, [{ opacity: 0, transform: 'translateY(24px) scale(.96)' }, { opacity: 1, transform: 'none' }], { duration: reducedMotion ? 1 : 420, easing: 'cubic-bezier(.2,.8,.3,1)' });
       await ctx.wait(reducedMotion ? 60 : 450);
-      veil.on(boxOf(hint)); // (what she reads, in the spotlight)
+      show(onShow, boxOf(hint)); // (what her voice reads, lit beside the two)
       await readLit(ctx, 'deal-hint', 'Not quite! Work out both sale prices.', [strip.parts[0]]);
       for (const [n, d] of it.deals.entries()) await readLit(ctx, `${it.id}-sum-${n}`, dealSum(d), [strip.parts[n + 1]]);
-      veil.on([onShow, boxOf(hint)]); // (and the two again, to pick, the sums still there to read)
     }
     await ctx.wait(700);
     if (hint) {
       const old = hint;
-      veil.on(onShow);
+      show(onShow);
       FX.settle(old.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 300, fill: 'forwards' })).then(() => old.remove());
     }
     // the two worked out side by side, the better one ticked; Buy
@@ -3419,16 +3424,16 @@
       deals: it.deals.map(d => ({ name: d.name, pic: d.pic, mp: d.mp, off: dealOff(d), pct: d.pct || null, pay: dealPay(d), best: d === best })),
     });
     await card.open();
+    show(onShow, boxOf(card.el)); // (the card lit beside the two)
     const other = it.deals.find(d => d !== best);
     await swifty.say(`${it.id}-right`, [{ t: 'Correct!', cls: 'stress' }, { t: ` The ${best.name.toLowerCase()} ${best.plural ? 'cost' : 'costs'} ` },
       { t: inr(dealPay(other) - dealPay(best)), em: true }, { t: ' less.' }]);
     await swifty.hide({ keepFocus: true });
-    veil.on(boxOf(card.el)); // (then the card in the spotlight, till Buy is pressed)
+    show(onShow, boxOf(card.el)); // (the two and the card, till Buy is pressed)
     await card.choose();
     if (!ctx.alive()) return;
     // Buy: paid; the money comes out of the wallet, and the thing goes onto the list, ticked (the bar on top, over the
     // spotlight, stays bright).
-    veil.on([onShow, boxOf(card.el)]);
     card.stamp('PAID');
     Sound.kaching();
     Party.bought.add(it.id);
@@ -3470,7 +3475,7 @@
     const items = (bought.length ? bought : PARTY_ITEMS).map(it => ({ name: bestDeal(it).name, icon: bestDeal(it).pic, mp: bestDeal(it).mp, pay: partyPay(it) }));
     const shown = bought.length ? total : PARTY_ITEMS.reduce((sum, it) => sum + partyPay(it), 0); // (from the scene list: the whole list)
     const table = FX.partyTable(scene.ui, { title: 'All Set for the Party!', items, total: shown, left: PARTY_BUDGET - shown });
-    const swifty = partyBird(ctx, scene, { upTo: 1080 }); // (left of the table)
+    const swifty = partyBird(ctx, scene, { upTo: 1080 }); // (under the table, left of the middle)
     await ctx.wait(500);
     FX.confetti(scene.ui);
     Sound.chime();

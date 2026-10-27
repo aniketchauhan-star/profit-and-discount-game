@@ -2738,8 +2738,8 @@ kbd {
 .ic-row:last-child { margin-bottom: 24px; }
 
 /* the end: the table, then Mission Complete, in the middle of the mall (blurred) */
-.scene[data-scene="partydone"] .pt { left: 1100px; top: 150px; }
-.scene[data-scene="partydone"] .pmc { left: 1150px; top: 110px; }
+.scene[data-scene="partydone"] .pt { left: 584px; top: 60px; scale: .95; transform-origin: 50% 0; } /* (in the middle: the user, 2026-10-27; Swifty's lines under them) */
+.scene[data-scene="partydone"] .pmc { left: 545px; top: 130px; width: 830px; } /* (wide enough for the four in a row) */
 /* A shop's two deals (the user's showrooms of 2026-10-26): each a gold ring round the thing and its tag, to tap (a
    button: .scene-ui lets presses through, so it takes them itself); crossed out grey when it isn't the better deal,
    ticked green when it is */
