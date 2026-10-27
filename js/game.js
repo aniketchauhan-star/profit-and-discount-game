@@ -10,6 +10,7 @@
   const ASSETS = 'assets/';
   const STORY = ASSETS + 'story/'; // the story's pictures
   const PARTY = ASSETS + 'party/'; // Party Prep's pictures, after screen 31 (the user's of 2026-10-23)
+  const FILM = ASSETS + 'video/'; // the films' first frames: the pictures of the screens with a film (see Clips)
   // Its shops' pictures (the user's showrooms of 2026-10-26: two of a kind in each, their prices on their tags).
   const PARTY_SHOWROOMS = { shirt: 'shirt-showroom.webp', pants: 'bottomwear-showroom.webp', watch: 'watch-showroom.webp', sunglasses: 'sunglasses-showroom.webp' };
   const reducedMotion = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -21,36 +22,6 @@
   // own speed, and so does changing screens (the auto-advance hold and the cross-fade, see FADE_MS).
   const PACE = 1.5;
   FX.setPace(PACE);
-
-  // Clean strip cut from "aniket walking sprite sheet.png": every frame cut along its own outline
-  // and aligned on the head/torso and the floor line, with a 16px gap between frames.
-  // Aniket walking (FX.Walker): his figure as a jointed cutout, made by tools/make_walk_rig.py from the first frame of the
-  // old walk sheet (source/aniket-walk-clean.png), whose frame coordinates it keeps. anchorX, baselineY: the point on
-  // the floor the screens place him by (as the sheet's frames had it); hip, knee, ankle: the joints; ground: the floor.
-  const WALK_RIG = {
-    src: ASSETS + 'sprites/aniket-rig.webp',
-    frameW: 358, frameH: 614, anchorX: 166, baselineY: 612,
-    hip: [206, 375], knee: [215, 476], ankle: [234, 580], ground: 610,
-    pieces: { // [atlas x, y, w, h, frame x, y], as tools/make_walk_rig.py prints them
-      upper: [0, 0, 216, 350, 53, 10],
-      hips: [220, 0, 123, 85, 118, 324],
-      thigh: [347, 0, 67, 160, 173, 342],
-      shin: [418, 0, 75, 134, 191, 451],
-      shoe: [497, 0, 107, 48, 204, 564],
-      thighFar: [608, 0, 67, 160, 173, 342],
-      shinFar: [679, 0, 75, 134, 191, 451],
-      shoeFar: [758, 0, 107, 48, 204, 564],
-    },
-    // The walk (frame px): two steps of 150 a cycle; each foot planted for 60% of it, landing 80 ahead of the hip, heel
-    // first (toe up 14°, rolling down by 8% of the cycle), heel up onto the ball from 42% (to 32°), then swinging in an
-    // arc 16 high. The heel and the ball are 26 behind and 52 ahead of the ankle. He stands with his feet together under
-    // him, legs straight (the user, 2026-10-23: "his stand position"): the near foot 14 ahead of the hips, the far one 14
-    // behind; he stops as the planted foot gets there, the other coming down beside it, and sets off the same way.
-    gait: {
-      cycle: 300, stance: 0.6, heelStrike: 80, roll: 0.08, heelOff: 0.42, lift: 16,
-      toeUp: 14 * Math.PI / 180, heelUp: 32 * Math.PI / 180, heel: -26, ball: 52, standFront: 14, standBack: -14,
-    },
-  };
 
   // Swifty, the teal bird with a backpack: clean strips cut from "bird fly .png" and "bird talk .png"
   // the same way (each frame cut along its own outline, all frames lined up), 16px gap between frames.
@@ -143,7 +114,7 @@
     },
     {
       id: 'home', title: 'Talking to Dad', sub: 'Dad, I want to buy a book and a new pair of sneakers…',
-      bg: STORY + 'boy-talks-with-father.webp',
+      bg: FILM + 'home.webp',
       kb: { origin: '50% 28%', from: 'scale(1.02)', to: 'scale(1.05) translate(-4px, 3px)' }, // a slow drift, both faces in view
       lamps: [[288, 360, 320]],    // the daylight through the open door
       dust: [180, 120, 1100, 760], // specks floating in the sunlight
@@ -151,7 +122,7 @@
     },
     {
       id: 'outside', title: 'The Bookstore', sub: 'Aniket walks to the store',
-      bg: STORY + 'bookstore-outside-view.webp',
+      bg: FILM + 'outside.webp',
       kb: { origin: '50% 62%', from: 'scale(1.02)', to: 'scale(1.06) translate(-6px, -4px)' },
       lamps: [[167, 321, 230], [767, 334, 170], [1313, 299, 170], [1666, 275, 170]], // the wall lamp; ceiling lights behind the glass
       dust: [420, 260, 1840, 820],
@@ -160,7 +131,7 @@
     },
     {
       id: 'browse', title: 'An Interesting Book', sub: 'This book looks interesting!',
-      bg: STORY + 'aniket-holds-the-book.webp',
+      bg: FILM + 'browse.webp',
       kb: { origin: '54% 40%', from: 'scale(1.02)', to: 'scale(1.08)' },
       lamps: [[1065, 140, 300], [1570, 116, 300]],
       dust: [200, 80, 1800, 800],
@@ -170,7 +141,7 @@
     },
     {
       id: 'ask', title: 'How Much?', sub: 'How much is this book?',
-      bg: STORY + 'aniket-gives-a-book-to-shopkeeper.webp',
+      bg: FILM + 'ask.webp',
       kb: { origin: '50% 38%', from: 'scale(1.02)', to: 'scale(1.065) translate(-6px, 0)' },
       lamps: [[1472, 106, 330]],
       dust: [300, 60, 1500, 700],
@@ -178,7 +149,7 @@
     },
     {
       id: 'shock', title: 'The Printed Price', sub: 'Oh! The price printed on it is ₹1000.',
-      bg: STORY + 'shocked-aniket.webp',
+      bg: STORY + 'shocked-aniket.webp', // (the user, 2026-10-27: his line on the close-up of the book, not on the counter's film)
       kb: { origin: '55% 80%', from: 'scale(1.02)', to: 'scale(1.065)' },
       lamps: [[1292, 128, 300]],
       dust: [150, 60, 1500, 760],
@@ -209,7 +180,7 @@
     },
     {
       id: 'reveal', title: 'I Gave You a Discount', sub: 'Printed ₹1000, but selling it at ₹800',
-      bg: STORY + 'aniket-gives-a-book-to-shopkeeper.webp',
+      bg: FILM + 'reveal.webp',
       kb: { origin: '50% 46%', from: QUIZ_CAMERA, to: QUIZ_DRIFT }, // framed left, like the question screen
       lamps: [[1472, 106, 330]],
       dust: [300, 60, 1500, 700],
@@ -220,7 +191,7 @@
     },
     {
       id: 'discount', title: 'What Is a Discount?', sub: 'Discount? What is that?',
-      bg: STORY + 'aniket-gives-a-book-to-shopkeeper.webp',
+      bg: FILM + 'discount.webp',
       react: PUZZLED, // fades in over the picture when he hears "discount" (see playDiscount)
       kb: { origin: '50% 46%', from: 'scale(1.02)', to: 'scale(1.065) translate(-6px, 0)' },
       lamps: [[1472, 106, 330]],
@@ -235,7 +206,7 @@
       id: 'dcard', title: 'How Much Discount?', sub: 'How much discount did Aniket get on the book?',
       // The user's doc (2026-10-23): a question card at the counter, as on the old Cost/Selling Price question (the camera
       // moves left to make room for it): it starts on screen 9's view (his puzzled face), so the change is seamless.
-      bg: PUZZLED,
+      bg: FILM + 'discount-end.webp', // (the last frame of 9's film: the change is seamless)
       kb: null, // this screen moves its own camera (see playDiscountCard)
       origin: '50% 46%', // the camera origin of screen 9
       lamps: [[1472, 106, 330]],
@@ -261,7 +232,7 @@
     },
     {
       id: 'pay', title: 'Thank You!', sub: 'The shopkeeper gives Aniket the book',
-      bg: STORY + 'aniket-gives-money-to-shopkeeper.webp',
+      bg: FILM + 'pay.webp',
       kb: { origin: '50% 46%', from: 'scale(1.02)', to: 'scale(1.075)' },
       lamps: [[1408, 86, 330]],
       dust: [300, 60, 1500, 700],
@@ -269,71 +240,67 @@
     },
     {
       id: 'exit', title: 'Coming Out of the Bookstore', sub: 'The doors swing open and Aniket comes out',
-      bg: STORY + 'bookstore-outside-view.webp', // the bookstore from the mall, as on screen 3
+      bg: FILM + 'exit.webp', // the bookstore from the mall, as on screen 3
       kb: { origin: '50% 62%', from: 'scale(1.02)', to: 'scale(1.06) translate(-6px, -4px)' },
       lamps: [[167, 321, 230], [767, 334, 170], [1313, 299, 170], [1666, 275, 170]], // the wall lamp; ceiling lights behind the glass
       dust: [420, 260, 1840, 820],
-      shot: 'storefront', // the same view as the next screen, so the fade there changes nothing but what Aniket does
-      setup: setupExit,
       play: playExit,
     },
     {
       id: 'leave', title: 'To the Shoe Shop', sub: 'Let’s help Aniket buy the sneakers!',
-      bg: STORY + 'bookstore-outside-view.webp',
+      bg: FILM + 'exit-end.webp', // (14's film as it ends, blurred: Swifty speaks over it)
       kb: { origin: '50% 62%', from: 'scale(1.02)', to: 'scale(1.06) translate(-6px, -4px)' },
       lamps: [[167, 321, 230], [767, 334, 170], [1313, 299, 170], [1666, 275, 170]],
       dust: [420, 260, 1840, 820],
-      shot: 'storefront',
-      setup: setupLeave,
+      setup: scene => allBlur(scene),
       play: playLeave,
     },
     {
       id: 'sneakers', title: 'The Shoe Shop', sub: 'Wow, nice sneakers! I love them.',
-      bg: STORY + 'he-sees-a-shoe.webp', // Aniket at the stand, pointing at the sneakers: the picture his clips start on
+      bg: FILM + 'sneakers.webp', // Aniket at the stand, pointing at the sneakers (its film's first frame)
       kb: { origin: '63% 66%', from: 'scale(1.02)', to: 'scale(1.07)' }, // eases in towards the price tags
       lamps: [[1740, 160, 260], [1740, 370, 260], [120, 60, 180]], // shelf lights, a ceiling light
       dust: [600, 40, 1900, 720],
-      shot: 'point', // the same view as screen 23, so the change there is a plain dissolve
-      setup: tentCard, // the ₹1800 card, as the picture has it
+      shot: 'sneakers', // (one take on to 17 and 18: the camera carries on, no fade)
       play: playSneakers,
     },
     {
       id: 'shoe', title: 'Tagged Price', sub: 'Aniket points at the ₹1800 tag',
-      bg: STORY + 'he-sees-a-shoe.webp',
+      bg: FILM + 'shoe.webp',
       kb: { origin: '63% 66%', from: 'scale(1.02)', to: 'scale(1.07)' }, // eases in towards the price tags
       lamps: [[1740, 160, 260], [1740, 370, 260], [120, 60, 180]], // shelf lights, a ceiling light
       dust: [600, 40, 1900, 720],
-      shot: 'point', // the same view as screen 22; its clip then moves in on the tags
+      shot: 'sneakers',
       play: playShoe,
     },
     {
       id: 'confused', title: 'The Price Tag', sub: 'The price tagged on it is ₹1800.',
-      bg: STORY + 'he-thinks-about-the-shoes.webp',
-      kb: null, origin: '50% 50%', still: true, // (still: the question card after it is on the same view, so the change is a plain dissolve)
+      bg: FILM + 'confused.webp',
+      kb: { origin: '63% 66%', from: 'scale(1.02)', to: 'scale(1.07)' }, // (as on 16 and 17: its film carries on from theirs)
       lamps: [[1740, 160, 260], [1740, 370, 260], [120, 60, 180]],
       dust: [600, 40, 1900, 720],
-      setup: setupConfused,
+      shot: 'sneakers',
       play: playConfused,
     },
     {
       id: 'smcard', title: 'The Sneakers’ Marked Price', sub: 'The marked price of the sneakers is —',
       // The user's doc (2026-10-23): a question card on the shoe shop, all blurred but the sneakers and their tags, the
       // card on the left; a wrong answer: "Check the price tagged on the sneakers.", and another try.
-      bg: STORY + 'he-thinks-about-the-shoes.webp', // the shoe shop, the card on the left
+      bg: FILM + 'confused-end.webp', // the shoe shop as 18's film ends (the card on the left)
       kb: null, origin: '50% 50%', still: true,
       lamps: [[1740, 160, 260], [1740, 370, 260], [120, 60, 180]], dust: null,
-      setup: standFocus,
+      setup: scene => standFocus(scene, STAND_FOCUS_FILM),
       play: playSneakerCard,
     },
     {
       id: 'offmeans', title: 'What Does 30% OFF Mean?', sub: 'If this is a discount, how much do I actually have to pay?',
       // The user's doc (2026-10-23): Aniket sees the 30% OFF tag and wonders; Swifty: "30% OFF means 30% discount here."
-      bg: STORY + 'he-thinks-about-the-shoes.webp',
+      bg: FILM + 'offmeans.webp',
+      react: STORY + 'he-thinks-about-the-shoes.webp', // (as its film goes: the close view the rest is worked out on)
       kb: null, origin: '63% 66%', still: true, // (screen 19's camera origin: it ends on the same view, so that change is seamless)
       lamps: [[1740, 160, 260], [1740, 370, 260], [120, 60, 180]],
       dust: [600, 40, 1900, 720],
       shot: 'stand',
-      setup: setupConfused,
       play: playOffMeans,
     },
     {
@@ -401,12 +368,11 @@
     },
     {
       id: 'final', title: 'Final Answer', sub: 'After a 30% discount, I will pay ₹1260.',
-      bg: STORY + 'he-sees-a-shoe.webp', // the same view as screens 23–34: Aniket pointing at the tags
+      bg: FILM + 'final.webp', // the same view as screens 23–34: Aniket pointing at the tags
       kb: { origin: '63% 66%', from: 'scale(1.02)', to: 'scale(1.07)' },
       lamps: [[1740, 160, 260], [1740, 370, 260], [120, 60, 180]],
       dust: [600, 40, 1900, 720],
       shot: 'stand',
-      setup: tentCard,
       play: playFinal,
     },
     {
@@ -426,33 +392,33 @@
     },
     {
       id: 'return', title: 'Back Home', sub: 'How was your shopping?',
-      bg: STORY + 'boy-returns-home.webp',
+      bg: FILM + 'return.webp',
       kb: { origin: '50% 30%', from: 'scale(1.02)', to: 'scale(1.05) translate(4px, 3px)' }, // a slow drift, both faces in view
       lamps: [[1030, 250, 300]],   // the daylight through the far window
       dust: [560, 80, 1300, 720],  // specks floating in the sunlight
       play: playReturn,
     },
     // Party Prep (the user's pictures of 2026-10-23, after screen 31): a message: Rohan's birthday party is tonight. His
-    // father gives him ₹5,000 (their talk, in the clips made for it), and at the mall Aniket walks where the player steers
+    // father gives him ₹5,000 (their talk, in its films), and at the mall Aniket walks where the player steers
     // him, with four arrows, on its map seen from above: into a shop, and its own picture comes. In each he works out the
     // sale price of what he needs, and buys it. Then all set for the party.
     {
       id: 'invite', title: 'A Party Message', sub: 'Rohan’s birthday party is tonight!',
-      bg: PARTY + 'party-message.webp',
+      bg: FILM + 'invite.webp',
       kb: { origin: '62% 40%', from: 'scale(1.02)', to: 'scale(1.05)' },
       lamps: [[220, 240, 260]], dust: [200, 80, 1400, 700],
       play: playInvite,
     },
     {
       id: 'partymoney', title: '₹5,000 for the Party', sub: 'Here’s ₹5,000.',
-      bg: STORY + 'father-gives-him-money.webp',
+      bg: FILM + 'partymoney.webp',
       kb: { origin: '55% 40%', from: 'scale(1.02)', to: 'scale(1.05) translate(-4px, 3px)' },
       lamps: [[1856, 250, 300]], dust: [1100, 60, 1900, 640],
       play: playPartyMoney,
     },
     {
       id: 'partydeal', title: 'Find the Best Deals', sub: 'Then I’m definitely finding the best offers!',
-      bg: STORY + 'boy-stands-and-talks.webp',
+      bg: FILM + 'partydeal.webp',
       kb: { origin: '52% 30%', from: 'scale(1.02)', to: 'scale(1.05) translate(4px, 3px)' }, // a slow drift, both faces in view
       lamps: [[1520, 300, 300]], dust: [700, 80, 1500, 640],
       play: playPartyDeal,
@@ -556,269 +522,57 @@
   // At home: Aniket, ready to go out, tells his father what he wants to buy at the mall; his father says yes, with a
   // word of advice; Aniket promises. One of them talks at a time.
   async function playHome(ctx, scene) {
-    const L = scene.layer;
-    const say = async (bubble, id, who) => {
-      const line = FX.bubble(L, Object.assign({ voice: who }, bubble));
-      await line.show();
-      await speak(ctx, line, id, who);
-      return line;
-    };
-    await ctx.wait(700);
-    const plan = await say({
+    await pauseUnlessFilm(ctx, scene, 700);
+    const plan = await picSay(ctx, scene, {
       anchor: [832, 300], corner: 'bl', tip: [742, 206], // on the wall right of his face, the tail at his mouth
       text: 'Dad, I want to buy\na book and a new\npair of sneakers\nfrom the mall.',
     }, 'plan', 'boy');
-    await ctx.wait(900);
-    await plan.hide();
-    await ctx.wait(250);
-    const advice = await say({
+    await nextLine(ctx, scene, plan, 'advice');
+    const advice = await picSay(ctx, scene, {
       anchor: [1262, 236], corner: 'br', tip: [1318, 332], // on the wall up-left of his head, the tail at his mouth
       text: 'Sure. But compare\nthe prices and\nbuy wisely.',
     }, 'advice', 'dad');
-    await ctx.wait(900);
-    await advice.hide();
-    await ctx.wait(250);
-    await say({ anchor: [800, 172], corner: 'bl', tip: [742, 206], text: 'I will!' }, 'promise', 'boy'); // up-right of his face
-    ctx.advance(3000); // then off to the mall
+    await nextLine(ctx, scene, advice, 'promise');
+    await picSay(ctx, scene, { anchor: [800, 172], corner: 'bl', tip: [742, 206], text: 'I will!' }, 'promise', 'boy'); // up-right of his face
+    advanceAfterFilm(ctx, scene); // then off to the mall
   }
 
-  // Aniket walks up to the bookstore. With its clip (s03-walk-in, the meeting of 2026-10-21: the door opens and he goes
-  // in, a real walk), the clip plays and the screen moves on as it ends. Without it, the game draws his walk.
+  // Aniket walks up to the bookstore and in (its film; the meeting of 2026-10-21: the door opens and he goes in, a real
+  // walk), and the screen moves on as it ends. Without it (reduced motion), its picture, the shop's sign lit up.
   async function playOutside(ctx, scene) {
-    if (Clips.has('s03-walk-in')) {
-      const v = scene.clipEls && scene.clipEls['s03-walk-in'];
-      const left = v && v.duration ? v.duration - v.currentTime : VIDEO_CLIPS['s03-walk-in'];
-      await ctx.wait(Math.max(0, left * 1000 - 400), { real: true });
+    if (scene.rolling) {
+      await Clips.until(ctx, scene, Clips.of(scene).seconds - 0.4);
       ctx.advance(400);
       return;
     }
-    const L = scene.layer;
-    const walker = new FX.Walker(L, WALK_RIG);
-    const from = { x: -190, y: 1016, s: 0.79 }; // off-screen left, slightly closer to the camera
-    const to = { x: 925, y: 986, s: 0.76 };     // front of the store, by the display table
-    walker.place(from.x, from.y, from.s);
-    walker.setFrame('idle');
-    const pan = x => (x / STAGE_W) * 1.6 - 0.8;
-
-    await ctx.wait(600);
-    Sound.duck(true);
-    await walker.walk(ctx, { from, to, speed: 265, decel: 230, onStep: x => Sound.step(pan(x)) });
-    Sound.step(pan(to.x), 0.5);
-    Sound.duck(false);
-    walker.idle(true);
-
-    await ctx.wait(300);
-    const headTop = to.y - (WALK_RIG.baselineY - 10) * to.s;
-    FX.exclaim(L, to.x + 22, headTop - 34);
-    Sound.ding();
-
-    await ctx.wait(500);
-    FX.shine(L, SHOP_SIGN, { duration: 1400, width: 260 });
+    await ctx.wait(900);
+    FX.shine(scene.layer, SHOP_SIGN, { duration: 1400, width: 260 });
     Sound.sparkle();
-
     await ctx.wait(700);
     ctx.advance(1800);
   }
 
-  // The bookstore's glass doors, opening. The picture's doorway (stage px: x 694–1429, its top from y 289 to 225, its
-  // bottom from y 842 to 881) is covered by DOORWAY: the same picture with the doors taken out (their seam, handles
-  // and fittings painted out, and the glass's haze off, so the shop is seen clearly through the open doorway). Over it,
-  // the two door leaves, drawn in one SVG: pale glass (the haze the picture's glass has, so closed they look just as it
-  // does), a sheen, their edges, the pull handles and the fittings. They swing open into the shop on their hinges, the
-  // left one on the doorway's left side and the right one on its right, drawn in perspective by doorLeaf (the same in
-  // every browser). Anything put under them (under) is seen through the glass while they are closed.
-  const DOORWAY = { src: ASSETS + 'ui/bookstore-doorway.webp', x: 694, y: 225 };
-  // Each leaf, closed: its hinge (x, and its top and bottom there), its free edge (the same), its width, and the side
-  // it swings from (+1: the hinge on the left, the leaf to its right; −1: the other way round).
-  const DOOR_LEAVES = [
-    { hinge: [694, 289, 842], free: [1044, 258.6, 860.6], dir: 1 },
-    { hinge: [1429, 225, 881], free: [1044, 258.6, 860.6], dir: -1 },
-  ];
-  const DOOR_OPEN = 68;       // how far they swing (deg)
-  const DOOR_EYE = 1800;      // how far the eye is from the doors (stage px): the depth of the perspective
-  const HANDLE = { from: 32, w: 15, top: 504, bottom: 698 };   // the pull handle: its distance from the free edge, width, top and bottom
-  let doorIds = 0;
-
-  // A point on a leaf turned `deg` into the shop, in stage px: u its distance from the hinge (closed), y its height
-  // (closed). The leaf turns about its hinge; seen from the front, a point further in looks smaller, towards the
-  // hinge's middle height.
-  function doorPoint(lf, deg, u, y) {
-    const a = (deg * Math.PI) / 180;
-    const k = DOOR_EYE / (DOOR_EYE + u * Math.sin(a)); // further away: smaller
-    const mid = (lf.hinge[1] + lf.hinge[2]) / 2;
-    return [lf.hinge[0] + lf.dir * u * Math.cos(a) * k, mid + (y - mid) * k];
-  }
-
-  // One leaf's shapes at `deg`, as SVG markup: the glass, its sheen, its edges, the dark free edge, the handle, the fittings.
-  function doorLeaf(lf, deg, id, i) {
-    const width = Math.abs(lf.free[0] - lf.hinge[0]);
-    const edgeY = (u, which) => lf.hinge[which] + (lf.free[which] - lf.hinge[which]) * (u / width); // the top (1) or bottom (2) at u
-    const pt = (u, y) => doorPoint(lf, deg, u, y).map(v => v.toFixed(1)).join(',');
-    const quad = (u0, u1, y0f, y1f) => [pt(u0, y0f(u0)), pt(u1, y0f(u1)), pt(u1, y1f(u1)), pt(u0, y1f(u0))].join(' ');
-    const top = u => edgeY(u, 1);
-    const bottom = u => edgeY(u, 2);
-    const glass = quad(0, width, top, bottom);
-    const free = [pt(width, top(width)), pt(width, bottom(width))];
-    const hu = width - HANDLE.from;
-    const handle = quad(hu - HANDLE.w, hu, () => HANDLE.top, () => HANDLE.bottom);
-    const fitTop = quad(width - 50, width - 2, u => top(u) + 2, u => top(u) + 16);
-    const fitBottom = quad(width - 50, width - 2, u => bottom(u) - 22, u => bottom(u) - 4);
-    return `<polygon points="${glass}" fill="rgb(242,234,226)" fill-opacity=".22"/>
-      <polygon points="${glass}" fill="url(#${id}s${i})"/>
-      <polygon points="${glass}" fill="none" stroke="rgba(40,60,80,.35)" stroke-width="2"/>
-      <line x1="${free[0].split(',')[0]}" y1="${free[0].split(',')[1]}" x2="${free[1].split(',')[0]}" y2="${free[1].split(',')[1]}" stroke="rgba(25,40,60,.7)" stroke-width="4"/>
-      <polygon points="${handle}" fill="url(#${id}h)" stroke="rgba(60,40,25,.45)" stroke-linejoin="round"/>
-      <polygon points="${fitTop}" fill="#a9a29a" stroke="rgba(60,60,60,.4)"/>
-      <polygon points="${fitBottom}" fill="#a9a29a" stroke="rgba(60,60,60,.4)"/>`;
-  }
-
-  function bookstoreDoors(layer, { open = false } = {}) {
-    // decoded before the screen is first painted: so it never shows the picture's closed doors, even for a moment
-    Object.assign(el('img', 'bs-doorway', layer), { decoding: 'sync', src: DOORWAY.src, alt: '', draggable: false })
-      .style.cssText = `left:${DOORWAY.x}px;top:${DOORWAY.y}px`;
-    const id = 'bsd' + (++doorIds);
-    const holder = el('div', 'bs-doors', layer);
-    holder.innerHTML = `<svg width="1920" height="1080" viewBox="0 0 1920 1080" aria-hidden="true">
-      <defs>
-        ${DOOR_LEAVES.map((lf, i) => `<linearGradient id="${id}s${i}" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".42" stop-color="#fff" stop-opacity="0"/>
-          <stop offset=".5" stop-color="#fff" stop-opacity=".22"/><stop offset=".58" stop-color="#fff" stop-opacity="0"/>
-          <stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>`).join('')}
-        <linearGradient id="${id}h" x1="0" y1="0" x2="1" y2="0">
-          <stop offset="0" stop-color="#6f5a45"/><stop offset=".35" stop-color="#ead9c4"/><stop offset=".62" stop-color="#b39579"/><stop offset="1" stop-color="#6a5440"/>
-        </linearGradient>
-      </defs>
-      <g class="bs-leaves"></g>
-    </svg>`;
-    const leaves = holder.querySelector('.bs-leaves');
-    const draw = deg => { leaves.innerHTML = DOOR_LEAVES.map((lf, i) => doorLeaf(lf, deg, id, i)).join(''); };
-    draw(open ? DOOR_OPEN : 0);
-    return {
-      // Puts `node` (e.g. Aniket inside the shop) between the doorway and the doors: seen through the glass.
-      under(node) {
-        layer.insertBefore(node, holder);
-      },
-      // The doors swing open into the shop (a little too far, then back), with the shop's bell.
-      open(ctx) {
-        Sound.chime();
-        Sound.swish();
-        if (reducedMotion) {
-          draw(DOOR_OPEN);
-          return ctx.wait(0);
-        }
-        const ms = 900;
-        const easeOut = t => 1 - Math.pow(1 - t, 3);
-        const easeInOut = t => (t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2);
-        return new Promise((resolve, reject) => {
-          const t0 = performance.now();
-          const step = now => {
-            if (!ctx.alive() || !holder.isConnected) return reject(CANCELLED);
-            const t = Math.min(1, (now - t0) / ms);
-            draw(t < 0.75 ? (DOOR_OPEN + 4) * easeOut(t / 0.75) : DOOR_OPEN + 4 - 4 * easeInOut((t - 0.75) / 0.25));
-            if (t < 1) requestAnimationFrame(step);
-            else resolve();
-          };
-          requestAnimationFrame(step);
-        });
-      },
-    };
-  }
-
-  // Where Aniket stands once he is out of the doors (the next screen starts him there).
-  const OUT_OF_THE_DOORS = { x: 1070, y: 958, s: 0.7 };
-
-  // Coming out of the bookstore (the same view as screen 3). With its clip (s20-out): Aniket comes out of the open door,
-  // stops in front of the shop, smiling, and walks off to the right; the next screen's clip carries on from its last
-  // frame, as it ends. Without it: he walks up to the doors inside the shop,
-  // seen through the glass; the doors swing open (the shop's bell), and he walks out through them into the mall, coming
-  // closer. The doors are there from the screen's first frame (setup).
-  function setupExit(scene) {
-    if (!Clips.has('s20-out')) scene.doors = bookstoreDoors(scene.layer); // (the clip has its own)
-  }
-
+  // Coming out of the bookstore: its film (Aniket comes out of the doors and walks off along the mall), and the screen
+  // moves on as it ends. Without it (reduced motion), its picture.
   async function playExit(ctx, scene) {
-    if (Clips.has('s20-out')) {
-      const v = scene.clipEls && scene.clipEls['s20-out'];
-      const left = v && v.duration ? v.duration - v.currentTime : VIDEO_CLIPS['s20-out']; // (the clip started with the screen)
-      await ctx.wait(Math.max(0, left * 1000 - 250), { real: true });
-      ctx.advance(250); // on as it ends, so he walks straight on into the next screen's clip
+    if (scene.rolling) {
+      await Clips.until(ctx, scene, Clips.of(scene).seconds - 0.25);
+      ctx.advance(250);
       return;
     }
-    const L = scene.layer;
-    const doors = scene.doors;
-    const walker = new FX.Walker(L, WALK_RIG);
-    doors.under(walker.root); // inside the shop, behind the glass
-    const inside = { x: 760, y: 822, s: 0.5 };      // inside the shop, by the left-hand door
-    const atDoors = { x: 905, y: 830, s: 0.52 };    // at the doors
-    walker.place(inside.x, inside.y, inside.s);
-    walker.setFrame('idle');
-    walker.root.style.opacity = '0';
-    const pan = x => (x / STAGE_W) * 1.6 - 0.8;
-
-    await ctx.wait(500);
-    walker.root.style.opacity = '';
-    FX.settle(walker.root.animate([{ opacity: 0 }, { opacity: 1 }], { duration: reducedMotion ? 1 : 400, easing: 'ease-out' }));
-    Sound.duck(true, 'walk');
-    try {
-      await walker.walk(ctx, { from: inside, to: atDoors, speed: 170, decel: 90, onStep: x => Sound.step(pan(x), 0.5) });
-    } finally {
-      Sound.duck(false, 'walk');
-    }
-    await ctx.wait(250);
-    await doors.open(ctx);
-    await ctx.wait(200);
-    Sound.duck(true, 'walk');
-    try {
-      await walker.walk(ctx, { from: atDoors, to: OUT_OF_THE_DOORS, speed: 200, decel: 120, onStep: x => Sound.step(pan(x)) });
-    } finally {
-      Sound.duck(false, 'walk');
-    }
-    walker.idle(true);
+    await ctx.wait(600);
     ctx.advance(1600); // then on to the next shop
   }
 
-  // On to the shoe shop (the same view): Aniket walks off along the mall to the right. With its clip (s21-walk, the rest
-  // of the take s20-out comes from), he walks on past the open door. Without it, the doors stand open behind
-  // him and he walks off, coming a little closer as he goes: the open doors and Aniket, just out of them, are there from
-  // the screen's first frame (setup), exactly as the screen before left them. Either way, the cut between the two
-  // changes nothing.
-  function setupLeave(scene) {
-    if (Clips.has('s21-walk')) return;
-    bookstoreDoors(scene.layer, { open: true });
-    const walker = new FX.Walker(scene.layer, WALK_RIG);
-    walker.place(OUT_OF_THE_DOORS.x, OUT_OF_THE_DOORS.y, OUT_OF_THE_DOORS.s);
-    walker.setFrame('idle');
-    walker.idle(true);
-    scene.walker = walker;
-  }
-
+  // On to the shoe shop: the last frame of the walk out of the bookstore, blurred (Swifty is what matters now). She
+  // sums up the bookstore and says what comes next (the user's doc, 2026-10-23), in her bubble: she pops up in the
+  // bottom-left corner, says it, and goes.
   async function playLeave(ctx, scene) {
-    if (Clips.has('s21-walk')) {
-      const v = scene.clipEls && scene.clipEls['s21-walk'];
-      const left = v && v.duration ? v.duration - v.currentTime : VIDEO_CLIPS['s21-walk']; // (the clip started with the screen)
-      await ctx.wait(Math.max(0, left * 1000 - 200), { real: true }); // he walks on and away
-    } else {
-      const walker = scene.walker;
-      const from = OUT_OF_THE_DOORS;               // just out of the doors, as the screen before left him
-      const to = { x: 2200, y: 1012, s: 0.8 };      // off to the right
-      const pan = x => (x / STAGE_W) * 1.6 - 0.8;
-
-      await ctx.wait(700);
-      walker.idle(false);
-      Sound.duck(true, 'walk');
-      try {
-        await walker.walk(ctx, { from, to, speed: 260, decel: 40, onStep: x => Sound.step(pan(x)) });
-      } finally {
-        Sound.duck(false, 'walk');
-      }
-    }
-    // Then Swifty sums up the bookstore and says what comes next (the user's doc, 2026-10-23), in her bubble: she pops up
-    // in the bottom-left corner (Aniket has walked on to the right), says it, and goes.
-    await ctx.wait(300);
+    await ctx.wait(700);
     await swiftyCornerLines(ctx, scene, [
       ['book-done', [{ t: 'Aniket bought the book and understood the ' }, { t: 'discount', cls: 'key' }, { t: '.' }]],
       ['to-sneakers', [{ t: 'Let’s help Aniket buy the ' }, { t: 'sneakers', cls: 'stress' }, { t: '!' }]],
-    ], { upTo: 1180 }); // (clear of him)
+    ], { upTo: 1180 });
     ctx.advance(900); // then on to the shoe shop
   }
 
@@ -826,8 +580,7 @@
   // written on its cover as if printed there: centred in the cover's top part and slanted with it (the books lean back
   // on the stand). On the pictures' layer, so they move with the camera. x, y: the title's centre (stage px); slant: how
   // far the cover leans (deg); tone: light words (on the green and the night-blue covers) or dark ones (on the pale
-  // sunset sky). The screen's clips (s05-idle, s05-aniket) show the stand a little smaller and higher up and to the left
-  // than the picture does: while one is on, the names move with it (css: .stand-names).
+  // sunset sky). (The screen's film starts on its picture and its camera stays put, so they stay on the covers.)
   const STAND_BOOKS = [
     { lines: ['Magic', 'Tree'], x: 1357, y: 679, slant: 12.8, tone: 'light' },
     { lines: ['Golden', 'Hills'], x: 1500, y: 684, slant: 10.7, tone: 'dark' },
@@ -843,102 +596,73 @@
     });
   }
 
-  // A piece of a screen's picture laid back over its clips, where a clip draws it wrong (the clips sit exactly on their
-  // pictures, so it lines up); its edges fade out (css: .pic-patch). box: [x, y, w, h] (stage px). Just over the clips,
-  // so it moves with the camera, and stays as the picture shrinks into a teaching screen's photo (only what is on the
-  // picture fades then).
-  function pictureOver(scene, [x, y, w, h]) {
-    if (!scene.patchBox) return null; // (no clips: the picture is all there is)
-    return el('div', 'pic-patch', scene.patchBox, {
-      left: `${x}px`, top: `${y}px`, width: `${w}px`, height: `${h}px`,
-      backgroundImage: `url("${scene.bg}")`, backgroundPosition: `${-x}px ${-y}px`,
-    });
-  }
-
   async function playBrowse(ctx, scene) {
-    const L = scene.layer;
-    FX.glow(L, 1030, 510, 420, 420, { cls: 'glow--book', delay: 0 });
-
-    // He picks the book up first (its clip, once it is made: the user, 2026-10-21), then says what he thinks of it.
-    const pickup = Clips.has('s05-pickup') ? VIDEO_CLIPS['s05-pickup'] : 0;
-    await (pickup ? ctx.wait(pickup * 1000 - 300, { real: true }) : ctx.wait(700));
-    const line = FX.bubble(L, {
+    FX.glow(scene.layer, 1030, 510, 420, 420, { cls: 'glow--book', delay: 0 });
+    await pauseUnlessFilm(ctx, scene, 700);
+    await picSay(ctx, scene, {
       anchor: [962, 296], corner: 'bl', tip: [905, 334], // right of his face, above the book; the tail at his mouth
-      text: 'This book looks\ninteresting!', voice: 'boy', rotate: -1.5,
-    });
-    await line.show();
-    await speak(ctx, line, 'browse', 'boy');
-    ctx.advance(3000); // "wait 3 seconds, then next screen"
+      text: 'This book looks\ninteresting!', rotate: -1.5,
+    }, 'browse', 'boy');
+    advanceAfterFilm(ctx, scene); // "wait 3 seconds, then next screen"
   }
 
   async function playAsk(ctx, scene) {
-    const L = scene.layer;
-
     // First Aniket asks…
-    await ctx.wait(700);
-    const question = FX.bubble(L, {
-      anchor: [778, 318], corner: 'bl', tip: [738, 372],
-      text: 'How much is\nthis book?', voice: 'boy', rotate: -1.5,
-    });
-    await question.show();
-    await speak(ctx, question, 'ask', 'boy');
-    await ctx.wait(1100);
+    await pauseUnlessFilm(ctx, scene, 700);
+    const question = await picSay(ctx, scene, {
+      anchor: [778, 318], corner: 'bl', tip: [738, 372], text: 'How much is\nthis book?', rotate: -1.5,
+    }, 'ask', 'boy');
 
     // …his bubble goes away, then the shopkeeper answers (never both on screen at once).
-    await question.hide();
-    await ctx.wait(250);
-    const answer = FX.bubble(L, {
-      anchor: [1262, 318], corner: 'br', tip: [1300, 372],
-      text: [{ t: 'It’s ' }, { t: '₹800', em: true }, { t: '!' }], voice: 'man', rotate: 1.5,
-    });
-    await answer.show();
-    await speak(ctx, answer, 'price', 'man');
+    await nextLine(ctx, scene, question, 'price');
+    const answer = await picSay(ctx, scene, {
+      anchor: [1262, 318], corner: 'br', tip: [1300, 372], text: [{ t: 'It’s ' }, { t: '₹800', em: true }, { t: '!' }], rotate: 1.5,
+    }, 'price', 'man');
     answer.emphasize();
     Sound.ding();
-    await ctx.wait(1300);
 
     // Then (the user's doc, 2026-10-23) Aniket finds it too much, and the shopkeeper sends him to the price on the book:
     // one bubble at a time, as before.
-    await answer.hide();
-    await ctx.wait(250);
-    const costly = FX.bubble(L, {
+    await nextLine(ctx, scene, answer, 'costly');
+    const costly = await picSay(ctx, scene, {
       anchor: [778, 318], corner: 'bl', tip: [738, 372],
-      text: [{ t: 'It is too ' }, { t: 'costly', cls: 'stress' }, { t: ', uncle.' }], voice: 'boy', rotate: -1.5,
-    });
-    await costly.show();
-    await speak(ctx, costly, 'costly', 'boy');
-    await ctx.wait(1000);
-    await costly.hide();
-    await ctx.wait(250);
-    const check = FX.bubble(L, {
+      text: [{ t: 'It is too ' }, { t: 'costly', cls: 'stress' }, { t: ', uncle.' }], rotate: -1.5,
+    }, 'costly', 'boy');
+    await nextLine(ctx, scene, costly, 'check-price');
+    const check = await picSay(ctx, scene, {
       anchor: [1262, 318], corner: 'br', tip: [1300, 372],
-      text: [{ t: 'Check the ' }, { t: 'printed price', cls: 'stress' }, { t: ' on the book.' }], voice: 'man', rotate: 1.5,
-    });
-    await check.show();
-    await speak(ctx, check, 'check-price', 'man');
+      text: [{ t: 'Check the ' }, { t: 'printed price', cls: 'stress' }, { t: ' on the book.' }], rotate: 1.5,
+    }, 'check-price', 'man');
     check.emphasize();
-    ctx.advance(3000); // then he looks at the book's price
+    advanceAfterFilm(ctx, scene); // then he looks at the book's price
+  }
+
+  // A line said in the voice of `who`, for the screen whose script `ctx` runs; never once the player has left that screen
+  // (a script carrying on after its line was cut short by Next or Back must not speak over the next screen).
+  function sayHere(ctx, id, text, who, opts) {
+    if (!ctx.alive()) return Promise.reject(CANCELLED);
+    return Voice.say(id, text, who, opts);
+  }
+
+  // Typed while the voice says it. On a film, it starts as the speaker's lips are about to move (see lineDue): if the
+  // line before kept it waiting, its recording starts that much into its quiet start, so the words still come with
+  // the lips. And it is done as the words are (the typing ends with them), not after the quiet its recording ends
+  // with: the next line, due on the film, may start then.
+  async function sayTyped(ctx, line, id, words, who, typing) {
+    const onFilm = await lineDue(ctx, id);
+    const from = onFilm ? Math.min(VOICE_LEAD, filmLate(SCENES[Game.index], id)) : 0;
+    const typed = line.type(ctx, from && typing.seconds ? Object.assign({}, typing, { seconds: typing.seconds - from }) : typing);
+    const saying = sayHere(ctx, id, words, who, { from });
+    if (onFilm) {
+      saying.catch(() => {});
+      await typed;
+    } else await Promise.all([typed, saying]);
   }
 
   // One part of a bubble split into parts (see FX.bubble), typed while it is spoken (in step with its recording).
-  // A line said in the voice of `who`, for the screen whose script `ctx` runs; never once the player has left that screen
-  // (a script carrying on after its line was cut short by Next or Back must not speak over the next screen).
-  function sayHere(ctx, id, text, who) {
-    if (!ctx.alive()) return Promise.reject(CANCELLED);
-    const showing = Clips.talk(SCENES[Game.index], id); // the speaker's talking clip, if this picture has one (see Clips)
-    if (!showing) return Voice.say(id, text, who);
-    // The voice starts as the clip comes on screen (at most 0.4 s later), so the lips move with the words from the start
-    // (the meeting of 2026-10-21: the movement came a little after the voice). The line is done once the speaker is done
-    // in the clip too (the user, 2026-10-22: "no need to cut the video, play full video"): a natural pause, and the next
-    // line's clip never cuts this one short while its speaker still moves (see CLIP_REST).
-    const saying = Promise.race([showing, new Promise(r => setTimeout(r, 400))])
-      .then(() => (ctx.alive() ? Voice.say(id, text, who) : Promise.reject(CANCELLED)));
-    return Promise.all([saying, showing.done]).then(([said]) => said);
-  }
-
   async function speakPart(ctx, line, part, id, words, who, speaker) {
     if (speaker) speaker.talk();
-    await Promise.all([line.type(ctx, { part, blips: !Voice.available, seconds: Voice.seconds(words) }), sayHere(ctx, id, words, who)]);
+    await sayTyped(ctx, line, id, words, who, { part, blips: !Voice.available, seconds: Voice.seconds(words) });
     if (speaker) speaker.idle();
   }
 
@@ -946,7 +670,7 @@
   // typing blips then). `speaker` (Swifty) moves her beak while she talks.
   async function speak(ctx, line, id, who, speaker) {
     if (speaker) speaker.talk();
-    await Promise.all([line.type(ctx, { blips: !Voice.available, seconds: Voice.seconds(line.words) }), sayHere(ctx, id, line.words, who)]);
+    await sayTyped(ctx, line, id, line.words, who, { blips: !Voice.available, seconds: Voice.seconds(line.words) });
     if (speaker) speaker.idle();
   }
 
@@ -1159,15 +883,17 @@
     FX.shine(L, MONEY, { duration: 900, width: 140 });
 
     await ctx.wait(450);
-    FX.badge(L, PRICE_TAG).pop(); // pop sound + a small ₹800 just above the money
+    const badge = FX.badge(L, PRICE_TAG);
+    badge.pop(); // pop sound + a small ₹800 just above the money
 
     await ctx.wait(500);
     Sound.kaching();
-    await ctx.wait(700);
-    const thanks = FX.bubble(L, Object.assign({ text: 'Thank you, uncle!', voice: 'boy', rotate: -1.5 }, THANKS_AT));
-    await thanks.show();
-    await speak(ctx, thanks, 'thanks', 'boy');
-    ctx.advance(3000); // then out of the bookstore
+    if (scene.rolling) { // (on the film the money changes hands: the ₹800 goes with it)
+      ctx.wait(1100, { real: true }).then(() => badge.el.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 400, fill: 'forwards' }), () => {});
+    }
+    await pauseUnlessFilm(ctx, scene, 700);
+    await picSay(ctx, scene, Object.assign({ text: 'Thank you, uncle!', rotate: -1.5 }, THANKS_AT), 'thanks', 'boy');
+    advanceAfterFilm(ctx, scene); // then out of the bookstore
   }
   // His bubble: right of his face, between the two of them, its tail at his mouth (story/aniket-gives-money-to-shopkeeper.webp,
   // stage px), as on screen 4.
@@ -1274,20 +1000,19 @@
     }
   }
 
-  // He looks at the price printed on the book (the shopkeeper told him to): it says ₹1000!
+  // He looks at the price printed on the book (the shopkeeper told him to): it says ₹1000! On the close-up of the book
+  // (the user, 2026-10-27: this line here, not on the counter's film).
   async function playShock(ctx, scene) {
     await ctx.wait(150);
     Sound.shock();
     jolt(scene);
     FX.ring(scene.layer, STICKER.shock);
     await ctx.wait(650);
-    const line = FX.bubble(scene.layer, {
+    const line = await picSay(ctx, scene, {
       anchor: [1030, 350], corner: 'bl', tip: [966, 300], // right of his head, the tail at his hair (his face is turned away)
       text: [{ t: 'Oh! The price printed on it is ' }, { t: '₹1000', em: true }, { t: '.' }], // (the user's doc, 2026-10-23)
-      voice: 'boy', rotate: -1.5,
-    });
-    await line.show();
-    await speak(ctx, line, 'shock', 'boy');
+      rotate: -1.5,
+    }, 'shock', 'boy');
     line.emphasize();
     ctx.advance(3000); // then Swifty says what it is
   }
@@ -1557,47 +1282,59 @@
 
   async function playReveal(ctx, scene) {
     const card = FX.reduction(scene.ui, REDUCTION_CARD);
-    await ctx.wait(500);
+    await pauseUnlessFilm(ctx, scene, 500);
     const fly = async (from, to, ms) => {
       await FX.flyAcross(scene.ui, from, to, { ms, lift: 70 });
       await ctx.wait(0); // (stops here if the player has left meanwhile)
     };
     let line = null;
     const part = async i => {
-      if (line) {
-        await line.hide();
-        await ctx.wait(120);
-      }
-      line = revealPart(scene, i);
-      await line.show();
-      await speak(ctx, line, `reveal-${i + 1}`, 'man');
+      const id = `reveal-${i + 1}`;
+      if (line) await nextLine(ctx, scene, line, id, 0, 120);
+      line = await picSay(ctx, scene, Object.assign({}, REVEAL_LINE, { text: REVEAL_PARTS[i] }), id, 'man');
       return line.el.querySelector('.em');
+    };
+    // What the card does with a line plays while the film goes on to the next one (without a film, before it).
+    const meanwhile = async step => {
+      const done = step();
+      done.catch(() => {});
+      if (!scene.rolling) {
+        await done;
+        await ctx.wait(400);
+      }
+      return { done }; // (not the promise itself: awaiting this must not wait for it)
     };
     // "See, the price printed on the book is ₹1000,": the ₹1000 flies out to the card, which swings in to catch it.
     const said1000 = await part(0);
-    const flying = fly(said1000, card.prices.from, 1000);
-    card.enter();
-    await flying;
-    await card.pasteFrom();
-    await ctx.wait(400);
+    const first = await meanwhile(async () => {
+      const flying = fly(said1000, card.prices.from, 1000);
+      card.enter();
+      await flying;
+      await card.pasteFrom();
+    });
     // "but I am selling it to you at ₹800.": the red arrow grows down, and the ₹800 flies into the bottom box.
     const said800 = await part(1);
-    await card.arrowDown();
-    await fly(said800, card.prices.to, 900);
-    await card.pasteTo();
-    await ctx.wait(400);
+    await first.done;
+    const second = await meanwhile(async () => {
+      const flying = fly(said800, card.prices.to, 900); // (at once: on the film its bubble may go before the arrow is done)
+      await card.arrowDown();
+      await flying;
+      await card.pasteTo();
+    });
     // "I gave you a discount.": the word comes beside the arrow (how much is the question on screen 10).
     await part(2);
-    await card.pasteCut();
+    const cut = second.done.then(() => card.pasteCut());
+    cut.catch(() => {});
+    if (!scene.rolling) await cut; // (on the film the card finishes as it goes on: the next screen starts with it done)
     line.emphasize(); // "discount." pulses: the new word
     Sound.ding();
-    ctx.advance(3000); // then Aniket wonders what it means
+    advanceAfterFilm(ctx, scene, 3000, { segue: true }); // then Aniket wonders what it means (the film goes straight on)
   }
 
   // "Discount?" Coming from screen 14 the picture, the card and the bubble are first exactly as they
   // were; then the bubble and the card go, and the camera glides back to the middle. Aniket doesn't know
-  // the shopkeeper's new word: his face turns puzzled (PUZZLED fades in over the picture) and he wonders
-  // about it in a thought cloud.
+  // the shopkeeper's new word: on the film he asks what it is, his face puzzled; without it, his face turns puzzled
+  // (PUZZLED fades in over the picture) and he wonders about it in a thought cloud.
   function setupDiscount(scene) {
     scene.carried = scene.cameFrom === 'reveal';
     if (!scene.carried) return;
@@ -1609,37 +1346,59 @@
   }
 
   async function playDiscount(ctx, scene) {
-    if (scene.carried) {
-      await ctx.wait(500);
-      scene.oldLine.hide();
-      scene.oldCard.leave();
-      await ctx.wait(300);
+    const backToMiddle = async () => { // the card and the bubble go, and the camera glides back to the middle
       const glide = glideCamera(ctx, scene, 1300);
       await ctx.wait(600); // about halfway: the soft right edge eases away as the picture slides over
       scene.el.classList.remove('is-feathered');
       await glide;
-    }
-    await ctx.wait(500);
+    };
+    let wondering = null;
+    if (scene.rolling) {
+      // On the film he asks it straight away, as the shopkeeper's word sinks in (the camera gliding back to the middle
+      // meanwhile); then the camera moves in on his puzzled face (only he matters here: the meeting of 2026-10-21).
+      if (scene.carried) {
+        scene.oldLine.hide();
+        scene.oldCard.leave();
+      }
+      const asking = picSay(ctx, scene, DISCOUNT_SAYS, 'disc-2', 'boy');
+      asking.catch(() => {});
+      if (scene.carried) await backToMiddle();
+      const said = await asking;
+      said.emphasize();
+      await ctx.wait(900);
+      await said.hide();
+      moveCamera(scene, faceCamera(scene, FACE_ZOOM).transform, 1400);
+      Sound.wonder();
+      await ctx.wait(1700);
+    } else {
+      if (scene.carried) {
+        await ctx.wait(500);
+        scene.oldLine.hide();
+        scene.oldCard.leave();
+        await ctx.wait(300);
+        await backToMiddle();
+      }
+      await ctx.wait(500);
 
-    // He doesn't know the word: his face turns puzzled, and he wonders about it. Only he matters here (the meeting of
-    // 2026-10-21: the shopkeeper isn't needed): the camera moves in on his face, and his thought comes beside his head.
-    const cam = faceCamera(scene, FACE_ZOOM);
-    moveCamera(scene, cam.transform, reducedMotion ? 1 : 1400);
-    scene.el.classList.add('is-reacting');
-    Clips.react(scene);
-    Sound.wonder();
-    await ctx.wait(1500);
-    const tip = cam.at(DISCOUNT_THOUGHT.tip);
-    const wondering = FX.thought(scene.ui, Object.assign({}, DISCOUNT_THOUGHT, { tip, at: [tip[0] + 560, tip[1] - 50] }));
-    await wondering.show();
-    await speak(ctx, wondering, 'disc-2', 'boy');
-    wondering.emphasize();
-    await ctx.wait(1200);
+      // He doesn't know the word: his face turns puzzled, and he wonders about it. Only he matters here (the meeting of
+      // 2026-10-21: the shopkeeper isn't needed): the camera moves in on his face, and his thought comes beside his head.
+      const cam = faceCamera(scene, FACE_ZOOM);
+      moveCamera(scene, cam.transform, reducedMotion ? 1 : 1400);
+      scene.el.classList.add('is-reacting');
+      Sound.wonder();
+      await ctx.wait(1500);
+      const tip = cam.at(DISCOUNT_THOUGHT.tip);
+      wondering = FX.thought(scene.ui, Object.assign({}, DISCOUNT_THOUGHT, { tip, at: [tip[0] + 560, tip[1] - 50] }));
+      await wondering.show();
+      await speak(ctx, wondering, 'disc-2', 'boy');
+      wondering.emphasize();
+      await ctx.wait(1200);
+    }
 
     // Then the answer, on this screen (the user's doc, 2026-10-23: "Swifty comes and says the definition of discount"): his
     // thought goes, the picture blurs and dims, and Swifty slides in from the right and says it in her bubble, as on
     // screen 6; then she goes, and the picture clears for the question.
-    await wondering.hide();
+    if (wondering) await wondering.hide();
     const veil = el('div', 'pop-veil');
     scene.ui.insertBefore(veil, scene.ui.firstChild); // (under Swifty)
     void veil.offsetWidth; // (so it fades in)
@@ -1671,6 +1430,11 @@
   // shopkeeper (his face, his hand) is out of the picture (the user, 2026-10-21: "no need to show shopkeeper"; the
   // picture is drawn at twice the screen's size, so it stays sharp this close).
   const FACE_ZOOM = { face: [651, 300], to: [700, 640], s: 2.2 }; // (his hand, below the frame)
+  // On the film he says it (his bubble at the counter, right of his face, the tail at his mouth, as on screen 4).
+  const DISCOUNT_SAYS = {
+    anchor: [778, 318], corner: 'bl', tip: [738, 372], rotate: -1.5,
+    text: [{ t: 'Discount?', cls: 'key' }, { t: '\nWhat is that?' }],
+  };
 
   // The camera on a point of the picture: `face` at `to` on screen, `s` times closer (about the world's own origin, so
   // the slow drift it had doesn't jump). at(p): where a point of the picture is on screen then.
@@ -1989,29 +1753,27 @@
   async function playSneakers(ctx, scene) {
     const L = scene.layer;
     FX.glow(L, 1290, 548, 560, 260, { cls: 'glow--book', delay: 0 });
-    await ctx.wait(700);
-    FX.shine(L, SNEAKERS, { duration: 1100, width: 160 });
-    Sound.sparkle();
-    await ctx.wait(800);
-    // Aniket's lines, one bubble at a time, right of his face, above the sneakers (the tail at his mouth), as on 35.
-    const say = async (text, id) => {
-      const line = FX.bubble(L, { anchor: FINAL_LINE.anchor, corner: 'bl', tip: FINAL_LINE.tip, text, voice: 'boy', rotate: -1.5 });
-      await line.show();
-      await speak(ctx, line, id, 'boy');
-      return line;
+    const shine = async () => {
+      await ctx.wait(700);
+      FX.shine(L, SNEAKERS, { duration: 1100, width: 160 });
+      Sound.sparkle();
     };
-    await say([{ t: 'Wow, nice sneakers! ' }, { t: 'I love them.' }], 'sneakers'); // (the user's doc, 2026-10-23)
-    ctx.advance(3000); // then a closer look (the 30% OFF comes after the question on their price: screen 18)
+    if (scene.rolling) shine().catch(() => {}); // (on the film, as he says it)
+    else {
+      await shine();
+      await ctx.wait(800);
+    }
+    // His line, right of his face, above the sneakers (the tail at his mouth), as on 35. (The user's doc, 2026-10-23.)
+    await picSay(ctx, scene, {
+      anchor: FINAL_LINE.anchor, corner: 'bl', tip: FINAL_LINE.tip, text: [{ t: 'Wow, nice sneakers! ' }, { t: 'I love them.' }], rotate: -1.5,
+    }, 'sneakers', 'boy');
+    advanceAfterFilm(ctx, scene, 3000, { segue: true }); // then a closer look: the film goes straight on
   }
 
-  // Nothing to say here: Aniket points at the sneakers, and the camera moves in on their ₹1800 price tag (the clip,
-  // s23-zoom); the screen waits for it to get there.
-  async function playShoe(ctx) {
-    if (Clips.has('s23-zoom')) {
-      await ctx.wait(5000, { real: true });
-      ctx.advance(2000);
-      return;
-    }
+  // Nothing to say here: Aniket looks at the sneakers' price, his hand going to his chin (the film goes on; the camera
+  // eases in towards the tags). Without the film, a moment on the picture.
+  async function playShoe(ctx, scene) {
+    if (scene.rolling) return advanceAfterFilm(ctx, scene, 0, { segue: true });
     await ctx.wait(600);
     ctx.advance(2600);
   }
@@ -2021,14 +1783,10 @@
   const OFF_TAG = { x: 1253, y: 733, w: 322, h: 141, round: 24 };
   const THINKING_OFF_TAG = { x: 1284, y: 778, w: 336, h: 153, round: 26 };
 
-  // The ₹1800 card is the picture's: its clips blur the price into "e1800" (laid on first, so the rings stay on top).
-  function setupConfused(scene) {
-    pictureOver(scene, PRICE_CARD_FACE);
-  }
-
   // Aniket, hand on his chin, looks at the sneakers' tags: he says what he sees, and asks how much he will actually
-  // pay, one bubble at a time, right of his face, the tail at his mouth by his hand.
-  const SHOE_SAY = { anchor: [717, 332], corner: 'bl', tip: [655, 342], voice: 'boy', rotate: -1.5 };
+  // pay, one bubble at a time, right of his face, the tail at his mouth by his hand (as the film of screen 18 shows him;
+  // on 16 he leans in closer: SHOE_SAYS_LEANING).
+  const SHOE_SAY = { anchor: [700, 290], corner: 'bl', tip: [640, 306], voice: 'boy', rotate: -1.5 };
   // (The user's doc, 2026-10-23: "The price tagged on it will be ₹1800"; "What 30% off means here, if this is discount
   // how much I actually have to pay.")
   const SHOE_PRICE = Object.assign({ text: [{ t: 'The price tagged on it is ' }, { t: '₹1800', em: true }, { t: '.' }] }, SHOE_SAY);
@@ -2036,25 +1794,20 @@
   const SHOE_PAY = Object.assign({
     text: [{ t: 'If this is a ' }, { t: 'discount', cls: 'key' }, { t: ', how much do I actually have to pay?' }],
   }, SHOE_SAY);
-  const PRICE_CARD = { x: 1346, y: 634, w: 196, h: 152, round: 16 }; // the white ₹1800 card on the sneakers (stage px)
-  const PRICE_CARD_FACE = [1259, 566, 173, 135]; // that card's face, with a little round it: x, y, w, h (stage px)
-  // The ₹1800 tent card on the stand, with a little round it, on the picture of screens 22 and 35 (story/he-sees-a-shoe.webp):
-  // their clips redraw the price roughly, so the picture's is laid over them.
-  const TENT_CARD = { 'story/he-sees-a-shoe.webp': [1196, 538, 236, 130] };
-  function tentCard(scene) {
-    pictureOver(scene, TENT_CARD[scene.bg.slice(ASSETS.length)]);
-  }
+  // The white ₹1800 card on the sneakers, as the sneakers' film shows the stand (stage px: 16–19); and his bubble as he
+  // leans in to read it (16).
+  const PRICE_CARD_FILM = { x: 1314, y: 603, w: 236, h: 130, round: 16 };
+  const SHOE_SAYS_LEANING = { anchor: [744, 300], tip: [684, 348] };
 
   // Screen 16: he says the price he sees (the price card on the sneakers lights up); then the question on it (screen 17).
   async function playConfused(ctx, scene) {
-    await ctx.wait(700);
-    const price = FX.bubble(scene.layer, SHOE_PRICE);
-    FX.ring(scene.layer, PRICE_CARD);
+    await pauseUnlessFilm(ctx, scene, 700);
+    await lineDue(ctx, 'shoe-price', BUBBLE_EARLY);
+    FX.ring(scene.layer, PRICE_CARD_FILM);
     Sound.sparkle();
-    await price.show();
-    await speak(ctx, price, 'shoe-price', 'boy');
+    const price = await picSay(ctx, scene, Object.assign({}, SHOE_PRICE, SHOE_SAYS_LEANING), 'shoe-price', 'boy');
     price.emphasize();
-    ctx.advance(3000); // then the question card on it
+    advanceAfterFilm(ctx, scene); // then the question card on it
   }
 
   // Screen 17: the marked price of the sneakers, on a card on the left (the sneakers and their tags sharp on the right).
@@ -2069,7 +1822,7 @@
       hint: [{ t: 'Not quite! Check the price tagged on the sneakers.' }],
       fromLeft: true,
       onHint: () => { // the price card on the sneakers lights up
-        FX.ring(scene.ui, PRICE_CARD);
+        FX.ring(scene.ui, PRICE_CARD_FILM);
         Sound.sparkle();
       },
     });
@@ -2077,23 +1830,29 @@
 
   // Screen 18: then he sees the 30% OFF tag, and wonders (the user's doc, 2026-10-23), one bubble at a time.
   async function playOffMeans(ctx, scene) {
-    await ctx.wait(500);
-    FX.ring(scene.layer, THINKING_OFF_TAG); // the 30% OFF label lights up first
+    // His questions on his film (the stand a little further off, as on 16 and 35; its first frame is the picture).
+    await pauseUnlessFilm(ctx, scene, 500);
+    const lit = FX.ring(scene.layer, OFF_TAG); // the 30% OFF label lights up first
     Sound.sparkle();
-    await ctx.wait(700);
-    const off = FX.bubble(scene.layer, SHOE_OFF);
-    await off.show();
-    await speak(ctx, off, 'off-what', 'boy');
+    await pauseUnlessFilm(ctx, scene, 700);
+    const off = await picSay(ctx, scene, SHOE_OFF, 'off-what', 'boy');
     off.emphasize();
-    await ctx.wait(900);
-    await off.hide();
-    await ctx.wait(250);
-    const ask = FX.bubble(scene.layer, SHOE_PAY);
-    await ask.show();
-    await speak(ctx, ask, 'shoe-ask', 'boy');
+    await nextLine(ctx, scene, off, 'shoe-ask');
+    const ask = await picSay(ctx, scene, SHOE_PAY, 'shoe-ask', 'boy');
     ask.emphasize();
     await ctx.wait(1200);
     await ask.hide();
+    // Then the picture the rest is worked out on (he thinks, his hand on his chin) takes the film's place: under a
+    // moment's blur all over, since it draws the stand a little closer than the film does; the camera then moves in on
+    // the sneakers, and only they come sharp again (the 30% OFF tag lit on it).
+    const haze = allBlur(scene, { instant: reducedMotion });
+    lit.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 500, fill: 'forwards' });
+    await ctx.wait(reducedMotion ? 60 : 800, { real: true });
+    scene.el.classList.add('is-reacting');
+    if (scene.rolling) Clips.hide(scene);
+    lit.remove();
+    FX.ring(scene.layer, Object.assign({ instant: true }, THINKING_OFF_TAG));
+    await ctx.wait(reducedMotion ? 60 : 650, { real: true });
 
     // What 30% OFF means (the user, 2026-10-22: "show only the shoes and the discount, and Swifty comes and says it"; no
     // panel): the camera moves in on the sneakers and their tags, everything else blurs, and Swifty slides in from the
@@ -2102,7 +1861,9 @@
     moveCamera(scene, cam.transform, reducedMotion ? 1 : 1500);
     await ctx.wait(1600);
     shoesFocus(scene, cam, { instant: false });
+    haze.classList.remove('is-on'); // (the blur all over goes as the window round the sneakers comes)
     await ctx.wait(reducedMotion ? 60 : 800);
+    haze.remove();
     const talk = await swiftyFromRight(ctx, scene, false, { bubbles: SHOES_BUBBLES });
     await ctx.wait(200);
     await talk.show([{ t: '30% OFF', em: true }, { t: ' means', end: true }, { t: '\n30% ' }, { t: 'discount', cls: 'key' }, { t: ' here.' }]);
@@ -2375,6 +2136,7 @@
   // Screens 24–26: the picture blurs and dims but the stand with the sneakers and their two tags, the point of all this maths (the user,
   // 2026-10-22: "blur the image, focus on shoes and discount"): a soft-edged window in the veil (its mask: an SVG).
   const STAND_FOCUS = { x: 1040, y: 425, w: 610, h: 450, round: 70, soft: 22 }; // the picture's stage px
+  const STAND_FOCUS_FILM = { x: 990, y: 420, w: 650, h: 420, round: 70, soft: 22 }; // (the stand as the sneakers' film shows it)
   function standFocus(scene, rect = STAND_FOCUS, { instant = true } = {}) { // (rect: on screen, when the camera has moved)
     const { x, y, w, h, round: r, soft } = rect;
     const hole = `M${x + r} ${y}H${x + w - r}A${r} ${r} 0 0 1 ${x + w} ${y + r}V${y + h - r}A${r} ${r} 0 0 1 ${x + w - r} ${y + h}` +
@@ -2769,17 +2531,19 @@
     // "So, after a 30% discount," — the 30% OFF tag lights up, and the ₹1800 is crossed out.
     const discount = speakPart(ctx, line, 0, 'final-1', line.parts[0], 'boy');
     discount.catch(() => {}); // if the player leaves mid-line, the waits below report it
+    await lineDue(ctx, 'final-1'); // (on the film: as he starts saying it)
     await ctx.wait(500);
     FX.ring(scene.layer, OFF_TAG);
     Sound.sparkle();
     await ctx.wait(600);
     crossOut.draw();
     await discount;
-    await ctx.wait(300);
+    await pauseUnlessFilm(ctx, scene, 300);
 
     // "I will pay ₹1260." — the new price stamps onto the stand.
     const pay = speakPart(ctx, line, 1, 'final-2', line.parts[1], 'boy');
     pay.catch(() => {});
+    await lineDue(ctx, 'final-2');
     await ctx.wait(700);
     await paid.stamp();
     const r = stageRect(paid.el);
@@ -2787,25 +2551,13 @@
     await pay;
     line.emphasize();
     Sound.chime();
-    ctx.advance(3000); // then the sneakers, in their box
+    advanceAfterFilm(ctx, scene); // then the sneakers, in their box
   }
 
   // The sneakers, in their box: over the counter, the shopkeeper hands them to Aniket. No words: a light sweeps
   // across the box, with twinkles round it and a chime.
   const SNEAKER_BOX = [[905, 440], [1245, 452], [1292, 598], [1240, 700], [880, 775], [800, 700], [800, 600], [935, 520]]; // the box and its lid (stage px)
-  // Where the box ends up in the clip (s36-box), in Aniket's hands.
-  const SNEAKER_BOX_HELD = [[440, 700], [630, 628], [752, 580], [1000, 598], [880, 702], [880, 800], [686, 864], [438, 792]];
-
   async function playBoxed(ctx, scene) {
-    if (Clips.has('s36-box')) { // the clip hands the box over: the chime as Aniket takes it, the light once it's his
-      await ctx.wait(1250, { real: true }); // (the clip started about half a second before this script)
-      Sound.chime();
-      await ctx.wait(2400, { real: true });
-      FX.shine(scene.layer, SNEAKER_BOX_HELD, { duration: 1300, width: 260 });
-      await ctx.wait(1300, { real: true });
-      ctx.advance(2600);
-      return;
-    }
     await ctx.wait(900);
     FX.shine(scene.layer, SNEAKER_BOX, { duration: 1300, width: 260 });
     await ctx.wait(450);
@@ -2863,24 +2615,15 @@
   // Back home: his father asks how the shopping went, and Aniket says what he learnt. One of them talks at a time.
   // (His father's "That’s useful, because you have another shopping job." was taken out on 2026-10-26, at the user's word.)
   async function playReturn(ctx, scene) {
-    const L = scene.layer;
-    const say = async (bubble, id, who) => {
-      const line = FX.bubble(L, Object.assign({ voice: who }, bubble));
-      await line.show();
-      await speak(ctx, line, id, who);
-      return line;
-    };
     const DAD = { anchor: [1262, 252], corner: 'br', tip: [1330, 372] }; // on the wall up-left of his head, the tail at his mouth
-    await ctx.wait(700);
-    const ask = await say(Object.assign({ text: 'How was your shopping?' }, DAD), 'home-ask', 'dad');
-    await ctx.wait(900);
-    await ask.hide();
-    await ctx.wait(250);
-    await say({
+    await pauseUnlessFilm(ctx, scene, 700);
+    const ask = await picSay(ctx, scene, Object.assign({ text: 'How was your shopping?' }, DAD), 'home-ask', 'dad');
+    await nextLine(ctx, scene, ask, 'home-learnt');
+    await picSay(ctx, scene, {
       anchor: [722, 376], corner: 'bl', tip: [645, 282], // on the wall right of his face, the tail at his mouth
       text: 'Great! I learnt\nabout marked price,\ndiscount and discount\npercentage.',
     }, 'home-learnt', 'boy');
-    ctx.advance(3000); // then the party invite (Party Prep)
+    advanceAfterFilm(ctx, scene); // then the party invite (Party Prep)
   }
 
   // ======================================================================
@@ -2944,8 +2687,10 @@
 
   // A line in a bubble on the picture, typed while it is said; resolves with the bubble, still up.
   async function picSay(ctx, scene, bubble, id, who) {
+    const onFilm = await lineDue(ctx, id, BUBBLE_EARLY); // (on a film: just before the speaker's lips move)
     const line = FX.bubble(scene.layer, Object.assign({ voice: who }, bubble));
-    await line.show();
+    const showing = line.show();
+    if (!onFilm) await showing; // (on a film the voice starts with the lips, the bubble perhaps still popping up)
     await speak(ctx, line, id, who);
     return line;
   }
@@ -3017,7 +2762,7 @@
 
   // The party message (screen 32): Aniket, on the sofa, reads his phone: the invite comes up out of it.
   const PHONE_AT = [1000, 410]; // his phone (stage px)
-  const SOFA_SAYS = { anchor: [1080, 236], corner: 'br', tip: [1196, 290], voice: 'boy' }; // left of his face, the tail at his mouth
+  const SOFA_SAYS = { anchor: [1080, 236], corner: 'br', tip: [1180, 315], voice: 'boy' }; // left of his face, the tail at his mouth
   async function playInvite(ctx, scene) {
     Party.bought.clear(); // (the shopping starts afresh)
     Party.from = null;
@@ -3032,51 +2777,44 @@
     await FX.reveal(card, [{ opacity: 0, transform: 'scale(.1)' }, { opacity: 1, transform: 'scale(1.04)', offset: 0.7 }, { opacity: 1, transform: 'none' }],
       { duration: reducedMotion ? 1 : 700, easing: 'cubic-bezier(.2,.8,.3,1)' });
     await ctx.wait(500);
-    let line = await picSay(ctx, scene, Object.assign({ text: [{ t: 'Wow! Rohan’s ' }, { t: 'birthday party', cls: 'key' }, { t: ' is tonight!' }] }, SOFA_SAYS), 'inv-1', 'boy');
-    await ctx.wait(900);
-    await line.hide();
-    await ctx.wait(250);
-    line = await picSay(ctx, scene, Object.assign({ text: 'I need a new outfit for the party!' }, SOFA_SAYS), 'inv-2', 'boy');
-    ctx.advance(3000);
+    if (Clips.of(scene) && scene.clipBox) Clips.roll(scene); // (his film: he reads it, and says so)
+    const line = await picSay(ctx, scene, Object.assign({ text: [{ t: 'Wow! Rohan’s ' }, { t: 'birthday party', cls: 'key' }, { t: ' is tonight!' }] }, SOFA_SAYS), 'inv-1', 'boy');
+    await nextLine(ctx, scene, line, 'inv-2');
+    await picSay(ctx, scene, Object.assign({ text: 'I need a new outfit for the party!' }, SOFA_SAYS), 'inv-2', 'boy');
+    advanceAfterFilm(ctx, scene);
   }
 
-  // Screen 33: his father holds out the money (it shines, cha-ching) and says how much (his clip, s43).
+  // Screen 33: his father holds out the money (it shines, cha-ching), says how much, and his advice; on the film Aniket
+  // takes the notes, holds them, and puts them in his pocket (the user, 2026-10-27).
   const NOTES_FAN = [[836, 436], [919, 396], [1010, 385], [1102, 402], [1148, 459], [1174, 540], [1102, 574], [988, 643], [947, 620], [873, 517]];
+  const MONEY_SAYS = { anchor: [690, 236], corner: 'bl', tip: [650, 312] }; // up-right of his face, the tail at his mouth
   async function playPartyMoney(ctx, scene) {
-    await ctx.wait(700);
+    await pauseUnlessFilm(ctx, scene, 700);
     FX.glow(scene.layer, 1004, 512, 420, 300, { cls: 'glow--money', delay: 0 });
     FX.shine(scene.layer, NOTES_FAN, { duration: 1000, width: 140 });
     Sound.kaching();
-    await ctx.wait(700);
-    const line = await picSay(ctx, scene, {
-      anchor: [690, 236], corner: 'bl', tip: [650, 312], // up-right of his face, the tail at his mouth
-      text: [{ t: 'Here’s ' }, { t: '₹5,000', em: true }, { t: '.' }],
-    }, 'money', 'dad');
+    await pauseUnlessFilm(ctx, scene, 700);
+    const line = await picSay(ctx, scene, Object.assign({ text: [{ t: 'Here’s ' }, { t: '₹5,000', em: true }, { t: '.' }] }, MONEY_SAYS), 'money', 'dad');
     line.emphasize();
     Sound.ding();
-    ctx.advance(3000);
+    await nextLine(ctx, scene, line, 'deal-use');
+    await picSay(ctx, scene, Object.assign({ text: 'Use what you have learnt\nand find the best deals.' }, MONEY_SAYS), 'deal-use', 'dad');
+    advanceAfterFilm(ctx, scene);
   }
 
-  // Screen 34: his father's advice, then Aniket's answer, one bubble at a time (their clips, s45).
+  // Screen 34: whatever is left after buying everything is his, his father says; then Aniket's answer, one bubble at a time.
   async function playPartyDeal(ctx, scene) {
     const DAD = { anchor: [790, 330], corner: 'bl', tip: [742, 380] }; // up-right of his head, the tail at his mouth
-    const say = async (bubble, id, who, keep) => {
-      const line = await picSay(ctx, scene, bubble, id, who);
-      if (keep) return line;
-      await ctx.wait(900);
-      await line.hide();
-      await ctx.wait(250);
-      return null;
-    };
-    await ctx.wait(700);
-    await say(Object.assign({ text: 'Use what you\nhave learnt and\nfind the best\ndeals.' }, DAD), 'deal-use', 'dad');
-    await say(Object.assign({ text: 'Whatever is left\nafter buying\neverything\nis yours.' }, DAD), 'deal-left', 'dad');
-    await say({ anchor: [1176, 184], corner: 'br', tip: [1234, 282], text: 'Really?' }, 'deal-really', 'boy'); // up-left of his face
-    await say({
+    await pauseUnlessFilm(ctx, scene, 700);
+    const left = await picSay(ctx, scene, Object.assign({ text: 'Whatever is left\nafter buying\neverything\nis yours.' }, DAD), 'deal-left', 'dad');
+    await nextLine(ctx, scene, left, 'deal-really');
+    const really = await picSay(ctx, scene, { anchor: [1176, 184], corner: 'br', tip: [1234, 282], text: 'Really?' }, 'deal-really', 'boy'); // up-left of his face
+    await nextLine(ctx, scene, really, 'deal-offers');
+    await picSay(ctx, scene, {
       anchor: [1160, 352], corner: 'br', tip: [1236, 282], // left of his face, the tail at his mouth
       text: 'Then I’m\ndefinitely finding\nthe best offers!',
-    }, 'deal-offers', 'boy', true);
-    ctx.advance(3000);
+    }, 'deal-offers', 'boy');
+    advanceAfterFilm(ctx, scene);
   }
 
   // Screen 35: he walks up to the mall.
@@ -3557,249 +3295,180 @@
   }
 
   // ======================================================================
-  // The story pictures, brought to life (the revamp brief, rule 1)
+  // The story's films (the user's Google Flow takes, 2026-10-27)
   // ======================================================================
-  // Short videos made from the story's pictures with Higgsfield (Seedance 2.5; the prompts are in "Animation Video
-  // Prompts.md"), kept in assets/video/ and listed in js/video_clips.js: the game plays only the clips there are, and
-  // where one isn't made yet the still picture stays, as before (so it does with reduced motion). On a screen with clips,
-  // its quiet loop plays while nobody speaks and each line's talking clip as the line is said; every clip of a screen
-  // starts on its picture, so each takes over from another without a jump. (The clips made with Gemini don't end on it:
-  // a talking clip with no loop to go back to stays on its last frame, and on some screens, `hold`, so does every one.)
-  // A movement clip (one picture turning into the next) plays in place of the fade into the next screen, which then
-  // comes in on its last frame.
+  // A story screen with a film plays it once, over its picture, and stays on its last frame. tools/flow_import.py cuts
+  // the films from the user's takes (the Gemini sparkle taken off, no sound) into assets/video/<screen>.mp4, with the
+  // film's first frame as the screen's picture (assets/video/<screen>.webp), so it starts on exactly what the screen
+  // shows; js/video_clips.js lists them. The game says the lines, in its own voices: each as its speaker's lips start
+  // to move in the film, at the time js/video_clips.js gives (measured on the take's own voices), its bubble just before
+  // (see lineDue). After every line the film itself keeps at least 2 s of quiet before the next one (the user,
+  // 2026-10-27: the take's quiet moment slowed down by the tool, never frozen). Where a take goes on from one screen to
+  // the next (the sneakers, 22 → 23 → 25; the counter, 14 → 15), the next screen's film starts on the last frame of this
+  // one's, with no fade. With reduced motion, or a film not there, the screen shows its picture and its lines come one
+  // after another, as before.
   const CLIP_DIR = ASSETS + 'video/';
-  // Each screen's clips: its quiet loop (`idle`; `once`: it plays once and holds its last frame), and its lines' talking
-  // clips by line id (a list: the first one made; '': the clip already playing goes on). `hold`: after a talking clip
-  // the loop doesn't start again, the clip stays on its last frame (where the people have moved on from the picture,
-  // e.g. Aniket has finished stepping in, so starting the loop again would jump back). `react` and `after`: the clip of
-  // a reaction (see Clips.react), and the loop after it.
-  const CLIPS = {
-    home: { idle: 's01-idle', lines: { plan: 's01-aniket-1', advice: 's01-father', promise: 's01-aniket-2' } },
-    browse: { intro: 's05-pickup', idle: 's05-idle', lines: { browse: 's05-aniket' } }, // (intro: he picks the book up first, once it is made)
-    ask: { idle: 's06-idle', lines: { ask: 's06-aniket', price: 's06-shopkeeper', costly: 's06-aniket', 'check-price': 's06-shopkeeper' } },
-    pay: { idle: 's07-idle' },
-    shock: { lines: { shock: 's10-aniket' } },
-    reveal: {
-      idle: 's06-idle',
-      lines: { 'reveal-1': ['s14-shopkeeper-1', 's06-shopkeeper'], 'reveal-2': ['s14-shopkeeper-2', 's06-shopkeeper'], 'reveal-3': ['s14-shopkeeper-3', 's06-shopkeeper'] },
-    },
-    discount: { idle: 's06-idle', react: 's14-to-s15', after: 's15-idle' },
-    outside: { idle: 's03-walk-in', once: true }, // into the bookstore (once it is made: see playOutside)
-    // Out of the bookstore: one take cut in two, each played once (its last frame stays), and a cut between the screens.
-    exit: { idle: 's20-out', once: true },
-    leave: { idle: 's21-walk', once: true },
-    // (The shoe shop is all clips: Screen 22 and 35 share Aniket pointing (s23-idle) and his talking clips.)
-    sneakers: { idle: 's23-idle', lines: { sneakers: 's22-aniket-1', 'sneakers-off': 's22-aniket-2', 'sneakers-discount': 's22-aniket-3' } },
-    shoe: { idle: 's23-zoom', once: true },
-    confused: { idle: 's25-idle', lines: { 'shoe-price': 's25-aniket-1' } },
-    offmeans: { idle: 's25-idle', lines: { 'off-what': 's25-aniket-1', 'shoe-ask': 's25-aniket-2' } },
-    final: { idle: 's23-idle', lines: { 'final-1': 's22-aniket-1', 'final-2': 's22-aniket-3' } },
-    boxed: { idle: 's36-box', once: true },
-    return: { idle: 's40-idle', hold: true, lines: { 'home-ask': 's40-father-1', 'home-learnt': 's40-aniket' } },
-    // (Party Prep: the father's ₹5,000 and his advice, in the clips made for the screens that had them before)
-    partymoney: { lines: { money: 's43-father' } },
-    partydeal: {
-      idle: 's45-idle', hold: true,
-      lines: { 'deal-use': 's45-father-1', 'deal-left': ['s45-father-2', 's45-father-1'], 'deal-really': 's45-aniket-1', 'deal-offers': 's45-aniket-2' },
-    },
-  };
-  // The movement clips, going forward from one screen to the next ("from>to").
-  const CLIP_FADE = 400; // ms: a clip fades in over the one before (css .scene-clip)
-  // A talking clip plays until its speaker's lips have stopped for good (the seconds here, measured on the speaker's face
-  // in each clip: frame to frame, the last movement) before the next line comes in; from there its face is still, so the
-  // next clip takes over with no cut to see. A clip not listed here (the Gemini ones, whose people go on moving to their
-  // last frame) plays to its end first (the user, 2026-10-22: "no need to cut the video, play full video"). Measure a new
-  // take again (tools/clip_rest.py).
-  const CLIP_REST = {
-    's01-aniket-1': 4.5, 's01-aniket-2': 1.42, 's01-father': 3.58, 's05-aniket': 2.5, 's06-aniket': 1.83, 's06-shopkeeper': 2.67,
-    's22-aniket-3': 3.83,
-  };
-  const CLIP_MOVES = { // (none now: s06-to-s07 went with the user's doc of 2026-10-23, he pays later; s42-to-s43 with the screens
-    // after 31, the same day)
-  };
+  const VOICE_LEAD = 0.3;     // s: the quiet each line's recording starts with, so it starts this much before the lips
+  const BUBBLE_EARLY = 0.45;  // s: a line's bubble comes this much before its voice
+  const FILM_HOLD = 2000;     // ms: after a film screen's last line, the story moves on this soon (or as the film ends)
+  // Screens whose script starts the film itself (Clips.roll), after what comes first (the invite out of the phone).
+  const FILM_LATER = new Set(['invite']);
 
   const Clips = {
-    // A clip there is to play (made, and listed in js/video_clips.js), unless motion is turned down.
-    has: name => !!name && !reducedMotion && typeof VIDEO_CLIPS === 'object' && Object.prototype.hasOwnProperty.call(VIDEO_CLIPS, name),
-    first: names => [].concat(names || []).find(n => Clips.has(n)) || null,
-    planned: scene => !!CLIPS[scene.id] || Object.keys(CLIP_MOVES).some(k => k.startsWith(scene.id + '>')),
-    moveFor: (from, to) => (Clips.has(CLIP_MOVES[`${from.id}>${to.id}`]) ? CLIP_MOVES[`${from.id}>${to.id}`] : null),
+    // This screen's film (its length and its lines' times: js/video_clips.js), unless motion is turned down.
+    of: scene => (!reducedMotion && scene && typeof VIDEO_CLIPS === 'object' &&
+      Object.prototype.hasOwnProperty.call(VIDEO_CLIPS, scene.id) ? VIDEO_CLIPS[scene.id] : null),
+    planned: scene => typeof VIDEO_CLIPS === 'object' && Object.prototype.hasOwnProperty.call(VIDEO_CLIPS, scene.id),
 
-    // The <video> of a clip on its screen: made when first needed, and loaded straight away (muted: the game plays the
-    // voices; inline, for tablets). `key`: a second copy of the clip (see play).
-    video(scene, name, key = name) {
-      scene.clipEls = scene.clipEls || {};
-      let v = scene.clipEls[key];
-      if (!v) {
-        v = el('video', 'scene-clip', scene.clipBox);
+    // The film's <video>: made when first needed and loaded straight away (muted: the game says the lines; inline, for
+    // tablets).
+    video(scene) {
+      if (!scene.film) {
+        const v = el('video', 'scene-clip', scene.clipBox);
         v.muted = true;
         v.defaultMuted = true;
         v.playsInline = true;
         v.preload = 'auto';
         ['muted', 'playsinline', 'disablepictureinpicture'].forEach(a => v.setAttribute(a, ''));
         v.setAttribute('aria-hidden', 'true');
-        v.src = CLIP_DIR + name + '.mp4';
-        scene.clipEls[key] = v;
+        v.src = CLIP_DIR + scene.id + '.mp4';
+        scene.film = v;
       }
-      return v;
+      return scene.film;
     },
 
-    // Plays a clip from its start, taking over from the clip on screen: it fades in over it (and then that one goes),
-    // so nothing jumps. Resolves (true) once it has ended, or at once for a loop; false if another clip took over first,
-    // or the clip isn't there. `onShow` is called as it comes on screen. `instant`: it shows at once, with no fade (the
-    // first clip of a screen that carries straight on from the one before, e.g. Aniket walking out: 20 → 21).
-    // A loop never jumps where it starts again (the user, 2026-10-21: "seamless, no atka atka"): just before its end,
-    // a copy of it starts and fades in over it (CLIP_FADE), and so on, the two taking turns.
-    play(scene, name, { loop = false, onShow = null, instant = false, onEnding = null, restAt = null, onRest = null } = {}) {
-      if (!scene.clipBox || !Clips.has(name)) return Promise.resolve(false);
-      let v = Clips.video(scene, name);
-      if (v.classList.contains('is-on')) v = Clips.video(scene, name, name + ' again'); // said again while it shows: a copy fades in over it
-      const turn = (scene.clipTurn || 0) + 1;
-      scene.clipTurn = turn;
-      v.loop = false;
-      v.style.zIndex = turn;
-      if (v.currentTime) v.currentTime = 0;
-      const others = () => Object.values(scene.clipEls).filter(o => o !== v);
-      const show = () => {
-        if (scene.clipTurn !== turn) return;
-        if (instant) {
-          v.style.transition = 'none';
-          v.classList.add('is-on');
-          void v.offsetWidth;
-          v.style.transition = '';
-        } else v.classList.add('is-on');
-        if (onShow) onShow();
-        setTimeout(() => {
-          if (scene.clipTurn !== turn) return;
-          others().forEach(o => { o.classList.remove('is-on'); o.pause(); });
-        }, instant ? 0 : CLIP_FADE + 20); // (once it has faded in over them: css .scene-clip)
-      };
-      // Just before its end: a loop starts again (a copy, fading in over it); `onEnding` (e.g. back to the quiet loop) is
-      // called, so what comes next fades in while this one still moves, and nothing waits on a still last frame.
-      if (onRest && restAt !== null) { // (its speaker's lips have stopped: see CLIP_REST)
-        const rest = () => {
-          if (scene.clipTurn !== turn || v.currentTime >= restAt) {
-            v.removeEventListener('timeupdate', rest);
-            if (scene.clipTurn === turn) onRest();
-          }
-        };
-        v.addEventListener('timeupdate', rest);
-      }
-      const ending = loop ? () => Clips.play(scene, name, { loop: true }) : onEnding;
-      if (ending) {
-        const near = () => {
-          if (scene.clipTurn !== turn) { v.removeEventListener('timeupdate', near); return; }
-          if (v.duration && v.duration - v.currentTime < (CLIP_FADE + 250) / 1000) {
-            v.removeEventListener('timeupdate', near);
-            ending();
-          }
-        };
-        v.addEventListener('timeupdate', near);
-      }
-      if (v.readyState >= 2 && !v.seeking) show();
-      else ['seeked', 'playing'].forEach(type => v.addEventListener(type, show, { once: true })); // (rewound, or loading)
-      const playing = v.play();
-      if (playing) playing.catch(() => {}); // (refused or interrupted: the picture stays)
-      if (loop) return Promise.resolve(true);
-      return new Promise(resolve => {
-        const done = () => {
-          clearTimeout(guard);
-          v.removeEventListener('ended', done);
-          resolve(scene.clipTurn === turn);
-        };
-        const guard = setTimeout(done, (VIDEO_CLIPS[name] + 1.5) * 1000); // a clip that stalls never holds the story up
-        v.addEventListener('ended', done);
-      });
-    },
-
-    // Back to the screen's quiet loop. Without one (or on a `hold` screen), the clip that just ended stays on its last
-    // frame; after a reaction with no loop, the clips make way for the reaction picture.
-    idle(scene) {
-      const plan = CLIPS[scene.id] || {};
-      const name = Clips.first(scene.reacted ? plan.after : plan.idle);
-      if (scene.reacted && !name) Clips.fade(scene);
-      else if (name && !plan.hold && !(plan.once && !scene.reacted)) return Clips.play(scene, name, { loop: true });
-      return Promise.resolve(false);
-    },
-
-    // The clips fade out, leaving the picture (and anything over it, e.g. a reaction picture).
-    fade(scene) {
-      scene.clipTurn = (scene.clipTurn || 0) + 1;
-      Object.values(scene.clipEls || {}).forEach(v => { v.classList.remove('is-on'); v.pause(); });
-    },
-
-    // A screen starts: its quiet loop (or its one clip), if it has clips; at once when the screen carries straight on
-    // from the one before (`instant`). The next screen's clips start loading meanwhile, and any loaded for another screen
-    // are let go.
-    start(scene, instant = false) {
-      scene.reacted = false;
-      const plan = scene.clipBox && CLIPS[scene.id];
-      if (plan) {
-        const intro = Clips.first(plan.intro); // played once first, from the screen's first frame, then the quiet loop
-        const name = Clips.first(plan.idle);
-        if (intro) Clips.play(scene, intro, { instant: true, onEnding: () => Clips.idle(scene) });
-        else if (name) Clips.play(scene, name, { loop: !plan.once, instant });
+    // A screen starts: its film plays (unless its script starts it: FILM_LATER), at once, or, on a screen fading in,
+    // as its script starts (`later`; see run), so its lines come with it. The next screen's film starts loading, and
+    // any loaded for a screen the player didn't go to is let go.
+    start(scene, instant = false, later = false) {
+      scene.rolling = null;
+      scene.filmDue = false;
+      if (Clips.of(scene) && scene.clipBox) {
+        Clips.video(scene);
+        if (!FILM_LATER.has(scene.id)) { // (those: their script starts it)
+          if (later) scene.filmDue = true;
+          else Clips.roll(scene, instant);
+        }
       }
       const next = SCENES[SCENES.indexOf(scene) + 1];
-      SCENES.forEach(s => { // clips loaded ahead for a screen the player didn't go to are let go
-        if (s !== scene && s !== next && s.clipEls && !s.el.classList.contains('is-active')) Clips.stop(s);
+      SCENES.forEach(s => {
+        if (s !== scene && s !== next && s.film && !s.el.classList.contains('is-active')) Clips.stop(s);
       });
-      if (next && next.clipBox) Clips.preload(next);
+      if (next && next.clipBox && Clips.of(next)) Clips.video(next);
     },
 
-    preload(scene) {
-      const plan = CLIPS[scene.id] || {};
-      [plan.intro, plan.idle, ...Object.values(plan.lines || {})].map(Clips.first).filter(Boolean).forEach(n => Clips.video(scene, n));
+    // The film plays from its start. It fades in over the picture as it starts moving (the picture is its first frame,
+    // so all that changes is that it moves); carrying straight on from the screen before (`instant`), at once.
+    roll(scene, instant = false) {
+      const v = Clips.video(scene);
+      scene.rolling = v;
+      v.classList.remove('is-on');
+      if (v.currentTime) v.currentTime = 0;
+      const show = () => {
+        if (scene.rolling !== v) return;
+        if (instant) v.style.transition = 'none';
+        v.classList.add('is-on');
+        if (instant) requestAnimationFrame(() => { v.style.transition = ''; });
+      };
+      v.addEventListener('playing', show, { once: true });
+      const playing = v.play();
+      if (playing) playing.catch(() => { if (scene.rolling === v) scene.rolling = null; }); // (refused: the picture stays)
     },
 
-    // A line is said: its talking clip plays with it, then the quiet loop again. Returns a promise that resolves as the
-    // clip comes on screen (so the voice can start with the lips: see sayHere), and its `done` one once the speaker is
-    // done in it (see CLIP_REST); or null without a clip.
-    talk(scene, id) {
-      const plan = scene && CLIPS[scene.id];
-      if (!plan || !plan.lines || !(id in plan.lines) || plan.lines[id] === '') return null;
-      const name = Clips.first(plan.lines[id]);
-      if (!name) return null;
-      let rested = null;
-      const done = new Promise(r => { rested = r; });
-      let on = false;
-      const shown = new Promise(resolve => {
-        const back = () => { if (SCENES[Game.index] === scene) Clips.idle(scene); }; // (the quiet loop, as it ends)
-        const show = () => { on = true; resolve(); };
-        Clips.play(scene, name, { onShow: show, onEnding: back, restAt: CLIP_REST[name] ?? null, onRest: rested })
-          .then(() => { resolve(); rested(); });
+    // Seconds of the screen's film still to play (0 without one).
+    left(scene) {
+      const v = scene.rolling;
+      const film = Clips.of(scene);
+      return v && film ? Math.max(0, (v.duration || film.seconds) - v.currentTime) : 0;
+    },
+
+    // Resolves once the screen's film is `t` seconds in (or has ended, or isn't playing); never while the player has
+    // left the screen (it rejects then). A film that stops moving holds nothing up for long: after 1.5 s it is let be.
+    until(ctx, scene, t) {
+      return new Promise((resolve, reject) => {
+        let last = -1;
+        let since = performance.now();
+        const tick = () => {
+          if (!ctx.alive()) return reject(CANCELLED);
+          const v = scene.rolling;
+          if (!v || v.ended || (v.currentTime >= t && v.classList.contains('is-on'))) return resolve(); // (on screen, moving)
+          if (v.currentTime !== last) {
+            last = v.currentTime;
+            since = performance.now();
+          } else if (performance.now() - since > 1500) {
+            scene.rolling = null; // (stalled: the lines go on without it)
+            return resolve();
+          }
+          requestAnimationFrame(tick);
+        };
+        tick();
       });
-      setTimeout(() => { if (!on) rested(); }, 1500); // (a clip that doesn't play at all holds no line up)
-      shown.done = done; // (its speaker done: lips still, or the clip at its end; see CLIP_REST, sayHere)
-      return shown;
     },
 
-    // A reaction (screen 15: Aniket's face turns puzzled): its clip, then the loop after it. Without one, the clips make
-    // way for the reaction picture the screen fades in.
-    react(scene) {
-      const plan = CLIPS[scene.id] || {};
-      scene.reacted = true;
-      const name = Clips.first(plan.react);
-      if (!name) {
-        if (Clips.first(plan.after)) Clips.idle(scene);
-        else Clips.fade(scene);
-        return;
-      }
-      Clips.play(scene, name).then(mine => { if (mine && SCENES[Game.index] === scene) Clips.idle(scene); });
-    },
-
-    // The screen is left: its clips stop and let go of their files.
-    stop(scene) {
-      scene.clipTurn = (scene.clipTurn || 0) + 1;
-      Object.values(scene.clipEls || {}).forEach(v => {
+    // The film fades out, leaving the screen's pictures (for what the screen does next on a still).
+    hide(scene) {
+      const v = scene.rolling;
+      scene.rolling = null;
+      if (v) {
+        v.classList.remove('is-on');
         v.pause();
-        v.removeAttribute('src');
-        v.load();
-        v.remove();
-      });
-      scene.clipEls = {};
+      }
+    },
+
+    // The screen is left: its film stops and lets go of its file.
+    stop(scene) {
+      const v = scene.film;
+      scene.film = null;
+      scene.rolling = null;
+      if (!v) return;
+      v.pause();
+      v.removeAttribute('src');
+      v.load();
+      v.remove();
     },
   };
+
+  // Line `id` is due: on a screen whose film is playing, as its speaker's lips are about to move in it (its voice starts
+  // VOICE_LEAD before them; `early`: that much sooner still); at once otherwise. Resolves true on a film.
+  async function lineDue(ctx, id, early = 0) {
+    const scene = SCENES[Game.index];
+    const film = scene && scene.rolling && Clips.of(scene);
+    const t = film && film.lines[id];
+    if (t === undefined || !film) return false;
+    await Clips.until(ctx, scene, t - VOICE_LEAD - early);
+    return true;
+  }
+
+  // How far past the time its voice was due line `id` is on the screen's film (seconds; 0 if not).
+  function filmLate(scene, id) {
+    const film = scene && scene.rolling && Clips.of(scene);
+    const t = film && film.lines[id];
+    return t === undefined || !film ? 0 : Math.max(0, scene.rolling.currentTime - (t - VOICE_LEAD));
+  }
+
+  // A pause of the story's own, on a screen without a film playing: with one, its lines come when it says (lineDue).
+  const pauseUnlessFilm = (ctx, scene, ms) => (scene.rolling ? Promise.resolve() : ctx.wait(ms));
+
+  // After a line: its bubble goes before the next one comes: `ms` later (and a moment's gap: the user, 2026-10-27, "pause
+  // after dialogue 2 second"), or, on a film, as the next line's bubble is due (the films keep that pause too: see
+  // tools/flow_import.py; going as that one comes, so the next voice is never late for its lips).
+  async function nextLine(ctx, scene, line, next, ms = 2000, gap = 250) {
+    if (await lineDue(ctx, next, BUBBLE_EARLY)) {
+      line.hide();
+      return;
+    }
+    await ctx.wait(ms);
+    await line.hide();
+    await ctx.wait(gap);
+  }
+
+  // The end of a screen with a film: on with the story soon after its last line (FILM_HOLD), or as the film ends if that
+  // is later; without one, `ms` after it. `segue`: as the film ends: the next screen's film carries straight on.
+  function advanceAfterFilm(ctx, scene, ms = 3000, { segue = false } = {}) {
+    if (!scene.rolling) return ctx.advance(ms);
+    const left = Clips.left(scene) * 1000;
+    ctx.advance(segue ? Math.max(0, left - 40) : Math.max(FILM_HOLD, left));
+  }
 
   // ======================================================================
   // Scene runner + navigation
@@ -3826,7 +3495,6 @@
     countdown: 0,
     starting: false,
     autoplay: readPref('bj.autoplay', true),
-    moving: null,  // { from } while a movement clip plays in place of a screen change (see go, Clips)
     waiting: -1,   // the screen go() waits to show until its pictures are in (see Pictures)
   };
 
@@ -3903,7 +3571,6 @@
     scene.layer.replaceChildren();
     scene.ui.replaceChildren();
     scene.bird = null; // (Swifty comes with her first bubble: see cornerSwifty)
-    if (scene.patchBox) scene.patchBox.replaceChildren();
     scene.el.classList.remove('is-leaving', 'is-entering', 'is-feathered', 'is-asking', 'is-hushed', 'is-instant', 'is-reacting', 'has-sheet');
     scene.el.classList.add('is-active');
     if (mode === 'cut' && !reducedMotion && !scene.still) {
@@ -3913,7 +3580,7 @@
     startCamera(scene, camera);
     if (camera) scene.parallax.style.transform = camera.parallax;
     if (scene.setup) scene.setup(scene);
-    Clips.start(scene, mode === 'continue');
+    Clips.start(scene, mode === 'continue', mode === 'fade');
   }
 
   function startCamera(scene, camera) {
@@ -3979,6 +3646,10 @@
 
   function run(scene) {
     const ctx = makeCtx();
+    if (scene.filmDue) { // (a screen that faded in: its film starts with its script)
+      scene.filmDue = false;
+      Clips.roll(scene);
+    }
     Promise.resolve()
       .then(() => scene.play(ctx, scene))
       .catch(err => { if (err !== CANCELLED) console.error(err); });
@@ -3986,7 +3657,7 @@
 
   // A screen whose pictures aren't in yet: they come first (the loading bar shows, counting them, if they take a while);
   // then the screen. Another go() meanwhile takes over (Game.waiting): this wait then leaves the bar alone.
-  function goWhenLoaded(i, opts) {
+  function goWhenLoaded(i) {
     const scene = SCENES[i];
     Game.waiting = i;
     const srcs = Pictures.of(scene);
@@ -4007,14 +3678,14 @@
     }));
     Pictures.get(scene, true).then(() => {
       clearTimeout(slow);
-      if (Game.waiting === i) go(i, opts);
+      if (Game.waiting === i) go(i);
     });
   }
 
   // Cross-fade only between these neighbouring screens (at home → at the mall, Bookstore → sees the
-  // book → holds it → How Much?, question → closer look at his new book, and into the shoe shop → at the
-  // sneakers' stand → the discount on them → his questions about it, and his final answer → the sneakers in their
-  // box), both ways; and, going forward only, between screens
+  // book → holds it → How Much?, question → closer look at his new book, into the shoe shop, and his final answer →
+  // the sneakers in their box), both ways; going forward, out of the bookstore into its last frame blurred (the
+  // sneakers' three screens are one take, carried straight on); and, going forward only, between screens
   // over the same blurred picture: the price panels (Marked Price → its definition → MP vs SP, so only their
   // right side changes), MP vs SP → the counter, the Discount definition → formula → formula reveal → summary,
   // what the 30% OFF tag means → the sneakers card → the percentage rule → its example → a quick check → Checkpoint 2 → the sneakers' question → 30% of ₹1800
@@ -4024,8 +3695,9 @@
   const PARTY_IDS = ['return', 'invite', 'partymoney', 'partydeal', 'tomall', 'mallfloor'];
   const SHOP_IDS = ['shirtshop', 'pantsshop', 'watchshop', 'sunshop'];
   const FADES = [...PARTY_IDS.slice(1).map((id, i) => [PARTY_IDS[i], id]), ...SHOP_IDS.flatMap(id => [['mallfloor', id], [id, 'partydone']]),
-    ['mallfloor', 'partydone'], ['home', 'outside'], ['mpcard', 'reveal'], ['pay', 'exit'], ['outside', 'browse'], ['browse', 'ask'], ['leave', 'sneakers'], ['sneakers', 'shoe'], ['shoe', 'confused'], ['final', 'boxed']];
-  const FORWARD_FADES = [['mp', 'mpcard'], ['formula', 'formula-reveal'], ['confused', 'smcard'], ['smcard', 'offmeans'], ['percentrule', 'whatpercent'],
+    ['mallfloor', 'partydone'], ['home', 'outside'], ['mpcard', 'reveal'], ['pay', 'exit'], ['outside', 'browse'], ['browse', 'ask'], ['leave', 'sneakers'], ['final', 'boxed']];
+  const FORWARD_FADES = [['exit', 'leave'], // (out of the bookstore: its film's last frame, blurred, under Swifty)
+    ['mp', 'mpcard'], ['formula', 'formula-reveal'], ['confused', 'smcard'], ['smcard', 'offmeans'], ['percentrule', 'whatpercent'],
     ['whatpercent', 'check'], ['check', 'topay'], ['topay', 'thirty'], ['thirty', 'paywork'], ['paywork', 'final']];
   const FADE_MS = 1200; // not stretched by PACE: changing screens stays brisk
   const SLIDE_MS = 950;  // a sheet sliding up over a story picture (see slide)
@@ -4065,19 +3737,12 @@
     scene.el.querySelectorAll(':scope > .snap-ghost').forEach(n => n.remove());
   }
 
-  // `afterMove`: the screen comes in on the last frame of the movement clip that just played (see Clips): a cut.
-  // `jump`: chosen in the scene list, so it comes in straight away (no movement clip on the way).
-  function go(i, { afterMove = false, jump = false } = {}) {
+  function go(i) {
     if (i < 0 || i > LAST) return;
-    if (!SCENES[i].picturesIn) return goWhenLoaded(i, { afterMove, jump });
+    if (!SCENES[i].picturesIn) return goWhenLoaded(i);
     Game.waiting = -1;
     $('#loader').classList.add('is-done'); // (if a wait for its pictures brought the loading bar up)
     Pictures.ahead(i);
-    const moving = Game.moving; // a movement clip was playing: the player moved on (or back) meanwhile, so it stops here
-    if (moving) {
-      Game.moving = null;
-      Clips.fade(moving.from);
-    }
     stopScene();
     clearTimeout(Game.startTimer);
     UI.closePanel(true);
@@ -4086,27 +3751,13 @@
     const to = SCENES[i];
     const forward = i === Game.index + 1;
     const changing = from && from !== to;
-    // The picture turns into the next one (a movement clip, in place of the fade): the clip plays on this screen, its
-    // bubbles going, and the next screen then comes in on its last frame.
-    const move = changing && forward && !moving && !afterMove && !jump && Clips.moveFor(from, to);
-    if (move) {
-      Game.moving = { from };
-      from.layer.querySelectorAll('.bubble').forEach(b => {
-        b.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 250, fill: 'forwards' });
-      });
-      Clips.play(from, move).then(() => {
-        if (!Game.moving || Game.moving.from !== from) return; // the player has moved on
-        Game.moving = null;
-        go(i, { afterMove: true });
-      });
-      return;
-    }
     // Into a sheet (see SHEETS) from a screen next to it, the sheet slides up over the picture; out of it, it
     // slides back down (jumps further away are cuts).
     const onSheet = s => !!s.sheet || s.el.classList.contains('has-sheet');
     const sheet = changing && !reducedMotion && Math.abs(i - Game.index) === 1 && onSheet(from) !== onSheet(to);
-    const fade = changing && !sheet && !afterMove && fadesBetween(from, to);
-    // Same camera shot (4 ↔ 5, 7 → 8): carry the camera over so nothing jumps.
+    const fade = changing && !sheet && fadesBetween(from, to);
+    // Same camera shot (4 ↔ 5, 7 → 8; a film going on from one screen to the next): carry the camera over so nothing
+    // jumps (and the film carries straight on).
     const sameFraming = from && to && from.kb && to.kb && ['origin', 'from', 'to'].every(k => from.kb[k] === to.kb[k]);
     const carry = changing && from.shot && from.shot === to.shot && (forward || sameFraming);
     const camera = carry ? cameraOf(from) : null;
@@ -4123,7 +3774,7 @@
       return;
     }
     if (!fade) {
-      activate(to, carry || afterMove ? 'continue' : 'cut', camera);
+      activate(to, carry ? 'continue' : 'cut', camera);
       run(to);
       return;
     }
@@ -4400,7 +4051,7 @@
       return decode ? p.decoded : p.loaded;
     },
     own: scene => [scene.bg, scene.react, scene.snap].filter(Boolean),
-    shared: () => [WALK_RIG.src, SWIFTY.fly.src, SWIFTY.stand.src, STAND, DOORWAY.src, SNEAKER_CARD.photo],
+    shared: () => [SWIFTY.fly.src, SWIFTY.stand.src, STAND, SNEAKER_CARD.photo],
     party: () => [TOP_SHEET.src, PARTY_WALLET, PARTY_JOY.base, PARTY_JOY.knob, ...PARTY_ITEMS.flatMap(it => [it.icon, ...it.deals.map(d => d.pic)])],
     // What a screen needs: its own pictures; after the start screen, the shared ones; from the way to the mall, Party Prep's.
     of(scene) {
@@ -4444,8 +4095,8 @@
       // She comes on this screen: her corner is kept (also on screen 8, whose panel slides up over the picture).
       if (scene.v2 && scene.swifty) scene.el.classList.add('has-swifty');
       if (scene.sheet === 'panel') el('div', 'sheet-panel', scene.world); // one big panel filling the screen (Swifty's books come with her: see standFor)
-      // The picture and its clips; where the camera pans past its edge, in one layer whose right edge feathers into the
-      // backdrop, so that the picture never shows through a clip there (the user, 2026-10-21: words doubled).
+      // The picture and its film; where the camera pans past its edge, in one layer whose right edge feathers into the
+      // backdrop, so that the picture never shows through the film there (the user, 2026-10-21: words doubled).
       const pic = scene.backdrop ? el('div', 'scene-pic scene-bg--feather', scene.world) : scene.world;
       [scene.bg, scene.react].filter(Boolean).forEach((src, i) => { // the picture, and a reaction to fade in over it
         const img = el('img', 'scene-bg' + (i ? ' scene-react' : ''), pic);
@@ -4455,7 +4106,6 @@
       });
       if (Clips.planned(scene)) { // its picture brought to life, over it (see Clips), once its clips are made
         scene.clipBox = el('div', 'scene-clips', pic);
-        scene.patchBox = el('div', 'scene-patches', pic); // pieces of the picture over its clips (see pictureOver)
       }
       scene.ambient = el('div', 'scene-ambient', scene.world);
       scene.lamps.forEach(([x, y, r]) => FX.glow(scene.ambient, x, y, r, r * 0.8));
@@ -4500,7 +4150,7 @@
       item.setAttribute('aria-label', `${i === 0 ? 'Start screen' : 'Scene ' + i}: ${scene.title}`);
       item.addEventListener('click', () => {
         Sound.click();
-        go(i, { jump: true });
+        go(i);
       });
       scene.item = item;
     });

@@ -618,12 +618,6 @@ button:focus-visible, .switch input:focus-visible + .switch-track {
 }
 .qback-text .hl { color: var(--teal); font-weight: 800; }
 
-/* The bookstore's doors, opening (screens 20 and 21, see bookstoreDoors): the doorway without its doors, and over it the
-   two glass leaves, drawn in perspective as they swing open into the shop on their hinges */
-.bs-doorway { position: absolute; display: block; pointer-events: none; user-select: none; -webkit-user-drag: none; }
-.bs-doors { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; pointer-events: none; }
-.bs-doors svg { display: block; overflow: visible; }
-
 /* The names of the books on the display stand (where Aniket holds the book), as if printed on their covers (see standTitles) */
 .cover-title {
   position: absolute;
@@ -639,21 +633,8 @@ button:focus-visible, .switch input:focus-visible + .switch-track {
 }
 .cover-title--light { color: #fffdf6; text-shadow: 0 1px 2px rgba(12, 30, 40, .55), 0 0 6px rgba(12, 30, 40, .25); }
 .cover-title--dark { color: #6e2a12; text-shadow: 0 1px 1px rgba(255, 244, 220, .7); }
-/* The names together: while a clip of the stand is on, they move with the stand as the clips show it (measured: 98%,
-   about 24 px up and to the left, round the stand's middle), as the clip fades in. */
-.stand-names { position: absolute; inset: 0; transform-origin: 1505px 720px; transition: transform .15s linear; pointer-events: none; }
-.scene:has(.scene-clip.is-on) .stand-names { transform: translate(-24px, -24px) scale(.983); }
-
-/* A piece of the picture laid back over its clips (game.js pictureOver), its edges fading out over 10 px */
-.pic-patch {
-  position: absolute;
-  background-size: 1920px 1080px; /* the picture, as the stage shows it */
-  pointer-events: none;
-  -webkit-mask: linear-gradient(90deg, transparent, #000 10px calc(100% - 10px), transparent), linear-gradient(transparent, #000 10px calc(100% - 10px), transparent);
-  -webkit-mask-composite: source-in;
-  mask: linear-gradient(90deg, transparent, #000 10px calc(100% - 10px), transparent), linear-gradient(transparent, #000 10px calc(100% - 10px), transparent);
-  mask-composite: intersect;
-}
+/* The names together (the film of the stand starts on its picture, so they sit on it as it plays). */
+.stand-names { position: absolute; inset: 0; pointer-events: none; }
 
 /* ---------- Marked Price panel (screen 11) ---------- */
 
@@ -1420,43 +1401,6 @@ button:focus-visible, .switch input:focus-visible + .switch-track {
 }
 .bird-shadow.is-on { opacity: 1; }
 
-/* ---------- Walking sprite ---------- */
-
-.walker {
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 0;
-  height: 0;
-  transform-origin: 0 0;
-}
-.walker-sprite {
-  position: absolute;
-  background-repeat: no-repeat;
-}
-.walker-reflect {
-  transform: scaleY(-1);
-  opacity: .2;
-  filter: blur(1.5px);
-  -webkit-mask-image: linear-gradient(to top, #000, rgba(0, 0, 0, .45) 16%, transparent 40%);
-  mask-image: linear-gradient(to top, #000, rgba(0, 0, 0, .45) 16%, transparent 40%);
-}
-.walker-shadow {
-  position: absolute;
-  left: -155px;
-  top: -24px;
-  width: 330px;
-  height: 48px;
-  border-radius: 50%;
-  background: radial-gradient(closest-side, rgba(52, 36, 20, .45), rgba(52, 36, 20, .2) 55%, rgba(52, 36, 20, 0));
-}
-.walker--matte .walker-reflect { display: none; } /* outdoors: no shine on the ground */
-.walker.is-idle .walker-body { animation: breathe 2.6s ease-in-out infinite; }
-@keyframes breathe {
-  0%, 100% { transform: scaleY(1); }
-  50%      { transform: scaleY(1.012); }
-}
-
 /* ---------- Title screen start button ---------- */
 
 .start-wrap { position: absolute; width: 0; height: 0; }
@@ -1884,7 +1828,7 @@ kbd {
 
 @media (prefers-reduced-motion: reduce) {
   .mote, .twinkle { display: none; }
-  .glow, .thought-puff-bob, .start-btn, .badge-rays, .exclaim-inner, .walker.is-idle .walker-body, #btn-next.is-ready, .rotate-phone, .spot-ring::after, .red-tag.is-pulsing, .cmp-box.is-key, .fm-box.is-ping, .fm-op.is-ping, .fm-box.is-ping::after, .fr-term.is-ping, .fr-op.is-ping, .pc-price.is-ping, .pc-off.is-ping, .pc-off-line.is-ping, .pqp-hint.is-ping, .pf-hint.is-ping, .pf-q-value.is-ping, .pq-opt.is-ping, .ws-panel .is-ping, .ws-drag, .ws-slot.is-waiting, .ws-slot.is-wrong {
+  .glow, .thought-puff-bob, .start-btn, .badge-rays, .exclaim-inner, #btn-next.is-ready, .rotate-phone, .spot-ring::after, .red-tag.is-pulsing, .cmp-box.is-key, .fm-box.is-ping, .fm-op.is-ping, .fm-box.is-ping::after, .fr-term.is-ping, .fr-op.is-ping, .pc-price.is-ping, .pc-off.is-ping, .pc-off-line.is-ping, .pqp-hint.is-ping, .pf-hint.is-ping, .pf-q-value.is-ping, .pq-opt.is-ping, .ws-panel .is-ping, .ws-drag, .ws-slot.is-waiting, .ws-slot.is-wrong {
     animation: none !important;
   }
   .qcard-pos { transition: none; }
@@ -2296,11 +2240,10 @@ kbd {
   font: 600 12px/1.4 system-ui, sans-serif; opacity: .85;
 }
 
-/* The story pictures brought to life (game.js Clips): a screen's video clips, over its picture and under everything on
-   it. Each fades in over the one before (0.4 s, game.js CLIP_FADE: the meeting of 2026-10-21 found 0.15 s jumpy, and the
-   user wanted it seamless), so a clip never pops in; a loop fades into its own start the same way. */
-.scene-clips { position: absolute; inset: 0; pointer-events: none; isolation: isolate; } /* (its clips' order stays inside it: under the bubbles) */
-.scene-patches { position: absolute; inset: 0; pointer-events: none; } /* pieces of the picture over the clips (game.js pictureOver) */
+/* The story's films (game.js Clips): a screen's film, over its picture and under everything on it. It fades in as it
+   starts moving (0.4 s; its first frame is the picture, so only the movement shows), or at once where it carries on
+   from the screen before. */
+.scene-clips { position: absolute; inset: 0; pointer-events: none; isolation: isolate; } /* (under the bubbles) */
 .scene-clip {
   position: absolute; inset: 0; width: 100%; height: 100%; display: block;
   object-fit: fill; opacity: 0; transition: opacity .4s ease-in-out;

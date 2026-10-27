@@ -1,5 +1,7 @@
 # Animation video prompts: the story pictures, talking and moving
 
+> **No longer in the game (2026-10-27):** the user's Google Flow films took the place of these clips (the prompts: `Google Flow Video Prompts.md`; how they are brought in: `tools/flow_import.py`). The clips and the tools that made them were taken out (they are in git's history); this file is kept for the record.
+
 These prompts turn the game's still pictures into short videos, made on Higgsfield with **Seedance 2.5, image to video**. Every clip below has a file name to save it as, and every talking clip has the exact words its person says.
 
 There are 53 clips in three kinds:

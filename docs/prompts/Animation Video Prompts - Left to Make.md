@@ -1,5 +1,7 @@
 # Animation clips left to make
 
+> **No longer in the game (2026-10-27):** the user's Google Flow films took the place of these clips (the prompts: `Google Flow Video Prompts.md`; how they are brought in: `tools/flow_import.py`). The clips and the tools that made them were taken out (they are in git's history); this file is kept for the record.
+
 29 of 39 clips to make: 10 not made yet, and 19 made with Gemini to make again on Higgsfield (the meeting of 2026-10-21: in the Gemini takes the people change from clip to clip, the lips move a little after the words, and the picture is soft). This file holds only those, by the picture you upload first, each with its prompt. Everything about them is in `docs/prompts/Animation Video Prompts.md`. Made with `python3 tools/make_videos.py --todo`; it is written again after each batch.
 
 **For every clip, on Higgsfield** (Seedance 2.5, image to video):

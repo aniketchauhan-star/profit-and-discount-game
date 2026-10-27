@@ -86,10 +86,10 @@
   let token = 0;
   let playing = null; // { stop } for the line being spoken
 
-  // Plays a recorded line on the one player. Resolves when it has ended or was stopped, and at the latest its
-  // remaining length + 0.6 s after it starts playing (so a stalled clip never holds the game up). If it can't be
-  // played (the file is missing, or play() is refused), `fallback` says the line instead.
-  function playClip([id, seconds], fallback) {
+  // Plays a recorded line on the one player (from `from` seconds into it). Resolves when it has ended or was stopped,
+  // and at the latest its remaining length + 0.6 s after it starts playing (so a stalled clip never holds the game up).
+  // If it can't be played (the file is missing, or play() is refused), `fallback` says the line instead.
+  function playClip([id, seconds], fallback, from = 0) {
     return new Promise(resolve => {
       let over = false;
       let guard = 0;
@@ -121,9 +121,9 @@
       player.addEventListener('ended', end);
       player.addEventListener('error', fail);
       player.addEventListener('playing', started);
-      guard = setTimeout(end, seconds * 1000 + 4000); // in case it never starts
+      guard = setTimeout(end, (seconds - from) * 1000 + 4000); // in case it never starts
       player.muted = false;
-      player.src = DIR + id + '.ogg';
+      player.src = DIR + id + '.ogg' + (from > 0 ? `#t=${from.toFixed(3)}` : '');
       const p = player.play();
       if (p) p.catch(err => { if (err.name !== 'AbortError') fail(); }); // AbortError: stopped before it began
     });
@@ -200,15 +200,15 @@
 
   // Speaks one line (`id` names it) as `who` ('boy' | 'dad' | 'man' | 'bird'): its recording, found by its text, or else
   // the device's voice. Resolves when it has finished or was stopped. Silent (resolves at once) while sound
-  // effects are off.
-  function say(id, text, who = 'boy') {
+  // effects are off. `from`: seconds into the recording to start at (the quiet it starts with, cut short to catch up).
+  function say(id, text, who = 'boy', { from = 0 } = {}) {
     stop();
     if (!window.Sound || !Sound.sfxOn || document.hidden) return Promise.resolve();
     const mine = ++token;
     Sound.duck(true, 'voice');
     const device = () => (mine === token ? speakText(spoken(text), CAST[who] || CAST.boy) : Promise.resolve());
     const clip = clipOf(text);
-    const run = clip ? playClip(clip, device) : device();
+    const run = clip ? playClip(clip, device, from) : device();
     return run.then(() => { if (mine === token) Sound.duck(false, 'voice'); });
   }
 

@@ -4,6 +4,13 @@
 # Raw video downloads (HEVC with sound): the game uses the converted copies in "assets/video/"
 videos\ /
 
+# The user's Google Flow takes (with sound and the Gemini sparkle): the game uses the films tools/flow_import.py makes
+# from them in "assets/video/"
+flow\ video\ new/
+
+# Python's compiled copies of the tools
+__pycache__/
+
 # Half-finished downloads and conversions
 *.part
 *.part.*
