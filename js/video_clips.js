@@ -1,7 +1,7 @@
 // Made by tools/flow_import.py from the user's Google Flow takes: do not edit by hand.
 // Each story screen's film in "assets/video/" (its first frame, the screen's picture: "<screen>.webp"): its length
-// in seconds, and when each line said on it starts in it (seconds: its speaker's lips start to move). The game plays
-// only the films listed here.
+// in seconds, and when each line said on it starts in it (seconds: its speaker's lips start to move); `sound`: it
+// plays with its own sound (the others are muted: the game says the lines). The game plays only the films listed here.
 const VIDEO_CLIPS = {
   "home": {"seconds": 15.333, "lines": {"plan": 0.54, "advice": 6.94, "promise": 12.71}},
   "outside": {"seconds": 3.625, "lines": {}},
@@ -20,4 +20,5 @@ const VIDEO_CLIPS = {
   "invite": {"seconds": 10.208, "lines": {"inv-1": 0.86, "inv-2": 6.17}},
   "partymoney": {"seconds": 10.167, "lines": {"money": 0.43, "deal-use": 4.33}},
   "partydeal": {"seconds": 13.292, "lines": {"deal-left": 0.35, "deal-really": 5.9, "deal-offers": 8.4}},
+  "fitcheck": {"seconds": 10.0, "lines": {}, "sound": true},
 };

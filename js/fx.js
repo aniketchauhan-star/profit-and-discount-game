@@ -781,6 +781,18 @@
       unlock() {
         buttons.forEach(b => { if (!b.classList.contains('is-wrong')) b.disabled = false; });
       },
+      // Shows the right answer, as if it had been picked (no more tries: after the last hint).
+      showAnswer() {
+        answered = true;
+        buttons.forEach((b, i) => {
+          b.disabled = true;
+          if (options[i].correct) {
+            b.classList.add('is-correct');
+            b.querySelector('.q-chip').innerHTML = ICON_CHECK;
+          } else if (!b.classList.contains('is-wrong')) b.classList.add('is-dim');
+        });
+        Sound.ding();
+      },
       // Shrinks the card out of the way while a bigger panel is up.
       hide() {
         return settle(card.animate([
@@ -3035,75 +3047,95 @@
   }
 
   /**
-   * Two deals side by side (a shop's better deal: the user, 2026-10-26): for each, its picture, its name, its price
-   * less its discount worked out ("₹1,200 − 20% (₹240)"), and what it costs then, big; the better one ticked, green,
-   * "Better deal" on it; and Buy under them. choose() resolves when Buy is pressed (a press while Swifty still speaks
-   * counts); stamp() puts PAID across the better one. bestPic: its picture (to fly onto the shopping list).
-   *  deals [{ name, pic, mp, off, pct, pay, best }]
+   * A shop's two deals side by side, their selling prices found (the user, 2026-10-27: "which deal is better, then buy
+   * a shirt, buy another shirt"): for each, its picture, its name, its price less its discount worked out ("₹1,200 −
+   * 20% (₹240)"), what it costs then, big, and a Buy of its own. choose() resolves with the one whose Buy is pressed (a
+   * press before it is asked counts); wrong(i): that one crossed out, grey, its Buy gone, the other still to buy;
+   * right(i): ticked and green, "Better deal" on it, the other's Buy gone too; stamp(i): PAID across it. pic(i): its
+   * picture (to fly onto the shopping list).
+   *  deals [{ name, pic, mp, off, pct, pay }]
    */
   function dealCard(parent, { deals, cls = '' }) {
     const root = el('div', classes('pc2 dc', cls), parent);
     const card = el('div', 'pc2-card dc-card', root);
-    let bestPic = null;
-    let bestRow = null;
-    deals.forEach(d => {
-      const row = el('div', d.best ? 'dc-row is-best' : 'dc-row', card);
+    let choosing = null;
+    let early = null;
+    const rows = deals.map((d, i) => {
+      const row = el('div', 'dc-row', card);
       const pic = el('div', 'dc-pic', row);
       const img = Object.assign(el('img', '', pic), { src: d.pic, alt: '' });
       el('b', 'dc-name', row).textContent = d.name;
       el('b', 'dc-pay', row).textContent = inr(d.pay);
       el('span', 'dc-sum', row).textContent = `${inr(d.mp)} − ${d.pct ? `${d.pct}% (${inr(d.off)})` : inr(d.off)}`;
-      if (d.best) {
-        const badge = el('span', 'dc-badge', row);
-        badge.innerHTML = `${ICON_CHECK}<span>Better deal</span>`;
-        bestPic = img;
-        bestRow = row;
-      }
+      const buy = el('button', 'pc2-btn pc2-btn--buy dc-buy', row);
+      buy.type = 'button';
+      buy.innerHTML = `${PARTY_ICONS.cart}<span>Buy</span>`;
+      buy.setAttribute('aria-label', `Buy the ${d.name.toLowerCase()}, ${inr(d.pay)}`);
+      buy.addEventListener('click', () => {
+        if (buy.disabled || root.classList.contains('is-paid')) return;
+        Sound.click();
+        if (choosing) {
+          const resolve = choosing;
+          choosing = null;
+          resolve(i);
+        } else if (early === null) {
+          early = i;
+          buy.classList.add('is-pressed');
+        }
+      });
+      return { row, img, buy };
     });
-    const buttons = el('div', 'pc2-buttons', card);
-    const buy = el('button', 'pc2-btn pc2-btn--buy', buttons);
-    buy.type = 'button';
-    buy.innerHTML = `${PARTY_ICONS.cart}<span>Buy</span>`;
-    let choosing = null;
-    let early = false;
-    buy.addEventListener('click', () => {
-      if (root.classList.contains('is-paid')) return;
-      Sound.click();
-      if (choosing) {
-        const resolve = choosing;
-        choosing = null;
-        resolve();
-      } else if (!early) {
-        early = true;
-        buy.classList.add('is-pressed');
+    const gone = buy => { // (a Buy goes: it fades, then its room closes up)
+      buy.disabled = true;
+      if (reducedMotion) {
+        buy.style.display = 'none';
+        return;
       }
-    });
+      const none = { height: '0px', marginTop: '0px', paddingTop: '0px', paddingBottom: '0px', borderTopWidth: '0px', borderBottomWidth: '0px' };
+      settle(buy.animate([{ opacity: 1, transform: 'none' }, { opacity: 0, transform: 'scale(.8)' }], { duration: 260, easing: 'ease-in', fill: 'forwards' }))
+        .then(() => settle(buy.animate([{ height: `${buy.offsetHeight}px`, marginTop: getComputedStyle(buy).marginTop }, none],
+          { duration: 280, easing: 'cubic-bezier(.4,0,.2,1)', fill: 'forwards' })))
+        .then(() => { buy.style.display = 'none'; });
+    };
     root.style.opacity = '0';
     return {
       el: root,
       card,
-      bestPic,
+      pic: i => rows[i].img,
       open: () => springIn(root, 620),
       choose() {
-        if (early) {
-          early = false;
-          buy.classList.remove('is-pressed');
-          return Promise.resolve();
+        if (early !== null) {
+          const i = early;
+          early = null;
+          rows[i].buy.classList.remove('is-pressed');
+          return Promise.resolve(i);
         }
         return new Promise(resolve => { choosing = resolve; });
       },
-      // Paid: a stamp across the better deal, and Buy goes.
-      stamp(text = 'PAID') {
+      wrong(i) {
+        const { row, buy } = rows[i];
+        row.classList.add('is-wrong');
+        gone(buy);
+        Sound.wrong();
+        settle(row.animate([{ transform: 'none' }, { transform: 'translateX(-12px)', offset: 0.2 }, { transform: 'translateX(12px)', offset: 0.45 },
+          { transform: 'translateX(-7px)', offset: 0.7 }, { transform: 'none' }], { duration: reducedMotion ? 1 : 420, easing: 'ease' }));
+      },
+      right(i) {
+        const { row } = rows[i];
+        row.classList.add('is-best');
+        const badge = el('span', 'dc-badge', row);
+        badge.innerHTML = `${ICON_CHECK}<span>Better deal</span>`;
+        popIn(badge, 460);
+        rows.forEach(r => { if (!r.buy.disabled) gone(r.buy); });
+      },
+      // Paid: a stamp across it.
+      stamp(i, text = 'PAID') {
         root.classList.add('is-paid');
-        const st = el('div', 'pc2-stamp dc-stamp', bestRow || card);
+        const st = el('div', 'pc2-stamp dc-stamp', rows[i].row);
         st.textContent = text;
         Sound.stamp();
         reveal(st, [{ opacity: 0, transform: 'scale(2.2) rotate(-14deg)' }, { opacity: 1, transform: 'scale(.95) rotate(-10deg)', offset: 0.7 },
           { opacity: 1, transform: 'rotate(-10deg)' }], { duration: 480, easing: 'cubic-bezier(.3,.7,.4,1)' });
-        const h = buttons.offsetHeight; // (Buy goes, and its room closes up: no empty card under the deals)
-        buttons.style.overflow = 'hidden';
-        settle(buttons.animate([{ opacity: 1, height: `${h}px`, marginTop: getComputedStyle(buttons).marginTop }, { opacity: 0, height: '0px', marginTop: '0px' }],
-          { duration: reducedMotion ? 1 : 420, easing: 'ease-in-out', fill: 'forwards' }));
       },
       async close() {
         await settle(root.animate([{ opacity: 1, transform: 'none' }, { opacity: 0, transform: 'translateY(24px) scale(.96)' }],

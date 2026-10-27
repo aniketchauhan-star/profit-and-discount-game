@@ -46,6 +46,7 @@ JOIN = 0.33        # seconds: one part fading into the next
 PAUSE = 2.0        # seconds: the least quiet after each line, before the next one (or the film's end)
 LEAD_OUT = 0.10    # seconds: a slowed-down moment ends this long before the next line's lips start
 CRF = 20
+SOUND_LEVEL = 'loudnorm=I=-19:TP=-2:LRA=11'  # a film with its own sound: about as loud as the game's music
 ENHANCE = 'nlmeans=s=3:p=7:r=9,cas=strength=0.5'
 SLOW = 'minterpolate=fps={fps}:mi_mode=mci:mc_mode=aobmc:me_mode=bidir:vsbmc=1'
 
@@ -66,6 +67,7 @@ TAKES = {
     'party-message': "Wow! Rohan's birthday party is tonight!.mp4",
     'money-1': '"Here\'s five thousand rupees." | | 2.2 s | | Aniket takes the notes and holds them, .mp4',
     'money-2': 'Whatever is left after buying everything is yours." |.mp4',
+    'fitcheck': 'fitcheck.mp4',
 }
 
 # Each screen's film: its parts (take, from, to: seconds in the take; to None: its end); the lines said on it (the game's
@@ -95,6 +97,9 @@ FILMS = {
     'partymoney': {'parts': [('money-1', 0, 8.6)], 'lines': {'money': (0.43, 'vo132'), 'deal-use': (2.95, 'vo133')}},
     'partydeal': {'parts': [('money-2', 0, 8.6)],
                   'lines': {'deal-left': (0.35, 'vo134'), 'deal-really': (4.0, 'vo135'), 'deal-offers': (5.0, 'vo136')}},
+    # His fit check in his new things, once all four are bought (the user, 2026-10-27), with its own music: `sound`, the
+    # take's sound kept (brought to SOUND_LEVEL), the one film the game doesn't play muted.
+    'fitcheck': {'parts': [('fitcheck', 0, None)], 'lines': {}, 'end': True, 'sound': True},
 }
 
 
@@ -235,11 +240,18 @@ def make(name, sparkle, log):
     lines, slow, total = plan(name, log)
     dest = OUT / f'{name}.mp4'
     tmp = dest.with_suffix('.part.mp4')
+    sound = ['-an']
+    if FILMS[name].get('sound'):  # (its take's own sound, as it is: so only for a film cut straight from one take)
+        parts = FILMS[name]['parts']
+        assert len(parts) == 1 and not slow and not parts[0][1], f'{name}: its sound would not fit its film'
+        sound = ['-map', '0:v', '-map', '1:a', '-af', SOUND_LEVEL, '-ar', '48000', '-c:a', 'aac', '-b:a', '128k', '-shortest']
     enc = subprocess.Popen(['ffmpeg', '-v', 'error', '-y', '-f', 'rawvideo', '-pix_fmt', 'yuv420p', '-s', f'{FW}x{FH}',
-                            '-r', str(FPS), '-i', '-', '-vf', ENHANCE, '-c:v', 'libx264', '-preset', 'slow', '-tune', 'animation',
+                            '-r', str(FPS), '-i', '-',
+                            *(['-i', str(take_path(FILMS[name]['parts'][0][0]))] if FILMS[name].get('sound') else []),
+                            '-vf', ENHANCE, '-c:v', 'libx264', '-preset', 'slow', '-tune', 'animation',
                             '-crf', str(CRF), '-pix_fmt', 'yuv420p', '-g', str(2 * FPS), '-colorspace', 'smpte170m',
                             '-color_trc', 'iec61966-2-1', '-color_primaries', 'bt709', '-color_range', 'tv',
-                            '-movflags', '+faststart', '-an', str(tmp)], stdin=subprocess.PIPE)
+                            '-movflags', '+faststart', *sound, str(tmp)], stdin=subprocess.PIPE)
     window, written = [], 0
     for k, raw in enumerate(cut_frames(name, sparkle)):
         w = next((s for s in slow if s[0] <= k < s[1]), None)
@@ -287,12 +299,14 @@ def index(log):
         if frames != total:
             log(f'  {name}: the film has {frames} frames, the plan {total}: make it again')
         films[name] = {'seconds': round(frames / FPS, 3), 'lines': {ln['id']: round(ln['at'], 2) for ln in lines}}
+        if FILMS[name].get('sound'):
+            films[name]['sound'] = True
     body = ',\n'.join(f'  {json.dumps(k)}: {json.dumps(v, ensure_ascii=False)}' for k, v in films.items())
     INDEX.write_text(
         '// Made by tools/flow_import.py from the user\'s Google Flow takes: do not edit by hand.\n'
         '// Each story screen\'s film in "assets/video/" (its first frame, the screen\'s picture: "<screen>.webp"): its length\n'
-        '// in seconds, and when each line said on it starts in it (seconds: its speaker\'s lips start to move). The game plays\n'
-        '// only the films listed here.\n'
+        '// in seconds, and when each line said on it starts in it (seconds: its speaker\'s lips start to move); `sound`: it\n'
+        '// plays with its own sound (the others are muted: the game says the lines). The game plays only the films listed here.\n'
         f'const VIDEO_CLIPS = {{\n{body},\n}};\n')
     log(f'wrote {INDEX.relative_to(ROOT)}: {len(films)} films')
 

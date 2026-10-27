@@ -2566,7 +2566,6 @@ kbd {
 .scene { --pp-ink: #1d2f6f; --pp-cream: #fffaf0; --pp-gold: #f3c34f; --pp-red: #e0303f; --pp-green: #17923d; }
 .pc2 { position: absolute; z-index: 4; font-family: 'Baloo 2', system-ui, sans-serif; pointer-events: auto; }
 .pc2-card { position: relative; padding: 34px 38px 30px; border: 6px solid var(--pp-gold); border-radius: 34px; background: var(--pp-cream); box-shadow: 0 22px 50px rgba(15, 25, 55, .38); }
-.pc2-buttons { display: flex; gap: 24px; margin-top: 28px; }
 .pc2-btn { flex: 1; display: flex; align-items: center; justify-content: center; gap: 12px; height: 96px; white-space: nowrap; border: 4px solid #fff; border-radius: 26px; color: #fff;
   font: inherit; font-size: 44px; font-weight: 800; box-shadow: 0 7px 0 var(--dk), 0 14px 26px rgba(0, 0, 0, .25); cursor: pointer; transition: translate .12s ease; }
 .pc2-btn:hover { translate: 0 -3px; }
@@ -2646,12 +2645,15 @@ kbd {
   box-shadow: 0 0 0 6px rgba(120, 220, 255, .85), 0 0 46px 18px rgba(80, 200, 255, .7); animation: joy-glow 1.4s ease-in-out infinite; }
 @keyframes joy-glow { 50% { box-shadow: 0 0 0 9px rgba(170, 238, 255, .95), 0 0 74px 30px rgba(80, 200, 255, .85); } }
 /* The spotlight (FX.focusVeil; the user, 2026-10-26: "focus on the things I want to see"): the screen dark and blurred,
-   but for a soft-edged hole on Swifty while she talks, on the controller, on a card */
+   but for a soft-edged hole. In the shopping game only as a shop comes in, round its two things (the user, 2026-10-27:
+   "do not add a shadow circle in game, only the first time the showroom comes") */
 .focus-veil { position: absolute; inset: 0; z-index: 9; background: rgba(6, 12, 34, .68); -webkit-backdrop-filter: blur(7px); backdrop-filter: blur(7px);
   opacity: 0; transition: opacity .45s ease; pointer-events: none; }
 .focus-veil.is-on { opacity: 1; }
-/* (in the shops, where the spotlight stays on the two things on show, the bar on top and what flies onto its list stay bright) */
-.scene[data-scene$="shop"] .ph { z-index: 10; }
+/* (in the shops, while it is round the two things on show, the bar on top stays bright, and Swifty and her words are
+   on top of it: no spotlight of her own) */
+.scene[data-scene$="shop"] .ph,
+.scene[data-scene$="shop"] :is(.bird, .bubble) { z-index: 10; }
 .scene[data-scene$="shop"] .party-fly { z-index: 11; }
 
 /* Aniket seen from above, his shadow under his feet (on the map's own layer: he walks under the bar, the arrows and the bubbles) */
@@ -2709,17 +2711,44 @@ kbd {
 .deal-spot.is-wrong .ds-mark::before { content: '✕'; }
 .deal-spot.is-right .ds-mark { background: #2fb35a; }
 .deal-spot.is-right .ds-mark::before { content: '✓'; }
-/* …a wrong pick: both worked out, on a card right of the things (her voice alone) */
-.deal-hint { position: absolute; left: 1290px; top: 200px; z-index: 4; width: 600px; padding: 22px; border: 6px solid var(--pp-gold); border-radius: 30px; background: var(--pp-cream);
-  box-shadow: 0 22px 50px rgba(15, 25, 55, .38); font-family: 'Baloo 2', system-ui, sans-serif; pointer-events: none; }
-.is-v2 .deal-hint .hint-strip { margin-top: 0; align-items: flex-start; font-size: 34px; }
-.deal-hint .hs-part { display: block; }
-.deal-hint .hs-part + .hs-part { margin-top: 14px; }
-.deal-hint .hs-name { display: block; font-weight: 800; } /* (each deal: its name, then its sum under it) */
-/* …the right one: the two worked out side by side (FX.dealCard), the better one ticked, and Buy */
+/* …the one whose selling price is asked: its ring brighter, still pulsing; once found, a steady gold ring */
+.deal-spot.is-now::before { border-color: #fff27a; box-shadow: 0 0 0 3px #fff, 0 0 44px 16px rgba(255, 214, 80, .8), inset 0 0 18px rgba(255, 220, 90, .45); }
+.deal-spot.is-now::after { animation: deal-pulse 1.6s ease-out infinite; opacity: 1; }
+.deal-spot.is-found::before { box-shadow: 0 0 0 3px rgba(255, 255, 255, .7), 0 0 18px 4px rgba(255, 205, 60, .4); }
+/* …its selling price, under it (game.js priceUnder): white, a green edge; green once it is the better deal, faded if
+   it was bought by mistake */
+.deal-sp { position: absolute; z-index: 3; display: flex; align-items: baseline; gap: 10px; padding: 5px 22px 1px; translate: -50% 0; border: 4px solid #2fb35a;
+  border-radius: 22px; background: #fff; color: var(--pp-ink); font: 700 26px/1.3 'Baloo 2', system-ui, sans-serif; white-space: nowrap;
+  box-shadow: 0 8px 18px rgba(15, 25, 55, .35); pointer-events: none; transition: background-color .3s ease, opacity .3s ease; }
+.deal-sp b { color: var(--pp-green); font-size: 42px; font-weight: 900; }
+.deal-sp.is-best { background: #2fb35a; color: #fff; }
+.deal-sp.is-best b { color: #fff; }
+.deal-sp.is-out { opacity: .6; }
+/* …its question card (FX.question, right of the two): the shop's cream and gold; on top, the thing's picture, its name
+   and its tag (as in the shop: the price, then the discount in red) */
+.qcard-pos--deal { width: 600px; } /* (room for a hint in two full lines; still clear of the two) */
+.qcard-pos--deal .qcard { padding: 30px 40px 40px; border: 6px solid var(--pp-gold); background: var(--pp-cream); }
+.qd-head { display: flex; align-items: center; gap: 20px; margin-bottom: 20px; padding-bottom: 20px; border-bottom: 3px solid #eadfc6; }
+.qd-pic { flex: none; display: grid; place-items: center; width: 112px; height: 112px; overflow: hidden; border-radius: 18px; background: #f6efe2;
+  box-shadow: inset 0 0 0 3px #e3d4b4; }
+.qd-pic img { width: 100%; height: 100%; object-fit: contain; }
+.qd-what { display: grid; justify-items: start; gap: 10px; }
+.qd-name { color: var(--pp-ink); font-size: 40px; font-weight: 800; line-height: 1.1; }
+.qd-tag { display: flex; overflow: hidden; border-radius: 12px; box-shadow: 0 3px 8px rgba(15, 25, 55, .2); font-size: 30px; font-weight: 800; line-height: 1; }
+.qd-mp { padding: 9px 14px 5px; border: 3px solid #cfdcef; border-right: 0; border-radius: 12px 0 0 12px; background: #fff; color: var(--pp-ink); }
+.qd-off { padding: 12px 14px 8px; background: var(--pp-red); color: #fff; }
+.qcard-pos--deal .qcard-q { color: var(--pp-ink); }
+.qcard-pos--deal .q-line { font-size: 42px; }
+.qcard-pos--deal .q-mark { margin: 0; padding: 0 4px; font-size: 42px; color: var(--sp); }
+.qcard-pos--deal .qcard-options { gap: 18px; margin-top: 24px; }
+.qcard-pos--deal .q-opt { height: 96px; font-size: 44px; }
+.is-v2 .qcard-pos--deal .hint-strip { gap: 12px; margin-top: 20px; padding: 12px 20px 14px 12px; font-size: 32px; }
+.is-v2 .qcard-pos--deal .hint-strip .hs-chip { width: 44px; height: 44px; }
+/* …then the two side by side, their selling prices found (FX.dealCard), each with its Buy: the better one ticked,
+   one bought by mistake crossed out */
 .scene[data-scene] .pc2.dc { left: 1290px; top: 168px; width: 600px; }
 .dc-card { padding: 30px 24px 24px; }
-.dc-row { position: relative; display: grid; grid-template-columns: 100px 1fr auto; grid-template-rows: auto auto; column-gap: 14px; margin-bottom: 22px;
+.dc-row { position: relative; display: grid; grid-template-columns: 100px 1fr auto; grid-template-rows: auto auto auto; column-gap: 14px; margin-bottom: 22px;
   padding: 12px 18px 12px 12px; border: 3px solid #d6e2f3; border-radius: 22px; background: #fff; }
 .dc-pic { grid-column: 1; grid-row: 1 / 3; display: grid; place-items: center; width: 100px; height: 100px; overflow: hidden; border-radius: 16px; background: #f6efe2; }
 .dc-pic img { width: 100%; height: 100%; object-fit: contain; }
@@ -2732,5 +2761,10 @@ kbd {
 .dc-badge { position: absolute; top: -22px; right: 18px; display: flex; align-items: center; gap: 6px; padding: 2px 16px 0 10px; border-radius: 16px; background: #2fb35a;
   color: #fff; font-size: 26px; font-weight: 800; }
 .dc-badge svg { width: 26px; height: 26px; fill: none; stroke: #fff; stroke-width: 7; stroke-linecap: round; stroke-linejoin: round; }
-.dc .pc2-buttons { margin-top: 6px; }
+.dc-row:last-child { margin-bottom: 0; }
+.dc-buy { grid-column: 1 / 4; grid-row: 3; height: 76px; margin-top: 12px; border-radius: 22px; font-size: 38px; }
+.dc-buy svg { width: 40px; height: 40px; }
+.dc-row.is-wrong { border-color: #9aa5ab; background: #eef0f1; }
+.dc-row.is-wrong :is(.dc-name, .dc-pay, .dc-sum) { color: #4f5d65; text-decoration: line-through; text-decoration-thickness: 3px; }
+.dc-row.is-wrong .dc-pic { opacity: .6; }
 .dc .dc-stamp { top: 50%; right: auto; bottom: auto; left: 8px; translate: 0 -50%; padding: 0 10px; border-width: 5px; font-size: 30px; letter-spacing: 2px; } /* (on its picture: its name and price clear) */

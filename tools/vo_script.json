@@ -856,5 +856,119 @@
     "line": "Use the controller to walk into a shop!",
     "spoken": "Use the controller to walk into a shop!",
     "speaker": "Swifty"
+  },
+  {
+    "id": "vo223",
+    "line": "Tap a shirt to find its selling price!",
+    "spoken": "Tap a shirt to find its selling price!",
+    "speaker": "Swifty"
+  },
+  {
+    "id": "vo224",
+    "line": "Not quite! The discount is 20% of ₹1,200.",
+    "spoken": "Not quite! The discount is twenty percent of one thousand two hundred rupees.",
+    "speaker": "Swifty"
+  },
+  {
+    "id": "vo225",
+    "line": "Not quite! Take ₹150 off ₹1,000.",
+    "spoken": "Not quite! Take one hundred and fifty rupees off one thousand rupees.",
+    "speaker": "Swifty"
+  },
+  {
+    "id": "vo226",
+    "line": "Let’s check the selling price of the green shirt!",
+    "spoken": "Let’s check the selling price of the green shirt!",
+    "speaker": "Swifty"
+  },
+  {
+    "id": "vo227",
+    "line": "Let’s check the selling price of the blue shirt!",
+    "spoken": "Let’s check the selling price of the blue shirt!",
+    "speaker": "Swifty"
+  },
+  {
+    "id": "vo228",
+    "line": "Tap one to find its selling price!",
+    "spoken": "Tap one to find its selling price!",
+    "speaker": "Swifty"
+  },
+  {
+    "id": "vo229",
+    "line": "Not quite! The discount is 30% of ₹1,800.",
+    "spoken": "Not quite! The discount is thirty percent of one thousand eight hundred rupees.",
+    "speaker": "Swifty"
+  },
+  {
+    "id": "vo230",
+    "line": "Not quite! Take ₹300 off ₹1,600.",
+    "spoken": "Not quite! Take three hundred rupees off one thousand six hundred rupees.",
+    "speaker": "Swifty"
+  },
+  {
+    "id": "vo231",
+    "line": "Let’s check the selling price of the trousers!",
+    "spoken": "Let’s check the selling price of the trousers!",
+    "speaker": "Swifty"
+  },
+  {
+    "id": "vo232",
+    "line": "Let’s check the selling price of the jeans!",
+    "spoken": "Let’s check the selling price of the jeans!",
+    "speaker": "Swifty"
+  },
+  {
+    "id": "vo233",
+    "line": "Tap a watch to find its selling price!",
+    "spoken": "Tap a watch to find its selling price!",
+    "speaker": "Swifty"
+  },
+  {
+    "id": "vo234",
+    "line": "Not quite! The discount is 20% of ₹2,000.",
+    "spoken": "Not quite! The discount is twenty percent of two thousand rupees.",
+    "speaker": "Swifty"
+  },
+  {
+    "id": "vo235",
+    "line": "Not quite! Take ₹250 off ₹1,800.",
+    "spoken": "Not quite! Take two hundred and fifty rupees off one thousand eight hundred rupees.",
+    "speaker": "Swifty"
+  },
+  {
+    "id": "vo236",
+    "line": "Let’s check the selling price of the brown watch!",
+    "spoken": "Let’s check the selling price of the brown watch!",
+    "speaker": "Swifty"
+  },
+  {
+    "id": "vo237",
+    "line": "Let’s check the selling price of the silver watch!",
+    "spoken": "Let’s check the selling price of the silver watch!",
+    "speaker": "Swifty"
+  },
+  {
+    "id": "vo238",
+    "line": "Not quite! The discount is 10% of ₹900.",
+    "spoken": "Not quite! The discount is ten percent of nine hundred rupees.",
+    "speaker": "Swifty"
+  },
+  {
+    "id": "vo239",
+    "line": "Let’s check the selling price of the brown sunglasses!",
+    "spoken": "Let’s check the selling price of the brown sunglasses!",
+    "speaker": "Swifty"
+  },
+  {
+    "id": "vo240",
+    "line": "Let’s check the selling price of the black sunglasses!",
+    "spoken": "Let’s check the selling price of the black sunglasses!",
+    "speaker": "Swifty"
+  },
+  {
+    "id": "vo241",
+    "line": "Not quite! Buy the one that costs less.",
+    "spoken": "Not quite! Buy the one that costs less.",
+    "speaker": "Swifty"
   }
 ]

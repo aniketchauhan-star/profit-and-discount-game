@@ -434,24 +434,33 @@
       id: 'mallfloor', title: 'Inside the Mall', sub: 'Walk to a shop with the arrows',
       bg: PARTY + 'mall-map.webp', // (the user's new map, 2026-10-26)
       kb: null, origin: '50% 50%', still: true, lamps: [], dust: null,
-      next: () => (partyDone() ? 'partydone' : PARTY_ITEMS.find(it => !Party.bought.has(it.id)).shop),
+      next: () => (partyDone() ? 'fitcheck' : PARTY_ITEMS.find(it => !Party.bought.has(it.id)).shop),
       setup: mallSetup,
       play: playMall,
     },
     ...[['shirtshop', 'The Shirts Shop', 'shirt'], ['pantsshop', 'The Bottomwear Shop', 'pants'],
       ['watchshop', 'The Watch Shop', 'watch'], ['sunshop', 'The Sunglasses Shop', 'sunglasses']]
       .map(([id, title, buys]) => ({
-        id, title, sub: 'Pick the better deal, and buy it', buys,
+        id, title, sub: 'Find both selling prices, then buy the better deal', buys,
         bg: PARTY + PARTY_SHOWROOMS[buys], // (the user's showrooms of 2026-10-26)
         kb: null, origin: '50% 50%', still: true, lamps: [], dust: null,
-        next: () => (partyDone() ? 'partydone' : 'mallfloor'), // (back out into the mall, by its door)
+        next: () => (partyDone() ? 'fitcheck' : 'mallfloor'), // (back out into the mall, by its door; all bought: his fit check)
         back: () => 'mallfloor',
         setup: shopSetup,
         play: playShop,
       })),
     {
+      // His fit check once all four are bought (the user, 2026-10-27: "after all collection this video come with
+      // celebration sound"): its film, with its own music; confetti as the beat starts. Then the summary, on its last frame.
+      id: 'fitcheck', title: 'Fit Check!', sub: 'Aniket in his new outfit',
+      bg: FILM + 'fitcheck.webp',
+      kb: null, origin: '50% 50%', still: true, lamps: [], dust: null,
+      back: () => 'mallfloor',
+      play: playFitCheck,
+    },
+    {
       id: 'partydone', title: 'All Set for the Party!', sub: 'Total ₹4,470, ₹530 left',
-      bg: PARTY + 'mall-map.webp',
+      bg: FILM + 'fitcheck-end.webp', // (his fit check as it ends, blurred: the summary over it)
       kb: null, origin: '50% 50%', still: true, lamps: [], dust: null,
       back: () => 'mallfloor',
       setup: scene => allBlur(scene),
@@ -2633,28 +2642,29 @@
   // with its price and its discount printed on its tag (a percentage or an amount off): the better deal is the one that
   // costs less after its discount (the user, 2026-10-26: "Pick the better deal"). Each: its price, its discount (`pct`
   // or `flat`), where it is on the picture (picture px of 1672 × 941: the thing and its tag, what the player taps), and
-  // its picture for the card and the shopping list. ₹4,470 in all, ₹530 left of ₹5,000.
+  // its picture for the cards and the shopping list; and what Swifty asks there (`pick`: tap one to find its selling
+  // price; `ask`: which is the better deal). ₹4,470 in all, ₹530 left of ₹5,000.
   const PARTY_BUDGET = 5000;
   const PARTY_WALLET = ASSETS + 'ui/wallet.webp';
   const PARTY_JOY = { base: PARTY + 'joystick-base.webp', knob: PARTY + 'joystick-knob.webp' }; // (the user's controller, cut out of their picture)
   const PARTY_ITEMS = [
     { id: 'shirt', name: 'Shirt', icon: PARTY + 'icon-shirt.webp', shop: 'shirtshop', a: 'this shirt',
-      ask: 'Which shirt is the better deal? Tap it!', deals: [
+      pick: 'Tap a shirt to find its selling price!', ask: 'Which shirt is the better deal? Tap it!', deals: [
         { name: 'Blue shirt', mp: 1200, pct: 20, spot: [548, 182, 768, 545], pic: 'deal-shirt-blue.webp' },
         { name: 'Green shirt', mp: 1000, flat: 150, spot: [833, 182, 1053, 545], pic: 'deal-shirt-green.webp' },
       ] },
     { id: 'pants', name: 'Bottomwear', icon: PARTY + 'icon-pants.webp', shop: 'pantsshop', a: 'this bottomwear',
-      ask: 'Which bottomwear is the better deal? Tap it!', deals: [
+      pick: 'Tap one to find its selling price!', ask: 'Which bottomwear is the better deal? Tap it!', deals: [
         { name: 'Jeans', mp: 1800, pct: 30, spot: [676, 160, 848, 562], pic: 'deal-pants-jeans.webp', plural: true },
         { name: 'Trousers', mp: 1600, flat: 300, spot: [930, 160, 1104, 562], pic: 'deal-pants-trousers.webp', plural: true },
       ] },
     { id: 'watch', name: 'Watch', icon: PARTY + 'icon-watch.webp', shop: 'watchshop', a: 'this watch',
-      ask: 'Which watch is the better deal? Tap it!', deals: [
+      pick: 'Tap a watch to find its selling price!', ask: 'Which watch is the better deal? Tap it!', deals: [
         { name: 'Silver watch', mp: 2000, pct: 20, spot: [556, 340, 700, 540], pic: 'deal-watch-silver.webp' },
         { name: 'Brown watch', mp: 1800, flat: 250, spot: [832, 340, 976, 540], pic: 'deal-watch-brown.webp' },
       ] },
     { id: 'sunglasses', name: 'Sunglasses', icon: PARTY + 'icon-sunglasses.webp', shop: 'sunshop', a: 'these sunglasses',
-      ask: 'Which sunglasses are the better deal? Tap them!', deals: [
+      pick: 'Tap one to find its selling price!', ask: 'Which sunglasses are the better deal? Tap them!', deals: [
         { name: 'Black sunglasses', mp: 1200, pct: 20, spot: [628, 422, 808, 514], pic: 'deal-sun-black.webp', plural: true },
         { name: 'Brown sunglasses', mp: 900, pct: 10, spot: [866, 422, 1046, 514], pic: 'deal-sun-brown.webp', plural: true },
       ] },
@@ -2698,11 +2708,8 @@
   // Swifty, as on the story's pictures: she pops up in a bottom corner (no books), her bubble beside her, and goes back
   // down when it goes (she is there only with a bubble). say() after say() changes the bubble; hide(). On the right
   // (`side: 'right'`; the user, 2026-10-26: "Swifty comes in on the right side") she slides in from its edge, her bubble
-  // on her left. With `focus` (an FX.focusVeil) she and her words are in the spotlight while she talks (the user: "focus
-  // on Swifty when she is talking"), beside what `lit()` gives (the spotlight's holes that stay: in a shop, the two things
-  // on show and the card up; the user, 2026-10-27: "every time Swifty says, show the shirts and Swifty"); hide() takes it
-  // away too, unless asked to keep it (for what comes next).
-  function partyBird(ctx, scene, { at = null, side = 'left', upTo = 1000, downTo = 640, size = 40, focus = null, lit = () => [] } = {}) {
+  // on her left (no further left than `downTo`).
+  function partyBird(ctx, scene, { at = null, side = 'left', upTo = 1000, downTo = 640, size = 40 } = {}) {
     const right = side === 'right';
     const spot = at || (right ? { x: 1740, y: 1066, s: 0.74 } : NOT_QUITE);
     const away = right ? 'translateX(380px)' : 'translateY(320px)'; // (where she comes from, and goes back to)
@@ -2729,12 +2736,10 @@
           ? { anchor: [spot.x - 176, head], corner: 'mr', tip: [spot.x - 120, head + 6], text, size, voice: 'bird', within: [downTo, spot.x - 176] }
           : { anchor: [spot.x + 176, head], corner: 'ml', tip: [spot.x + 120, head + 6], text, size, voice: 'bird', within: [spot.x + 176, upTo] });
         await line.show();
-        if (focus) focus.on([...lit(), spotOf([bird.root, line.el])]);
         await Promise.all([speak(ctx, line, id, 'bird', bird), ctx.wait(ms)]);
         bird.point();
       },
-      async hide({ keepFocus = false } = {}) {
-        if (focus && !keepFocus) focus.off();
+      async hide() {
         if (line) {
           const old = line;
           line = null;
@@ -2748,16 +2753,6 @@
         b.root.remove();
       },
     };
-  }
-
-  // The spotlight's hole round some things (stage px): an oval round all of them, a little room to spare.
-  function spotOf(nodes, room = 1.3) {
-    const rs = nodes.filter(Boolean).map(stageRect);
-    const left = Math.min(...rs.map(r => r.left));
-    const top = Math.min(...rs.map(r => r.top));
-    const right = Math.max(...rs.map(r => r.right));
-    const bottom = Math.max(...rs.map(r => r.bottom));
-    return { x: (left + right) / 2, y: (top + bottom) / 2, rx: ((right - left) / 2) * room, ry: ((bottom - top) / 2) * room };
   }
 
   // The party message (screen 32): Aniket, on the sofa, reads his phone: the invite comes up out of it.
@@ -2914,19 +2909,15 @@
     const cleanup = () => { pad.destroy(); if (Game.steering === steer) Game.steering = false; };
     try {
       if (!Party.from) { // the first time in: how to walk (he can walk meanwhile; the list on top says what to buy)
-        // Swifty comes in on the right, in the spotlight while she says it; then the spotlight goes round to the
-        // controller, which glows, everything else dark and blurred, until it is used (the user, 2026-10-26)
-        const veil = FX.focusVeil(scene.ui);
-        swifty = partyBird(ctx, scene, { side: 'right', focus: veil, size: 38 });
+        // Swifty comes in on the right to say it; then the controller glows until it is used (the user, 2026-10-26). No
+        // spotlight, the rest dark (the user, 2026-10-27: "do not add a shadow circle in game", but for a shop's first look).
+        swifty = partyBird(ctx, scene, { side: 'right', size: 38 });
         (async () => {
           await swifty.say('mall-how', [{ t: 'Use the ' }, { t: 'controller', cls: 'key' }, { t: ' to walk into a shop!' }], 400);
-          await swifty.hide({ keepFocus: true });
-          const r = stageRect(pad.el);
+          await swifty.hide();
           pad.el.classList.add('is-glowing');
-          await veil.on({ x: r.left + r.width / 2, y: r.top + r.height / 2, rx: r.width / 2 + 34 });
           await Promise.race([pad.pressed().then(() => ctx.wait(1200)), ctx.wait(5000)]);
           pad.el.classList.remove('is-glowing');
-          await veil.off();
         })().catch(err => { if (err !== CANCELLED) console.error(err); });
       }
       let way = walker.way;
@@ -3008,11 +2999,15 @@
   }
 
   // ---------- A shop (screens 37–40) ----------
-  // Two of a kind on show, each with its price and discount printed on its tag (the user's showrooms of 2026-10-26).
-  // Both light up, each a button; Swifty asks which is the better deal. A wrong one: crossed out, and on a card her
-  // voice works out both sale prices (each line lit as it is said); the right one: ticked, sparkles, and a card with the
-  // two worked out side by side, the better one ticked, and Buy. Buy: PAID, the money comes out of the wallet, its
-  // picture goes onto the shopping list (ticked), and back out into the mall (or, all bought, on to the end).
+  // Two of a kind on show, each with its price and its discount printed on its tag (the user's showrooms of 2026-10-26).
+  // The user, 2026-10-27: "the user can select any shirt, then a question pops up: its selling price. Incorrect: a hint;
+  // again incorrect: another hint; then the price shows. Then Swifty says 'Let's check the selling price of the other
+  // shirt', and the same for it; then which deal is better: buy a shirt, buy another shirt. Then that showroom is
+  // checked." As the shop comes in, the camera moves in on the two, lit in gold, the rest of the shop dark and blurred
+  // (the user's picture: "only the first time the showroom comes, like this"); the first tap brightens it again, and no
+  // spotlight comes after that ("do not add a shadow circle"). Each selling price found goes under its thing; then the
+  // two side by side, each with its Buy. The better deal (the one that costs less): PAID, the money comes out of the
+  // wallet, its picture goes onto the shopping list (ticked), and back out into the mall (or, all bought, his fit check).
   function shopSetup(scene) {
     Party.from = scene.buys; // (back out into the mall, he stands at this shop's door)
     partyBar(scene);
@@ -3047,14 +3042,88 @@
     return { transform: `translate(${tx}px, ${ty}px) scale(${s})`, map: ([x, y]) => [ox + tx + s * (x - ox), oy + ty + s * (y - oy)] };
   }
 
-  // The spotlight's window round a card (a rectangle with round corners, a little room round it).
-  function boxOf(node, room = 28, round = 40) {
-    const r = stageRect(node);
-    return { x: r.left + r.width / 2, y: r.top + r.height / 2, rx: r.width / 2 + room, ry: r.height / 2 + room, round };
+  // "Blue shirt: ₹1,200 − ₹240 = ₹960." (a deal's selling price worked out, as said and as written on its second hint)
+  const dealSum = d => `${d.name}: ${inr(d.mp)} − ${inr(dealOff(d))} = ${inr(dealPay(d))}.`;
+  // Its first hint: what to work out ("The discount is 20% of ₹1,200." or "Take ₹150 off ₹1,000.").
+  const dealHint = d => (d.pct
+    ? [{ t: 'Not quite! The discount is ' }, { t: `${d.pct}% of ${inr(d.mp)}`, em: true }, { t: '.' }]
+    : [{ t: 'Not quite! Take ' }, { t: inr(d.flat), em: true }, { t: ' off ' }, { t: inr(d.mp), em: true }, { t: '.' }]);
+  const SHOP_SAYS_FROM = 1130; // (stage px: Swifty's bubble stays right of the selling prices under the two)
+
+  // A deal's selling price, under it in the shop ("Selling price ₹960"), placed but still hidden.
+  function priceUnder(scene, spot, pay) {
+    const [x, y, w, h] = ['left', 'top', 'width', 'height'].map(k => parseFloat(spot.style[k]));
+    const tag = el('div', 'deal-sp', scene.ui, { left: `${x + w / 2}px`, top: `${y + h + 24}px`, opacity: '0' }); // (clear of its ring)
+    el('span', '', tag).textContent = 'Selling price';
+    el('b', '', tag).textContent = inr(pay);
+    return tag;
   }
 
-  // "Blue shirt: ₹1,200 − ₹240 = ₹960." (a deal's sale price worked out, as said and as written on the hint card)
-  const dealSum = d => `${d.name}: ${inr(d.mp)} − ${inr(dealOff(d))} = ${inr(dealPay(d))}.`;
+  // A card on the right asks a deal's selling price: the thing's picture, its name and its tag on top, and three answers
+  // (its selling price, its discount, and its price less the percentage taken as rupees, or plus the amount off). A
+  // wrong one: the first hint, what to work out; another: the second, it worked out, and the answer shows (each hint her
+  // voice alone, on the card). Then its selling price flies from the card to under it (`spot`), and the card goes.
+  // `at`: where the right answer is (0–2, from deal to deal). Resolves with that price under it.
+  async function sellingPrice(ctx, scene, d, spot, at) {
+    const off = dealOff(d);
+    const pay = dealPay(d);
+    const values = [off, d.pct ? d.mp - d.pct : d.mp + off];
+    values.splice(at, 0, pay);
+    let tries = 0;
+    let found = null;
+    const answered = new Promise(resolve => { found = resolve; });
+    const card = FX.question(scene.ui, {
+      lines: ['Its {selling price} is —'],
+      options: values.map(v => ({ label: inr(v), correct: v === pay })),
+      onAnswer(correct, button) {
+        const reply = correct ? right(button) : wrong();
+        reply.catch(err => { if (err !== CANCELLED) console.error(err); });
+      },
+    });
+    card.el.classList.add('qcard-pos--deal');
+    card.card.setAttribute('aria-label', `${d.name}: ${inr(d.mp)}, ${d.pct ? `${d.pct}%` : inr(d.flat)} off. Its selling price is —`);
+    const head = el('div', 'qd-head');
+    card.card.prepend(head);
+    Object.assign(el('img', '', el('div', 'qd-pic', head)), { src: d.pic, alt: '' });
+    const what = el('div', 'qd-what', head);
+    el('b', 'qd-name', what).textContent = d.name;
+    const tag = el('div', 'qd-tag', what); // (as on its tag in the shop)
+    el('span', 'qd-mp', tag).textContent = inr(d.mp);
+    el('span', 'qd-off', tag).textContent = `${d.pct ? `${d.pct}%` : inr(d.flat)} OFF`;
+    async function wrong() {
+      card.lock();
+      tries++;
+      await ctx.wait(700); // let the shake and buzz land first
+      const hint = tries === 1 ? dealHint(d) : [{ t: `${d.name}: ${inr(d.mp)} − ${inr(off)} = ` }, { t: inr(pay), em: true }, { t: '.' }];
+      const strip = hintStrip(card.card, [hint]);
+      await ctx.wait(reducedMotion ? 60 : 450);
+      await readLit(ctx, `${d.name}-hint-${tries}`, tries === 1 ? plainOf(hint) : dealSum(d), strip.parts);
+      if (tries === 1) {
+        card.unlock(); // another try (the wrong answer stays crossed out)
+        return;
+      }
+      card.showAnswer(); // (no more tries: there it is)
+      await ctx.wait(1000);
+      found(card.card.querySelectorAll('.q-opt')[values.indexOf(pay)]);
+    }
+    async function right(button) {
+      const [x, y] = stagePoint(button);
+      FX.burst(scene.ui, x, y, { count: 18, dist: [110, 230], size: [14, 28] });
+      await ctx.wait(700);
+      found(button);
+    }
+    await card.enter(ctx);
+    const button = await answered;
+    const under = priceUnder(scene, spot, pay);
+    await FX.flyAcross(scene.ui, button.querySelector('.q-label'), under.querySelector('b'));
+    Sound.pop();
+    FX.reveal(under, [{ opacity: 0, transform: 'scale(.6)' }, { opacity: 1, transform: 'scale(1.08)', offset: 0.65 }, { opacity: 1, transform: 'none' }],
+      { duration: reducedMotion ? 1 : 420, easing: 'cubic-bezier(.2,.8,.3,1)' });
+    await ctx.wait(350);
+    await card.hide();
+    card.el.remove();
+    return under;
+  }
 
   async function playShop(ctx, scene) {
     const k = PARTY_ITEMS.findIndex(x => x.id === scene.buys);
@@ -3063,11 +3132,7 @@
     const bar = scene.bar;
     const spots = scene.spots;
     const veil = FX.focusVeil(scene.ui);
-    // What the spotlight keeps lit: the two things on show, and beside them the card that is up (the user, 2026-10-27:
-    // "when a panel comes, show the two things and the panel, the rest faded"); Swifty joins them while she talks.
-    let shown = [];
-    const show = (...holes) => veil.on(shown = holes);
-    const swifty = partyBird(ctx, scene, { side: 'right', focus: veil, lit: () => shown });
+    const swifty = partyBird(ctx, scene, { side: 'right', downTo: SHOP_SAYS_FROM });
     // a tap counts at once, even while she still asks (as the price card's buttons do)
     let tapped = null;
     let waiting = null;
@@ -3103,13 +3168,14 @@
       const [x1, y1] = cam.map([d.spot[2] * PK, d.spot[3] * PK]);
       Object.assign(spots[i].style, { left: `${x0}px`, top: `${y0}px`, width: `${x1 - x0}px`, height: `${y1 - y0}px` });
     });
-    // only the two on show, in the spotlight: a bright window round them, the rest of the shop dark and blurred (the
-    // user, 2026-10-26: "need to see only the front two shirts, not the others", in every shop)
+    // the first look: only the two on show, lit, the rest of the shop dark and blurred (the user, 2026-10-26: "need to
+    // see only the front two shirts, not the others"; 2026-10-27: like this, only as the shop comes in). Swifty, on top
+    // of it, is not in a spotlight of her own.
     const sides = spots.map(b => ['left', 'top', 'width', 'height'].map(k => parseFloat(b.style[k])));
     const [L, T] = [Math.min(...sides.map(b => b[0])) - 50, Math.min(...sides.map(b => b[1])) - 50];
     const [R, B] = [Math.max(...sides.map(b => b[0] + b[2])) + 50, Math.max(...sides.map(b => b[1] + b[3])) + 50];
-    const onShow = { x: (L + R) / 2, y: (T + B) / 2, rx: (R - L) / 2, ry: (B - T) / 2, round: 48 };
-    show(onShow);
+    const lit = (bottom = B) => veil.on({ x: (L + R) / 2, y: (T + bottom) / 2, rx: (R - L) / 2, ry: (bottom - T) / 2, round: 48 });
+    lit();
     await ctx.wait(300);
     Sound.sparkle();
     spots.forEach((b, i) => FX.reveal(b, [{ opacity: 0, transform: 'scale(1.25)' }, { opacity: 1, transform: 'none' }],
@@ -3117,73 +3183,82 @@
     await ctx.wait(800);
     if (Party.bought.has(it.id)) { // (here again, from the scene list: it is bought already)
       spots.forEach((b, i) => { b.disabled = true; b.classList.add(it.deals[i] === best ? 'is-right' : 'is-done'); });
+      const unders = it.deals.map((d, i) => {
+        const under = priceUnder(scene, spots[i], dealPay(d));
+        under.style.opacity = '';
+        under.classList.toggle('is-best', d === best);
+        return under;
+      });
+      lit(Math.max(B, ...unders.map(u => u.offsetTop + u.offsetHeight + 30))); // (their selling prices lit too)
       await swifty.say(`${it.id}-had`, `You bought ${it.a} already!`);
       ctx.advance(3000);
       return;
     }
-    await swifty.say(`${it.id}-which`, [{ t: it.ask.replace(/Tap (it|them)!$/, '') }, { t: it.ask.match(/Tap (it|them)!$/)[0], cls: 'key' }]); // (the space ends the first part: a coloured part keeps no space before it)
-    await swifty.hide({ keepFocus: true });
-    show(onShow); // (and the two, to pick)
-    let hint = null;
-    for (;;) {
-      const i = await choose();
-      if (!ctx.alive()) return;
-      const r = stageRect(spots[i]);
-      if (it.deals[i] === best) {
-        spots[i].classList.add('is-right');
-        spots.forEach(b => { b.disabled = true; });
-        Sound.correct();
-        FX.burst(scene.ui, r.left + r.width / 2, r.top + r.height / 2, { count: 20, dist: [110, 240], size: [14, 28] });
-        break;
+    await swifty.say(`${it.id}-pick`, [{ t: it.pick.replace(/selling price!$/, '') }, { t: 'selling price', cls: 'stress' }, { t: '!' }]);
+    await swifty.hide();
+    // one tapped: the shop brightens, and a card asks its selling price; then Swifty asks for the other's, the same way
+    const first = await choose();
+    if (!ctx.alive()) return;
+    spots.forEach(b => { b.disabled = true; });
+    veil.off();
+    const prices = [];
+    for (const [n, i] of [first, 1 - first].entries()) {
+      const d = it.deals[i];
+      spots[i].classList.add('is-now');
+      if (n) {
+        await swifty.say(`${it.id}-next`, [{ t: 'Let’s check the ' }, { t: 'selling price', cls: 'stress' }, { t: ` of the ${d.name.toLowerCase()}!` }]);
+        await swifty.hide();
+      } else {
+        await ctx.wait(450); // (as the shop brightens)
       }
-      // the other one: crossed out; her voice works both out, on a card (her voice alone: she isn't there)
-      spots[i].classList.add('is-wrong');
-      spots[i].disabled = true;
-      Sound.wrong();
-      await ctx.wait(600);
-      hint = el('div', 'deal-hint', scene.ui);
-      const strip = hintStrip(hint, [[{ t: 'Not quite! Work out both sale prices.' }], ...it.deals.map(d => [{ t: `${d.name}: `, cls: 'hs-name' },
-        { t: `${inr(d.mp)} − ${inr(dealOff(d))} = ` }, { t: inr(dealPay(d)), em: true }, { t: '.' }])]);
-      FX.reveal(hint, [{ opacity: 0, transform: 'translateY(24px) scale(.96)' }, { opacity: 1, transform: 'none' }], { duration: reducedMotion ? 1 : 420, easing: 'cubic-bezier(.2,.8,.3,1)' });
-      await ctx.wait(reducedMotion ? 60 : 450);
-      show(onShow, boxOf(hint)); // (what her voice reads, lit beside the two)
-      await readLit(ctx, 'deal-hint', 'Not quite! Work out both sale prices.', [strip.parts[0]]);
-      for (const [n, d] of it.deals.entries()) await readLit(ctx, `${it.id}-sum-${n}`, dealSum(d), [strip.parts[n + 1]]);
+      prices[i] = await sellingPrice(ctx, scene, d, spots[i], (k + i) % 3);
+      spots[i].classList.replace('is-now', 'is-found');
+      await ctx.wait(500);
     }
-    await ctx.wait(700);
-    if (hint) {
-      const old = hint;
-      show(onShow);
-      FX.settle(old.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 300, fill: 'forwards' })).then(() => old.remove());
-    }
-    // the two worked out side by side, the better one ticked; Buy
+    // the two side by side, each with its Buy: the better deal is the one that costs less
     const card = FX.dealCard(scene.ui, {
       cls: `dc--${it.id}`,
-      deals: it.deals.map(d => ({ name: d.name, pic: d.pic, mp: d.mp, off: dealOff(d), pct: d.pct || null, pay: dealPay(d), best: d === best })),
+      deals: it.deals.map(d => ({ name: d.name, pic: d.pic, mp: d.mp, off: dealOff(d), pct: d.pct || null, pay: dealPay(d) })),
     });
     await card.open();
-    show(onShow, boxOf(card.el)); // (the card lit beside the two)
-    const other = it.deals.find(d => d !== best);
+    await swifty.say(`${it.id}-which`, [{ t: it.ask.replace(/Tap (it|them)!$/, '') }, { t: it.ask.match(/Tap (it|them)!$/)[0], cls: 'key' }]); // (the space ends the first part: a coloured part keeps no space before it)
+    await swifty.hide();
+    const b = it.deals.indexOf(best);
+    for (;;) {
+      const i = await card.choose();
+      if (!ctx.alive()) return;
+      if (i === b) break;
+      card.wrong(i); // (crossed out, on the card and in the shop)
+      spots[i].classList.add('is-wrong');
+      prices[i].classList.add('is-out');
+      await ctx.wait(600);
+      await swifty.say('buy-less', [{ t: 'Not quite! Buy the one that ' }, { t: 'costs less', em: true }, { t: '.' }]);
+      await swifty.hide();
+    }
+    card.right(b);
+    spots[b].classList.add('is-right');
+    prices[b].classList.add('is-best');
+    spots.forEach((s, n) => { if (n !== b && !s.classList.contains('is-wrong')) s.classList.add('is-done'); });
+    Sound.correct();
+    const [x, y] = stagePoint(card.pic(b));
+    FX.burst(scene.ui, x, y, { count: 20, dist: [110, 240], size: [14, 28] });
+    await ctx.wait(500);
+    const other = it.deals[1 - b];
     await swifty.say(`${it.id}-right`, [{ t: 'Correct!', cls: 'stress' }, { t: ` The ${best.name.toLowerCase()} ${best.plural ? 'cost' : 'costs'} ` },
       { t: inr(dealPay(other) - dealPay(best)), em: true }, { t: ' less.' }]);
-    await swifty.hide({ keepFocus: true });
-    show(onShow, boxOf(card.el)); // (the two and the card, till Buy is pressed)
-    await card.choose();
-    if (!ctx.alive()) return;
-    // Buy: paid; the money comes out of the wallet, and the thing goes onto the list, ticked (the bar on top, over the
-    // spotlight, stays bright).
-    card.stamp('PAID');
+    // bought: PAID, the money comes out of the wallet, and the thing goes onto the list, ticked (the bar on top)
+    card.stamp(b, 'PAID');
     Sound.kaching();
     Party.bought.add(it.id);
     const counting = bar.count(partyMoney());
-    await flyToList(ctx, scene, card.bestPic, bar.slots[k], best.pic);
+    await flyToList(ctx, scene, card.pic(b), bar.slots[k], best.pic);
     const slotPic = bar.slots[k].querySelector('img');
     if (slotPic) slotPic.src = best.pic; // (the list shows what was bought)
     bar.tick(k);
     await counting;
     await ctx.wait(400);
     await swifty.say(`${it.id}-done`, [{ t: 'Great!', cls: 'stress' }, { t: ` You bought the ${best.name.toLowerCase()}!` }]);
-    ctx.advance(3000); // back out into the mall (or on to the end)
+    ctx.advance(3000); // back out into the mall (or on to his fit check)
   }
 
   // A copy of its picture flies from the card onto its slot on the shopping list.
@@ -3206,7 +3281,27 @@
     Sound.pop();
   }
 
-  // ---------- The end (screen 41): all set for the party ----------
+  // ---------- His fit check (screen 41), once all four are bought ----------
+  // Its film plays with its own music (the celebration: the game's music steps back for it), and confetti comes down as
+  // the beat starts; then the summary, on its last frame. Without the film, its first frame, confetti and a chime.
+  const FITCHECK_BEAT = 2.9; // s into its film: the music's beat starts
+  async function playFitCheck(ctx, scene) {
+    if (!scene.rolling) {
+      await ctx.wait(600);
+      FX.confetti(scene.ui);
+      Sound.correct();
+      ctx.advance(3000);
+      return;
+    }
+    Sound.duck(true);
+    await Clips.until(ctx, scene, FITCHECK_BEAT);
+    FX.confetti(scene.ui, { count: 140, ms: 3200 });
+    await Clips.until(ctx, scene, FITCHECK_BEAT + 3.6);
+    FX.confetti(scene.ui, { count: 90 });
+    advanceAfterFilm(ctx, scene, 3000, { segue: true }); // (on as it ends: the summary comes in on its last frame)
+  }
+
+  // ---------- The end (screen 42): all set for the party ----------
   async function playPartyDone(ctx, scene) {
     const total = PARTY_BUDGET - partyMoney();
     const bought = PARTY_ITEMS.filter(it => Party.bought.has(it.id));
@@ -3320,16 +3415,17 @@
       Object.prototype.hasOwnProperty.call(VIDEO_CLIPS, scene.id) ? VIDEO_CLIPS[scene.id] : null),
     planned: scene => typeof VIDEO_CLIPS === 'object' && Object.prototype.hasOwnProperty.call(VIDEO_CLIPS, scene.id),
 
-    // The film's <video>: made when first needed and loaded straight away (muted: the game says the lines; inline, for
-    // tablets).
+    // The film's <video>: made when first needed and loaded straight away (muted: the game says the lines; one with its
+    // own sound, the fit check's music, plays it while sound effects are on; inline, for tablets).
     video(scene) {
       if (!scene.film) {
         const v = el('video', 'scene-clip', scene.clipBox);
-        v.muted = true;
-        v.defaultMuted = true;
+        const mute = !(Clips.of(scene) || {}).sound || !Sound.sfxOn;
+        v.muted = mute;
+        v.defaultMuted = mute;
         v.playsInline = true;
         v.preload = 'auto';
-        ['muted', 'playsinline', 'disablepictureinpicture'].forEach(a => v.setAttribute(a, ''));
+        [...(mute ? ['muted'] : []), 'playsinline', 'disablepictureinpicture'].forEach(a => v.setAttribute(a, ''));
         v.setAttribute('aria-hidden', 'true');
         v.src = CLIP_DIR + scene.id + '.mp4';
         scene.film = v;
@@ -3371,8 +3467,15 @@
         if (instant) requestAnimationFrame(() => { v.style.transition = ''; });
       };
       v.addEventListener('playing', show, { once: true });
+      const refused = () => { if (scene.rolling === v) scene.rolling = null; }; // (the picture stays)
       const playing = v.play();
-      if (playing) playing.catch(() => { if (scene.rolling === v) scene.rolling = null; }); // (refused: the picture stays)
+      if (playing) {
+        playing.catch(() => { // (refused with its sound: then without it; refused even so: the picture stays)
+          if (v.muted) return refused();
+          v.muted = true;
+          v.play().catch(refused);
+        });
+      }
     },
 
     // Seconds of the screen's film still to play (0 without one).
@@ -3694,9 +3797,9 @@
   // Every other change is a straight cut.
   const PARTY_IDS = ['return', 'invite', 'partymoney', 'partydeal', 'tomall', 'mallfloor'];
   const SHOP_IDS = ['shirtshop', 'pantsshop', 'watchshop', 'sunshop'];
-  const FADES = [...PARTY_IDS.slice(1).map((id, i) => [PARTY_IDS[i], id]), ...SHOP_IDS.flatMap(id => [['mallfloor', id], [id, 'partydone']]),
-    ['mallfloor', 'partydone'], ['home', 'outside'], ['mpcard', 'reveal'], ['pay', 'exit'], ['outside', 'browse'], ['browse', 'ask'], ['leave', 'sneakers'], ['final', 'boxed']];
-  const FORWARD_FADES = [['exit', 'leave'], // (out of the bookstore: its film's last frame, blurred, under Swifty)
+  const FADES = [...PARTY_IDS.slice(1).map((id, i) => [PARTY_IDS[i], id]), ...SHOP_IDS.flatMap(id => [['mallfloor', id], [id, 'fitcheck']]),
+    ['mallfloor', 'fitcheck'], ['home', 'outside'], ['mpcard', 'reveal'], ['pay', 'exit'], ['outside', 'browse'], ['browse', 'ask'], ['leave', 'sneakers'], ['final', 'boxed']];
+  const FORWARD_FADES = [['exit', 'leave'], ['fitcheck', 'partydone'], // (a film into its own last frame, blurred)
     ['mp', 'mpcard'], ['formula', 'formula-reveal'], ['confused', 'smcard'], ['smcard', 'offmeans'], ['percentrule', 'whatpercent'],
     ['whatpercent', 'check'], ['check', 'topay'], ['topay', 'thirty'], ['thirty', 'paywork'], ['paywork', 'final']];
   const FADE_MS = 1200; // not stretched by PACE: changing screens stays brisk
