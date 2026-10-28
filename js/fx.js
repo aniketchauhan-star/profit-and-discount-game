@@ -312,14 +312,20 @@
   // The revamp's dialogue box shows its whole line at once; each word lights up as it is said (`part`: only that part's
   // words). Each word's time is its share of the recording (`seconds`; or about 62 ms a letter when the device's voice
   // reads it), a word after a comma or full stop three letters more (the voice pauses there); the last one goes out as
-  // the voice ends.
-  async function sayWords(ctx, root, { part, seconds }) {
+  // the voice ends. `light: false` (Aniket, his father, the shopkeeper: the user, 2026-10-28, "the conversation should
+  // look like a conversation, not reading"): no word lights up; the line is just there while it is said.
+  async function sayWords(ctx, root, { part, seconds, light = true }) {
     const words = [...root.querySelectorAll('.b-word')].filter(w => !w.classList.contains('was-said') &&
       (part === undefined || +w.firstElementChild.dataset.part === part));
     if (!words.length) return;
     const share = (w, i) => w.textContent.length + 1 + (i > 0 && /[!?.,]$/.test(words[i - 1].textContent) ? 3 : 0);
     const total = words.reduce((sum, w, i) => sum + share(w, i), 0);
     const unit = seconds ? Math.max(16, ((seconds - 0.35) * 1000) / total) : 62;
+    if (!light) {
+      words.forEach(w => w.classList.add('was-said'));
+      await ctx.wait(total * unit, { real: true });
+      return;
+    }
     const start = performance.now();
     let at = 0;
     for (const [i, word] of words.entries()) {
@@ -350,7 +356,7 @@
       // ends (0.35 s before the clip does): each takes max(16 ms, (seconds − 0.35) / letters), and the one after a
       // comma or full stop three letters' time more (the voice pauses there).
       async type(ctx, { speed = 46, blips = true, part, seconds } = {}) {
-        if (o.calm) return sayWords(ctx, root, { part, seconds }); // the revamp's dialogue box
+        if (o.calm) return sayWords(ctx, root, { part, seconds, light: !o.voice || o.voice === 'bird' }); // the revamp's dialogue box
         if (seconds) {
           const todo = letters.filter(l => !l.classList.contains('on') && (part === undefined || +l.dataset.part <= part));
           const before = i => 1 + (i > 0 && /[!?.,]/.test(todo[i - 1].textContent) ? 3 : 0);
@@ -707,6 +713,23 @@
     return host;
   }
 
+  // A wrong answer, felt as well as heard (the user, 2026-10-28: "when the user does wrong, a red light comes from the
+  // frame's corners and it vibrates slightly", in all the story and the game): its buzz, a red glow in from the
+  // screen's corners, and the picture shakes a little (not with motion turned down). The buttons and the nav stay put.
+  let wrongGlow = null;
+  function wrongFlash() {
+    Sound.wrong();
+    const stage = document.getElementById('stage');
+    if (!stage) return;
+    if (!wrongGlow || !wrongGlow.isConnected) wrongGlow = el('div', 'wrong-glow', stage);
+    settle(wrongGlow.animate([{ opacity: 0 }, { opacity: 1, offset: 0.2 }, { opacity: 0 }], { duration: 900, easing: 'ease-out' }));
+    const scenes = document.getElementById('scenes');
+    if (scenes && !reducedMotion) {
+      settle(scenes.animate([{ translate: '0 0' }, { translate: '-7px 0' }, { translate: '6px 0' }, { translate: '-4px 0' },
+        { translate: '2px 0' }, { translate: '0 0' }], { duration: 420, easing: 'ease-out' }));
+    }
+  }
+
   // Shows a node that was hidden with opacity 0, with an entrance animation (a plain fade if motion is reduced).
   function reveal(node, frames, opts) {
     node.style.opacity = '';
@@ -759,7 +782,7 @@
           b.classList.add('is-wrong');
           chip.innerHTML = ICON_CROSS;
           b.disabled = true; // the player can still pick another answer
-          Sound.wrong();
+          wrongFlash();
         }
         if (onAnswer) onAnswer(!!opt.correct, b);
       });
@@ -1871,7 +1894,7 @@
           values[n].classList.add('is-lifted');
         }
         if (m !== n) { // the wrong box: it shakes there, and goes back
-          Sound.wrong();
+          wrongFlash();
           replay(boxes[m], 'is-wrong');
           await glide(chip, centre(boxes[m]), fit(m, chip), 240);
           await settle(chip.animate([{ translate: '0 0' }, { translate: '-12px 0' }, { translate: '12px 0' }, { translate: '-8px 0' }, { translate: '0 0' }], {
@@ -2067,7 +2090,7 @@
           b.disabled = true;
           b.classList.add('is-wrong');
           chip.innerHTML = ICON_CROSS;
-          Sound.wrong();
+          wrongFlash();
           if (onAnswer) onAnswer(false, b, i, false);
           return;
         }
@@ -2079,7 +2102,7 @@
         b.classList.add(opt.correct ? 'is-correct' : 'is-wrong');
         chip.innerHTML = opt.correct ? ICON_CHECK : ICON_CROSS;
         if (opt.correct) Sound.correct();
-        else Sound.wrong();
+        else wrongFlash();
         if (onAnswer) onAnswer(!!opt.correct, b, i, true);
       });
       b.style.opacity = '0';
@@ -3116,7 +3139,7 @@
         const { row, buy } = rows[i];
         row.classList.add('is-wrong');
         gone(buy);
-        Sound.wrong();
+        wrongFlash();
         settle(row.animate([{ transform: 'none' }, { transform: 'translateX(-12px)', offset: 0.2 }, { transform: 'translateX(12px)', offset: 0.45 },
           { transform: 'translateX(-7px)', offset: 0.7 }, { transform: 'none' }], { duration: reducedMotion ? 1 : 420, easing: 'ease' }));
       },
@@ -3239,7 +3262,7 @@
   window.FX = {
     CANCELLED, el, fracText, settle, reveal, flyAcross, glow, motes, twinkles, burst, shine, exclaim, bubble, thought, badge, ring, question, reduction,
     formulaNote, concept, barModel, grid100, formulaPanel, formulaReveal, productQuestion, workedSheet, strike, stickTag, choices, percentFormula,
-    questionPanel, confetti, Bird, inr, partyHud, dealCard, doneBadge, partyTable, partyMission, joystick, focusVeil, TopWalker,
+    questionPanel, confetti, Bird, inr, partyHud, dealCard, doneBadge, partyTable, partyMission, joystick, focusVeil, TopWalker, wrongFlash,
     setPace(p) { pace = p; },
   };
 })();

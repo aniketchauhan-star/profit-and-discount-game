@@ -3004,10 +3004,12 @@
   // again incorrect: another hint; then the price shows. Then Swifty says 'Let's check the selling price of the other
   // shirt', and the same for it; then which deal is better: buy a shirt, buy another shirt. Then that showroom is
   // checked." As the shop comes in, the camera moves in on the two, lit in gold, the rest of the shop dark and blurred
-  // (the user's picture: "only the first time the showroom comes, like this"); the first tap brightens it again, and no
-  // spotlight comes after that ("do not add a shadow circle"). Each selling price found goes under its thing; then the
-  // two side by side, each with its Buy. The better deal (the one that costs less): PAID, the money comes out of the
-  // wallet, its picture goes onto the shopping list (ticked), and back out into the mall (or, all bought, his fit check).
+  // (the user's picture: "like this"). Then the light is on the one asked about only, the rest (the other one too) dark
+  // and blurred ("blur the left area and focus on what I select; when both should be visible, then show both"), and on
+  // both again to compare them. Swifty and the cards are on top of it, with no light of their own ("do not add a shadow
+  // circle"). Each selling price found goes under its thing; then the two side by side, each with its Buy. The better
+  // deal (the one that costs less): PAID, the money comes out of the wallet, its picture goes onto the shopping list
+  // (ticked), and back out into the mall (or, all bought, his fit check).
   function shopSetup(scene) {
     Party.from = scene.buys; // (back out into the mall, he stands at this shop's door)
     partyBar(scene);
@@ -3042,9 +3044,8 @@
     return { transform: `translate(${tx}px, ${ty}px) scale(${s})`, map: ([x, y]) => [ox + tx + s * (x - ox), oy + ty + s * (y - oy)] };
   }
 
-  // "Blue shirt: ₹1,200 − ₹240 = ₹960." (a deal's selling price worked out, as said and as written on its second hint)
-  const dealSum = d => `${d.name}: ${inr(d.mp)} − ${inr(dealOff(d))} = ${inr(dealPay(d))}.`;
-  // Its first hint: what to work out ("The discount is 20% of ₹1,200." or "Take ₹150 off ₹1,000.").
+  // A deal's first hint: what to work out ("The discount is 20% of ₹1,200." or "Take ₹150 off ₹1,000."); its second is its
+  // sum ("Blue shirt: ₹1,200 − ₹240 = ₹960.").
   const dealHint = d => (d.pct
     ? [{ t: 'Not quite! The discount is ' }, { t: `${d.pct}% of ${inr(d.mp)}`, em: true }, { t: '.' }]
     : [{ t: 'Not quite! Take ' }, { t: inr(d.flat), em: true }, { t: ' off ' }, { t: inr(d.mp), em: true }, { t: '.' }]);
@@ -3061,10 +3062,12 @@
 
   // A card on the right asks a deal's selling price: the thing's picture, its name and its tag on top, and three answers
   // (its selling price, its discount, and its price less the percentage taken as rupees, or plus the amount off). A
-  // wrong one: the first hint, what to work out; another: the second, it worked out, and the answer shows (each hint her
-  // voice alone, on the card). Then its selling price flies from the card to under it (`spot`), and the card goes.
-  // `at`: where the right answer is (0–2, from deal to deal). Resolves with that price under it.
-  async function sellingPrice(ctx, scene, d, spot, at) {
+  // wrong one: the first hint, what to work out; another: the second, it worked out, and the answer shows. Swifty comes
+  // in on the left to say each, in her bubble (the user, 2026-10-28: not written on the card). Then its selling price
+  // flies from the card to under it (`under`, see priceUnder), and the card goes. `at`: where the right answer is (0–2,
+  // from deal to deal).
+  const SHOP_HINT_TO = 1180; // (stage px: her bubble on the left stops short of the card)
+  async function sellingPrice(ctx, scene, d, under, at) {
     const off = dealOff(d);
     const pay = dealPay(d);
     const values = [off, d.pct ? d.mp - d.pct : d.mp + off];
@@ -3090,14 +3093,20 @@
     const tag = el('div', 'qd-tag', what); // (as on its tag in the shop)
     el('span', 'qd-mp', tag).textContent = inr(d.mp);
     el('span', 'qd-off', tag).textContent = `${d.pct ? `${d.pct}%` : inr(d.flat)} OFF`;
+    const swifty = partyBird(ctx, scene, { upTo: SHOP_HINT_TO }); // (on the left)
     async function wrong() {
       card.lock();
       tries++;
       await ctx.wait(700); // let the shake and buzz land first
-      const hint = tries === 1 ? dealHint(d) : [{ t: `${d.name}: ${inr(d.mp)} − ${inr(off)} = ` }, { t: inr(pay), em: true }, { t: '.' }];
-      const strip = hintStrip(card.card, [hint]);
-      await ctx.wait(reducedMotion ? 60 : 450);
-      await readLit(ctx, `${d.name}-hint-${tries}`, tries === 1 ? plainOf(hint) : dealSum(d), strip.parts);
+      // (a price already under the other one, in the dark now, steps out of her bubble's way while she talks)
+      const shown = [...scene.ui.querySelectorAll('.deal-sp')].filter(p => p.style.opacity !== '0');
+      const fades = shown.map(p => p.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 250, fill: 'forwards' }));
+      try {
+        await swifty.say(`${d.name}-hint-${tries}`, tries === 1 ? dealHint(d) : [{ t: `${d.name}: ${inr(d.mp)} − ${inr(off)} = ` }, { t: inr(pay), em: true }, { t: '.' }]);
+        await swifty.hide();
+      } finally {
+        fades.forEach(f => f.reverse());
+      }
       if (tries === 1) {
         card.unlock(); // another try (the wrong answer stays crossed out)
         return;
@@ -3114,7 +3123,6 @@
     }
     await card.enter(ctx);
     const button = await answered;
-    const under = priceUnder(scene, spot, pay);
     await FX.flyAcross(scene.ui, button.querySelector('.q-label'), under.querySelector('b'));
     Sound.pop();
     FX.reveal(under, [{ opacity: 0, transform: 'scale(.6)' }, { opacity: 1, transform: 'scale(1.08)', offset: 0.65 }, { opacity: 1, transform: 'none' }],
@@ -3122,7 +3130,6 @@
     await ctx.wait(350);
     await card.hide();
     card.el.remove();
-    return under;
   }
 
   async function playShop(ctx, scene) {
@@ -3169,13 +3176,28 @@
       Object.assign(spots[i].style, { left: `${x0}px`, top: `${y0}px`, width: `${x1 - x0}px`, height: `${y1 - y0}px` });
     });
     // the first look: only the two on show, lit, the rest of the shop dark and blurred (the user, 2026-10-26: "need to
-    // see only the front two shirts, not the others"; 2026-10-27: like this, only as the shop comes in). Swifty, on top
-    // of it, is not in a spotlight of her own.
+    // see only the front two shirts, not the others"; 2026-10-27, with a picture of it: "like this")
     const sides = spots.map(b => ['left', 'top', 'width', 'height'].map(k => parseFloat(b.style[k])));
-    const [L, T] = [Math.min(...sides.map(b => b[0])) - 50, Math.min(...sides.map(b => b[1])) - 50];
-    const [R, B] = [Math.max(...sides.map(b => b[0] + b[2])) + 50, Math.max(...sides.map(b => b[1] + b[3])) + 50];
-    const lit = (bottom = B) => veil.on({ x: (L + R) / 2, y: (T + bottom) / 2, rx: (R - L) / 2, ry: (bottom - T) / 2, round: 48 });
-    lit();
+    const prices = it.deals.map((d, i) => priceUnder(scene, spots[i], dealPay(d))); // (hidden till found)
+    const light = (which, withPrices = true) => { // the light's window round those (`which`): each and its tag, and its price under it
+      const boxes = which.map(i => {
+        const [x, y, w, h] = sides[i];
+        const box = [x - 50, y - 50, x + w + 50, y + h + 50];
+        if (withPrices) {
+          const p = prices[i];
+          const left = parseFloat(p.style.left) - p.offsetWidth / 2; // (it is centred under its thing)
+          const top = parseFloat(p.style.top);
+          box[0] = Math.min(box[0], left - 30);
+          box[2] = Math.max(box[2], left + p.offsetWidth + 30);
+          box[3] = Math.max(box[3], top + p.offsetHeight + 30);
+        }
+        return box;
+      });
+      const [L, T] = [Math.min(...boxes.map(b => b[0])), Math.min(...boxes.map(b => b[1]))];
+      const [R, B] = [Math.max(...boxes.map(b => b[2])), Math.max(...boxes.map(b => b[3]))];
+      return veil.on({ x: (L + R) / 2, y: (T + B) / 2, rx: (R - L) / 2, ry: (B - T) / 2, round: 48 });
+    };
+    light([0, 1], false);
     await ctx.wait(300);
     Sound.sparkle();
     spots.forEach((b, i) => FX.reveal(b, [{ opacity: 0, transform: 'scale(1.25)' }, { opacity: 1, transform: 'none' }],
@@ -3183,38 +3205,37 @@
     await ctx.wait(800);
     if (Party.bought.has(it.id)) { // (here again, from the scene list: it is bought already)
       spots.forEach((b, i) => { b.disabled = true; b.classList.add(it.deals[i] === best ? 'is-right' : 'is-done'); });
-      const unders = it.deals.map((d, i) => {
-        const under = priceUnder(scene, spots[i], dealPay(d));
-        under.style.opacity = '';
-        under.classList.toggle('is-best', d === best);
-        return under;
+      prices.forEach((p, i) => {
+        p.style.opacity = '';
+        p.classList.toggle('is-best', it.deals[i] === best);
       });
-      lit(Math.max(B, ...unders.map(u => u.offsetTop + u.offsetHeight + 30))); // (their selling prices lit too)
+      light([0, 1]); // (their selling prices lit too)
       await swifty.say(`${it.id}-had`, `You bought ${it.a} already!`);
       ctx.advance(3000);
       return;
     }
     await swifty.say(`${it.id}-pick`, [{ t: it.pick.replace(/selling price!$/, '') }, { t: 'selling price', cls: 'stress' }, { t: '!' }]);
     await swifty.hide();
-    // one tapped: the shop brightens, and a card asks its selling price; then Swifty asks for the other's, the same way
+    // one tapped: the light moves onto it alone, and a card asks its selling price; then Swifty asks for the other's, and
+    // the light moves onto that one
     const first = await choose();
     if (!ctx.alive()) return;
     spots.forEach(b => { b.disabled = true; });
-    veil.off();
-    const prices = [];
     for (const [n, i] of [first, 1 - first].entries()) {
       const d = it.deals[i];
       spots[i].classList.add('is-now');
+      light([i]);
       if (n) {
         await swifty.say(`${it.id}-next`, [{ t: 'Let’s check the ' }, { t: 'selling price', cls: 'stress' }, { t: ` of the ${d.name.toLowerCase()}!` }]);
         await swifty.hide();
       } else {
-        await ctx.wait(450); // (as the shop brightens)
+        await ctx.wait(450); // (as the light moves)
       }
-      prices[i] = await sellingPrice(ctx, scene, d, spots[i], (k + i) % 3);
+      await sellingPrice(ctx, scene, d, prices[i], (k + i) % 3);
       spots[i].classList.replace('is-now', 'is-found');
       await ctx.wait(500);
     }
+    light([0, 1]); // (both again, with their selling prices, to compare them)
     // the two side by side, each with its Buy: the better deal is the one that costs less
     const card = FX.dealCard(scene.ui, {
       cls: `dc--${it.id}`,

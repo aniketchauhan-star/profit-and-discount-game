@@ -14,6 +14,11 @@
 # pyloudnorm) and whisper.cpp's whisper-cli with ~/.cache/whisper-models/ggml-large-v3-turbo.bin. Files only: nothing is
 # played.
 #   ~/.cache/bj-voices/venv/bin/python tools/voices/voices.py OUT [id …]        (no ids: every line of the three)
+# On 2026-10-28 the user found the three "too fast", "like reading, not a conversation", and asked for the films' lips to
+# go with the words: they talk livelier and slower now (VOICES: exaggeration up, cfg 0.3, as Chatterbox's notes advise
+# for a calmer pace), and with TARGETS=file.json ({id: seconds}) each line is made as long as that: of its takes (with
+# SEED=2000 … more of them), the likest that is near that length, fitted to it with ffmpeg's atempo (the pitch kept), by
+# no more than STRETCH. tools/flow_import.py fits a film's lips to the voice as it comes out (see LIPS there).
 import json, os, re, subprocess, sys, warnings
 warnings.filterwarnings('ignore')
 os.environ.setdefault('PYTORCH_ENABLE_MPS_FALLBACK', '1')
@@ -26,17 +31,20 @@ OUT = sys.argv[1]
 ONLY = set(sys.argv[2:])
 TAKES = int(os.environ.get('TAKES', 3))
 MAX_TAKES = int(os.environ.get('MAX_TAKES', 6))
+SEED = int(os.environ.get('SEED', 1000))  # the first take's seed (another SEED: other takes of a line)
 LUFS = -16.0  # (Swifty's clips, measured)
 os.makedirs(f'{OUT}/takes', exist_ok=True)
 
-VOICES = {  # how lively, the pitch range to keep (Hz)
-    'Aniket': dict(exaggeration=0.6, range=(205, 290)),
-    'Father': dict(exaggeration=0.45, range=(100, 145)),
-    'Shopkeeper': dict(exaggeration=0.5, range=(105, 150)),
+VOICES = {  # how lively (exaggeration), how closely it keeps to the usual pace (cfg: lower is slower), the pitch range to keep (Hz)
+    'Aniket': dict(exaggeration=0.7, cfg=0.3, range=(205, 290)),
+    'Father': dict(exaggeration=0.55, cfg=0.3, range=(100, 145)),
+    'Shopkeeper': dict(exaggeration=0.6, cfg=0.3, range=(105, 150)),
     # Swifty's lines come from the user's recording (swifty_cut.py); only a line it doesn't have is made, when asked for
     # by its id, cloned from refs/swifty.flac (four of her clips from the recording, as they are): "You bought … already!"
-    'Swifty': dict(exaggeration=0.5, range=(215, 330)),
+    'Swifty': dict(exaggeration=0.5, cfg=0.5, range=(215, 330)),
 }
+TARGETS = json.load(open(os.environ['TARGETS'])) if os.environ.get('TARGETS') else {}  # {id: seconds of speech}
+STRETCH = 0.85  # a take is slowed (or sped up) by no more than this, to the length wanted
 SR = 24000
 
 # ---------- words as said (to compare whisper's words with the line's) ----------
@@ -67,6 +75,7 @@ def words_to_digits(tokens):
 def tokens(text):
     t = text.lower()
     t = re.sub(r'₹\s?([\d,]+)', lambda m: m[1].replace(',', '') + ' rupees', t)
+    t = re.sub(r'\brs\.?\s?([\d,]+)', lambda m: m[1].replace(',', '') + ' rupees', t)  # (whisper writes rupees as "Rs. 1800")
     t = re.sub(r'(\d),(\d)', r'\1\2', t)
     t = re.sub(r'(\d+)\s*/\s*(\d+)', r'\1 over \2', t)
     t = t.replace('÷', ' divided by ').replace('×', ' times ').replace('=', ' equals ').replace('−', ' minus ').replace('%', ' percent ')
@@ -102,6 +111,35 @@ def trim(y, sr):
     y[:n] *= np.linspace(0, 1, n)
     y[-n:] *= np.linspace(1, 0, n)
     return y
+
+
+def speech_seconds(y, sr):
+    """How long a voice talks, measured as tools/flow_import.py measures the game's clips: with the quiet the finished
+    clip has before and after it (tools/voices/finish.py: 0.30 s and 0.40 s), its quiet start and end left out."""
+    path = f'{OUT}/measure.wav'
+    sf.write(path, np.concatenate([np.zeros(int(0.30 * sr)), y, np.zeros(int(0.40 * sr))]).astype(np.float32), sr)
+    out = subprocess.run(['ffmpeg', '-hide_banner', '-nostats', '-i', path, '-af', 'silencedetect=noise=-38dB:d=0.18', '-f', 'null', '-'],
+                         capture_output=True, text=True).stderr
+    length = float(re.search(r'Duration: (\d+):(\d+):([\d.]+)', out).group(3))
+    marks = [(k, float(t)) for k, t in re.findall(r'silence_(start|end): ([0-9.]+)', out)]
+    spans, at = [], 0.0
+    for kind, t in marks:
+        if kind == 'start' and t > at + 0.02:
+            spans.append((at, t))
+        if kind == 'end':
+            at = t
+    if not marks or marks[-1][0] == 'end':
+        spans.append((at, length))
+    spans = [x for x in spans if x[1] - x[0] > 0.05]
+    return spans[-1][1] - spans[0][0] if spans else length
+
+
+def fit(y, sr, tempo):
+    """The voice faster (tempo > 1) or slower, its pitch kept (ffmpeg's atempo)."""
+    a, b = f'{OUT}/fit-in.wav', f'{OUT}/fit-out.wav'
+    sf.write(a, y.astype(np.float32), sr)
+    subprocess.run(['ffmpeg', '-v', 'error', '-y', '-i', a, '-af', f'atempo={tempo:.5f}', b], check=True)
+    return sf.read(b)[0]
 
 
 def heard(path):
@@ -141,33 +179,63 @@ for who, path in refs.items():
 meter = pyln.Meter(SR)
 
 log = f'{OUT}/takes.jsonl'
+# takes made before in OUT (a run cut short, or a line made again at another length) are used again, not made again
+made = {}
+if os.path.exists(log):
+    for row in map(json.loads, open(log)):
+        if os.path.exists(row['path']):
+            made[row['path']] = row
 for r in todo:
     v = VOICES[r['speaker']]
     lo, hi = v['range']
-    tts.prepare_conditionals(refs[r['speaker']], exaggeration=v['exaggeration'])
+    ready = False
     takes = []
     for k in range(MAX_TAKES):
-        torch.manual_seed(1000 + k)
-        wav = tts.generate(said[r['id']], exaggeration=v['exaggeration'], cfg_weight=0.5, temperature=0.8)
-        y = trim(wav.cpu().numpy()[0].astype(np.float64), tts.sr)
-        p = f"{OUT}/takes/{r['id']}_{k}.wav"
-        sf.write(p, y.astype(np.float32), tts.sr)
-        e = emb(y, tts.sr)
-        t = dict(id=r['id'], who=r['speaker'], line=r['line'], take=k, path=p, seconds=round(len(y) / tts.sr, 2),
-                 likeness=round(float(e @ ref_emb[r['speaker']] / np.linalg.norm(e)), 3), pitch=round(praat_pitch(y, tts.sr)), heard=heard(p))
+        p = f"{OUT}/takes/{r['id']}_{k}.wav" if SEED == 1000 else f"{OUT}/takes/{r['id']}_s{SEED + k}.wav"
+        if p in made and made[p]['line'] == r['line']:
+            t = dict(made[p])
+            y = sf.read(p)[0]
+        else:
+            if not ready:
+                tts.prepare_conditionals(refs[r['speaker']], exaggeration=v['exaggeration'])
+                ready = True
+            torch.manual_seed(SEED + k)
+            wav = tts.generate(said[r['id']], exaggeration=v['exaggeration'], cfg_weight=v['cfg'], temperature=0.8)
+            y = trim(wav.cpu().numpy()[0].astype(np.float64), tts.sr)
+            sf.write(p, y.astype(np.float32), tts.sr)
+            e = emb(y, tts.sr)
+            t = dict(id=r['id'], who=r['speaker'], line=r['line'], take=k, path=p, seconds=round(len(y) / tts.sr, 2),
+                     likeness=round(float(e @ ref_emb[r['speaker']] / np.linalg.norm(e)), 3), pitch=round(praat_pitch(y, tts.sr)), heard=heard(p))
         t['exact'] = tokens(t['line']) == tokens(t['heard'])
         t['in_range'] = lo <= t['pitch'] <= hi
+        t['speech'] = round(speech_seconds(y, tts.sr), 3)
         takes.append(t)
         with open(log, 'a') as fh:
             fh.write(json.dumps(t, ensure_ascii=False) + '\n')
         print(f"  {r['id']} take {k}: {t['seconds']:.2f} s, likeness {t['likeness']:.3f}, pitch {t['pitch']} Hz{'' if t['in_range'] else ' (out of range)'}{'' if t['exact'] else ' WORDS: ' + t['heard']}", flush=True)
         if k >= TAKES - 1 and any(x['exact'] and x['in_range'] for x in takes):
             break
-    best = max(takes, key=lambda t: (t['exact'], t['in_range'], t['likeness']))
+    for p, row in made.items():  # (and its takes made with other seeds)
+        if row['id'] == r['id'] and row['line'] == r['line'] and all(p != t['path'] for t in takes):
+            t = dict(row)
+            t['exact'] = tokens(t['line']) == tokens(t['heard'])
+            t['in_range'] = lo <= t['pitch'] <= hi
+            t['speech'] = round(speech_seconds(sf.read(p)[0], tts.sr), 3)
+            takes.append(t)
+    want = TARGETS.get(r['id'])
+    # (with a length wanted: a take that can be fitted to it with little stretch, as stretching slows the voice unevenly)
+    off = lambda t: abs(np.log(t['speech'] / want)) if want else 0.0
+    best = max(takes, key=lambda t: (t['exact'], t['in_range'], t['likeness'] - 0.3 * off(t) - 3 * max(0.0, off(t) - np.log(1 / STRETCH))))
     y, sr = sf.read(best['path'])
     loud = meter.integrated_loudness(y) if len(y) > sr * 0.45 else float('nan')
     if np.isfinite(loud):
         y = pyln.normalize.loudness(y, loud, LUFS)
     y *= min(1.0, 0.89 / max(1e-9, np.abs(y).max()))
+    if want:  # as long as wanted, or as near as STRETCH allows (tools/flow_import.py fits the film's lips to it)
+        tempo = min(1 / STRETCH, max(STRETCH, speech_seconds(y, sr) / want))
+        if abs(tempo - 1) > 0.01:
+            y = fit(y, sr, tempo)
+            best['tempo'] = round(tempo, 3)
     sf.write(f"{OUT}/{r['id']}.wav", y.astype(np.float32), sr)
-    print(f"{r['id']} ({best['who']}): take {best['take']} of {len(takes)}{'' if best['exact'] else ' (words not exact!)'}{'' if best['in_range'] else ' (pitch out of range!)'}, likeness {best['likeness']:.3f}, pitch {best['pitch']} Hz | heard: {best['heard']}", flush=True)
+    fitted = f", {best['speech']:.2f} s made {best['speech'] / best.get('tempo', 1):.2f} s, {want:.2f} s wanted (tempo {best.get('tempo', 1):.2f})" if want else ''
+    print(f"{r['id']} ({best['who']}): take {best['take']} of {len(takes)}{'' if best['exact'] else ' (words not exact!)'}{'' if best['in_range'] else ' (pitch out of range!)'}, likeness {best['likeness']:.3f}, pitch {best['pitch']} Hz{fitted} | heard: {best['heard']}", flush=True)

@@ -45,6 +45,7 @@ FRAME = FW * FH * 3 // 2
 JOIN = 0.33        # seconds: one part fading into the next
 PAUSE = 2.0        # seconds: the least quiet after each line, before the next one (or the film's end)
 LEAD_OUT = 0.10    # seconds: a slowed-down moment ends this long before the next line's lips start
+LIPS = (0.85, 1.5)  # a line's lips made this much faster at most, or slower, to talk as long as the game's voice of it
 CRF = 20
 SOUND_LEVEL = 'loudnorm=I=-19:TP=-2:LRA=11'  # a film with its own sound: about as loud as the game's music
 ENHANCE = 'nlmeans=s=3:p=7:r=9,cas=strength=0.5'
@@ -150,8 +151,11 @@ def layout(name):
 
 
 def plan(name, log=print):
-    """The film's lines as cut (cue: where its lips start; said: where its take's lips stop) and the slowed-down moments
-    that make the pauses: [(from frame, to frame, frames they become)], and each line's cue in the finished film."""
+    """The film's lines as cut (cue: where its lips start; said: where its take's lips stop) and the slowed-down moments:
+    [(from frame, to frame, frames they become)], and each line's cue in the finished film. A line's lips are slowed to
+    go on as long as the game's voice of it talks (the user, 2026-10-28: "sync the character's lips with the text"; the
+    voices were made slower, near the lengths in tools/voices/lengths.json), within LIPS; then the quiet after it, to
+    make its pause."""
     parts, total = layout(name)
     spans = []  # the takes' speech, in the cut film's seconds
     for p in parts:
@@ -173,18 +177,31 @@ def plan(name, log=print):
     for i, ln in enumerate(lines):
         nxt = lines[i + 1]['cue'] if i + 1 < len(lines) else end
         said = max([e for s, e in spans if ln['cue'] - 0.05 <= s < nxt] or [ln['cue'] + ln['voice']])
-        extra = PAUSE - (nxt - (ln['cue'] + ln['voice']))
         ln['at'] = ln['cue'] + shift
+        lips = said - ln['cue']
+        gone = ln['cue'] + ln['voice']  # (where the voice stops, in the take's time)
+        lips_end = 0  # (the frame its lips' slowed moment ends at: the pause's starts no earlier)
+        if abs(ln['voice'] - lips) > 0.04:  # the lips, as long as the voice
+            a, b = round(ln['cue'] * FPS), round(said * FPS)
+            n = round(min(max(ln['voice'], lips * LIPS[0]), lips * LIPS[1]) * FPS)
+            if b - a >= 2 and n != b - a:
+                slow.append((a, b, n))
+                shift += (n - (b - a)) / FPS
+                lips_end = b
+                gone = said + (ln['voice'] - n / FPS)  # (in the take's time: a voice longer still goes on past them)
+                if abs(ln['voice'] - n / FPS) > 0.1:
+                    log(f'  {name}: "{ln["id"]}" voice {ln["voice"]:.2f} s, lips {n / FPS:.2f} s at most')
+        extra = PAUSE - (nxt - gone)
         if extra <= 0.04:
             continue
         w1 = nxt - (LEAD_OUT if i + 1 < len(lines) else 0)
         w0 = min(said + 0.04, w1 - 0.2)
         w0 = max(w0, ln['cue'] + 0.1)
-        a, b = round(w0 * FPS), round(w1 * FPS)
+        a, b = max(lips_end, round(w0 * FPS)), round(w1 * FPS)
         if b - a < 2:
             log(f'  {name}: no room to slow down after "{ln["id"]}"')
             continue
-        slow.append((a, b, round((w1 - w0 + extra) * FPS)))
+        slow.append((a, b, (b - a) + round(extra * FPS)))
         shift += (slow[-1][2] - (b - a)) / FPS
     return lines, slow, round(end * FPS) + sum(n - (b - a) for a, b, n in slow)
 
