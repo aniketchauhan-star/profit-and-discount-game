@@ -3042,7 +3042,6 @@
       this.x = x;
       this.y = y;
       this.root.style.transform = `translate(${num(x)}px, ${num(y)}px) scale(${this.scale})`;
-      this.root.style.zIndex = String(Math.round(y)); // (lower on the floor: in front)
     }
 
     _frame(row, col, mirror = false) {

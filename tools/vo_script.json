@@ -970,5 +970,11 @@
     "line": "Not quite! Buy the one that costs less.",
     "spoken": "Not quite! Buy the one that costs less.",
     "speaker": "Swifty"
+  },
+  {
+    "id": "vo242",
+    "line": "Use the controller to walk to the next shop!",
+    "spoken": "Use the controller to walk to the next shop!",
+    "speaker": "Swifty"
   }
 ]

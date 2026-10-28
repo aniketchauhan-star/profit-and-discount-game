@@ -20,7 +20,8 @@ Every line heard in the game has its clip (a line said in parts for the read-alo
 - **Aniket, his father and the shopkeeper: made on the Mac** by `tools/voices/voices.py` with **Chatterbox** (Resemble AI's open-source voice model, MIT licence: free to use in the game), each cloned from his studio voice, shaped first with the WORLD vocoder as `tools/vo_deepen.py` does (the references: `tools/voices/refs/`): **Aniket** younger (pitch × 1.25, a shorter throat × 1.10: a boy's voice, about 240 Hz; the studio's "Male Child" was nearer a teenager, about 185 Hz), **the shopkeeper** deeper (pitch × 0.66, a longer throat × 0.88: about 125 Hz; his studio clips were at about 195 Hz, a woman's range, as noted below), **the father** as he was (about 120 Hz). Each line is made again (up to six takes) until a take has exactly its words (whisper) and its pitch in his range; of those, the one most like his voice is kept. The three are distinct: each take is much nearer its own speaker's voice than the other two's (speaker embeddings). The spoken forms are as before (`spoken` in `tools/vo_script.json`: amounts in words).
 - **Four of Swifty's lines weren't in her recording**: "You bought this shirt already!" (and the bottomwear, the watch, the sunglasses: vo174, vo180, vo186, vo192), heard only when a shop is opened again from the scene list after it was bought. They are made the same way, cloned from four of her clips in the recording (`tools/voices/refs/swifty.flac`, as they are, not shaped); a recording of them by the user can take their place.
 - **The shops became "pick the better deal"** (the user's showrooms, later on 2026-10-26: two things in each, see `docs/PROMPT.md`), with 23 new lines of Swifty's, made the same way (cloned from her recording, each checked for its exact words): vo199–vo202 ("Which shirt is the better deal? Tap it!" …), vo203 ("Not quite! Work out both sale prices."), vo204–vo211 (each thing worked out: "Blue shirt: ₹1,200 − ₹240 = ₹960." …), vo212–vo215 ("Correct! The green shirt costs ₹110 less." …), vo216–vo219 ("Great! You bought the green shirt!" …), and the end's vo220–vo221 ("Total amount: ₹4,470.", "Money left: ₹530."). The shops' lines before them (vo169–vo173, vo175–vo179, vo181–vo185, vo187–vo191: each thing's price, its question, its hint, "Great! The sale price is …", "Great! You bought …"; and vo194–vo195, the old totals) are no longer heard; their clips stay, unused.
-- **Aniket, his father and the shopkeeper made again, slower and livelier** (2026-10-28, the user: "too fast", "the conversation should look like a conversation, not reading type", and "sync the video characters' lips with the text"): their 30 lines, by the same tool with livelier settings (`tools/voices/voices.py`: more expression, a lower guidance weight, which the model's makers advise for a calmer pace), each made as long as `tools/voices/lengths.json` asks: a calm talking pace (the boy about 3.8 syllables a second, his father 3.3, the shopkeeper 3.5, with a breath at a comma or a full stop), never faster than before, and on a film no longer than its character's lips can follow (1.5 times their length in the take). The take nearest that length is kept and fitted to it with ffmpeg's `atempo` (the pitch kept). The films' lips are then slowed to go on as long as the voice (`tools/flow_import.py`, `LIPS`). Their speech bubbles show the whole line while it is said, with no word lighting up (Swifty's still light up). To make one again: change its length in `lengths.json`, delete its clip from the output folder, and run `TARGETS=tools/voices/lengths.json ~/.cache/bj-voices/venv/bin/python tools/voices/voices.py OUT voNNN`, then `tools/voices/finish.py`, `tools/vo_build.py`, and `tools/flow_import.py` for its film.
+- **Aniket, his father and the shopkeeper made again, livelier, and laid on the films' lips** (2026-10-28, the user: "too fast", "the conversation should look like a conversation, not reading type", "sync the video characters' lips with the text"; and later the same day, of the films' 2-second breaks: "lagging and awkward"): their 30 lines, by the same tool with livelier settings (`tools/voices/voices.py`: more expression, a lower guidance weight, which the model's makers advise for a calmer pace). The films now play evenly a little slower than their takes (`tools/flow_import.py`, `PACE`), and each line said on a film is made to its character's lips: `tools/flow_import.py --timing` writes into `tools/voices/lengths.json` when the lips move (each stretch between their pauses, at the film's pace), and the tool cuts the voice at its own pauses into as many phrases and starts each phrase as the lips start it, each stretched by at most 15% (ffmpeg's `atempo`, the pitch kept). The take that fits with least stretch is kept; where none did, slower ones were made (`SEED=3000 EXAG=0.8 CFG=0.15`). The two lines said on no film (vo141, vo167) are as long as a calm pace (the boy about 3.8 syllables a second). Their speech bubbles show the whole line while it is said, with no word lighting up (Swifty's still light up). To make one again: delete its clip from the output folder and run `TARGETS=tools/voices/lengths.json ~/.cache/bj-voices/venv/bin/python tools/voices/voices.py OUT voNNN` (it uses the takes already in OUT), then `tools/voices/finish.py` and `tools/vo_build.py`.
+- **The mall, back out of a shop** (2026-10-28, the user: "Swifty and the controller show only when Swifty says this is the controller"): she says it each time the mall comes, so a line for coming back: "Use the controller to walk to the next shop!" (vo242, made the same way, cloned from her recording).
 - **Each shop's two selling prices first** (the user, 2026-10-27: tap either thing, its selling price on a card, a hint, another, then the answer; the other's the same; then buy the better deal), with 19 new lines of Swifty's, made the same way (cloned from her recording, each checked for its exact words and her pitch): vo223, vo228, vo233 ("Tap a shirt to find its selling price!", "Tap one to find its selling price!", "Tap a watch to find its selling price!"); each deal's first hint, what to work out (vo224, vo225, vo229, vo230, vo234, vo235, vo238: "Not quite! The discount is 20% of ₹1,200.", "Not quite! Take ₹150 off ₹1,000." …; the second hint is its sum, vo204–vo211, as before); "Let’s check the selling price of the green shirt!" and the seven others (vo226, vo227, vo231, vo232, vo236, vo237, vo239, vo240); and a wrong Buy's "Not quite! Buy the one that costs less." (vo241). "Not quite! Work out both sale prices." (vo203) is no longer heard; its clip stays, unused. A recording of these by the user can take their place.
 - **The mall's controller** (the user's, 2026-10-26, in place of the arrows): Swifty's line there became "Use the controller to walk into a shop!" (vo222, made the same way); the recorded "Use the arrows to walk into a shop!" (vo168) is no longer heard.
 - **Every new clip** (`tools/voices/finish.py`): 0.3 s of silence before the voice and 0.4 s after it, as the studio's clips had (the game's typing is timed to that); as loud as Swifty's recording (−16 LUFS), never over −1 dBFS; then `python3 tools/vo_build.py voices.zip` as before.
@@ -188,28 +189,28 @@ Generated by `tools/vo_build.py`. "=" means the line is said as written.
 <!-- vo-table -->
 | Clip | Speaker | Line as shown | Spoken as | Devanagari sent to the voice | Seconds |
 |---|---|---|---|---|---|
-| vo001 | Aniket | Dad, I want to buy a book and a new pair of sneakers from the mall. | = | — | 5.31 |
-| vo002 | Father | Sure. But compare the prices and buy wisely. | = | — | 4.71 |
-| vo003 | Aniket | I will! | = | — | 1.39 |
-| vo004 | Aniket | This book looks interesting! | = | — | 2.59 |
-| vo005 | Aniket | How much is this book? | = | — | 2.04 |
-| vo006 | Shopkeeper | It’s ₹800! | It's eight hundred rupees! | — | 2.46 |
+| vo001 | Aniket | Dad, I want to buy a book and a new pair of sneakers from the mall. | = | — | 5.79 |
+| vo002 | Father | Sure. But compare the prices and buy wisely. | = | — | 4.46 |
+| vo003 | Aniket | I will! | = | — | 1.33 |
+| vo004 | Aniket | This book looks interesting! | = | — | 2.57 |
+| vo005 | Aniket | How much is this book? | = | — | 2.12 |
+| vo006 | Shopkeeper | It’s ₹800! | It's eight hundred rupees! | — | 2.5 |
 | vo139 | Aniket | It is too costly, uncle. | = | — | 2.52 |
-| vo140 | Shopkeeper | Check the printed price on the book. | = | — | 3.0 |
+| vo140 | Shopkeeper | Check the printed price on the book. | = | — | 2.79 |
 | vo141 | Aniket | Oh! The price printed on it is ₹1000. | Oh! The price printed on it is one thousand rupees. | — | 4.52 |
 | vo142 | Swifty | The price printed on an item | = | — | 2.34 |
 | vo143 | Swifty | is called its marked price. | = | — | 2.92 |
 | vo144 | Swifty | Not quite! Check the price printed on the book. | = | — | 3.82 |
 | vo145 | Swifty | Correct! The price printed on the book, ₹1000, is its marked price. | Correct! The price printed on the book, one thousand rupees, is its marked price. | — | 6.73 |
-| vo146 | Shopkeeper | See, the price printed on the book is ₹1000, | See, the price printed on the book is one thousand rupees, | — | 5.5 |
-| vo147 | Shopkeeper | but I am selling it to you at ₹800. | but I am selling it to you at eight hundred rupees. | — | 4.5 |
-| vo148 | Shopkeeper | I gave you a discount. | = | — | 2.38 |
-| vo149 | Aniket | Discount? What is that? | = | — | 2.82 |
+| vo146 | Shopkeeper | See, the price printed on the book is ₹1000, | See, the price printed on the book is one thousand rupees, | — | 6.0 |
+| vo147 | Shopkeeper | but I am selling it to you at ₹800. | but I am selling it to you at eight hundred rupees. | — | 4.33 |
+| vo148 | Shopkeeper | I gave you a discount. | = | — | 2.0 |
+| vo149 | Aniket | Discount? What is that? | = | — | 3.2 |
 | vo150 | Swifty | The reduction given on the marked price of an item | = | — | 3.56 |
 | vo151 | Swifty | is called a discount. | = | — | 2.27 |
 | vo152 | Swifty | Not quite! ₹800 is the shopkeeper’s selling price. | Not quite! Eight hundred rupees is the shopkeeper's selling price. | — | 5.7 |
 | vo153 | Swifty | Yes! Aniket paid ₹200 less than the marked price. | Yes! Aniket paid two hundred rupees less than the marked price. | — | 5.67 |
-| vo154 | Aniket | Thank you, uncle! | = | — | 2.5 |
+| vo154 | Aniket | Thank you, uncle! | = | — | 1.95 |
 | vo155 | Swifty | Aniket bought the book and understood the discount. | = | — | 4.0 |
 | vo156 | Swifty | Let’s help Aniket buy the sneakers! | Let's help Aniket buy the sneakers! | — | 2.92 |
 | vo026 | Swifty | Marked Price, | = | — | 1.74 |
@@ -225,12 +226,12 @@ Generated by `tools/vo_build.py`. "=" means the line is said as written.
 | vo037 | Swifty | So, D | = | — | 2.05 |
 | vo038 | Swifty | = MP | equals M P | — | 2.52 |
 | vo039 | Swifty | − SP. | minus S P. | — | 2.57 |
-| vo157 | Aniket | Wow, nice sneakers! I love them. | = | — | 3.67 |
-| vo046 | Aniket | What does 30% OFF mean here? | What does thirty percent off mean here? | — | 3.1 |
-| vo048 | Aniket | The price tagged on it is ₹1800. | The price tagged on it is one thousand eight hundred rupees. | — | 4.7 |
+| vo157 | Aniket | Wow, nice sneakers! I love them. | = | — | 3.96 |
+| vo046 | Aniket | What does 30% OFF mean here? | What does thirty percent off mean here? | — | 2.98 |
+| vo048 | Aniket | The price tagged on it is ₹1800. | The price tagged on it is one thousand eight hundred rupees. | — | 4.25 |
 | vo158 | Swifty | Not quite! Check the price tagged on the sneakers. | = | — | 4.26 |
 | vo159 | Swifty | Correct! ₹1800 is the price tagged on the sneakers: their marked price. | Correct! One thousand eight hundred rupees is the price tagged on the sneakers: their marked price. | — | 7.87 |
-| vo049 | Aniket | If this is a discount, how much do I actually have to pay? | = | — | 5.42 |
+| vo049 | Aniket | If this is a discount, how much do I actually have to pay? | = | — | 5.66 |
 | vo050 | Swifty | 30% OFF means | Thirty percent off means | — | 2.7 |
 | vo160 | Swifty | 30% discount here. | thirty percent discount here. | — | 2.52 |
 | vo161 | Swifty | To calculate how much Aniket has to pay for these sneakers, | = | — | 4.49 |
@@ -277,8 +278,8 @@ Generated by `tools/vo_build.py`. "=" means the line is said as written.
 | vo099 | Swifty | ₹1800 − ₹540 | One thousand eight hundred rupees minus five hundred and forty rupees | — | 5.84 |
 | vo100 | Swifty | = ₹1260. | equals one thousand two hundred and sixty rupees. | — | 4.48 |
 | vo101 | Swifty | So, you pay ₹1260 for the sneakers! | So, you pay one thousand two hundred and sixty rupees for the sneakers! | — | 5.06 |
-| vo102 | Aniket | So, after a 30% discount, | So, after a thirty percent discount, | — | 3.54 |
-| vo103 | Aniket | I will pay ₹1260. | I will pay one thousand two hundred and sixty rupees. | — | 4.51 |
+| vo102 | Aniket | So, after a 30% discount, | So, after a thirty percent discount, | — | 3.29 |
+| vo103 | Aniket | I will pay ₹1260. | I will pay one thousand two hundred and sixty rupees. | — | 5.26 |
 | vo104 | Swifty | 540 is what percent of 1800? | Five hundred and forty is what percent of one thousand eight hundred? | — | 5.05 |
 | vo105 | Swifty | 540 is the part, | Five hundred and forty is the part, | — | 2.51 |
 | vo106 | Swifty | and 1800 is the whole. | and one thousand eight hundred is the whole. | — | 3.2 |
@@ -288,17 +289,17 @@ Generated by `tools/vo_build.py`. "=" means the line is said as written.
 | vo110 | Swifty | Here, the part is the discount, | = | — | 2.69 |
 | vo111 | Swifty | and the whole is the marked price. | = | — | 2.6 |
 | vo112 | Swifty | So, Discount % = Discount ÷ Marked Price × 100. | So, Discount percentage equals Discount divided by Marked Price, times one hundred. | — | 7.47 |
-| vo127 | Father | How was your shopping? | = | — | 2.12 |
-| vo128 | Aniket | Great! I learnt about marked price, discount and discount percentage. | = | — | 6.15 |
-| vo132 | Father | Here’s ₹5,000. | Here’s five thousand rupees. | — | 2.94 |
-| vo133 | Father | Use what you have learnt and find the best deals. | = | — | 4.6 |
-| vo134 | Father | Whatever is left after buying everything is yours. | = | — | 4.97 |
-| vo135 | Aniket | Really? | = | — | 1.27 |
+| vo127 | Father | How was your shopping? | = | — | 1.86 |
+| vo128 | Aniket | Great! I learnt about marked price, discount and discount percentage. | = | — | 7.5 |
+| vo132 | Father | Here’s ₹5,000. | Here’s five thousand rupees. | — | 2.73 |
+| vo133 | Father | Use what you have learnt and find the best deals. | = | — | 4.69 |
+| vo134 | Father | Whatever is left after buying everything is yours. | = | — | 4.45 |
+| vo135 | Aniket | Really? | = | — | 1.35 |
 | vo136 | Aniket | Then I’m definitely finding the best offers! | = | — | 3.92 |
 | vo137 | Swifty | Try again! | = | — | 1.69 |
 | vo138 | Swifty | Let’s write it in short. | = | — | 2.07 |
-| vo165 | Aniket | Wow! Rohan’s birthday party is tonight! | Wow! Rohan's birthday party is tonight! | — | 4.04 |
-| vo166 | Aniket | I need a new outfit for the party! | = | — | 3.39 |
+| vo165 | Aniket | Wow! Rohan’s birthday party is tonight! | Wow! Rohan's birthday party is tonight! | — | 4.11 |
+| vo166 | Aniket | I need a new outfit for the party! | = | — | 3.37 |
 | vo167 | Aniket | The mall! Let’s go shopping! | The mall! Let's go shopping! | — | 2.69 |
 | vo174 | Swifty | You bought this shirt already! | = | — | 2.35 |
 | vo180 | Swifty | You bought this bottomwear already! | = | — | 2.86 |
@@ -350,4 +351,5 @@ Generated by `tools/vo_build.py`. "=" means the line is said as written.
 | vo239 | Swifty | Let’s check the selling price of the brown sunglasses! | = | — | 4.16 |
 | vo240 | Swifty | Let’s check the selling price of the black sunglasses! | = | — | 4.13 |
 | vo241 | Swifty | Not quite! Buy the one that costs less. | = | — | 3.6 |
+| vo242 | Swifty | Use the controller to walk to the next shop! | = | — | 3.77 |
 <!-- /vo-table -->

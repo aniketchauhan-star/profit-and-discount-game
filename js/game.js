@@ -2847,10 +2847,24 @@
   };
   // How he walks (the user, 2026-10-23: "the movement should be smooth and slow, it should look like a walk"): at an easy
   // pace, speeding up and slowing down gently (WALK_EASE: how quickly, a second), his steps in time with the ground he
-  // covers: a cycle of them (10 frames up or down, 7 sideways) is about 120 px, two steps.
-  const WALK_SPEED = 140; // stage px a second
+  // covers: a cycle of them (10 frames up or down, 7 sideways) is about 85 px, two steps. His size (the user, 2026-10-28:
+  // "the boy is too big, the showroom is smaller than him"): about half a shop's doorway, 110 px tall (WALK_SCALE of his
+  // sheet's 200 px); his pace and his steps go with it.
+  const WALK_SCALE = 0.55;
+  const WALK_SPEED = 110; // stage px a second
   const WALK_EASE = 6;
-  const WALK_PER = { up: 12, down: 12, left: 17, right: 17 }; // px a frame
+  const WALK_PER = { up: 8.5, down: 8.5, left: 12, right: 12 }; // px a frame
+  // The way he faces, going (x, y): the stronger of the two ways, and near a diagonal the way he was facing, if it is one
+  // of the two (so he doesn't flicker between them).
+  const faceOf = (x, y, was) => {
+    const h = x > 0 ? 'right' : 'left';
+    const u = y > 0 ? 'down' : 'up';
+    const ax = Math.abs(x);
+    const ay = Math.abs(y);
+    if (ax > ay * 1.3) return h;
+    if (ay > ax * 1.3) return u;
+    return was === h || was === u ? was : (ax >= ay ? h : u);
+  };
   // On the floor (stage px): a line from the point to the right crosses the outline an odd number of times.
   const FLOOR = MALL.floor.map(p => pp(...p));
   const onFloor = ([x, y]) => FLOOR.reduce((inside, [x0, y0], i) => {
@@ -2888,7 +2902,7 @@
     });
     const from = Party.from && DOORS[Party.from];
     const [x, y] = from ? from.out : pp(...MALL.start);
-    scene.walker = new FX.TopWalker(scene.layer, TOP_SHEET, { scale: 0.78, per: WALK_PER });
+    scene.walker = new FX.TopWalker(scene.layer, TOP_SHEET, { scale: WALK_SCALE, per: WALK_PER });
     scene.walker.place(x, y);
     scene.walker.stand(from ? 'down' : 'up');
   }
@@ -2905,21 +2919,40 @@
         transformOrigin: '0 100%', transform: `skewY(${Math.atan2(door.along[1], door.along[0])}rad)`,
       });
     });
-    let swifty = null;
     const cleanup = () => { pad.destroy(); if (Game.steering === steer) Game.steering = false; };
+    // The controller comes in only as Swifty names it (the user, 2026-10-28: "Swifty and the controller show only when
+    // Swifty says this is the controller"), each time the mall comes: the first time how to walk, back out of a shop
+    // where to go next. It pops in at the bottom left as she says "controller", and glows till it is used. (He can walk
+    // with the arrow keys meanwhile; the list on top says what to buy.)
+    pad.el.classList.add('is-away');
+    let padIn = false;
+    const showPad = () => {
+      if (padIn || !ctx.alive()) return;
+      padIn = true;
+      pad.el.classList.remove('is-away');
+      FX.reveal(pad.el, [{ opacity: 0, transform: 'scale(.4)' }, { opacity: 1, transform: 'scale(1.12)', offset: 0.6 }, { opacity: 1, transform: 'none' }],
+        { duration: reducedMotion ? 1 : 560, easing: 'cubic-bezier(.2,.8,.3,1)' });
+      Sound.pop();
+      pad.el.classList.add('is-glowing');
+      Promise.race([pad.pressed().then(() => ctx.wait(1200)), ctx.wait(6000)]).then(() => pad.el.classList.remove('is-glowing'), () => {});
+    };
+    if (partyDone()) showPad(); // (here again from the scene list, all bought: nothing left to walk to)
+    else {
+      const swifty = partyBird(ctx, scene, { side: 'right', size: 38 });
+      (async () => {
+        await ctx.wait(600);
+        const named = whenSaid(scene.ui, 'controller', showPad);
+        try {
+          await swifty.say(Party.from ? 'mall-next' : 'mall-how',
+            [{ t: 'Use the ' }, { t: 'controller', cls: 'key' }, { t: Party.from ? ' to walk to the next shop!' : ' to walk into a shop!' }], 400);
+        } finally {
+          named();
+          showPad(); // (at the latest as she ends)
+        }
+        await swifty.hide();
+      })().catch(err => { if (err !== CANCELLED) console.error(err); });
+    }
     try {
-      if (!Party.from) { // the first time in: how to walk (he can walk meanwhile; the list on top says what to buy)
-        // Swifty comes in on the right to say it; then the controller glows until it is used (the user, 2026-10-26). No
-        // spotlight, the rest dark (the user, 2026-10-27: "do not add a shadow circle in game", but for a shop's first look).
-        swifty = partyBird(ctx, scene, { side: 'right', size: 38 });
-        (async () => {
-          await swifty.say('mall-how', [{ t: 'Use the ' }, { t: 'controller', cls: 'key' }, { t: ' to walk into a shop!' }], 400);
-          await swifty.hide();
-          pad.el.classList.add('is-glowing');
-          await Promise.race([pad.pressed().then(() => ctx.wait(1200)), ctx.wait(5000)]);
-          pad.el.classList.remove('is-glowing');
-        })().catch(err => { if (err !== CANCELLED) console.error(err); });
-      }
       let way = walker.way;
       let last = null;
       let toast = null;
@@ -2931,21 +2964,10 @@
           last = now;
           const v = pad.value();
           const pressed = v.x !== 0 || v.y !== 0;
-          // he faces the way pushed at once: the controller's stronger way (near a diagonal, the way he was facing, if it
-          // is one of the two)
-          if (pressed) {
-            const h = v.x > 0 ? 'right' : 'left';
-            const u = v.y > 0 ? 'down' : 'up';
-            const ax = Math.abs(v.x);
-            const ay = Math.abs(v.y);
-            if (ax > ay * 1.3) way = h;
-            else if (ay > ax * 1.3) way = u;
-            else way = way === h || way === u ? way : (ax >= ay ? h : u);
-          }
           const k = 1 - Math.exp(-WALK_EASE * dt);
           vel = [vel[0] + (v.x * WALK_SPEED - vel[0]) * k, vel[1] + (v.y * WALK_SPEED - vel[1]) * k];
-          const speed = Math.hypot(vel[0], vel[1]);
-          if (speed > 8) {
+          let moved = 0;
+          if (Math.hypot(vel[0], vel[1]) > 6) {
             const p = [walker.x, walker.y];
             const dx = vel[0] * dt;
             const dy = vel[1] * dt;
@@ -2957,12 +2979,15 @@
               if (q[0] === p[0]) vel[0] = 0;
               if (q[1] === p[1]) vel[1] = 0;
             }
-            const moved = Math.hypot(q[0] - p[0], q[1] - p[1]);
+            moved = Math.hypot(q[0] - p[0], q[1] - p[1]);
             walker.place(q[0], q[1]);
-            if (moved > 0.01) walker.walk(way, moved);
-            else walker.stand(way);
+            if (moved > 0.01) way = faceOf(q[0] - p[0], q[1] - p[1], way); // (he faces the way he goes, sliding along an edge too)
           } else {
             vel = [0, 0];
+          }
+          if (moved > 0.01) walker.walk(way, moved);
+          else {
+            if (pressed) way = faceOf(v.x, v.y, way); // (pushed against something: he turns that way)
             walker.stand(way);
           }
           // at a shop's door: it glows; walking into it (towards the shop: up, or up and to its side), in he goes (or, if
@@ -2986,16 +3011,60 @@
         };
         requestAnimationFrame(tick);
       });
-      // in through the doors
-      walker.stand('up');
-      Sound.whoosh();
-      cleanup();
+      pad.el.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 300, fill: 'forwards' }); // (in he goes: the controller fades away)
       Party.from = going;
+      await enterShop(ctx, scene, walker, DOORS[going]);
+      cleanup(); // (the arrow keys kept till now: held, they'd change the screen)
       go(sceneIndex(PARTY_ITEMS.find(it => it.id === going).shop));
     } catch (err) {
       cleanup();
       throw err;
     }
+  }
+
+  // In through a shop's doors (the user, 2026-10-28: "make an effect of entering the showroom"): he walks on into the
+  // doorway and is gone inside, as the camera moves in on it; the shop's picture comes in over it (FADES), the camera
+  // still moving in. (Without motion: in at once.)
+  async function enterShop(ctx, scene, walker, door) {
+    Sound.whoosh();
+    if (reducedMotion) return;
+    const mid = [door.a[0] + (door.along[0] * door.len) / 2, door.a[1] + (door.along[1] * door.len) / 2];
+    const s = 1.9;
+    const [ox, oy] = [STAGE_W / 2, STAGE_H / 2]; // (the mall's camera turns round the middle: its `origin`)
+    scene.kbAnim = scene.world.animate([{ transform: 'none' }, { transform: `translate(${(mid[0] - ox) * (1 - s)}px, ${(mid[1] - oy) * (1 - s)}px) scale(${s})` }],
+      { duration: 1400, easing: 'cubic-bezier(.5,0,.7,.4)', fill: 'forwards' }); // (let go when the mall comes again: see startCamera)
+    const from = [walker.x, walker.y];
+    const to = [mid[0] + door.inward[0] * 36, mid[1] + door.inward[1] * 36];
+    const way = faceOf(to[0] - from[0], to[1] - from[1], walker.way);
+    walker.root.animate([{ opacity: 1 }, { opacity: 1, offset: 0.5 }, { opacity: 0 }], { duration: 750, fill: 'forwards' });
+    const t0 = performance.now();
+    let prev = from;
+    await new Promise(resolve => {
+      const step = now => {
+        const k = Math.min(1, (now - t0) / 750);
+        const q = [from[0] + (to[0] - from[0]) * k, from[1] + (to[1] - from[1]) * k];
+        walker.place(q[0], q[1]);
+        walker.walk(way, Math.hypot(q[0] - prev[0], q[1] - prev[1]));
+        prev = q;
+        if (k < 1 && ctx.alive()) requestAnimationFrame(step);
+        else resolve();
+      };
+      requestAnimationFrame(step);
+    });
+    await ctx.wait(120);
+  }
+
+  // Calls fn() once as `word` is said in a speech bubble under `host` (it lights up then: see FX's sayWords). Returns a
+  // function that stops waiting for it.
+  function whenSaid(host, word, fn) {
+    const seen = new MutationObserver(changes => {
+      if (!changes.some(c => c.target.classList.contains('is-now') && c.target.classList.contains('b-word') &&
+        c.target.textContent.replace(/[^\w]/g, '') === word)) return;
+      seen.disconnect();
+      fn();
+    });
+    seen.observe(host, { subtree: true, attributes: true, attributeFilter: ['class'] });
+    return () => seen.disconnect();
   }
 
   // ---------- A shop (screens 37–40) ----------
@@ -3418,15 +3487,16 @@
   // film's first frame as the screen's picture (assets/video/<screen>.webp), so it starts on exactly what the screen
   // shows; js/video_clips.js lists them. The game says the lines, in its own voices: each as its speaker's lips start
   // to move in the film, at the time js/video_clips.js gives (measured on the take's own voices), its bubble just before
-  // (see lineDue). After every line the film itself keeps at least 2 s of quiet before the next one (the user,
-  // 2026-10-27: the take's quiet moment slowed down by the tool, never frozen). Where a take goes on from one screen to
+  // (see lineDue). Each film plays a little slower than its take, evenly (the user, 2026-10-28: the 2-second breaks made
+  // after each line by slowing the take's quiet moments looked "lagging and awkward"): the talk keeps the take's own
+  // rhythm, and each voice is laid on its character's lips, phrase by phrase. Where a take goes on from one screen to
   // the next (the sneakers, 22 → 23 → 25; the counter, 14 → 15), the next screen's film starts on the last frame of this
   // one's, with no fade. With reduced motion, or a film not there, the screen shows its picture and its lines come one
   // after another, as before.
   const CLIP_DIR = ASSETS + 'video/';
   const VOICE_LEAD = 0.3;     // s: the quiet each line's recording starts with, so it starts this much before the lips
   const BUBBLE_EARLY = 0.45;  // s: a line's bubble comes this much before its voice
-  const FILM_HOLD = 2000;     // ms: after a film screen's last line, the story moves on this soon (or as the film ends)
+  const FILM_HOLD = 1000;     // ms: after a film screen's last line, the story moves on this soon (or as the film ends)
   // Screens whose script starts the film itself (Clips.roll), after what comes first (the invite out of the phone).
   const FILM_LATER = new Set(['invite']);
 

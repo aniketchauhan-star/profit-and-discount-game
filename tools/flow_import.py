@@ -4,10 +4,10 @@
 Each story screen with a film gets its part of a take (two takes joined, for one), cut to the frame:
   * the Gemini sparkle taken off (tools/flow_sparkle.py);
   * where two parts join, the first fades into the second over JOIN seconds;
-  * a pause after every line (the user, 2026-10-27: "pause after dialogue 2 second ... smooth"): at least PAUSE seconds
-    between the end of a line, as the game's own recording says it, and the next line (or the film's end). Where the
-    take goes on sooner, its quiet moment after the line (nobody's lips moving) is slowed down to fill it, its in-between
-    frames made by motion interpolation, so nothing stops: the people move on, only more slowly;
+  * the whole film a little slower than the take, evenly (PACE: the user, 2026-10-28, of the 2-second breaks made after
+    each line the day before by slowing the take's quiet moments: "it's lagging and awkward; if you make the video
+    slow, this won't come"): its in-between frames made by motion interpolation, so the talk keeps the take's own
+    rhythm, at a calmer pace, with no moment slower than the rest;
   * enhanced (ENHANCE: a non-local-means clean-up of the take's compression, then contrast-adaptive sharpening) and
     encoded well (H.264, CRF 20, tuned for animation), without sound (the game says the lines), 1920 x 1080, 24 fps,
     marked as the takes are (BT.601, sRGB), so the browser shows it in the same colours as its picture;
@@ -15,11 +15,13 @@ Each story screen with a film gets its part of a take (two takes joined, for one
     starts on exactly what the screen shows) and, where the next screen goes on from it, its last frame as
     <screen>-end.webp.
 Then js/video_clips.js: each film's length, and for each line said on it when its speaker's lips start to move in it
-(from the take's own voices: the start of the speech nearest the time given in FILMS, moved on by the pauses).
+(from the take's own voices: the start of the speech nearest the time given in FILMS, at the film's pace).
 
   ~/.cache/bj-voices/venv/bin/python tools/flow_import.py              all the films
   ~/.cache/bj-voices/venv/bin/python tools/flow_import.py home ask     only these (js/video_clips.js lists them all)
   ... --index                                                          only js/video_clips.js
+  ... --timing                                                         each line's lips (when they move, from its
+      start, at its film's pace) into tools/voices/lengths.json, for the game's voices to be made to (voices.py)
 
 Needs numpy and scipy, ffmpeg (with libx264) and cwebp.
 """
@@ -38,14 +40,10 @@ from flow_sparkle import Sparkle  # noqa: E402
 ROOT = Path(__file__).resolve().parent.parent
 TAKES_DIR = ROOT / 'flow video new'
 OUT = ROOT / 'assets' / 'video'
-VO = ROOT / 'assets' / 'vo'
 INDEX = ROOT / 'js' / 'video_clips.js'
 FW, FH, FPS = 1920, 1080, 24
 FRAME = FW * FH * 3 // 2
 JOIN = 0.33        # seconds: one part fading into the next
-PAUSE = 2.0        # seconds: the least quiet after each line, before the next one (or the film's end)
-LEAD_OUT = 0.10    # seconds: a slowed-down moment ends this long before the next line's lips start
-LIPS = (0.85, 1.5)  # a line's lips made this much faster at most, or slower, to talk as long as the game's voice of it
 CRF = 20
 SOUND_LEVEL = 'loudnorm=I=-19:TP=-2:LRA=11'  # a film with its own sound: about as loud as the game's music
 ENHANCE = 'nlmeans=s=3:p=7:r=9,cas=strength=0.5'
@@ -70,6 +68,15 @@ TAKES = {
     'money-2': 'Whatever is left after buying everything is yours." |.mp4',
     'fitcheck': 'fitcheck.mp4',
 }
+
+# How much slower each film plays than its take (see the top). Each the median, over its lines, of how much longer a
+# calm voice of the line (the boy about 3.8 syllables a second, his father 3.3, the shopkeeper 3.5) is than the take's
+# lips, between 1 and 1.35; where a take goes on over screens (the counter, 8 → 9; the sneakers, 16 → 17 → 18), one pace
+# for them all, so nothing changes speed at the join. The others (the walks, the fit check with its music) as taken.
+PACE = {'home': 1.25, 'browse': 1.35, 'ask': 1.35, 'reveal': 1.15, 'discount': 1.15, 'pay': 1.35, 'sneakers': 1.10,
+        'shoe': 1.10, 'confused': 1.10, 'offmeans': 1.10, 'final': 1.20, 'return': 1.25, 'invite': 1.35, 'partymoney': 1.35,
+        'partydeal': 1.25}
+VOICES = ROOT / 'tools' / 'voices' / 'lengths.json'
 
 # Each screen's film: its parts (take, from, to: seconds in the take; to None: its end); the lines said on it (the game's
 # line ids): about when each starts, in seconds into the film as cut, and its recording (assets/vo/); `end`: its last
@@ -132,12 +139,6 @@ def speech(path):
     return [s for s in spans if s[1] - s[0] > 0.05]
 
 
-def voice_length(vo):
-    """How long the game's recording of a line talks (seconds, its quiet start and end left out)."""
-    spans = speech(VO / f'{vo}.ogg')
-    return spans[-1][1] - spans[0][0]
-
-
 def layout(name):
     """The film's parts as frame ranges in their takes, with where each starts in the cut film (frames)."""
     parts, at = [], 0
@@ -151,11 +152,9 @@ def layout(name):
 
 
 def plan(name, log=print):
-    """The film's lines as cut (cue: where its lips start; said: where its take's lips stop) and the slowed-down moments:
-    [(from frame, to frame, frames they become)], and each line's cue in the finished film. A line's lips are slowed to
-    go on as long as the game's voice of it talks (the user, 2026-10-28: "sync the character's lips with the text"; the
-    voices were made slower, near the lengths in tools/voices/lengths.json), within LIPS; then the quiet after it, to
-    make its pause."""
+    """The film's lines, in order: where each one's lips start in the take as cut (cue), the stretches its lips move in
+    there, from the cue (spans), and where it starts in the finished film (at: its cue at the film's pace). Then the
+    number of frames as cut, and the pace."""
     parts, total = layout(name)
     spans = []  # the takes' speech, in the cut film's seconds
     for p in parts:
@@ -164,46 +163,19 @@ def plan(name, log=print):
             if hi > lo:
                 spans.append((p['at'] / FPS + lo - p['f0'] / FPS, p['at'] / FPS + hi - p['f0'] / FPS))
     spans.sort()
+    pace = PACE.get(name, 1.0)
     lines = []
     for line, (t, vo) in FILMS[name]['lines'].items():
         cue = min((s for s, _ in spans), key=lambda s: abs(s - t), default=None)
         if cue is None or abs(cue - t) > 0.6:
             log(f'  {name}: no speech near {t:.2f} s for "{line}": kept {t:.2f} s')
             cue = t
-        lines.append({'id': line, 'cue': cue, 'voice': voice_length(vo)})
+        lines.append({'id': line, 'vo': vo, 'cue': cue, 'at': cue * pace})
     lines.sort(key=lambda l: l['cue'])
-    end = total / FPS
-    slow, shift = [], 0.0
     for i, ln in enumerate(lines):
-        nxt = lines[i + 1]['cue'] if i + 1 < len(lines) else end
-        said = max([e for s, e in spans if ln['cue'] - 0.05 <= s < nxt] or [ln['cue'] + ln['voice']])
-        ln['at'] = ln['cue'] + shift
-        lips = said - ln['cue']
-        gone = ln['cue'] + ln['voice']  # (where the voice stops, in the take's time)
-        lips_end = 0  # (the frame its lips' slowed moment ends at: the pause's starts no earlier)
-        if abs(ln['voice'] - lips) > 0.04:  # the lips, as long as the voice
-            a, b = round(ln['cue'] * FPS), round(said * FPS)
-            n = round(min(max(ln['voice'], lips * LIPS[0]), lips * LIPS[1]) * FPS)
-            if b - a >= 2 and n != b - a:
-                slow.append((a, b, n))
-                shift += (n - (b - a)) / FPS
-                lips_end = b
-                gone = said + (ln['voice'] - n / FPS)  # (in the take's time: a voice longer still goes on past them)
-                if abs(ln['voice'] - n / FPS) > 0.1:
-                    log(f'  {name}: "{ln["id"]}" voice {ln["voice"]:.2f} s, lips {n / FPS:.2f} s at most')
-        extra = PAUSE - (nxt - gone)
-        if extra <= 0.04:
-            continue
-        w1 = nxt - (LEAD_OUT if i + 1 < len(lines) else 0)
-        w0 = min(said + 0.04, w1 - 0.2)
-        w0 = max(w0, ln['cue'] + 0.1)
-        a, b = max(lips_end, round(w0 * FPS)), round(w1 * FPS)
-        if b - a < 2:
-            log(f'  {name}: no room to slow down after "{ln["id"]}"')
-            continue
-        slow.append((a, b, (b - a) + round(extra * FPS)))
-        shift += (slow[-1][2] - (b - a)) / FPS
-    return lines, slow, round(end * FPS) + sum(n - (b - a) for a, b, n in slow)
+        nxt = lines[i + 1]['cue'] if i + 1 < len(lines) else total / FPS
+        ln['spans'] = [(max(0.0, s - ln['cue']), e - ln['cue']) for s, e in spans if ln['cue'] - 0.05 <= s < nxt] or [(0.0, 0.5)]
+    return lines, total, pace
 
 
 def decode(take, f0, f1):
@@ -242,46 +214,28 @@ def cut_frames(name, sparkle):
             yield raw
 
 
-def slowed(frames, n):
-    """`frames` (a quiet moment) slowed down into `n` frames, the frames in between made by motion interpolation (a few
-    more made than needed, and `n` taken evenly from them, from the first frame to the last: none shown twice)."""
-    k = (n + 3) / max(1, len(frames) - 1)
-    p = subprocess.run(['ffmpeg', '-v', 'error', '-f', 'rawvideo', '-pix_fmt', 'yuv420p', '-s', f'{FW}x{FH}', '-r', str(FPS),
-                        '-i', '-', '-vf', f'setpts={k:.6f}*PTS,' + SLOW.format(fps=FPS), '-f', 'rawvideo', '-pix_fmt', 'yuv420p', '-'],
-                       input=b''.join(frames), capture_output=True, check=True)
-    made = [p.stdout[i:i + FRAME] for i in range(0, len(p.stdout) - FRAME + 1, FRAME)] or frames
-    return [made[min(len(made) - 1, round(j * (len(made) - 1) / max(1, n - 1)))] for j in range(n)]
-
-
 def make(name, sparkle, log):
-    lines, slow, total = plan(name, log)
+    lines, total, pace = plan(name, log)
     dest = OUT / f'{name}.mp4'
     tmp = dest.with_suffix('.part.mp4')
     sound = ['-an']
     if FILMS[name].get('sound'):  # (its take's own sound, as it is: so only for a film cut straight from one take)
         parts = FILMS[name]['parts']
-        assert len(parts) == 1 and not slow and not parts[0][1], f'{name}: its sound would not fit its film'
+        assert len(parts) == 1 and pace == 1 and not parts[0][1], f'{name}: its sound would not fit its film'
         sound = ['-map', '0:v', '-map', '1:a', '-af', SOUND_LEVEL, '-ar', '48000', '-c:a', 'aac', '-b:a', '128k', '-shortest']
     enc = subprocess.Popen(['ffmpeg', '-v', 'error', '-y', '-f', 'rawvideo', '-pix_fmt', 'yuv420p', '-s', f'{FW}x{FH}',
                             '-r', str(FPS), '-i', '-',
                             *(['-i', str(take_path(FILMS[name]['parts'][0][0]))] if FILMS[name].get('sound') else []),
-                            '-vf', ENHANCE, '-c:v', 'libx264', '-preset', 'slow', '-tune', 'animation',
+                            '-vf', ENHANCE if pace == 1 else f'setpts={pace}*PTS,{SLOW.format(fps=FPS)},{ENHANCE}',
+                            '-c:v', 'libx264', '-preset', 'slow', '-tune', 'animation',
                             '-crf', str(CRF), '-pix_fmt', 'yuv420p', '-g', str(2 * FPS), '-colorspace', 'smpte170m',
                             '-color_trc', 'iec61966-2-1', '-color_primaries', 'bt709', '-color_range', 'tv',
                             '-movflags', '+faststart', *sound, str(tmp)], stdin=subprocess.PIPE)
-    window, written = [], 0
-    for k, raw in enumerate(cut_frames(name, sparkle)):
-        w = next((s for s in slow if s[0] <= k < s[1]), None)
-        if w:
-            window.append(raw)
-            if k == w[1] - 1:
-                for f in slowed(window, w[2]):
-                    enc.stdin.write(f)
-                    written += 1
-                window = []
-            continue
+    raw = None
+    for raw in cut_frames(name, sparkle):
         enc.stdin.write(raw)
-        written += 1
+    if pace != 1 and raw is not None:  # (the last frame once more: the slowed film reaches it, so the next goes on from it)
+        enc.stdin.write(raw)
     enc.stdin.close()
     if enc.wait():
         raise SystemExit(f'{name}: encoding failed')
@@ -289,8 +243,12 @@ def make(name, sparkle, log):
     poster(dest, OUT / f'{name}.webp', first=True)
     if FILMS[name].get('end'):
         poster(dest, OUT / f'{name}-end.webp', first=False)
-    pauses = ', '.join(f'{(n - (b - a)) / FPS:.1f} s at {a / FPS:.1f} s' for a, b, n in slow) or 'none'
-    log(f'  {name}: {written / FPS:.2f} s ({total / FPS:.2f} planned), {dest.stat().st_size / 1e6:.2f} MB; slowed: {pauses}')
+    log(f'  {name}: {frames_in(dest) / FPS:.2f} s ({total / FPS:.2f} s as taken, at ×{pace:.2f}), {dest.stat().st_size / 1e6:.2f} MB')
+
+
+def frames_in(film):
+    return int(subprocess.run(['ffprobe', '-v', 'error', '-select_streams', 'v:0', '-count_packets', '-show_entries',
+                               'stream=nb_read_packets', '-of', 'csv=p=0', str(film)], capture_output=True, text=True).stdout.strip())
 
 
 def poster(film, dest, first=True):
@@ -310,11 +268,10 @@ def index(log):
         film = OUT / f'{name}.mp4'
         if not film.exists():
             continue
-        lines, _, total = plan(name, lambda *_: None)
-        frames = int(subprocess.run(['ffprobe', '-v', 'error', '-select_streams', 'v:0', '-count_packets', '-show_entries',
-                                     'stream=nb_read_packets', '-of', 'csv=p=0', str(film)], capture_output=True, text=True).stdout.strip())
-        if frames != total:
-            log(f'  {name}: the film has {frames} frames, the plan {total}: make it again')
+        lines, total, pace = plan(name, lambda *_: None)
+        frames = frames_in(film)
+        if abs(frames - total * pace) > 3:
+            log(f'  {name}: the film has {frames} frames, {total} at ×{pace:.2f} planned: make it again')
         films[name] = {'seconds': round(frames / FPS, 3), 'lines': {ln['id']: round(ln['at'], 2) for ln in lines}}
         if FILMS[name].get('sound'):
             films[name]['sound'] = True
@@ -328,12 +285,26 @@ def index(log):
     log(f'wrote {INDEX.relative_to(ROOT)}: {len(films)} films')
 
 
+def timing(log):
+    """Each film line's lips, at its film's pace: when they move, from the line's start ([[from, to] …], seconds), into
+    tools/voices/lengths.json (the lines said on no film keep their lengths there)."""
+    want = json.loads(VOICES.read_text())
+    for name in FILMS:
+        lines, _, pace = plan(name, log)
+        for ln in lines:
+            want[ln['vo']] = [[round(a * pace, 2), round(b * pace, 2)] for a, b in ln['spans']]
+    VOICES.write_text(json.dumps(want, indent=1) + '\n')
+    log(f'wrote {VOICES.relative_to(ROOT)}')
+
+
 def main(args):
     only = [a for a in args if not a.startswith('--')]
     unknown = [a for a in only if a not in FILMS]
     if unknown:
         raise SystemExit(f'no such film: {", ".join(unknown)} (films: {", ".join(FILMS)})')
     OUT.mkdir(parents=True, exist_ok=True)
+    if '--timing' in args:
+        return timing(print)
     if '--index' not in args:
         sparkle = Sparkle()
         for name in only or FILMS:

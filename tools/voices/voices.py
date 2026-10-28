@@ -16,9 +16,10 @@
 #   ~/.cache/bj-voices/venv/bin/python tools/voices/voices.py OUT [id …]        (no ids: every line of the three)
 # On 2026-10-28 the user found the three "too fast", "like reading, not a conversation", and asked for the films' lips to
 # go with the words: they talk livelier and slower now (VOICES: exaggeration up, cfg 0.3, as Chatterbox's notes advise
-# for a calmer pace), and with TARGETS=file.json ({id: seconds}) each line is made as long as that: of its takes (with
-# SEED=2000 … more of them), the likest that is near that length, fitted to it with ffmpeg's atempo (the pitch kept), by
-# no more than STRETCH. tools/flow_import.py fits a film's lips to the voice as it comes out (see LIPS there).
+# for a calmer pace), and with TARGETS=file.json each line is made to it: {id: seconds} as long as that, or (a line on a
+# film: tools/flow_import.py --timing) {id: [[from, to] …]} on its character's lips, each phrase starting as they start
+# moving again (see align). Of its takes (with SEED=2000 … more of them), the likest that fits with little stretch,
+# fitted with ffmpeg's atempo (the pitch kept), by no more than STRETCH.
 import json, os, re, subprocess, sys, warnings
 warnings.filterwarnings('ignore')
 os.environ.setdefault('PYTORCH_ENABLE_MPS_FALLBACK', '1')
@@ -32,6 +33,9 @@ ONLY = set(sys.argv[2:])
 TAKES = int(os.environ.get('TAKES', 3))
 MAX_TAKES = int(os.environ.get('MAX_TAKES', 6))
 SEED = int(os.environ.get('SEED', 1000))  # the first take's seed (another SEED: other takes of a line)
+# (for those other takes: how lively and how closely to the usual pace, instead of the voice's own: see VOICES)
+EXAG = float(os.environ['EXAG']) if os.environ.get('EXAG') else None
+CFG = float(os.environ['CFG']) if os.environ.get('CFG') else None
 LUFS = -16.0  # (Swifty's clips, measured)
 os.makedirs(f'{OUT}/takes', exist_ok=True)
 
@@ -45,6 +49,9 @@ VOICES = {  # how lively (exaggeration), how closely it keeps to the usual pace 
 }
 TARGETS = json.load(open(os.environ['TARGETS'])) if os.environ.get('TARGETS') else {}  # {id: seconds of speech}
 STRETCH = 0.85  # a take is slowed (or sped up) by no more than this, to the length wanted
+# …and a phrase laid on its lips (see align): a word or two (up to a second long, as the lips have it: "Great!",
+# "Discount?") drawn out by up to ×1.5, as a voice does; a longer phrase by up to ×1.3
+reach = lambda seconds: (1 / 1.5, 1.5) if seconds <= 1.0 else (1 / 1.3, 1.3)
 SR = 24000
 
 # ---------- words as said (to compare whisper's words with the line's) ----------
@@ -111,6 +118,68 @@ def trim(y, sr):
     y[:n] *= np.linspace(0, 1, n)
     y[-n:] *= np.linspace(1, 0, n)
     return y
+
+
+def spans_of(y, sr, d=0.12):
+    """Where a voice talks: its stretches between pauses (quiet at least `d` s), in seconds from its start."""
+    path = f'{OUT}/measure.wav'
+    sf.write(path, np.concatenate([np.zeros(int(0.30 * sr)), y, np.zeros(int(0.40 * sr))]).astype(np.float32), sr)
+    out = subprocess.run(['ffmpeg', '-hide_banner', '-nostats', '-i', path, '-af', f'silencedetect=noise=-38dB:d={d}', '-f', 'null', '-'],
+                         capture_output=True, text=True).stderr
+    length = float(re.search(r'Duration: (\d+):(\d+):([\d.]+)', out).group(3))
+    marks = [(k, float(t)) for k, t in re.findall(r'silence_(start|end): ([0-9.]+)', out)]
+    spans, at = [], 0.0
+    for kind, t in marks:
+        if kind == 'start' and t > at + 0.02:
+            spans.append([at - 0.30, t - 0.30])
+        if kind == 'end':
+            at = t
+    if not marks or marks[-1][0] == 'end':
+        spans.append([at - 0.30, length - 0.30])
+    return [x for x in spans if x[1] - x[0] > 0.05]
+
+
+def paired(ours, target):
+    """A voice's stretches and the lips' paired up, as many of each: the voice's joined at its shortest pauses where it
+    has more, the lips' where they have more."""
+    ours, target = [list(x) for x in ours], [list(x) for x in target]
+    for many in (ours, target):
+        while len(many) > min(len(ours), len(target)):
+            k = min(range(len(many) - 1), key=lambda i: many[i + 1][0] - many[i][1])
+            many[k][1] = many.pop(k + 1)[1]
+    return list(zip(ours, target))
+
+
+def stretches(ours, target):
+    """How much longer each of the voice's stretches must last to fill its stretch of the lips."""
+    return [(e - s) / max(0.05, b - a) for (a, b), (s, e) in paired(ours, target)]
+
+
+def align(y, sr, target):
+    """The voice laid on its character's lips (target: [[from, to] …], seconds from the first word, at the film's pace):
+    cut in its pauses into as many pieces as the lips have stretches (see paired), each piece fitted to its stretch by no
+    more than STRETCH and started with it (a piece longer than its stretch still ends before the next one starts)."""
+    pairs = paired(spans_of(y, sr), target)
+    pieces, cursor = [], 0
+    for n, ((a, b), (s, e)) in enumerate(pairs):
+        lo = a - 0.04 if n == 0 else (pairs[n - 1][0][1] + a) / 2  # (cut in the middle of the pause before it…)
+        hi = b + 0.08 if n == len(pairs) - 1 else (b + pairs[n + 1][0][0]) / 2  # (…and after it)
+        piece = y[max(0, int(lo * sr)):min(len(y), int(hi * sr))].copy()
+        lo_k, hi_k = reach(e - s)
+        k = min(hi_k, max(lo_k, (e - s) / max(0.05, b - a)))  # (how much longer it is made)
+        if abs(k - 1) > 0.01:
+            piece = fit(piece, sr, 1 / k)
+        fade = int(0.006 * sr)
+        piece[:fade] *= np.linspace(0, 1, fade)
+        piece[-fade:] *= np.linspace(1, 0, fade)
+        lead = (a - max(0.0, lo)) * k  # (the quiet it starts with, as made)
+        at = max(0, cursor - int(lead * sr), int((s - lead + 0.04) * sr))  # (its first word on its lips; never on the words before)
+        pieces.append((at, piece))
+        cursor = at + int(((b - max(0.0, lo)) * k + 0.03) * sr)  # (where its words end: its quiet end may go under the next)
+    out = np.zeros(max(at + len(piece) for at, piece in pieces) + int(0.1 * sr))
+    for at, piece in pieces:
+        out[at:at + len(piece)] += piece
+    return out
 
 
 def speech_seconds(y, sr):
@@ -197,10 +266,10 @@ for r in todo:
             y = sf.read(p)[0]
         else:
             if not ready:
-                tts.prepare_conditionals(refs[r['speaker']], exaggeration=v['exaggeration'])
+                tts.prepare_conditionals(refs[r['speaker']], exaggeration=EXAG or v['exaggeration'])
                 ready = True
             torch.manual_seed(SEED + k)
-            wav = tts.generate(said[r['id']], exaggeration=v['exaggeration'], cfg_weight=v['cfg'], temperature=0.8)
+            wav = tts.generate(said[r['id']], exaggeration=EXAG or v['exaggeration'], cfg_weight=CFG or v['cfg'], temperature=0.8)
             y = trim(wav.cpu().numpy()[0].astype(np.float64), tts.sr)
             sf.write(p, y.astype(np.float32), tts.sr)
             e = emb(y, tts.sr)
@@ -223,19 +292,31 @@ for r in todo:
             t['speech'] = round(speech_seconds(sf.read(p)[0], tts.sr), 3)
             takes.append(t)
     want = TARGETS.get(r['id'])
-    # (with a length wanted: a take that can be fitted to it with little stretch, as stretching slows the voice unevenly)
-    off = lambda t: abs(np.log(t['speech'] / want)) if want else 0.0
+    # (with a length wanted, or its lips: a take that can be fitted with little stretch, as stretching drags the voice)
+    if isinstance(want, list):
+        for t in takes:
+            t['pieces'] = spans_of(sf.read(t['path'])[0], tts.sr)
+        def off(t):  # (the most stretch it needs, beyond what its phrase may have, counted as more than STRETCH's)
+            ks = [(k, reach(e - s)) for k, (_, (s, e)) in zip(stretches(t['pieces'], want), paired(t['pieces'], want))]
+            return max((abs(np.log(k)) - max(0.0, np.log(hi) - np.log(1 / STRETCH)) for k, (_, hi) in ks), default=9.0)
+    else:
+        off = lambda t: abs(np.log(t['speech'] / want)) if want else 0.0
     best = max(takes, key=lambda t: (t['exact'], t['in_range'], t['likeness'] - 0.3 * off(t) - 3 * max(0.0, off(t) - np.log(1 / STRETCH))))
     y, sr = sf.read(best['path'])
     loud = meter.integrated_loudness(y) if len(y) > sr * 0.45 else float('nan')
     if np.isfinite(loud):
         y = pyln.normalize.loudness(y, loud, LUFS)
     y *= min(1.0, 0.89 / max(1e-9, np.abs(y).max()))
-    if want:  # as long as wanted, or as near as STRETCH allows (tools/flow_import.py fits the film's lips to it)
+    if isinstance(want, list):  # on its lips
+        ks = stretches(best['pieces'], want)
+        y = align(y, sr, want)
+        fitted = f", laid on its lips: {len(ks)} piece(s), each ×{', ×'.join(f'{k:.2f}' for k in ks)} wanted, {speech_seconds(y, sr):.2f} s, its lips {want[-1][1]:.2f} s"
+    elif want:  # as long as wanted, or as near as STRETCH allows
         tempo = min(1 / STRETCH, max(STRETCH, speech_seconds(y, sr) / want))
         if abs(tempo - 1) > 0.01:
             y = fit(y, sr, tempo)
-            best['tempo'] = round(tempo, 3)
+        fitted = f", {best['speech']:.2f} s made {best['speech'] / tempo:.2f} s, {want:.2f} s wanted"
+    else:
+        fitted = ''
     sf.write(f"{OUT}/{r['id']}.wav", y.astype(np.float32), sr)
-    fitted = f", {best['speech']:.2f} s made {best['speech'] / best.get('tempo', 1):.2f} s, {want:.2f} s wanted (tempo {best.get('tempo', 1):.2f})" if want else ''
     print(f"{r['id']} ({best['who']}): take {best['take']} of {len(takes)}{'' if best['exact'] else ' (words not exact!)'}{'' if best['in_range'] else ' (pitch out of range!)'}, likeness {best['likeness']:.3f}, pitch {best['pitch']} Hz{fitted} | heard: {best['heard']}", flush=True)
