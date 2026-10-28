@@ -3129,7 +3129,8 @@
     return tag;
   }
 
-  // A card on the right asks a deal's selling price: the thing's picture, its name and its tag on top, and three answers
+  // A card on the right asks a deal's selling price: the thing's picture and its name on top (its price and discount are
+  // on its tag in the shop: the user, 2026-10-28, "no need to show this" on the card), and three answers
   // (its selling price, its discount, and its price less the percentage taken as rupees, or plus the amount off). A
   // wrong one: the first hint, what to work out; another: the second, it worked out, and the answer shows. Swifty comes
   // in on the left to say each, in her bubble (the user, 2026-10-28: not written on the card). Then its selling price
@@ -3153,15 +3154,11 @@
       },
     });
     card.el.classList.add('qcard-pos--deal');
-    card.card.setAttribute('aria-label', `${d.name}: ${inr(d.mp)}, ${d.pct ? `${d.pct}%` : inr(d.flat)} off. Its selling price is —`);
+    card.card.setAttribute('aria-label', `${d.name}: its selling price is —`);
     const head = el('div', 'qd-head');
     card.card.prepend(head);
     Object.assign(el('img', '', el('div', 'qd-pic', head)), { src: d.pic, alt: '' });
-    const what = el('div', 'qd-what', head);
-    el('b', 'qd-name', what).textContent = d.name;
-    const tag = el('div', 'qd-tag', what); // (as on its tag in the shop)
-    el('span', 'qd-mp', tag).textContent = inr(d.mp);
-    el('span', 'qd-off', tag).textContent = `${d.pct ? `${d.pct}%` : inr(d.flat)} OFF`;
+    el('b', 'qd-name', head).textContent = d.name;
     const swifty = partyBird(ctx, scene, { upTo: SHOP_HINT_TO }); // (on the left)
     async function wrong() {
       card.lock();
