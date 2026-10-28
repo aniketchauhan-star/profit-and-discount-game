@@ -82,10 +82,12 @@ PACE = {'home': 1.25, 'browse': 1.30, 'ask': 1.35, 'reveal': 1.15, 'pay': 1.25, 
         'partydeal': 1.25}
 VOICES = ROOT / 'tools' / 'voices' / 'lengths.json'
 # Stills from the takes, for screens without a film (the user, 2026-10-28, of screen 9: "he is thinking, not saying;
-# zoom his face"): a frame (take, seconds), the sparkle off and enhanced as the films are, made twice the screen's size
-# (Lanczos, then sharpened) so it stays sharp with the camera close: assets/video/<name>.webp.
+# zoom his face"), or a close-up a film cuts away to: a frame (take, seconds), the sparkle off and enhanced as the films
+# are, made twice the screen's size (Lanczos, then sharpened) so it stays sharp with the camera close:
+# assets/video/<name>.webp.
 STILLS = {
     'counter-puzzled': ('counter-3', 5.6),  # (the frame screen 8's film stops on: his face puzzled at "discount")
+    'offmeans-tags': ('shoes-2', 2.68),     # (screen 20's film at 2.95 s, ×1.10: the sneakers and tags it cuts away to)
 }
 
 # Each screen's film: its parts (take, from, to: seconds in the take; to None: its end); the lines said on it (the game's

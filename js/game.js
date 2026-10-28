@@ -296,6 +296,7 @@
       // The user's doc (2026-10-23): Amit sees the 30% OFF tag and wonders; Swifty: "30% OFF means 30% discount here."
       bg: FILM + 'offmeans.webp',
       react: STORY + 'he-thinks-about-the-shoes.webp', // (as its film goes: the close view the rest is worked out on)
+      closeup: FILM + 'offmeans-tags.webp', // (what its film cuts away to between his questions: see cutAway)
       kb: null, origin: '63% 66%', still: true, // (screen 19's camera origin: it ends on the same view, so that change is seamless)
       lamps: [[1740, 160, 260], [1740, 370, 260], [120, 60, 180]],
       dust: [600, 40, 1900, 720],
@@ -1835,6 +1836,39 @@
     });
   }
 
+  // Between his two questions, a moment to take the first in (the user, 2026-10-28: "the transition between the screens
+  // is too quick, keep it pause in between"). His lips start the second 0.7 s after the first in his film, and a film is
+  // never slowed or held still where it shows for a pause (it looks like lag: see tools/flow_import.py), so the camera
+  // cuts away to what he is asking about, the sneakers and their tags, close, easing in a little; then back to him, the
+  // film going on from the frame it left. `at`: the film's time of the cut (his lips closed on the first question); the
+  // picture's point `face` at `to` on screen, `s` times closer, `closer` by the end of `ms`.
+  const TAGS_CLOSEUP = { at: 2.95, face: [1300, 645], to: [960, 540], s: 1.75, closer: 1.84, ms: 2200 };
+
+  // The screen's film cuts away to its close-up (its `closeup` still: that frame of the film, twice its size, so it stays
+  // sharp this close) and back, before line `next` is due; `line`, the bubble up, goes with the cut. Without the film or
+  // the still, nothing: the lines keep their own pause (nextLine).
+  async function cutAway(ctx, scene, shot, line, next) {
+    const v = scene.rolling;
+    const still = scene.el.querySelector('.scene-closeup');
+    if (!v || !still || !still.naturalWidth) return;
+    await Clips.until(ctx, scene, shot.at);
+    if (scene.rolling !== v || v.ended || v.currentTime > Clips.of(scene).lines[next] - VOICE_LEAD) return;
+    v.pause();
+    line.el.remove();
+    scene.el.classList.add('is-closeup');
+    if (scene.kbAnim) scene.kbAnim.cancel();
+    const push = scene.world.animate([
+      { transform: faceCamera(scene, shot).transform },
+      { transform: faceCamera(scene, Object.assign({}, shot, { s: shot.closer })).transform },
+    ], { duration: shot.ms, easing: 'cubic-bezier(.3,0,.6,1)', fill: 'forwards' });
+    scene.kbAnim = push; // (a camera move: stopped if the screen is left)
+    await ctx.wait(shot.ms, { real: true });
+    push.cancel();
+    scene.kbAnim = null;
+    scene.el.classList.remove('is-closeup');
+    v.play().catch(() => { if (scene.rolling === v) scene.rolling = null; }); // (refused: the lines go on without it)
+  }
+
   // Screen 18: then he sees the 30% OFF tag, and wonders (the user's doc, 2026-10-23), one bubble at a time.
   async function playOffMeans(ctx, scene) {
     // His questions on his film (the stand a little further off, as on 16 and 35; its first frame is the picture).
@@ -1844,6 +1878,7 @@
     await pauseUnlessFilm(ctx, scene, 700);
     const off = await picSay(ctx, scene, SHOE_OFF, 'off-what', 'boy');
     off.emphasize();
+    await cutAway(ctx, scene, TAGS_CLOSEUP, off, 'shoe-ask'); // (a moment between his questions)
     await nextLine(ctx, scene, off, 'shoe-ask');
     const ask = await picSay(ctx, scene, SHOE_PAY, 'shoe-ask', 'boy');
     ask.emphasize();
@@ -3770,7 +3805,7 @@
     scene.layer.replaceChildren();
     scene.ui.replaceChildren();
     scene.bird = null; // (Swifty comes with her first bubble: see cornerSwifty)
-    scene.el.classList.remove('is-leaving', 'is-entering', 'is-feathered', 'is-asking', 'is-hushed', 'is-instant', 'is-reacting', 'has-sheet');
+    scene.el.classList.remove('is-leaving', 'is-entering', 'is-feathered', 'is-asking', 'is-hushed', 'is-instant', 'is-reacting', 'is-closeup', 'has-sheet');
     scene.el.classList.add('is-active');
     if (mode === 'cut' && !reducedMotion && !scene.still) {
       void scene.el.offsetWidth; // restart the settle-in animation
@@ -3822,7 +3857,7 @@
   }
 
   function deactivate(scene) {
-    scene.el.classList.remove('is-active', 'is-entering', 'is-leaving', 'is-feathered', 'is-asking', 'is-hushed', 'is-instant', 'is-reacting', 'has-sheet');
+    scene.el.classList.remove('is-active', 'is-entering', 'is-leaving', 'is-feathered', 'is-asking', 'is-hushed', 'is-instant', 'is-reacting', 'is-closeup', 'has-sheet');
     scene.el.style.zIndex = '';
     scene.el.style.transitionDuration = '';
     unsnap(scene);
@@ -4249,7 +4284,7 @@
       if (decode && !p.decoded) p.decoded = p.loaded.then(img => (img && img.decode ? img.decode().catch(() => {}) : null));
       return decode ? p.decoded : p.loaded;
     },
-    own: scene => [scene.bg, scene.react, scene.snap].filter(Boolean),
+    own: scene => [scene.bg, scene.react, scene.snap, scene.closeup].filter(Boolean),
     shared: () => [SWIFTY.fly.src, SWIFTY.stand.src, STAND, SNEAKER_CARD.photo],
     party: () => [TOP_SHEET.src, PARTY_WALLET, PARTY_JOY.base, PARTY_JOY.knob, ...PARTY_ITEMS.flatMap(it => [it.icon, ...it.deals.map(d => d.pic)])],
     // What a screen needs: its own pictures; after the start screen, the shared ones; from the way to the mall, Party Prep's.
@@ -4305,6 +4340,12 @@
       });
       if (Clips.planned(scene)) { // its picture brought to life, over it (see Clips), once its clips are made
         scene.clipBox = el('div', 'scene-clips', pic);
+      }
+      if (scene.closeup) { // a close-up its film cuts away to: a still over the film, shown while the cut lasts (cutAway)
+        const img = el('img', 'scene-bg scene-closeup', pic);
+        img.dataset.src = scene.closeup;
+        img.alt = '';
+        img.draggable = false;
       }
       scene.ambient = el('div', 'scene-ambient', scene.world);
       scene.lamps.forEach(([x, y, r]) => FX.glow(scene.ambient, x, y, r, r * 0.8));

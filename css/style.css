@@ -155,6 +155,9 @@ button:focus-visible, .switch input:focus-visible + .switch-track {
    (when the screen starts again) is instant. */
 .scene-bg.scene-react { opacity: 0; transition: none; }
 .scene.is-reacting .scene-bg.scene-react { opacity: 1; transition: opacity .6s ease; }
+/* A close-up a film cuts away to (game.js cutAway: a still of its frame, over the film), shown only while the cut lasts. */
+.scene-bg.scene-closeup { opacity: 0; }
+.scene.is-closeup .scene-bg.scene-closeup { opacity: 1; }
 .scene-bg--feather {
   -webkit-mask-image: linear-gradient(90deg, #000 84%, transparent 100%);
   mask-image: linear-gradient(90deg, #000 84%, transparent 100%);
