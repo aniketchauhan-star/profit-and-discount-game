@@ -1369,7 +1369,7 @@
         scene.oldLine.hide();
         scene.oldCard.leave();
       }
-      const asking = picSay(ctx, scene, DISCOUNT_SAYS, 'disc-2', 'boy');
+      const asking = picSay(ctx, scene, DISCOUNT_THINKS, 'disc-2', 'boy');
       asking.catch(() => {});
       if (scene.carried) await backToMiddle();
       const said = await asking;
@@ -1439,9 +1439,10 @@
   // shopkeeper (his face, his hand) is out of the picture (the user, 2026-10-21: "no need to show shopkeeper"; the
   // picture is drawn at twice the screen's size, so it stays sharp this close).
   const FACE_ZOOM = { face: [651, 300], to: [700, 640], s: 2.2 }; // (his hand, below the frame)
-  // On the film he says it (his bubble at the counter, right of his face, the tail at his mouth, as on screen 4).
-  const DISCOUNT_SAYS = {
-    anchor: [778, 318], corner: 'bl', tip: [738, 372], rotate: -1.5,
+  // On the film too, in a thought cloud (the user, 2026-10-28: "this dialogue will come in a thought bubble"): above and to
+  // the right of his head, between him and the shopkeeper, its puffs rising from his hair (stage px of the film's frame).
+  const DISCOUNT_THINKS = {
+    thought: true, at: [905, 175], tip: [690, 238], size: 42,
     text: [{ t: 'Discount?', cls: 'key' }, { t: '\nWhat is that?' }],
   };
 
@@ -2695,10 +2696,11 @@
     });
   }
 
-  // A line in a bubble on the picture, typed while it is said; resolves with the bubble, still up.
+  // A line in a bubble on the picture (or, with `thought: true`, in a thought cloud: FX.thought), typed while it is said;
+  // resolves with the bubble, still up.
   async function picSay(ctx, scene, bubble, id, who) {
     const onFilm = await lineDue(ctx, id, BUBBLE_EARLY); // (on a film: just before the speaker's lips move)
-    const line = FX.bubble(scene.layer, Object.assign({ voice: who }, bubble));
+    const line = (bubble.thought ? FX.thought : FX.bubble)(scene.layer, Object.assign({ voice: who }, bubble));
     const showing = line.show();
     if (!onFilm) await showing; // (on a film the voice starts with the lips, the bubble perhaps still popping up)
     await speak(ctx, line, id, who);
