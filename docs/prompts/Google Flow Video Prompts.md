@@ -70,7 +70,9 @@ At home in a bright living room, a boy of about twelve stands on the left (short
 
 ## Video 2: The bookstore (game screens 2–3)
 
-`flow-2-bookstore.mp4`. Two shots, 10 seconds each: he walks in, then he holds the book inside.
+`flow-2-bookstore.mp4`. Two shots, 10 seconds each: he walks in, then he holds the book inside. Between them, a new
+short shot (the user, 2026-10-28: "before book hold add a scene he is seeing a book"): he sees the book and picks it up,
+ending exactly where the game's screen 3 starts (Shot 1b).
 
 ### Shot 1: he walks in
 
@@ -79,6 +81,31 @@ First frame: `assets/story/bookstore-outside-view.webp`. No lines.
 ```text
 In a bright shopping mall, in front of a bookstore with a big glass front and the sign "CHAUHAN BOOK STORE", a boy of about twelve (short, messy dark-brown hair, green T-shirt, navy backpack on both shoulders, blue jeans, white sneakers) walks in from the left edge of the frame along the shiny floor, at a calm, natural walking pace, his arms swinging gently, to the bookstore's glass doors. The right-hand glass door swings open into the shop, he walks in through it, his back to us, and goes on inside between the shelves; the door swings shut behind him. Nobody talks. End on exactly this picture: the store front with nobody outside it and the doors closed. Camera locked: no zoom, pan or shake. Same 2D cartoon illustration style as the picture (clean outlines, soft flat colours, warm light). The boy's face, hair, clothes and colours stay the same all the way. The sign, the shelves and the store stay sharp and in place. No subtitles, captions, on-screen text or speech bubbles. No music; only soft footsteps.
 ```
+
+### Shot 1b: he sees the book and picks it up (new, 2026-10-28)
+
+`he sees the book.mp4`, **6 seconds** (8 if Flow doesn't offer 6). No lines. It is made from **two pictures**, a first
+frame and a last frame, so it ends on exactly the frame the game's screen 3 starts on, and plays straight into it.
+
+**The last frame** is ready: `flow video new/frames/screen 3 first frame (last frame of the new shot).png` (the very
+first frame of your "this book look interesting" video, the Gemini sparkle taken off).
+
+**The first frame** doesn't exist yet: make it from that picture with an image edit (in Flow's image editing, or in
+the Gemini app), with this prompt, and check that only the boy's arms and the book have changed:
+
+```text
+Edit this picture. Change only this: the boy is not holding a book. His arms hang relaxed at his sides, and he looks down at the wooden display table in front of him. The blue book "A Brighter Tomorrow" (the same cover: a moon over blue hills and a river, the same title) lies flat, cover up, on top of the small stack of books at the left end of the display table, right in front of him. Everything else stays exactly the same: the bookstore, the shelves and their signs, the counter and the shopkeeper behind it, the books standing on the display, the plants, the boy's face, hair, clothes and backpack, where everything is in the picture, and the 2D cartoon style. Add no text.
+```
+
+Then **Frames to Video** with Veo 3.1: the edited picture as the **first frame**, the PNG above as the **last frame**,
+and this prompt:
+
+```text
+In a bright bookstore, a boy of about twelve (short, messy dark-brown hair, green T-shirt, navy backpack on both shoulders, blue jeans) stands by the wooden display table, looking over the books on it. At 1 second his eyes stop on the blue book lying on the stack in front of him, "A Brighter Tomorrow": his eyebrows lift and a curious smile comes to his face. At 2 seconds he reaches out, picks the book up with both hands and lifts it in front of his chest, turning its cover towards himself, and looks at it with interest, ending exactly on the last frame. Nobody talks. His movements are calm and natural, at an even pace, with no pause and no freeze. The other books on the display, the shelves, the plants, the signs and the shopkeeper at the counter in the background stay still and in place. The book's cover and title stay sharp and readable. Camera locked: no zoom, pan or shake. Same 2D cartoon illustration style as the pictures (clean outlines, soft flat colours, warm light). His face, hair, clothes and colours stay exactly the same. No subtitles, captions, on-screen text or speech bubbles. No music; only soft bookstore sounds.
+```
+
+Put it in `flow video new/` and tell me: it becomes its own screen, just before "This book looks interesting!",
+played at the same gentle pace as that film, so the two join without a jump.
 
 ### Shot 2: he sees the book, holds it and says it
 
@@ -302,7 +329,7 @@ At home by the dining table, the father on the left (light-blue shirt, moustache
 | Video | File | How it is made | First pictures |
 |---|---|---|---|
 | 1. At home | `flow-1-home.mp4` | one clip (10 s) | `story/boy-talks-with-father.webp` |
-| 2. The bookstore | `flow-2-bookstore.mp4` | two shots (10 + 10 s) | `story/bookstore-outside-view.webp`, `story/aniket-holds-the-book.webp` |
+| 2. The bookstore | `flow-2-bookstore.mp4` | two shots (10 + 10 s); between them, the new shot of him seeing the book (6 s, first and last frame) | `story/bookstore-outside-view.webp`, `story/aniket-holds-the-book.webp`; for the new shot, an edit of `flow video new/frames/screen 3 first frame (last frame of the new shot).png`, and that picture as its last frame |
 | 3. At the counter | `flow-3-counter.mp4` | four parts (10 + 6 + 10 + 10 s), each from the last frame of the one before | `story/aniket-gives-a-book-to-shopkeeper.webp` |
 | 4. The shoe shop | `flow-4-shoe-shop.mp4` | three parts at the stand (10 + 8 + 8 s), then the box (8 s), and the walk out if you like (8 s) | `story/he-sees-a-shoe.webp`, `story/shopkeeper-gives-the-sneakers-box.webp`, `story/bookstore-outside-view.webp` |
 | 5. Back home | `flow-5-back-home.mp4` | one clip (10 s) | `story/boy-returns-home.webp` |
