@@ -5,7 +5,7 @@
 const VIDEO_CLIPS = {
   "home": {"seconds": 12.417, "lines": {"plan": 0.68, "advice": 6.33, "promise": 11.3}},
   "outside": {"seconds": 3.625, "lines": {}},
-  "browse": {"seconds": 6.667, "lines": {"browse": 1.37}},
+  "browse": {"seconds": 5.917, "lines": {"browse": 1.56}},
   "ask": {"seconds": 10.667, "lines": {"ask": 0.67, "price": 2.46, "costly": 4.84, "check-price": 7.69}},
   "reveal": {"seconds": 12.375, "lines": {"reveal-1": 0.39, "reveal-2": 6.4, "reveal-3": 10.67}},
   "pay": {"seconds": 10.042, "lines": {"thanks": 5.5}},

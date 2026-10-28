@@ -5,7 +5,7 @@ const VO_LINES = {
   "Dad, I want to buy a book and a new pair of sneakers from the mall.": ["vo001", 5.79],
   "Sure. But compare the prices and buy wisely.": ["vo002", 4.46],
   "I will!": ["vo003", 1.33],
-  "This book looks interesting!": ["vo004", 2.57],
+  "This book looks interesting!": ["vo004", 2.6],
   "How much is this book?": ["vo005", 2.12],
   "It’s ₹800!": ["vo006", 2.5],
   "It is too costly, uncle.": ["vo139", 2.52],

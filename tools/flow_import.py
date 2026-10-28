@@ -2,7 +2,8 @@
 """Makes the story's films from the user's Google Flow takes (in "flow video new/", 2026-10-27).
 
 Each story screen with a film gets its part of a take (two takes joined, for one), cut to the frame:
-  * the Gemini sparkle taken off (tools/flow_sparkle.py);
+  * the Gemini sparkle taken off (tools/flow_sparkle.py), and where a take writes garbled words on something that
+    stays put (the titles on the bookstore's stand), they are painted out (`clean`: see PaintOut);
   * where two parts join, the first fades into the second over JOIN seconds;
   * the whole film a little slower than the take, evenly (PACE: the user, 2026-10-28, of the 2-second breaks made after
     each line the day before by slowing the take's quiet moments: "it's lagging and awkward; if you make the video
@@ -33,9 +34,10 @@ import tempfile
 from pathlib import Path
 
 import numpy as np
+from scipy.ndimage import gaussian_filter
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from flow_sparkle import Sparkle  # noqa: E402
+from flow_sparkle import Laplace, Sparkle, planes  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent
 TAKES_DIR = ROOT / 'flow video new'
@@ -53,7 +55,7 @@ SLOW = 'minterpolate=fps={fps}:mi_mode=mci:mc_mode=aobmc:me_mode=bidir:vsbmc=1'
 TAKES = {
     'home': 'start home..mp4',
     'walk-in': 'inter in showroom. .mp4',
-    'book': 'hold the book .mp4',
+    'book': 'this book look interesting .mp4',  # (the user's new take of 2026-10-28, in place of "hold the book .mp4")
     'counter-1': 'much is this bookHow?.mp4',
     'counter-2': 'Oh! The price printed on it is one thousand rupees." |.mp4',
     'counter-3': 'but I am selling it to you at eight hundred rupees." |.mp4',
@@ -74,7 +76,7 @@ TAKES = {
 # calm voice of the line (the boy about 3.8 syllables a second, his father 3.3, the shopkeeper 3.5) is than the take's
 # lips, between 1 and 1.35; where a take goes on over screens (the sneakers, 16 → 17 → 18), one pace
 # for them all, so nothing changes speed at the join. The others (the walks, the fit check with its music) as taken.
-PACE = {'home': 1.25, 'browse': 1.35, 'ask': 1.35, 'reveal': 1.15, 'pay': 1.35, 'sneakers': 1.10,
+PACE = {'home': 1.25, 'browse': 1.30, 'ask': 1.35, 'reveal': 1.15, 'pay': 1.35, 'sneakers': 1.10,
         'shoe': 1.10, 'confused': 1.10, 'offmeans': 1.10, 'final': 1.20, 'return': 1.25, 'invite': 1.35, 'partymoney': 1.35,
         'partydeal': 1.25}
 VOICES = ROOT / 'tools' / 'voices' / 'lengths.json'
@@ -88,7 +90,9 @@ VOICES = ROOT / 'tools' / 'voices' / 'lengths.json'
 FILMS = {
     'home': {'parts': [('home', 0, None)], 'lines': {'plan': (0.5, 'vo001'), 'advice': (5.0, 'vo002'), 'promise': (9.0, 'vo003')}},
     'outside': {'parts': [('walk-in', 0, None)], 'lines': {}},
-    'browse': {'parts': [('book', 0, 5.0)], 'lines': {'browse': (1.0, 'vo004')}},
+    # (`clean`: the garbled titles on the three books on the stand painted out, for the game to print theirs on: STAND_BOOKS)
+    'browse': {'parts': [('book', 0, 4.6)], 'lines': {'browse': (1.2, 'vo004')},
+               'clean': [(1316, 643, 1402, 714), (1463, 666, 1527, 739), (1596, 678, 1657, 747)]},
     'ask': {'parts': [('counter-1', 0, 5.3), ('counter-1', 7.0, None)],
             'lines': {'ask': (0.5, 'vo005'), 'price': (1.8, 'vo006'), 'costly': (3.6, 'vo139'), 'check-price': (5.75, 'vo140')}},
     'reveal': {'parts': [('counter-2', 4.45, None), ('counter-3', 0, 5.6)],
@@ -199,9 +203,37 @@ def blend(a, b, k):
     return np.round(x * (1 - k) + y * k).astype(np.uint8).tobytes()
 
 
+class PaintOut:
+    """Boxes of a take's picture that stay still (x0, y0, x1, y1: px), painted out in every frame: filled smoothly from
+    the colours round them (flow_sparkle.Laplace) on the median of the take's first frames, with a soft edge."""
+
+    def __init__(self, take, f0, boxes, soft=1.5):
+        y, u, v = planes(b''.join(decode(take, f0, f0 + 12)), FW, FH)
+        self.parts = []
+        for k, plane in enumerate(np.median(p, axis=0) for p in (y, u, v)):
+            q = 1 if k == 0 else 2  # (U and V are half the size)
+            mask = np.zeros(plane.shape, bool)
+            for x0, y0, x1, y1 in boxes:
+                mask[y0 // q:-(-y1 // q), x0 // q:-(-x1 // q)] = True
+            filled = Laplace(mask)(plane)
+            alpha = np.clip(gaussian_filter(mask.astype(np.float32), soft / q) * 2, 0, 1)
+            ys, xs = np.nonzero(alpha > 0.002)
+            box = np.s_[ys.min():ys.max() + 1, xs.min():xs.max() + 1]
+            self.parts.append((box, filled[box], alpha[box]))
+
+    def __call__(self, raw):
+        a = np.frombuffer(raw, np.uint8).copy()
+        q = FW * FH // 4
+        for plane, (box, filled, alpha) in zip((a[:FW * FH].reshape(FH, FW), a[FW * FH:FW * FH + q].reshape(FH // 2, FW // 2),
+                                                a[FW * FH + q:].reshape(FH // 2, FW // 2)), self.parts):
+            plane[box] = np.clip(plane[box] * (1 - alpha) + filled * alpha + 0.5, 0, 255).astype(np.uint8)
+        return a.tobytes()
+
+
 def cut_frames(name, sparkle):
-    """The cut film's frames (yuv420p), the sparkle off and the parts joined."""
+    """The cut film's frames (yuv420p), the sparkle off (and any `clean` boxes painted out) and the parts joined."""
     parts, _ = layout(name)
+    clean = PaintOut(parts[0]['take'], parts[0]['f0'], FILMS[name]['clean']) if FILMS[name].get('clean') else None
     join = round(JOIN * FPS)
     held = []      # the last frames of a part, kept to fade into the next one
     for i, p in enumerate(parts):
@@ -209,6 +241,8 @@ def cut_frames(name, sparkle):
         n = p['f1'] - p['f0']
         for k, raw in enumerate(decode(p['take'], p['f0'], p['f1'])):
             raw = sparkle.frame(raw)
+            if clean:
+                raw = clean(raw)
             if i and k < join and held:  # fading in over the end of the part before
                 raw = blend(held.pop(0), raw, (k + 1) / (join + 1))
             if not last and k >= n - join:

@@ -596,11 +596,12 @@
   // written on its cover as if printed there: centred in the cover's top part and slanted with it (the books lean back
   // on the stand). On the pictures' layer, so they move with the camera. x, y: the title's centre (stage px); slant: how
   // far the cover leans (deg); tone: light words (on the green and the night-blue covers) or dark ones (on the pale
-  // sunset sky). (The screen's film starts on its picture and its camera stays put, so they stay on the covers.)
+  // sunset sky). (The screen's film starts on its picture and its camera stays put, so they stay on the covers; the
+  // garbled words its take wrote there are painted out of it: tools/flow_import.py, `clean`.)
   const STAND_BOOKS = [
-    { lines: ['Magic', 'Tree'], x: 1357, y: 679, slant: 12.8, tone: 'light' },
-    { lines: ['Golden', 'Hills'], x: 1500, y: 684, slant: 10.7, tone: 'dark' },
-    { lines: ['Starry', 'Nights'], x: 1638, y: 680, slant: 10, tone: 'light' },
+    { lines: ['Magic', 'Tree'], x: 1359, y: 679, slant: 13.5, tone: 'light' },
+    { lines: ['Golden', 'Hills'], x: 1495, y: 702, slant: 10.8, tone: 'dark' },
+    { lines: ['Starry', 'Nights'], x: 1626, y: 712, slant: 10.3, tone: 'light' },
   ];
 
   function standTitles(scene) {
