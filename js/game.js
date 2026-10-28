@@ -86,10 +86,10 @@
     browse: [[630, 79, 903, 352], [888, 382, 1161, 639]],                                 // Amit's head, the book
     ask: [[530, 164, 773, 406], [742, 482, 939, 694], [1288, 164, 1515, 406]],            // Amit, the book, the shopkeeper
     shock: [[STICKER.shock.x - 106, STICKER.shock.y - 106, STICKER.shock.x + 106, STICKER.shock.y + 106], [1509, 133, 1812, 406]],
-    sneakers: [[436, 73, 664, 345], [1045, 446, 1540, 648], [1088, 679, 1406, 800]],     // Amit, the sneakers and ₹1800, 30% OFF
-    confused: [[342, 79, 600, 382], [1248, 558, 1444, 710], [1116, 701, 1452, 855]],     // Amit, the ₹1800 tag, 30% OFF
-    offmeans: [[342, 79, 600, 382], [1248, 558, 1444, 710], [1116, 701, 1452, 855]],     // (the same picture)
-    final: [[436, 73, 664, 345], [1224, 558, 1406, 648], [1088, 679, 1406, 800]],        // Amit, the two tags
+    sneakers: [[436, 73, 664, 345], [1100, 492, 1482, 662], [1088, 679, 1406, 800]],     // Amit, the sneakers and ₹1800, 30% OFF
+    confused: [[342, 79, 600, 382], [1200, 548, 1416, 672], [1116, 701, 1452, 855]],     // Amit, the ₹1800 tag, 30% OFF
+    offmeans: [[342, 79, 600, 382], [1200, 548, 1416, 672], [1116, 701, 1452, 855]],     // (the same picture)
+    final: [[436, 73, 664, 345], [1200, 548, 1416, 672], [1088, 679, 1406, 800]],        // Amit, the two tags
     return: [[373, 73, 600, 315], [1327, 194, 1600, 436]],                                // Amit, his father
     partymoney: [[285, 67, 573, 370], [1270, 97, 1542, 370], [830, 370, 1179, 642]],     // his father, Amit, the money
     partydeal: [[433, 218, 691, 491], [1236, 36, 1479, 309]],
@@ -1801,9 +1801,9 @@
   const SHOE_PAY = Object.assign({
     text: [{ t: 'If this is a ' }, { t: 'discount', cls: 'key' }, { t: ', how much do I actually have to pay?' }],
   }, SHOE_SAY);
-  // The white ₹1800 card on the sneakers, as the sneakers' film shows the stand (stage px: 16–19); and his bubble as he
-  // leans in to read it (16).
-  const PRICE_CARD_FILM = { x: 1314, y: 603, w: 236, h: 130, round: 16 };
+  // The white ₹1800 card on the sneakers, as the sneakers' film shows the stand (stage px: 16–19; where it stands since
+  // the sneakers were made smaller: tools/flow_resize.py); and his bubble as he leans in to read it (16).
+  const PRICE_CARD_FILM = { x: 1308, y: 610, w: 203, h: 112, round: 14 };
   const SHOE_SAYS_LEANING = { anchor: [744, 300], tip: [684, 348] };
 
   // Screen 16: he says the price he sees (the price card on the sneakers lights up); then the question on it (screen 17).
@@ -1842,7 +1842,7 @@
   // cuts away to what he is asking about, the sneakers and their tags, close, easing in a little; then back to him, the
   // film going on from the frame it left. `at`: the film's time of the cut (his lips closed on the first question); the
   // picture's point `face` at `to` on screen, `s` times closer, `closer` by the end of `ms`.
-  const TAGS_CLOSEUP = { at: 2.95, face: [1300, 645], to: [960, 540], s: 1.75, closer: 1.84, ms: 2200 };
+  const TAGS_CLOSEUP = { at: 2.95, face: [1290, 650], to: [960, 540], s: 1.75, closer: 1.82, ms: 2200 };
 
   // The screen's film cuts away to its close-up (its `closeup` still: that frame of the film, twice its size, so it stays
   // sharp this close) and back, before line `next` is due; `line`, the bubble up, goes with the cut. Without the film or
@@ -2177,8 +2177,8 @@
 
   // Screens 24–26: the picture blurs and dims but the stand with the sneakers and their two tags, the point of all this maths (the user,
   // 2026-10-22: "blur the image, focus on shoes and discount"): a soft-edged window in the veil (its mask: an SVG).
-  const STAND_FOCUS = { x: 1040, y: 425, w: 610, h: 450, round: 70, soft: 22 }; // the picture's stage px
-  const STAND_FOCUS_FILM = { x: 990, y: 420, w: 650, h: 420, round: 70, soft: 22 }; // (the stand as the sneakers' film shows it)
+  const STAND_FOCUS = { x: 1070, y: 480, w: 500, h: 385, round: 70, soft: 22 }; // the picture's stage px
+  const STAND_FOCUS_FILM = { x: 1040, y: 455, w: 520, h: 385, round: 70, soft: 22 }; // (the stand as the sneakers' film shows it)
   function standFocus(scene, rect = STAND_FOCUS, { instant = true } = {}) { // (rect: on screen, when the camera has moved)
     const { x, y, w, h, round: r, soft } = rect;
     const hole = `M${x + r} ${y}H${x + w - r}A${r} ${r} 0 0 1 ${x + w} ${y + r}V${y + h - r}A${r} ${r} 0 0 1 ${x + w - r} ${y + h}` +
@@ -2543,7 +2543,7 @@
   // Amit is at the stand, pointing at the tags. As he
   // says "So, after a 30% discount, I will pay ₹1260.", the 30% OFF tag lights up and a red line crosses out
   // the ₹1800, then a green ₹1260 tag stamps onto the stand.
-  const STRIKE_1800 = { from: [1244, 630], to: [1380, 580] }; // across the "₹1800" on the tag hanging from the sneakers (stage px)
+  const STRIKE_1800 = { from: [1248, 634], to: [1365, 591] }; // across the "₹1800" on the card in front of the sneakers (stage px)
   const PAID_TAG = { x: 1253, y: 880, text: '₹1260' };        // on the stand's front, under both tags
   const FINAL_LINE = {
     anchor: [736, 282], corner: 'bl', tip: [636, 304], // right of his face, above the sneakers; the tail at his mouth

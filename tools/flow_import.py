@@ -35,9 +35,10 @@ import tempfile
 from pathlib import Path
 
 import numpy as np
-from scipy.ndimage import gaussian_filter
+from scipy.ndimage import binary_dilation, binary_opening, gaussian_filter
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+from flow_resize import SNEAKERS_FILM, smaller  # noqa: E402
 from flow_sparkle import Laplace, Sparkle, planes  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -89,6 +90,10 @@ STILLS = {
     'counter-puzzled': ('counter-3', 5.6),  # (the frame screen 8's film stops on: his face puzzled at "discount")
     'offmeans-tags': ('shoes-2', 2.68),     # (screen 20's film at 2.95 s, ×1.10: the sneakers and tags it cuts away to)
 }
+
+# Takes whose sneakers are made smaller where they stand, in every film and still cut from them (the user, 2026-10-28:
+# "The size of the sneakers too large if we compare with Aniket's size. Fix the size."; tools/flow_resize.py: Smaller).
+SMALLER = {'shoes-1': SNEAKERS_FILM, 'shoes-2': SNEAKERS_FILM, 'shoes-3': SNEAKERS_FILM}
 
 # Each screen's film: its parts (take, from, to: seconds in the take; to None: its end); the lines said on it (the game's
 # line ids): about when each starts, in seconds into the film as cut, and its recording (assets/vo/); `end`: its last
@@ -239,6 +244,74 @@ class PaintOut:
         return a.tobytes()
 
 
+def yuv_rgb(y, u, v):
+    """Planes as decoded (BT.601, TV range; U and V half the size) → RGB, 0–1."""
+    u = np.repeat(np.repeat(u, 2, 0), 2, 1) - 128
+    v = np.repeat(np.repeat(v, 2, 0), 2, 1) - 128
+    y = (y - 16) * 1.164
+    return np.clip(np.dstack([y + 1.596 * v, y - 0.392 * u - 0.813 * v, y + 2.017 * u]) / 255, 0, 1)
+
+
+def rgb_yuv(rgb):
+    """RGB, 0–1 → Y, U, V, all full size (BT.601, TV range)."""
+    r, g, b = (rgb[..., k] * 255 for k in range(3))
+    return (16 + 0.257 * r + 0.504 * g + 0.098 * b, 128 - 0.148 * r - 0.291 * g + 0.439 * b,
+            128 + 0.439 * r - 0.368 * g - 0.071 * b)
+
+
+class Smaller:
+    """A take's sneakers made smaller where they stand (SMALLER; tools/flow_resize.py): its camera never moves, so it is
+    one still patch, made on the take's median picture and laid over every frame; it follows the frame's light (an AI
+    take flickers a little). Nothing passes in front of the sneakers in these takes (his hand points from further left):
+    a frame where something big moves there is reported, to be looked at (the patch would cover it)."""
+
+    made = {}
+
+    @classmethod
+    def of(cls, take):
+        if take not in SMALLER:
+            return None
+        if take not in cls.made:
+            cls.made[take] = cls(take, SMALLER[take])
+        return cls.made[take]
+
+    def __init__(self, take, spec):
+        n = frames_of(take)
+        picks = set(np.linspace(0, n - 1, 24).round().astype(int).tolist())
+        y, u, v = planes(b''.join(raw for k, raw in enumerate(decode(take, 0, n)) if k in picks), FW, FH)
+        med = [np.median(p, axis=0) for p in (y, u, v)]
+        out, alpha, _, _ = smaller(yuv_rgb(*med), spec)
+        py, pu, pv = rgb_yuv(out)
+        ys, xs = np.nonzero(alpha > 0.002)
+        y0, y1 = (ys.min() - 24) // 2 * 2, (ys.max() + 26) // 2 * 2  # (even: the chroma's box is half of it)
+        x0, x1 = (xs.min() - 24) // 2 * 2, (xs.max() + 26) // 2 * 2
+        self.box, self.half = np.s_[y0:y1, x0:x1], np.s_[y0 // 2:y1 // 2, x0 // 2:x1 // 2]
+        self.med, self.alpha = med[0][self.box], alpha[self.box]
+        self.ring = (self.alpha == 0) & binary_dilation(self.alpha > 0, iterations=16)  # (round it: the frame's light)
+        self.patch = [py[self.box], half(pu[self.box]), half(pv[self.box])]
+
+    def __call__(self, raw, where=''):
+        a = np.frombuffer(raw, np.uint8).copy()
+        q = FW * FH // 4
+        y = a[:FW * FH].reshape(FH, FW)
+        u, v = a[FW * FH:FW * FH + q].reshape(FH // 2, FW // 2), a[FW * FH + q:].reshape(FH // 2, FW // 2)
+        here = y[self.box].astype(np.float32)
+        moving = binary_opening(np.abs(here - self.med) > 40, iterations=4) & (self.alpha > 0)
+        if moving.sum() > 1500:
+            print(f'  (something moves in front of the smaller sneakers {where}: {int(moving.sum())} px; look at it)')
+        light = float(np.mean((here - self.med)[self.ring]))
+        k, kh = self.alpha, half(self.alpha)
+        for plane, box, patch, w, shift in ((y, self.box, self.patch[0], k, light), (u, self.half, self.patch[1], kh, 0),
+                                            (v, self.half, self.patch[2], kh, 0)):
+            plane[box] = np.clip(plane[box] * (1 - w) + (patch + shift) * w + 0.5, 0, 255).astype(np.uint8)
+        return a.tobytes()
+
+
+def half(a):
+    """A plane at half the size (each 2 × 2 averaged)."""
+    return a.reshape(a.shape[0] // 2, 2, a.shape[1] // 2, 2).mean((1, 3))
+
+
 def cut_frames(name, sparkle):
     """The cut film's frames (yuv420p), the sparkle off (and any `clean` boxes painted out) and the parts joined."""
     parts, _ = layout(name)
@@ -248,10 +321,13 @@ def cut_frames(name, sparkle):
     for i, p in enumerate(parts):
         last = i == len(parts) - 1
         n = p['f1'] - p['f0']
+        small = Smaller.of(p['take'])
         for k, raw in enumerate(decode(p['take'], p['f0'], p['f1'])):
             raw = sparkle.frame(raw)
             if clean:
                 raw = clean(raw)
+            if small:
+                raw = small(raw, f'in {name}, frame {p["f0"] + k} of {p["take"]}')
             if i and k < join and held:  # fading in over the end of the part before
                 raw = blend(held.pop(0), raw, (k + 1) / (join + 1))
             if not last and k >= n - join:
@@ -301,6 +377,8 @@ def still(name, sparkle, log):
     take, t = STILLS[name]
     f = round(t * FPS)
     raw = sparkle.frame(next(decode(take, f, f + 1)))
+    if Smaller.of(take):
+        raw = Smaller.of(take)(raw)
     with tempfile.TemporaryDirectory() as d:
         png = Path(d) / 'f.png'
         subprocess.run(['ffmpeg', '-v', 'error', '-y', '-f', 'rawvideo', '-pix_fmt', 'yuv420p', '-s', f'{FW}x{FH}', '-i', '-',

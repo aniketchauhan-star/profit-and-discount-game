@@ -166,6 +166,11 @@ At a bookshop counter, a puzzled boy of about twelve on the left (short, messy d
 frame of the one before, then a second shot of the box at the counter. You can start it with the walk out of the
 bookstore if you like (the optional shot at the end).
 
+The sneakers on the stand are a child's size in the game: since 2026-10-28 they are made smaller in the takes (about
+three quarters: "The size of the sneakers too large if we compare with Aniket's size"; `tools/flow_resize.py`). For a new
+take, start it from the game's own first frame, `assets/video/sneakers.webp`, which already has them small, rather than
+`he-sees-a-shoe.webp`, and keep the words "the small blue sneakers" in its prompt.
+
 ### Part 1 (10 seconds)
 
 First frame: `assets/story/he-sees-a-shoe.webp`.
