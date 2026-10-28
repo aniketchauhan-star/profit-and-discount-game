@@ -1345,7 +1345,9 @@
     if (!scene.rolling) await cut; // (on the film the card finishes as it goes on: the next screen starts with it done)
     line.emphasize(); // "discount." pulses: the new word
     Sound.ding();
-    advanceAfterFilm(ctx, scene, 3000, { segue: true }); // then Aniket wonders what it means (the film goes straight on)
+    // then Aniket wonders what it means: a moment more on "I gave you a discount." first (the user, 2026-10-28: "a little
+    // fast when the shopkeeper says I gave you a discount"); screen 9 starts on the frame its film stops on
+    ctx.advance(scene.rolling ? Clips.left(scene) * 1000 + 1800 : 3000);
   }
 
   // "Discount?" Coming from screen 14 the picture, the card and the bubble are first exactly as they
@@ -1370,7 +1372,7 @@
       await glide;
     };
     if (scene.carried) {
-      await ctx.wait(500);
+      await ctx.wait(900);
       scene.oldLine.hide();
       scene.oldCard.leave();
       await ctx.wait(300);
@@ -1379,9 +1381,9 @@
     await ctx.wait(500);
 
     // He doesn't know the word: he thinks about it, his face puzzled (the user, 2026-10-28: "he is thinking, not saying;
-    // zoom his face": the still frame his film stops on as screen 8 ends, no lips moving). Only he matters here (the
-    // meeting of 2026-10-21): the camera moves in on his face, and his thought comes in a cloud beside his head, heard in
-    // his voice.
+    // zoom his face"; "do not make him speak 'Discount?' 'What is that?': just make him think, and confused, and excited
+    // then"): the still frame his film stops on as screen 8 ends (no lips moving), the camera moving in on his face, and
+    // his thought in a cloud beside his head, unspoken (a wondering sound), long enough to read.
     const cam = faceCamera(scene, FACE_ZOOM);
     moveCamera(scene, cam.transform, reducedMotion ? 1 : 1400);
     Sound.wonder();
@@ -1389,9 +1391,8 @@
     const tip = cam.at(DISCOUNT_THOUGHT.tip);
     const wondering = FX.thought(scene.ui, Object.assign({}, DISCOUNT_THOUGHT, { tip, at: [tip[0] + 340, tip[1] - 70] }));
     await wondering.show();
-    await speak(ctx, wondering, 'disc-2', 'boy');
     wondering.emphasize();
-    await ctx.wait(1200);
+    await ctx.wait(3600);
 
     // Then the answer, on this screen (the user's doc, 2026-10-23: "Swifty comes and says the definition of discount"): his
     // thought goes, the picture blurs and dims, and Swifty slides in from the right and says it in her bubble, as on
@@ -1413,7 +1414,11 @@
     await ctx.wait(1800);
     await swiftyAway(ctx, talk);
     veil.classList.remove('is-on');
-    await ctx.wait(800);
+    await ctx.wait(700);
+    // …and then he is excited: he has got it ("!" by his head, with a sparkle)
+    FX.exclaim(scene.ui, tip[0] + 30, tip[1] - 20);
+    Sound.sparkle();
+    await ctx.wait(400);
     ctx.advance(2000); // then the question: how much discount did he get?
   }
 

@@ -21,6 +21,7 @@ Then js/video_clips.js: each film's length, and for each line said on it when it
   ~/.cache/bj-voices/venv/bin/python tools/flow_import.py              all the films
   ~/.cache/bj-voices/venv/bin/python tools/flow_import.py home ask     only these (js/video_clips.js lists them all)
   ... --index                                                          only js/video_clips.js
+  ... --stills                                                         the stills (STILLS) only
   ... --timing                                                         each line's lips (when they move, from its
       start, at its film's pace) into tools/voices/lengths.json, for the game's voices to be made to (voices.py)
 
@@ -80,6 +81,12 @@ PACE = {'home': 1.25, 'browse': 1.30, 'ask': 1.35, 'reveal': 1.15, 'pay': 1.35, 
         'shoe': 1.10, 'confused': 1.10, 'offmeans': 1.10, 'final': 1.20, 'return': 1.25, 'invite': 1.35, 'partymoney': 1.35,
         'partydeal': 1.25}
 VOICES = ROOT / 'tools' / 'voices' / 'lengths.json'
+# Stills from the takes, for screens without a film (the user, 2026-10-28, of screen 9: "he is thinking, not saying;
+# zoom his face"): a frame (take, seconds), the sparkle off and enhanced as the films are, made twice the screen's size
+# (Lanczos, then sharpened) so it stays sharp with the camera close: assets/video/<name>.webp.
+STILLS = {
+    'counter-puzzled': ('counter-3', 5.6),  # (the frame screen 8's film stops on: his face puzzled at "discount")
+}
 
 # Each screen's film: its parts (take, from, to: seconds in the take; to None: its end); the lines said on it (the game's
 # line ids): about when each starts, in seconds into the film as cut, and its recording (assets/vo/); `end`: its last
@@ -288,6 +295,21 @@ def frames_in(film):
                                'stream=nb_read_packets', '-of', 'csv=p=0', str(film)], capture_output=True, text=True).stdout.strip())
 
 
+def still(name, sparkle, log):
+    take, t = STILLS[name]
+    f = round(t * FPS)
+    raw = sparkle.frame(next(decode(take, f, f + 1)))
+    with tempfile.TemporaryDirectory() as d:
+        png = Path(d) / 'f.png'
+        subprocess.run(['ffmpeg', '-v', 'error', '-y', '-f', 'rawvideo', '-pix_fmt', 'yuv420p', '-s', f'{FW}x{FH}', '-i', '-',
+                        '-vf', f'{ENHANCE},scale=w={2 * FW}:h={2 * FH}:in_color_matrix=bt601:in_range=tv:'
+                               'flags=lanczos+accurate_rnd+full_chroma_int,cas=strength=0.55',
+                        '-pix_fmt', 'rgb24', '-frames:v', '1', str(png)], input=raw, check=True)
+        dest = OUT / f'{name}.webp'
+        subprocess.run(['cwebp', '-quiet', '-q', '88', '-m', '6', '-sharp_yuv', '-noalpha', str(png), '-o', str(dest)], check=True)
+    log(f'  {name}: {take} at {t:.2f} s, {dest.stat().st_size / 1e3:.0f} kB')
+
+
 def poster(film, dest, first=True):
     """The finished film's first (or last) frame, as the browser shows it (BT.601, TV range), as a WebP."""
     with tempfile.TemporaryDirectory() as d:
@@ -342,6 +364,11 @@ def main(args):
     OUT.mkdir(parents=True, exist_ok=True)
     if '--timing' in args:
         return timing(print)
+    if '--stills' in args:
+        sparkle = Sparkle()
+        for name in STILLS:
+            still(name, sparkle, print)
+        return
     if '--index' not in args:
         sparkle = Sparkle()
         for name in only or FILMS:
