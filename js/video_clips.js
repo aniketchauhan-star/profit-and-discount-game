@@ -8,7 +8,6 @@ const VIDEO_CLIPS = {
   "browse": {"seconds": 6.667, "lines": {"browse": 1.37}},
   "ask": {"seconds": 10.667, "lines": {"ask": 0.67, "price": 2.46, "costly": 4.84, "check-price": 7.69}},
   "reveal": {"seconds": 12.375, "lines": {"reveal-1": 0.39, "reveal-2": 6.4, "reveal-3": 10.67}},
-  "discount": {"seconds": 5.042, "lines": {"disc-2": 0.39}},
   "pay": {"seconds": 10.042, "lines": {"thanks": 5.5}},
   "exit": {"seconds": 2.5, "lines": {}},
   "sneakers": {"seconds": 3.917, "lines": {"sneakers": 0.33}},

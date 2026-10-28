@@ -191,8 +191,7 @@
     },
     {
       id: 'discount', title: 'What Is a Discount?', sub: 'Discount? What is that?',
-      bg: FILM + 'discount.webp',
-      react: PUZZLED, // fades in over the picture when he hears "discount" (see playDiscount)
+      bg: FILM + 'counter-puzzled.webp', // (the frame screen 8's film stops on, made twice as big: his face, close, stays sharp)
       kb: { origin: '50% 46%', from: 'scale(1.02)', to: 'scale(1.065) translate(-6px, 0)' },
       lamps: [[1472, 106, 330]],
       dust: [300, 60, 1500, 700],
@@ -206,7 +205,7 @@
       id: 'dcard', title: 'How Much Discount?', sub: 'How much discount did Aniket get on the book?',
       // The user's doc (2026-10-23): a question card at the counter, as on the old Cost/Selling Price question (the camera
       // moves left to make room for it): it starts on screen 9's view (his puzzled face), so the change is seamless.
-      bg: FILM + 'discount-end.webp', // (the last frame of 9's film: the change is seamless)
+      bg: FILM + 'counter-puzzled.webp', // (screen 9's picture: the change is seamless)
       kb: null, // this screen moves its own camera (see playDiscountCard)
       origin: '50% 46%', // the camera origin of screen 9
       lamps: [[1472, 106, 330]],
@@ -1369,53 +1368,34 @@
       scene.el.classList.remove('is-feathered');
       await glide;
     };
-    let wondering = null;
-    if (scene.rolling) {
-      // On the film he asks it straight away, as the shopkeeper's word sinks in (the camera gliding back to the middle
-      // meanwhile); then the camera moves in on his puzzled face (only he matters here: the meeting of 2026-10-21).
-      if (scene.carried) {
-        scene.oldLine.hide();
-        scene.oldCard.leave();
-      }
-      const asking = picSay(ctx, scene, DISCOUNT_THINKS, 'disc-2', 'boy');
-      asking.catch(() => {});
-      if (scene.carried) await backToMiddle();
-      const said = await asking;
-      said.emphasize();
-      await ctx.wait(900);
-      await said.hide();
-      moveCamera(scene, faceCamera(scene, FACE_ZOOM).transform, 1400);
-      Sound.wonder();
-      await ctx.wait(1700);
-    } else {
-      if (scene.carried) {
-        await ctx.wait(500);
-        scene.oldLine.hide();
-        scene.oldCard.leave();
-        await ctx.wait(300);
-        await backToMiddle();
-      }
+    if (scene.carried) {
       await ctx.wait(500);
-
-      // He doesn't know the word: his face turns puzzled, and he wonders about it. Only he matters here (the meeting of
-      // 2026-10-21: the shopkeeper isn't needed): the camera moves in on his face, and his thought comes beside his head.
-      const cam = faceCamera(scene, FACE_ZOOM);
-      moveCamera(scene, cam.transform, reducedMotion ? 1 : 1400);
-      scene.el.classList.add('is-reacting');
-      Sound.wonder();
-      await ctx.wait(1500);
-      const tip = cam.at(DISCOUNT_THOUGHT.tip);
-      wondering = FX.thought(scene.ui, Object.assign({}, DISCOUNT_THOUGHT, { tip, at: [tip[0] + 560, tip[1] - 50] }));
-      await wondering.show();
-      await speak(ctx, wondering, 'disc-2', 'boy');
-      wondering.emphasize();
-      await ctx.wait(1200);
+      scene.oldLine.hide();
+      scene.oldCard.leave();
+      await ctx.wait(300);
+      await backToMiddle();
     }
+    await ctx.wait(500);
+
+    // He doesn't know the word: he thinks about it, his face puzzled (the user, 2026-10-28: "he is thinking, not saying;
+    // zoom his face": the still frame his film stops on as screen 8 ends, no lips moving). Only he matters here (the
+    // meeting of 2026-10-21): the camera moves in on his face, and his thought comes in a cloud beside his head, heard in
+    // his voice.
+    const cam = faceCamera(scene, FACE_ZOOM);
+    moveCamera(scene, cam.transform, reducedMotion ? 1 : 1400);
+    Sound.wonder();
+    await ctx.wait(1500);
+    const tip = cam.at(DISCOUNT_THOUGHT.tip);
+    const wondering = FX.thought(scene.ui, Object.assign({}, DISCOUNT_THOUGHT, { tip, at: [tip[0] + 340, tip[1] - 70] }));
+    await wondering.show();
+    await speak(ctx, wondering, 'disc-2', 'boy');
+    wondering.emphasize();
+    await ctx.wait(1200);
 
     // Then the answer, on this screen (the user's doc, 2026-10-23: "Swifty comes and says the definition of discount"): his
     // thought goes, the picture blurs and dims, and Swifty slides in from the right and says it in her bubble, as on
     // screen 6; then she goes, and the picture clears for the question.
-    if (wondering) await wondering.hide();
+    await wondering.hide();
     const veil = el('div', 'pop-veil');
     scene.ui.insertBefore(veil, scene.ui.firstChild); // (under Swifty)
     void veil.offsetWidth; // (so it fades in)
@@ -1439,20 +1419,14 @@
   // Aniket's thought: a cloud above and to the right of his head, its puffs rising from the top of his hair (`tip`: the
   // picture's px; on screen it follows the camera, see faceCamera).
   const DISCOUNT_THOUGHT = {
-    tip: [748, 226],
+    tip: [697, 228],
     text: [{ t: 'Discount?', cls: 'key' }, { t: '\nWhat is that?' }], voice: 'boy', // (the user's doc, 2026-10-23)
     size: 54, // big (the user, 2026-10-21), in the room the shopkeeper leaves
   };
   // His face, in the picture (stage px), and where the camera brings it on screen, how close: close enough that the
   // shopkeeper (his face, his hand) is out of the picture (the user, 2026-10-21: "no need to show shopkeeper"; the
-  // picture is drawn at twice the screen's size, so it stays sharp this close).
-  const FACE_ZOOM = { face: [651, 300], to: [700, 640], s: 2.2 }; // (his hand, below the frame)
-  // On the film too, in a thought cloud (the user, 2026-10-28: "this dialogue will come in a thought bubble"): above and to
-  // the right of his head, between him and the shopkeeper, its puffs rising from his hair (stage px of the film's frame).
-  const DISCOUNT_THINKS = {
-    thought: true, at: [905, 175], tip: [690, 238], size: 42,
-    text: [{ t: 'Discount?', cls: 'key' }, { t: '\nWhat is that?' }],
-  };
+  // picture is his film's frame made twice the screen's size, so it stays sharp this close).
+  const FACE_ZOOM = { face: [635, 330], to: [720, 560], s: 1.8 };
 
   // The camera on a point of the picture: `face` at `to` on screen, `s` times closer (about the world's own origin, so
   // the slow drift it had doesn't jump). at(p): where a point of the picture is on screen then.
@@ -2704,11 +2678,10 @@
     });
   }
 
-  // A line in a bubble on the picture (or, with `thought: true`, in a thought cloud: FX.thought), typed while it is said;
-  // resolves with the bubble, still up.
+  // A line in a bubble on the picture, typed while it is said; resolves with the bubble, still up.
   async function picSay(ctx, scene, bubble, id, who) {
     const onFilm = await lineDue(ctx, id, BUBBLE_EARLY); // (on a film: just before the speaker's lips move)
-    const line = (bubble.thought ? FX.thought : FX.bubble)(scene.layer, Object.assign({ voice: who }, bubble));
+    const line = FX.bubble(scene.layer, Object.assign({ voice: who }, bubble));
     const showing = line.show();
     if (!onFilm) await showing; // (on a film the voice starts with the lips, the bubble perhaps still popping up)
     await speak(ctx, line, id, who);

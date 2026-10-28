@@ -72,9 +72,9 @@ TAKES = {
 
 # How much slower each film plays than its take (see the top). Each the median, over its lines, of how much longer a
 # calm voice of the line (the boy about 3.8 syllables a second, his father 3.3, the shopkeeper 3.5) is than the take's
-# lips, between 1 and 1.35; where a take goes on over screens (the counter, 8 → 9; the sneakers, 16 → 17 → 18), one pace
+# lips, between 1 and 1.35; where a take goes on over screens (the sneakers, 16 → 17 → 18), one pace
 # for them all, so nothing changes speed at the join. The others (the walks, the fit check with its music) as taken.
-PACE = {'home': 1.25, 'browse': 1.35, 'ask': 1.35, 'reveal': 1.15, 'discount': 1.15, 'pay': 1.35, 'sneakers': 1.10,
+PACE = {'home': 1.25, 'browse': 1.35, 'ask': 1.35, 'reveal': 1.15, 'pay': 1.35, 'sneakers': 1.10,
         'shoe': 1.10, 'confused': 1.10, 'offmeans': 1.10, 'final': 1.20, 'return': 1.25, 'invite': 1.35, 'partymoney': 1.35,
         'partydeal': 1.25}
 VOICES = ROOT / 'tools' / 'voices' / 'lengths.json'
@@ -93,7 +93,6 @@ FILMS = {
             'lines': {'ask': (0.5, 'vo005'), 'price': (1.8, 'vo006'), 'costly': (3.6, 'vo139'), 'check-price': (5.75, 'vo140')}},
     'reveal': {'parts': [('counter-2', 4.45, None), ('counter-3', 0, 5.6)],
                'lines': {'reveal-1': (0.35, 'vo146'), 'reveal-2': (5.55, 'vo147'), 'reveal-3': (9.25, 'vo148')}},
-    'discount': {'parts': [('counter-3', 5.6, None)], 'lines': {'disc-2': (0.33, 'vo149')}, 'end': True},
     'pay': {'parts': [('counter-4', 0, 7.5)], 'lines': {'thanks': (4.07, 'vo154')}},
     'exit': {'parts': [('walk-out', 0, None)], 'lines': {}, 'end': True},
     'sneakers': {'parts': [('shoes-1', 0, 3.6)], 'lines': {'sneakers': (0.3, 'vo157')}},
