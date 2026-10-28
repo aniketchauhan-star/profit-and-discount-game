@@ -1,7 +1,7 @@
-# Aniket (the boy), his father and the shopkeeper, voiced with Chatterbox (Resemble AI's open-source voice model, MIT
+# Amit (the boy), his father and the shopkeeper, voiced with Chatterbox (Resemble AI's open-source voice model, MIT
 # licence), each cloned from his reference in refs/: his own studio clips (the TTS studio's Puck, Fenrir and Charon) shaped
 # with the WORLD vocoder as tools/vo_deepen.py does, made on 2026-10-26 from the clips in git before that day's commit:
-#   Aniket      vo001 vo047 vo102 vo005   pitch × 1.25, throat × 1.10: younger, a boy's voice (about 245 Hz; the studio's
+#   Amit      vo001 vo047 vo102 vo005   pitch × 1.25, throat × 1.10: younger, a boy's voice (about 245 Hz; the studio's
 #                                         "Male Child" was nearer a teenager, about 185 Hz)
 #   Father      vo002 vo133 vo134         as they were (deepened before, about 135 Hz)
 #   Shopkeeper  vo021 vo022 vo023         pitch × 0.66, throat × 0.88: deeper (about 125 Hz; his studio clips were at about
@@ -40,7 +40,7 @@ LUFS = -16.0  # (Swifty's clips, measured)
 os.makedirs(f'{OUT}/takes', exist_ok=True)
 
 VOICES = {  # how lively (exaggeration), how closely it keeps to the usual pace (cfg: lower is slower), the pitch range to keep (Hz)
-    'Aniket': dict(exaggeration=0.7, cfg=0.3, range=(205, 290)),
+    'Amit': dict(exaggeration=0.7, cfg=0.3, range=(205, 290)),
     'Father': dict(exaggeration=0.55, cfg=0.3, range=(100, 145)),
     'Shopkeeper': dict(exaggeration=0.6, cfg=0.3, range=(105, 150)),
     # Swifty's lines come from the user's recording (swifty_cut.py); only a line it doesn't have is made, when asked for
@@ -92,6 +92,7 @@ def tokens(text):
     t = re.sub(r"[’'`]", '', t)
     t = re.sub(r'[^a-z0-9 ]', ' ', t)
     t = re.sub(r'\banna kate\b|\banakate\b|\banikate\b|\bani kate\b', 'aniket', t)
+    t = re.sub(r'\b(ameet|amith|ammit|amitt|a meet)\b', 'amit', t)  # (the boy's name since 2026-10-28)
     t = re.sub(r'\bbottom wear\b|\bbottomware\b', 'bottomwear', t)
     t = re.sub(r'\bhole\b', 'whole', t)
     return words_to_digits(t.split())

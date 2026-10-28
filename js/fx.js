@@ -312,7 +312,7 @@
   // The revamp's dialogue box shows its whole line at once; each word lights up as it is said (`part`: only that part's
   // words). Each word's time is its share of the recording (`seconds`; or about 62 ms a letter when the device's voice
   // reads it), a word after a comma or full stop three letters more (the voice pauses there); the last one goes out as
-  // the voice ends. `light: false` (Aniket, his father, the shopkeeper: the user, 2026-10-28, "the conversation should
+  // the voice ends. `light: false` (Amit, his father, the shopkeeper: the user, 2026-10-28, "the conversation should
   // look like a conversation, not reading"): no word lights up; the line is just there while it is said.
   async function sayWords(ctx, root, { part, seconds, light = true }) {
     const words = [...root.querySelectorAll('.b-word')].filter(w => !w.classList.contains('was-said') &&
@@ -2756,7 +2756,7 @@
   }
 
   // ---------- Party Prep (screens 32–51: the user's designs of 2026-10-23) ----------
-  // Rohan's party: Aniket buys a party shirt, bottomwear, a watch and sunglasses at Sky Mall with ₹5,000. These are its
+  // Rohan's party: Amit buys a party shirt, bottomwear, a watch and sunglasses at Sky Mall with ₹5,000. These are its
   // pieces, drawn as in the designs: the bar on top (the wallet, Party Prep and the shopping bag), the cards with a
   // question about a sale price (Check), its working out (Buy / Keep Looking), what was bought, the shopping list, the
   // party look's prices, and Mission Complete. All in stage px; where each sits is in css (.is-party, by screen).
@@ -3013,7 +3013,7 @@
   }
 
   /**
-   * Aniket seen from above (the mall's map): his walk in four ways, from a strip of frames (sheet: { src, frameW, frameH,
+   * Amit seen from above (the mall's map): his walk in four ways, from a strip of frames (sheet: { src, frameW, frameH,
    * anchorX, anchorY (the point between his feet), rows: { down, up, left, right }, frames: { down: n, … }, stand:
    * { down: [row, col], up, right } (left: right, mirrored) }), drawn `scale` times as big. place(x, y) puts the point
    * between his feet there; walk(way, dist) turns him that way and plays his steps (a frame every `per` px he goes: a

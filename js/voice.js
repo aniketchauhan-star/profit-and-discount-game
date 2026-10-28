@@ -1,7 +1,7 @@
 /* ==========================================================================
    Bookstore Journey — voices
    The characters speak their lines in Indian English: Swifty in the user's own
-   recording (2026-10-26), Aniket, his father and the shopkeeper in voices made
+   recording (2026-10-26), Amit, his father and the shopkeeper in voices made
    with an open-source voice model, each cloned from his voice in the TTS studio
    "Ai Wala Human By Aamir" (see docs/VOICEOVER.md). Each clip is found by the
    exact text its line shows (js/vo_lines.js). A line without a clip, a browser
@@ -27,9 +27,9 @@
   // and rate shape it. A female part played by a male voice is pitched up (pitch + 0.45), and a male part played by a
   // female voice (only if the device has no man's voice) down (pitch − 0.3).
   const CAST = {
-    boy: { gender: 'm', pitch: 1.25, rate: 0.92 },  // Aniket
+    boy: { gender: 'm', pitch: 1.25, rate: 0.92 },  // Amit
     man: { gender: 'm', pitch: 0.9, rate: 0.88 },   // the shopkeeper
-    dad: { gender: 'm', pitch: 0.82, rate: 0.86 },  // Aniket's father
+    dad: { gender: 'm', pitch: 0.82, rate: 0.86 },  // Amit's father
     bird: { gender: 'f', pitch: 1.3, rate: 0.95 },  // Swifty, who also explains every teaching screen
   };
 
@@ -46,7 +46,7 @@
   const better = v => (/natural|neural|online|enhanced|premium|google/i.test(v.name) ? 0 : 1);
 
   // The best voice for a character: Indian English first (the right gender if there is one),
-  // then Hindi voices (they read English with an Indian accent), then any English voice. A man's part (Aniket, his
+  // then Hindi voices (they read English with an Indian accent), then any English voice. A man's part (Amit, his
   // father, the shopkeeper) takes a man's voice from any of them before a woman's: a woman's can't be made to sound
   // like a man.
   function pick(gender) {

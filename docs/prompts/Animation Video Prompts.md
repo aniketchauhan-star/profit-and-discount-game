@@ -6,27 +6,27 @@ These prompts turn the game's still pictures into short videos, made on Higgsfie
 
 There are 53 clips in three kinds:
 - **Talking clips (32):** one for each line a person says. The lips move with that line's words, then the person stops and smiles. The game plays the recorded voice with the clip.
-- **Quiet clips (18):** blinking, breathing, a sip of tea; they play between the lines. Six play once instead: Aniket walking into the bookstore (3), picking up the book (5), the box handed over (36), the camera moving in on the price tags (23), and Aniket coming out of the bookstore and walking on (20 and 21).
+- **Quiet clips (18):** blinking, breathing, a sip of tea; they play between the lines. Six play once instead: Amit walking into the bookstore (3), picking up the book (5), the box handed over (36), the camera moving in on the price tags (23), and Amit coming out of the bookstore and walking on (20 and 21).
 - **Movements (3):** one picture turns into the next, for example the book handed over, then the notes. They replace the fades.
 
 Screen numbers are the brief's (as in `docs/PROMPT.md`).
 
 ## In the game now
 
-**The review meeting of 2026-10-21** (`docs/MEETING-2026-10-21.md`): in the clips made with Gemini the people change from clip to clip, the lips move a little after the words, and the picture is soft, so **all 32 are to be made again on Higgsfield**, in 1080p, the people exactly as in the pictures and their faces showing what they say; the game keeps the Gemini takes until then. The meeting also asked for a new clip, **`s03-walk-in`**: Aniket walks up to the bookstore and the door opens for him (the game plays it on Screen 3 as soon as it is made). The same day the user asked for another, **`s05-pickup`**: on Screen 5, before "This book looks interesting!", Aniket picks the book up from the display (made backwards, see its prompt; the game plays it first on Screen 5 as soon as it is made). Everything to make is in `docs/prompts/Animation Video Prompts - Left to Make.md`.
+**The review meeting of 2026-10-21** (`docs/MEETING-2026-10-21.md`): in the clips made with Gemini the people change from clip to clip, the lips move a little after the words, and the picture is soft, so **all 32 are to be made again on Higgsfield**, in 1080p, the people exactly as in the pictures and their faces showing what they say; the game keeps the Gemini takes until then. The meeting also asked for a new clip, **`s03-walk-in`**: Amit walks up to the bookstore and the door opens for him (the game plays it on Screen 3 as soon as it is made). The same day the user asked for another, **`s05-pickup`**: on Screen 5, before "This book looks interesting!", Amit picks the book up from the display (made backwards, see its prompt; the game plays it first on Screen 5 as soon as it is made). Everything to make is in `docs/prompts/Animation Video Prompts - Left to Make.md`.
 
 **29 clips play in the game.** (Screens 2, 4, 9, 24 and 44 were taken out on 2026-10-21: the clips `s04-to-s05` and `s24-idle` were removed, and `s09-to-s10`, `s24-to-s25` and `s43-to-s44` aren't needed. The screens after 31 were made again as Party Prep on 2026-10-23, and on 2026-10-26 the clips of the ones that went were removed from the folder too, with their prompts: `s40-father-2`, `s41-idle`, `s41-father-1`, `s42-to-s43`, `s46-idle` and the eight of Screen 56, and your Gemini take `outgoing.mp4`. They are in git's history.)
 - **Screens 1, 5, 6, 7 and 8** (made on Higgsfield): `s01-idle`, `s01-aniket-1`, `s01-father`, `s01-aniket-2`, `s05-idle`, `s05-aniket`, `s06-idle`, `s06-aniket`, `s06-shopkeeper` and `s07-idle`. Screen 8 uses `s07-idle` too (the same picture). Until Screen 14 has its own clips, the shopkeeper there also talks with `s06-shopkeeper`.
-- **Screens 20 and 21** (your Gemini take `outgoing.mp4`, cut in two 4.6 s in, where Aniket walks past the open door, as in your screenshot of Screen 21): `s20-out` and `s21-walk`, with a cut between the two screens. The take sits 15 px higher than the picture, so `tools/gemini_clean.py` was given its framing (`--framing 1.0226,0.6,-15`), and its sparkle is covered with the floor just left of it (`--star-from -60,-3`): under the sparkle, the take draws the glass's base lower than the picture does. On Screen 5, the clips show the book stand a little smaller and higher up than the picture (about 24 px); the names on the books move with it. On Screen 25, `s25-idle` and `s25-aniket-1` blur the price on the white card into "e1800", and on Screens 22 and 35 the clips redraw the ₹1800 tent card's price roughly: the game lays the picture's card over them (`s23-zoom`, whose camera moves, draws it well).
+- **Screens 20 and 21** (your Gemini take `outgoing.mp4`, cut in two 4.6 s in, where Amit walks past the open door, as in your screenshot of Screen 21): `s20-out` and `s21-walk`, with a cut between the two screens. The take sits 15 px higher than the picture, so `tools/gemini_clean.py` was given its framing (`--framing 1.0226,0.6,-15`), and its sparkle is covered with the floor just left of it (`--star-from -60,-3`): under the sparkle, the take draws the glass's base lower than the picture does. On Screen 5, the clips show the book stand a little smaller and higher up than the picture (about 24 px); the names on the books move with it. On Screen 25, `s25-idle` and `s25-aniket-1` blur the price on the white card into "e1800", and on Screens 22 and 35 the clips redraw the ₹1800 tent card's price roughly: the game lays the picture's card over them (`s23-zoom`, whose camera moves, draws it well).
 - **Screens 22, 23, 25, 35, 36, 40, 43 and 45** (made with Gemini, 17 clips): `s22-aniket-1`, `s22-aniket-2`, `s22-aniket-3`, `s23-idle`, `s23-zoom`, `s25-idle`, `s25-aniket-1`, `s25-aniket-2`, `s36-box`, `s40-idle`, `s40-father-1`, `s40-aniket`, `s43-father`, `s45-idle`, `s45-father-1`, `s45-aniket-1` and `s45-aniket-2`. Until `s45-father-2` is made, the father says that line with `s45-father-1`.
 
 From the Gemini batch:
 - **Cleaned** with `tools/gemini_clean.py`: the Gemini sparkle is gone, and each clip sits exactly on its picture again (Gemini shows the picture about 2% closer, and in `s25-aniket-2` and `s45-aniket-2` the camera also pushed in; it is held still now; `s23-zoom` keeps its camera move, which is the point of it). Then `tools/enhance_clips.py --ai` redrew each one at 1920 × 1080, the stage's size, with **Real-ESRGAN** (its model for cartoon video, `realesr-animevideov3`, at twice the size, then brought to 1080p), so outlines, faces and printed words are sharp instead of blurred when the browser stretches a 720p clip: about 1.5 MB each now. The tool is a free download (github.com/xinntao/Real-ESRGAN/releases, v0.2.5.0, `realesrgan-ncnn-vulkan-20220424-macos.zip`); give its folder to `--ai`. Without it, `tools/enhance_clips.py` sharpens instead (a light denoise, Lanczos, sharpening on the lines), and `--import --gemini` does that by itself for new takes.
 - **`s23-zoom`, repaired by hand:** where its camera moves in, the cleaner covered the sparkle with the wrong spot of the picture, so a white, yellow or purple star showed on the stand (frames 51–68, 81–94 and 123–124). In those frames, that spot was taken from the nearest frame without one, fitted to the camera and blended in. If the clip is ever made or cleaned again, check the stand under the sparkle.
-- **The shoe shop is all video, no still picture** (Screens 22, 23, 25 and 35). Your three takes for Screen 22 start on Aniket pointing, so Screen 22 now shows that picture, `story/he-sees-a-shoe.webp`, and plays them, with `s23-idle` between the lines; `shoes shop enter.png` is no longer used. Screen 23 plays `s23-zoom`: Aniket points, and the camera moves in on the ₹1800 and 30% OFF tags. Screen 25 has its quiet loop, `s25-idle` (from the quiet end of the take for `s25-aniket-1`). Screen 35 reuses Screen 22's clips: `s23-idle`, then `s22-aniket-1` for "So, after a 30% discount," and `s22-aniket-3` for "I will pay ₹1260." So `s22-to-s23` and `s23-to-s24` are no longer needed, nor clips of Screen 35's own.
-- **Started a little later:** `s40-aniket` begins once Aniket has finished stepping in (0.7 s into the take), and `s45-aniket-1` and `s45-aniket-2` once the father's hand is down (0.75 s and 0.5 s). Otherwise Aniket, or the father's hand, would jump back at each new line. On Screens 40 and 45 the last clip also stays on its last frame between lines. Gemini wrote "Really?" on the screen in `s45-aniket-1`; it is covered.
+- **The shoe shop is all video, no still picture** (Screens 22, 23, 25 and 35). Your three takes for Screen 22 start on Amit pointing, so Screen 22 now shows that picture, `story/he-sees-a-shoe.webp`, and plays them, with `s23-idle` between the lines; `shoes shop enter.png` is no longer used. Screen 23 plays `s23-zoom`: Amit points, and the camera moves in on the ₹1800 and 30% OFF tags. Screen 25 has its quiet loop, `s25-idle` (from the quiet end of the take for `s25-aniket-1`). Screen 35 reuses Screen 22's clips: `s23-idle`, then `s22-aniket-1` for "So, after a 30% discount," and `s22-aniket-3` for "I will pay ₹1260." So `s22-to-s23` and `s23-to-s24` are no longer needed, nor clips of Screen 35's own.
+- **Started a little later:** `s40-aniket` begins once Amit has finished stepping in (0.7 s into the take), and `s45-aniket-1` and `s45-aniket-2` once the father's hand is down (0.75 s and 0.5 s). Otherwise Amit, or the father's hand, would jump back at each new line. On Screens 40 and 45 the last clip also stays on its last frame between lines. Gemini wrote "Really?" on the screen in `s45-aniket-1`; it is covered.
 - **Loop:** `s25-idle` plays forwards and then backwards, so it loops without a jump.
-- **Not used:** a take of Aniket pointing (it ends with his arm down, turned away), the take for `s24-to-s25` (he crosses his arms), and a second take of `s45-idle` (the camera pushes in). Gemini's original files (with the sparkle) were moved to the Trash, so they don't weigh down the folder.
+- **Not used:** a take of Amit pointing (it ends with his arm down, turned away), the take for `s24-to-s25` (he crosses his arms), and a second take of `s45-idle` (the camera pushes in). Gemini's original files (with the sparkle) were moved to the Trash, so they don't weigh down the folder.
 - **To make on Higgsfield:** the movements (Gemini can't be given an end frame).
 
 From your first batch:
@@ -41,12 +41,12 @@ From your first batch:
 ## How to make a clip on Higgsfield
 
 1. Open Seedance 2.5 (image to video) on Higgsfield.
-2. **Start frame:** upload the picture named with the clip. The pictures are in the game folder, `assets`: `/Users/AniketChauhan/Desktop/profit and discount game/assets/`.
+2. **Start frame:** upload the picture named with the clip. The pictures are in the game folder, `assets`: `/Users/AmitChauhan/Desktop/profit and discount game/assets/`.
 3. **End frame:** upload the picture named as the end frame. For talking clips and quiet loops, that's the same picture again.
 4. Paste the clip's prompt.
 5. Set the **length** given with the clip, **1080p**, 16:9, and **sound off**. The game plays its own recorded voices; if sound can't be turned off, that's fine, the game mutes the clip.
 6. Generate. Make 2 or 3 takes and keep the cleanest.
-7. Download it, rename it to the clip's file name (for example `s01-aniket-1.mp4`), and save it in **`assets/video/`**: `/Users/AniketChauhan/Desktop/profit and discount game/assets/video/`.
+7. Download it, rename it to the clip's file name (for example `s01-aniket-1.mp4`), and save it in **`assets/video/`**: `/Users/AmitChauhan/Desktop/profit and discount game/assets/video/`.
 
 **Before you keep a clip, check:**
 - The first frame is the picture, and the last frame is the end-frame picture.
@@ -70,48 +70,48 @@ camera movement, zoom, pan, shake, cut, morphing, melting, warping, flicker, fac
 | File | Screen | Start frame | End frame | Length | What happens |
 |---|---|---|---|---|---|
 | s01-idle | 1 | story/boy-talks-with-father.webp | same | 5 s | both listen; Dad sips his tea |
-| s01-aniket-1 | 1 | story/boy-talks-with-father.webp | same | 6 s | Aniket: "Dad, I want to buy a book and a new pair of sneakers from the mall." |
+| s01-aniket-1 | 1 | story/boy-talks-with-father.webp | same | 6 s | Amit: "Dad, I want to buy a book and a new pair of sneakers from the mall." |
 | s01-father | 1 | story/boy-talks-with-father.webp | same | 5 s | Dad: "Sure. But compare the prices and buy wisely." |
-| s01-aniket-2 | 1 | story/boy-talks-with-father.webp | same | 4 s | Aniket: "I will!" |
-| s03-walk-in | 3 | story/bookstore-outside-view.webp | (none) | 6 s | Aniket walks up to the bookstore; the glass door opens and he goes in (the meeting of 2026-10-21) |
-| s05-pickup | 5 | story/aniket-holds-the-book.webp | (none) | 4 s | Aniket picks the book up from the display (made backwards: he puts it down; the import turns it round) |
-| s05-idle | 5 | story/aniket-holds-the-book.webp | same | 5 s | Aniket looks at the book |
-| s05-aniket | 5 | story/aniket-holds-the-book.webp | same | 4 s | Aniket: "This book looks interesting!" |
+| s01-aniket-2 | 1 | story/boy-talks-with-father.webp | same | 4 s | Amit: "I will!" |
+| s03-walk-in | 3 | story/bookstore-outside-view.webp | (none) | 6 s | Amit walks up to the bookstore; the glass door opens and he goes in (the meeting of 2026-10-21) |
+| s05-pickup | 5 | story/aniket-holds-the-book.webp | (none) | 4 s | Amit picks the book up from the display (made backwards: he puts it down; the import turns it round) |
+| s05-idle | 5 | story/aniket-holds-the-book.webp | same | 5 s | Amit looks at the book |
+| s05-aniket | 5 | story/aniket-holds-the-book.webp | same | 4 s | Amit: "This book looks interesting!" |
 | s06-idle | 6, 14 | story/aniket-gives-a-book-to-shopkeeper.webp | same | 5 s | both wait |
-| s06-aniket | 6 | story/aniket-gives-a-book-to-shopkeeper.webp | same | 4 s | Aniket: "How much is this book?" |
+| s06-aniket | 6 | story/aniket-gives-a-book-to-shopkeeper.webp | same | 4 s | Amit: "How much is this book?" |
 | s06-shopkeeper | 6 | story/aniket-gives-a-book-to-shopkeeper.webp | same | 4 s | Shopkeeper: "It's ₹800!" |
 | s06-to-s07 | 6 → 7 | story/aniket-gives-a-book-to-shopkeeper.webp | story/aniket-gives-money-to-shopkeeper.webp | 5 s | the book handed over, then the notes |
 | s07-idle | 7, 8 | story/aniket-gives-money-to-shopkeeper.webp | same | 5 s | both wait (the notes don't move) |
-| s10-aniket | 10 | story/shocked-aniket.webp | same | 5 s | Aniket: "₹1000? What is this?" |
+| s10-aniket | 10 | story/shocked-aniket.webp | same | 5 s | Amit: "₹1000? What is this?" |
 | s14-shopkeeper-1 | 14 | story/aniket-gives-a-book-to-shopkeeper.webp | same | 5 s | Shopkeeper: "The price printed on the book is ₹1000," |
 | s14-shopkeeper-2 | 14 | story/aniket-gives-a-book-to-shopkeeper.webp | same | 4 s | Shopkeeper: "but you paid only ₹800." |
 | s14-shopkeeper-3 | 14 | story/aniket-gives-a-book-to-shopkeeper.webp | same | 4 s | Shopkeeper: "So, you got a ₹200 discount." |
-| s14-to-s15 | 14 → 15 | story/aniket-gives-a-book-to-shopkeeper.webp | story/what-is-a-discount.webp | 4 s | Aniket's face turns puzzled |
-| s15-idle | 15 | story/what-is-a-discount.webp | same | 5 s | Aniket thinks (mouth closed) |
-| s20-out | 20 | story/bookstore-outside-view.webp | (none) | 5 s | Aniket comes out of the bookstore, stops, smiling, and walks off to the right (the first 4.6 s of your Gemini take `outgoing.mp4`) |
-| s21-walk | 21 | story/bookstore-outside-view.webp | (none) | 1 s | Aniket walks on past the open door, to the shoe shop (the last 1.4 s of `outgoing.mp4`, from where your screenshot of Screen 21 shows him) |
-| s22-aniket-1 | 22, 35 | story/he-sees-a-shoe.webp | same | 4 s | Aniket: "These sneakers look good!" (on 35: "So, after a 30% discount,") |
-| s22-aniket-2 | 22 | story/he-sees-a-shoe.webp | same | 4 s | Aniket: "What does 30% OFF mean here?" |
-| s22-aniket-3 | 22, 35 | story/he-sees-a-shoe.webp | same | 4 s | Aniket: "Is this also a discount?" (on 35: "I will pay ₹1260.") |
-| s23-idle | 22, 35 | story/he-sees-a-shoe.webp | same | 5 s | Aniket points (no words) |
-| s23-zoom | 23 | story/he-sees-a-shoe.webp | (none) | 6 s | Aniket points; the camera moves in on the ₹1800 and 30% OFF tags |
-| s25-idle | 25 | story/he-thinks-about-the-shoes.webp | same | 4 s | Aniket thinks, hand on chin (no words) |
-| s25-aniket-1 | 25 | story/he-thinks-about-the-shoes.webp | same | 4 s | Aniket: "The tag says ₹1800." |
-| s25-aniket-2 | 25 | story/he-thinks-about-the-shoes.webp | same | 6 s | Aniket: "With 30% off, how much do I actually pay?" |
+| s14-to-s15 | 14 → 15 | story/aniket-gives-a-book-to-shopkeeper.webp | story/what-is-a-discount.webp | 4 s | Amit's face turns puzzled |
+| s15-idle | 15 | story/what-is-a-discount.webp | same | 5 s | Amit thinks (mouth closed) |
+| s20-out | 20 | story/bookstore-outside-view.webp | (none) | 5 s | Amit comes out of the bookstore, stops, smiling, and walks off to the right (the first 4.6 s of your Gemini take `outgoing.mp4`) |
+| s21-walk | 21 | story/bookstore-outside-view.webp | (none) | 1 s | Amit walks on past the open door, to the shoe shop (the last 1.4 s of `outgoing.mp4`, from where your screenshot of Screen 21 shows him) |
+| s22-aniket-1 | 22, 35 | story/he-sees-a-shoe.webp | same | 4 s | Amit: "These sneakers look good!" (on 35: "So, after a 30% discount,") |
+| s22-aniket-2 | 22 | story/he-sees-a-shoe.webp | same | 4 s | Amit: "What does 30% OFF mean here?" |
+| s22-aniket-3 | 22, 35 | story/he-sees-a-shoe.webp | same | 4 s | Amit: "Is this also a discount?" (on 35: "I will pay ₹1260.") |
+| s23-idle | 22, 35 | story/he-sees-a-shoe.webp | same | 5 s | Amit points (no words) |
+| s23-zoom | 23 | story/he-sees-a-shoe.webp | (none) | 6 s | Amit points; the camera moves in on the ₹1800 and 30% OFF tags |
+| s25-idle | 25 | story/he-thinks-about-the-shoes.webp | same | 4 s | Amit thinks, hand on chin (no words) |
+| s25-aniket-1 | 25 | story/he-thinks-about-the-shoes.webp | same | 4 s | Amit: "The tag says ₹1800." |
+| s25-aniket-2 | 25 | story/he-thinks-about-the-shoes.webp | same | 6 s | Amit: "With 30% off, how much do I actually pay?" |
 | s36-box | 36 | story/shopkeeper-gives-the-sneakers-box.webp | (none) | 5 s | the shopkeeper hands over the box |
 | s40-idle | 40 | story/boy-returns-home.webp | same | 5 s | both smile, back home |
 | s40-father-1 | 40 | story/boy-returns-home.webp | same | 4 s | Dad: "How was your shopping?" |
-| s40-aniket | 40 | story/boy-returns-home.webp | same | 7 s | Aniket: "Great! I learnt about marked price, discount and discount percentage." |
+| s40-aniket | 40 | story/boy-returns-home.webp | same | 7 s | Amit: "Great! I learnt about marked price, discount and discount percentage." |
 | s43-father | 43 | story/father-gives-him-money.webp | same | 4 s | Dad: "Here's ₹5,000." |
 | s45-idle | 45 | story/boy-stands-and-talks.webp | same | 5 s | both listen |
 | s45-father-1 | 45 | story/boy-stands-and-talks.webp | same | 5 s | Dad: "Use what you have learnt and find the best deals." |
 | s45-father-2 | 45 | story/boy-stands-and-talks.webp | same | 5 s | Dad: "Whatever is left after buying everything is yours." |
-| s45-aniket-1 | 45 | story/boy-stands-and-talks.webp | same | 4 s | Aniket: "Really?" |
-| s45-aniket-2 | 45 | story/boy-stands-and-talks.webp | same | 4 s | Aniket: "Then I'm definitely finding the best offers!" |
+| s45-aniket-1 | 45 | story/boy-stands-and-talks.webp | same | 4 s | Amit: "Really?" |
+| s45-aniket-2 | 45 | story/boy-stands-and-talks.webp | same | 4 s | Amit: "Then I'm definitely finding the best offers!" |
 
 No clips are needed for:
 - Screen 2: it stays still, as the brief says.
-- Screens 3, 20 and 21: the game already moves Aniket and the doors there.
+- Screens 3, 20 and 21: the game already moves Amit and the doors there.
 - Swifty's lines: she is drawn and moved by the game itself.
 
 ## The prompts
@@ -144,7 +144,7 @@ The boy on the left (green T-shirt, navy backpack, hands on his straps) answers 
 
 ### Screen 3: into the bookstore
 
-The meeting of 2026-10-21 asked for this one: the walk the game draws on Screen 3 doesn't look like real walking, so he walks up to the shop in a clip, and the door opens for him. Aniket isn't in this picture: the prompt describes him, so check that he looks as he does in the other pictures before keeping a take.
+The meeting of 2026-10-21 asked for this one: the walk the game draws on Screen 3 doesn't look like real walking, so he walks up to the shop in a clip, and the door opens for him. Amit isn't in this picture: the prompt describes him, so check that he looks as he does in the other pictures before keeping a take.
 
 #### s03-walk-in.mp4
 Save as `assets/video/s03-walk-in.mp4` · start frame `story/bookstore-outside-view.webp` · end frame: none · 6 s · sound off
@@ -154,7 +154,7 @@ In a bright shopping mall, in front of a bookstore with a big glass front and th
 
 ### Screen 5: the book
 
-The user asked (2026-10-21) for Aniket to pick the book up first, before "This book looks interesting!". There is no picture of him before he has it, so the clip is **made backwards**: it starts on this picture, and he puts the book down on the display. `tools/make_videos.py` turns it round as it brings it in, so in the game he picks the book up and the clip ends exactly on this picture, where the screen's other clips start.
+The user asked (2026-10-21) for Amit to pick the book up first, before "This book looks interesting!". There is no picture of him before he has it, so the clip is **made backwards**: it starts on this picture, and he puts the book down on the display. `tools/make_videos.py` turns it round as it brings it in, so in the game he picks the book up and the clip ends exactly on this picture, where the screen's other clips start.
 
 #### s05-pickup.mp4
 Save as `assets/video/s05-pickup.mp4` · start frame `story/aniket-holds-the-book.webp` · end frame: none · 4 s · sound off · **made backwards** (the import turns it round)
@@ -248,7 +248,7 @@ At a bookshop counter, the boy on the left (green T-shirt, navy backpack), holdi
 
 ### Screens 20–21: out of the bookstore
 
-Both clips come from one 6 s Gemini take, `outgoing.mp4`, cut 4.6 s in (frame 110), where Aniket is walking past the open door: Screen 20 plays everything before it and Screen 21 the rest, with a cut between them, so he never jumps. The prompt is the take's; to make it again, make it as one clip and cut it the same way.
+Both clips come from one 6 s Gemini take, `outgoing.mp4`, cut 4.6 s in (frame 110), where Amit is walking past the open door: Screen 20 plays everything before it and Screen 21 the rest, with a cut between them, so he never jumps. The prompt is the take's; to make it again, make it as one clip and cut it the same way.
 
 #### s20-out.mp4
 Save as `assets/video/s20-out.mp4` · start frame `story/bookstore-outside-view.webp` · end frame: none · 2 s · sound off

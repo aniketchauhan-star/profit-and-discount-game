@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Cuts Aniket's walking figure into the pieces of a jointed cutout, for the game's walk (js/fx.js, Walker).
+"""Cuts Amit's walking figure into the pieces of a jointed cutout, for the game's walk (js/fx.js, Walker).
 
   python3 tools/make_walk_rig.py      writes "assets/sprites/aniket-rig.webp" and prints the pieces' places in it
 

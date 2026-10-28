@@ -1,7 +1,7 @@
 # Google Flow videos: each scene in one video, with its lines
 
-Each scene is **one video**: **at home** (Dad and Aniket), **the bookstore**, **at the counter** (the shopkeeper and
-Aniket), **the shoe shop**, **back home**, and **the party at home**. Every line is the game's own words, in the
+Each scene is **one video**: **at home** (Dad and Amit), **the bookstore**, **at the counter** (the shopkeeper and
+Amit), **the shoe shop**, **back home**, and **the party at home**. Every line is the game's own words, in the
 game's order, with the second it starts.
 
 ## How to make a scene's video
@@ -12,7 +12,7 @@ game's order, with the second it starts.
    prompt (the grey box).
 3. **The next part:** open the part you just made, go to its very last frame, pause, and click **Save frame**. Make
    the next part with Frames to Video from **that saved frame**, not from the scene's picture again. That way nothing
-   jumps back: the notes stay in Aniket's pocket, the book stays in his hands. Paste the next prompt, and repeat for
+   jumps back: the notes stay in Amit's pocket, the book stays in his hands. Paste the next prompt, and repeat for
    every part.
 4. **Join them:** in the scene builder, put the parts one after another and play each join. Every part keeps moving
    to its last frame, and the next one starts talking straight away, so there is no pause between them. If a part
@@ -43,7 +43,7 @@ while she talks.
 
 ## The people (the same all the way)
 
-- **Aniket:** a boy of about twelve, with short, messy dark-brown hair, a green T-shirt, a navy backpack worn on both
+- **Amit:** a boy of about twelve, with short, messy dark-brown hair, a green T-shirt, a navy backpack worn on both
   shoulders, blue jeans and white sneakers. His voice is a young Indian boy's, bright and eager.
 - **His father:** a light-blue shirt, a moustache and short black hair. His voice is a warm, calm Indian man's.
 - **The bookshop's shopkeeper:** glasses, short black hair, a light-blue shirt and a navy apron. His voice is
@@ -52,15 +52,15 @@ while she talks.
 
 ---
 
-## Video 1: At home, Dad and Aniket (game screen 1)
+## Video 1: At home, Dad and Amit (game screen 1)
 
 `flow-1-home.mp4`. One clip, 10 seconds. First frame: `assets/story/boy-talks-with-father.webp`.
 
 | At | Who | Says |
 |---|---|---|
-| 0.3 s | Aniket | "Dad, I want to buy a book and a new pair of sneakers from the mall." |
+| 0.3 s | Amit | "Dad, I want to buy a book and a new pair of sneakers from the mall." |
 | 5.0 s | Father | "Sure. But compare the prices and buy wisely." |
-| 9.0 s | Aniket | "I will!" |
+| 9.0 s | Amit | "I will!" |
 
 ```text
 At home in a bright living room, a boy of about twelve stands on the left (short, messy dark-brown hair, green T-shirt, navy backpack on both shoulders, his hands on its straps) and talks to his father, who sits on the sofa on the right (light-blue shirt, moustache, a white tea cup in his hand). They talk in Indian English, each one's lips moving only while he speaks, in time with his words, with natural mouth shapes. At 0.3 seconds the boy says, excited and happy: "Dad, I want to buy a book and a new pair of sneakers from the mall." His eyebrows rise and his head nods gently; the father listens with a smile. At 5 seconds the father lowers his cup a little and answers, warm and calm: "Sure. But compare the prices and buy wisely." His head nods gently on "buy wisely", and he brings the cup back to exactly where it was. At 9 seconds the boy answers brightly: "I will!" and nods once; then both smile with their mouths closed. End on exactly this picture, every mouth closed. Camera locked: no zoom, pan or shake. Same 2D cartoon illustration style as the picture (clean outlines, soft flat colours, warm light). Every face, hairstyle, outfit, body shape and colour stays exactly the same. Everything not described stays perfectly still. No subtitles, captions, on-screen text or speech bubbles. No music and no sound effects, only the voices.
@@ -86,7 +86,7 @@ First frame: `assets/story/aniket-holds-the-book.webp`.
 
 | At | Who | Says |
 |---|---|---|
-| 1.0 s | Aniket | "This book looks interesting!" |
+| 1.0 s | Amit | "This book looks interesting!" |
 
 ```text
 In a bookstore, a boy of about twelve (short, messy dark-brown hair, green T-shirt, navy backpack on both shoulders, blue jeans) holds the blue book "A Brighter Tomorrow" in both hands by the wooden display table. He looks at its cover with a happy, curious smile, and his eyes widen. At 1 second he says to himself, pleased, in Indian English: "This book looks interesting!" His lips move only while he speaks, in time with the words; his eyebrows lift and his head tilts a little towards the book. Then he keeps smiling at the book with his mouth closed and holds it a little closer. The book's cover and title stay sharp and readable, and the book ends exactly where it is in the picture. The books standing on the display, the shelves, the plants and the shopkeeper at the counter in the background stay perfectly still. End on exactly this picture, his mouth closed. Camera locked: no zoom, pan or shake. Same 2D cartoon illustration style as the picture (clean outlines, soft flat colours, warm light). Every face, hairstyle, outfit, body shape and colour stays exactly the same. No subtitles, captions, on-screen text or speech bubbles. No music and no sound effects, only the voice.
@@ -94,7 +94,7 @@ In a bookstore, a boy of about twelve (short, messy dark-brown hair, green T-shi
 
 ---
 
-## Video 3: At the counter, the shopkeeper and Aniket (game screens 4–13)
+## Video 3: At the counter, the shopkeeper and Amit (game screens 4–13)
 
 `flow-3-counter.mp4`. One video in four parts (10 + 6 + 10 + 10 seconds), each made from the last frame of the one
 before. The camera stays on the counter all the way. Each join falls on a moment that keeps moving: his shock at the
@@ -106,11 +106,11 @@ First frame: `assets/story/aniket-gives-a-book-to-shopkeeper.webp`.
 
 | At | Who | Says |
 |---|---|---|
-| 0.3 s | Aniket | "How much is this book?" |
+| 0.3 s | Amit | "How much is this book?" |
 | 1.6 s | Shopkeeper | "It's eight hundred rupees!" |
-| 3.4 s | Aniket | "It is too costly, uncle." |
+| 3.4 s | Amit | "It is too costly, uncle." |
 | 5.3 s | Shopkeeper | "Check the printed price on the book." |
-| 7.6 s | | Aniket looks down at the price sticker on the book, and his shock grows (no words) |
+| 7.6 s | | Amit looks down at the price sticker on the book, and his shock grows (no words) |
 
 ```text
 At a bookshop counter, a boy of about twelve on the left (short, messy dark-brown hair, green T-shirt, navy backpack, blue jeans) holds out the blue book "A Brighter Tomorrow", and the shopkeeper on the right (glasses, short black hair, light-blue shirt, navy apron) stands behind the counter with his open hand out. They talk in Indian English, each one's lips moving only while he speaks, in time with his words, with natural mouth shapes. At 0.3 seconds the boy asks: "How much is this book?" At 1.6 seconds the shopkeeper answers cheerfully, with a small nod: "It's eight hundred rupees!" At 3.4 seconds the boy says, a little worried, his eyebrows drawing together: "It is too costly, uncle." At 5.3 seconds the shopkeeper smiles kindly and says, his open hand making a small friendly gesture towards the book: "Check the printed price on the book." At 7.6 seconds the boy brings the book a little closer and looks down at the white price sticker on its cover; his eyes go wide and his mouth starts to fall open in shock, still moving at the last frame. Camera locked: no zoom, pan or shake. Same 2D cartoon illustration style as the picture (clean outlines, soft flat colours, warm light). Every face, hairstyle, outfit, body shape and colour stays exactly the same. The shop and everything in it stay still; the two people keep small, natural movements to the very last frame, never freezing. All signs and printed words stay sharp and in place. No subtitles, captions, on-screen text or speech bubbles. No music and no sound effects, only the voices.
@@ -122,7 +122,7 @@ First frame: the last frame of Part 1.
 
 | At | Who | Says |
 |---|---|---|
-| 0.1 s | Aniket | "Oh! The price printed on it is one thousand rupees." |
+| 0.1 s | Amit | "Oh! The price printed on it is one thousand rupees." |
 | 3.9 s | | The shopkeeper nods kindly and points at the sticker, about to explain (no words) |
 
 ```text
@@ -138,7 +138,7 @@ First frame: the last frame of Part 2.
 | 0.1 s | Shopkeeper | "See, the price printed on the book is one thousand rupees," |
 | 3.9 s | Shopkeeper | "but I am selling it to you at eight hundred rupees." |
 | 7.6 s | Shopkeeper | "I gave you a discount." |
-| 8.7 s | | Aniket's face turns puzzled (no words) |
+| 8.7 s | | Amit's face turns puzzled (no words) |
 
 ```text
 At a bookshop counter, the shopkeeper on the right (glasses, short black hair, light-blue shirt, navy apron) points at the price sticker on the blue book "A Brighter Tomorrow", which the boy on the left (short, messy dark-brown hair, green T-shirt, navy backpack, blue jeans) holds. Right from the first frame, with no pause, the shopkeeper explains in Indian English, kind and patient: "See, the price printed on the book is one thousand rupees," then, after a short pause, at 3.9 seconds: "but I am selling it to you at eight hundred rupees." At 7.6 seconds he adds with a warm smile: "I gave you a discount." His lips move only while he speaks, in time with his words; the boy listens and nods. From 8.7 seconds the boy has heard a word he doesn't know: his smile fades, his eyebrows go up and draw together, and he tilts his head, puzzled, still moving at the last frame. Camera locked: no zoom, pan or shake. Same 2D cartoon illustration style as the picture (clean outlines, soft flat colours, warm light). Every face, hairstyle, outfit, body shape and colour stays exactly the same. The shop and everything in it stay still; the two people keep small, natural movements to the very last frame, never freezing. All signs and printed words stay sharp and in place. No subtitles, captions, on-screen text or speech bubbles. No music and no sound effects, only the voice.
@@ -150,9 +150,9 @@ First frame: the last frame of Part 3.
 
 | At | Who | Says |
 |---|---|---|
-| 0.1 s | Aniket | "Discount? What is that?" |
-| 1.8 s | | The shopkeeper taps the sticker; Aniket understands, takes notes from his pocket and pays (no words) |
-| 6.6 s | Aniket | "Thank you, uncle!" |
+| 0.1 s | Amit | "Discount? What is that?" |
+| 1.8 s | | The shopkeeper taps the sticker; Amit understands, takes notes from his pocket and pays (no words) |
+| 6.6 s | Amit | "Thank you, uncle!" |
 
 ```text
 At a bookshop counter, a puzzled boy of about twelve on the left (short, messy dark-brown hair, green T-shirt, navy backpack, blue jeans) holds the blue book "A Brighter Tomorrow"; the shopkeeper on the right (glasses, short black hair, light-blue shirt, navy apron) smiles behind the counter. Right from the first frame, with no pause, the boy asks in Indian English: "Discount? What is that?" From 1.8 seconds the shopkeeper smiles warmly and taps the price sticker on the book, and the boy's face lights up: he gets it, and nods. He hands the book to the shopkeeper, takes a few banknotes out of the front pocket of his jeans and holds them out; the shopkeeper takes them with a nod and hands the book back to him. At 6.6 seconds the boy says happily: "Thank you, uncle!" Each one's lips move only while he speaks, in time with his words. Then he holds the book against his chest and both smile with their mouths closed. Camera locked: no zoom, pan or shake. Same 2D cartoon illustration style as the picture (clean outlines, soft flat colours, warm light). Every face, hairstyle, outfit, body shape and colour stays exactly the same. The shop and everything in it stay still. All signs and printed words stay sharp and in place. No subtitles, captions, on-screen text or speech bubbles. No music and no sound effects, only the voice.
@@ -172,9 +172,9 @@ First frame: `assets/story/he-sees-a-shoe.webp`.
 
 | At | Who | Says |
 |---|---|---|
-| 0.4 s | Aniket | "Wow, nice sneakers! I love them." |
+| 0.4 s | Amit | "Wow, nice sneakers! I love them." |
 | 3.0 s | | He lowers his arm and puts his hand on his chin (no words) |
-| 4.6 s | Aniket | "The price tagged on it is one thousand eight hundred rupees." |
+| 4.6 s | Amit | "The price tagged on it is one thousand eight hundred rupees." |
 | 8.7 s | | He looks down at the red "30% OFF" label, puzzled (no words) |
 
 ```text
@@ -187,8 +187,8 @@ First frame: the last frame of Part 1.
 
 | At | Who | Says |
 |---|---|---|
-| 0.1 s | Aniket | "What does thirty percent off mean here?" |
-| 2.8 s | Aniket | "If this is a discount, how much do I actually have to pay?" |
+| 0.1 s | Amit | "What does thirty percent off mean here?" |
+| 2.8 s | Amit | "If this is a discount, how much do I actually have to pay?" |
 | 6.0 s | | He thinks hard, tapping his chin (no words) |
 
 ```text
@@ -202,8 +202,8 @@ First frame: the last frame of Part 2.
 | At | Who | Says |
 |---|---|---|
 | 0.0 s | | His face lights up; he points at the sneakers again (no words) |
-| 1.2 s | Aniket | "So, after a thirty percent discount," |
-| 3.6 s | Aniket | "I will pay one thousand two hundred and sixty rupees." |
+| 1.2 s | Amit | "So, after a thirty percent discount," |
+| 3.6 s | Amit | "I will pay one thousand two hundred and sixty rupees." |
 
 ```text
 In a shoe shop, a boy of about twelve (short, messy dark-brown hair, green T-shirt, navy backpack, blue jeans) stands by the display stand, thinking, his finger on his chin. Right from the first frame his face lights up: he has worked it out. He lowers his hand from his chin and points at the blue sneakers again, proud and happy. At 1.2 seconds he says in Indian English: "So, after a thirty percent discount," and at 3.6 seconds: "I will pay one thousand two hundred and sixty rupees." Then he nods with a confident smile, his mouth closed. His lips move only while he speaks, in time with the words. The sneakers and the labels on the stand stay exactly in place. Camera locked: no zoom, pan or shake. Same 2D cartoon illustration style as the picture (clean outlines, soft flat colours, warm light). His face, hair, clothes and colours stay exactly the same. The shop and everything in it stay still. No subtitles, captions, on-screen text or speech bubbles. No music and no sound effects, only the voice.
@@ -234,7 +234,7 @@ In a bright shopping mall, in front of a bookstore with a big glass front and th
 | At | Who | Says |
 |---|---|---|
 | 0.5 s | Father | "How was your shopping?" |
-| 2.2 s | Aniket | "Great! I learnt about marked price, discount and discount percentage." |
+| 2.2 s | Amit | "Great! I learnt about marked price, discount and discount percentage." |
 
 ```text
 At home, a boy of about twelve on the left (short, messy dark-brown hair, green T-shirt, navy backpack, a blue book held against his chest, a blue-and-white shopping bag in his other hand) has just come in; his father sits at the dining table on the right (light-blue shirt, moustache, a white tea cup and a newspaper). They talk in Indian English, each one's lips moving only while he speaks, in time with his words, with natural mouth shapes. At 0.5 seconds the father looks up and asks warmly: "How was your shopping?" At 2.2 seconds the boy answers happily: "Great! I learnt about marked price, discount and discount percentage." He nods and lifts the shopping bag a little to show it, then lowers it back to where it was. Then both smile with their mouths closed. The father's cup and newspaper stay where they are. End on exactly this picture, every mouth closed. Camera locked: no zoom, pan or shake. Same 2D cartoon illustration style as the picture (clean outlines, soft flat colours, warm light). Every face, hairstyle, outfit, body shape and colour stays exactly the same. Everything not described stays perfectly still. The wall signs stay sharp and in place. No subtitles, captions, on-screen text or speech bubbles. No music and no sound effects, only the voices.
@@ -253,8 +253,8 @@ First frame: `assets/party/party-message.webp`.
 
 | At | Who | Says |
 |---|---|---|
-| 0.5 s | Aniket | "Wow! Rohan's birthday party is tonight!" |
-| 4.3 s | Aniket | "I need a new outfit for the party!" |
+| 0.5 s | Amit | "Wow! Rohan's birthday party is tonight!" |
+| 4.3 s | Amit | "I need a new outfit for the party!" |
 
 ```text
 At home in a bright living room, a boy of about twelve (short, messy dark-brown hair, green T-shirt, blue jeans, white sneakers) sits cross-legged on a beige sofa, holding his phone in one hand and looking at it, thrilled, his other hand in a little fist of joy. He says, in Indian English, his lips moving only while he speaks, in time with the words: at 0.5 seconds, "Wow! Rohan's birthday party is tonight!", and at 4.3 seconds, a little worried but excited, "I need a new outfit for the party!" Then he looks up from his phone with an excited smile, his mouth closed, thinking what to wear. The phone stays in his hand; nothing appears on its screen that we can read. Camera locked: no zoom, pan or shake. Same 2D cartoon illustration style as the picture (clean outlines, soft flat colours, warm light). His face, hairstyle, outfit, body shape and colours stay exactly the same. The room and everything in it stay still. No subtitles, captions, on-screen text or speech bubbles. No music and no sound effects, only the voice.
@@ -267,9 +267,9 @@ First frame: `assets/story/father-gives-him-money.webp`.
 | At | Who | Says |
 |---|---|---|
 | 0.3 s | Father | "Here's five thousand rupees." |
-| 2.2 s | | Aniket takes the notes and holds them, delighted (no words) |
+| 2.2 s | | Amit takes the notes and holds them, delighted (no words) |
 | 2.9 s | Father | "Use what you have learnt and find the best deals." |
-| 7.0 s | | Aniket folds the notes, puts them in his jeans pocket and pats it (no words) |
+| 7.0 s | | Amit folds the notes, puts them in his jeans pocket and pats it (no words) |
 | 9.2 s | | He looks up at his father with a big smile (no words) |
 
 ```text
@@ -283,8 +283,8 @@ First frame: the last frame of Part 1 (the notes in his pocket).
 | At | Who | Says |
 |---|---|---|
 | 0.1 s | Father | "Whatever is left after buying everything is yours." |
-| 3.9 s | Aniket | "Really?" |
-| 4.7 s | Aniket | "Then I'm definitely finding the best offers!" |
+| 3.9 s | Amit | "Really?" |
+| 4.7 s | Amit | "Then I'm definitely finding the best offers!" |
 
 ```text
 At home by the dining table, the father on the left (light-blue shirt, moustache, short black hair) sits and smiles at his son, a boy of about twelve standing on the right (short, messy dark-brown hair, green T-shirt, navy backpack on both shoulders, blue jeans), whose money is now in his jeans pocket. Right from the first frame, with no pause, the father says with a playful smile, his eyebrows raised and a little nod towards the boy's pocket: "Whatever is left after buying everything is yours." At 3.9 seconds the boy, surprised and delighted, asks: "Really?", his eyebrows shooting up, his eyes widening and his hand going to the pocket with the money. At 4.7 seconds he says excitedly, with a determined grin, his other hand making a small fist of joy: "Then I'm definitely finding the best offers!" Then he nods once and both smile with their mouths closed. They talk in Indian English; each one's lips move only while he speaks, in time with his words. The money stays in his pocket: no notes appear in anyone's hand. Camera locked: no zoom, pan or shake. Same 2D cartoon illustration style as the picture (clean outlines, soft flat colours, warm light). Every face, hairstyle, outfit, body shape and colour stays exactly the same. The room and everything in it stay still. No subtitles, captions, on-screen text or speech bubbles. No music and no sound effects, only the voices.

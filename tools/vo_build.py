@@ -32,7 +32,7 @@ MAP = ROOT / 'js' / 'vo_lines.js'
 DOC = ROOT / 'docs' / 'VOICEOVER.md'
 VOICES = {
     'Swifty': 'Female Teacher (Standard)',  # Gemini voice Kore
-    'Aniket': 'Male Child (Energetic)',     # Puck
+    'Amit': 'Male Child (Energetic)',     # Puck
     'Shopkeeper': 'Male Teacher (Formal)',  # Charon
     'Father': 'Male Senior (Pedagogical)',  # Fenrir
 }

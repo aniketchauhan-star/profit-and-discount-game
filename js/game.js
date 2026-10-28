@@ -47,7 +47,7 @@
     },
   };
 
-  // The counter picture once more, with Aniket puzzled by the word "discount": it lines up exactly with
+  // The counter picture once more, with Amit puzzled by the word "discount": it lines up exactly with
   // "story/aniket-gives-a-book-to-shopkeeper.webp" (only his face differs), so it can fade in over it.
   const PUZZLED = STORY + 'what-is-a-discount.webp';
 
@@ -59,7 +59,7 @@
 
   // Shapes on the artwork (stage px).
   const TITLE_PLATE = [[410, 150], [740, 150], [745, 280], [985, 280], [1010, 330], [1010, 470], [960, 535], [290, 535], [245, 470], [250, 300], [405, 285]];
-  const START_AT = [567, 640]; // the Start button's centre: under the title, between the planter and Aniket's hand and bags
+  const START_AT = [567, 640]; // the Start button's centre: under the title, between the planter and Amit's hand and bags
   const SHOP_SIGN = [[380, 148], [1885, 18], [1885, 172], [380, 292]];
   const MONEY = [[896, 534], [1011, 477], [1040, 498], [1062, 514], [1062, 612], [942, 624], [930, 600], [896, 560]];
   const PRICE_TAG = { x: 975, y: 404, text: '₹800', radius: 72 }; // small ₹800 just above the money
@@ -82,20 +82,20 @@
   // Keep-clear areas on the story pictures (the revamp, rule 2): faces, prices, tags and the book, [left, top, right, bottom]
   // in the picture's px. A speech bubble on the picture moves around them (FX.bubble: avoid).
   const KEEP_CLEAR = {
-    home: [[500, 48, 758, 276], [1273, 185, 1500, 412]],                                  // Aniket's face, his father's
-    browse: [[630, 79, 903, 352], [888, 382, 1161, 639]],                                 // Aniket's head, the book
-    ask: [[530, 164, 773, 406], [742, 482, 939, 694], [1288, 164, 1515, 406]],            // Aniket, the book, the shopkeeper
+    home: [[500, 48, 758, 276], [1273, 185, 1500, 412]],                                  // Amit's face, his father's
+    browse: [[630, 79, 903, 352], [888, 382, 1161, 639]],                                 // Amit's head, the book
+    ask: [[530, 164, 773, 406], [742, 482, 939, 694], [1288, 164, 1515, 406]],            // Amit, the book, the shopkeeper
     shock: [[STICKER.shock.x - 106, STICKER.shock.y - 106, STICKER.shock.x + 106, STICKER.shock.y + 106], [1509, 133, 1812, 406]],
-    sneakers: [[436, 73, 664, 345], [1045, 446, 1540, 648], [1088, 679, 1406, 800]],     // Aniket, the sneakers and ₹1800, 30% OFF
-    confused: [[342, 79, 600, 382], [1248, 558, 1444, 710], [1116, 701, 1452, 855]],     // Aniket, the ₹1800 tag, 30% OFF
+    sneakers: [[436, 73, 664, 345], [1045, 446, 1540, 648], [1088, 679, 1406, 800]],     // Amit, the sneakers and ₹1800, 30% OFF
+    confused: [[342, 79, 600, 382], [1248, 558, 1444, 710], [1116, 701, 1452, 855]],     // Amit, the ₹1800 tag, 30% OFF
     offmeans: [[342, 79, 600, 382], [1248, 558, 1444, 710], [1116, 701, 1452, 855]],     // (the same picture)
-    final: [[436, 73, 664, 345], [1224, 558, 1406, 648], [1088, 679, 1406, 800]],        // Aniket, the two tags
-    return: [[373, 73, 600, 315], [1327, 194, 1600, 436]],                                // Aniket, his father
-    partymoney: [[285, 67, 573, 370], [1270, 97, 1542, 370], [830, 370, 1179, 642]],     // his father, Aniket, the money
+    final: [[436, 73, 664, 345], [1224, 558, 1406, 648], [1088, 679, 1406, 800]],        // Amit, the two tags
+    return: [[373, 73, 600, 315], [1327, 194, 1600, 436]],                                // Amit, his father
+    partymoney: [[285, 67, 573, 370], [1270, 97, 1542, 370], [830, 370, 1179, 642]],     // his father, Amit, the money
     partydeal: [[433, 218, 691, 491], [1236, 36, 1479, 309]],
   };
 
-  // Aniket's questions, carried from the story to the top of the teaching screens that answer them (the revamp, Part 2:
+  // Amit's questions, carried from the story to the top of the teaching screens that answer them (the revamp, Part 2:
   // screen 16, and 26–34, where 34 answers it).
 
   // Camera for screens with a card on the right (the question, the reduction): both characters
@@ -121,12 +121,12 @@
       play: playHome,
     },
     {
-      id: 'outside', title: 'The Bookstore', sub: 'Aniket walks to the store',
+      id: 'outside', title: 'The Bookstore', sub: 'Amit walks to the store',
       bg: FILM + 'outside.webp',
       kb: { origin: '50% 62%', from: 'scale(1.02)', to: 'scale(1.06) translate(-6px, -4px)' },
       lamps: [[167, 321, 230], [767, 334, 170], [1313, 299, 170], [1666, 275, 170]], // the wall lamp; ceiling lights behind the glass
       dust: [420, 260, 1840, 820],
-      exit: 'zoom', zoomOrigin: '52% 56%', // into the next screen (Aniket with the book): the camera pushes into the store while fading
+      exit: 'zoom', zoomOrigin: '52% 56%', // into the next screen (Amit with the book): the camera pushes into the store while fading
       play: playOutside,
     },
     {
@@ -202,7 +202,7 @@
       play: playDiscount,
     },
     {
-      id: 'dcard', title: 'How Much Discount?', sub: 'How much discount did Aniket get on the book?',
+      id: 'dcard', title: 'How Much Discount?', sub: 'How much discount did Amit get on the book?',
       // The user's doc (2026-10-23): a question card at the counter, as on the old Cost/Selling Price question (the camera
       // moves left to make room for it): it starts on screen 9's view (his puzzled face), so the change is seamless.
       bg: FILM + 'counter-puzzled.webp', // (screen 9's picture: the change is seamless)
@@ -230,7 +230,7 @@
       play: playFormulaReveal,
     },
     {
-      id: 'pay', title: 'Thank You!', sub: 'The shopkeeper gives Aniket the book',
+      id: 'pay', title: 'Thank You!', sub: 'The shopkeeper gives Amit the book',
       bg: FILM + 'pay.webp',
       kb: { origin: '50% 46%', from: 'scale(1.02)', to: 'scale(1.075)' },
       lamps: [[1408, 86, 330]],
@@ -238,7 +238,7 @@
       play: playPay,
     },
     {
-      id: 'exit', title: 'Coming Out of the Bookstore', sub: 'The doors swing open and Aniket comes out',
+      id: 'exit', title: 'Coming Out of the Bookstore', sub: 'The doors swing open and Amit comes out',
       bg: FILM + 'exit.webp', // the bookstore from the mall, as on screen 3
       kb: { origin: '50% 62%', from: 'scale(1.02)', to: 'scale(1.06) translate(-6px, -4px)' },
       lamps: [[167, 321, 230], [767, 334, 170], [1313, 299, 170], [1666, 275, 170]], // the wall lamp; ceiling lights behind the glass
@@ -246,7 +246,7 @@
       play: playExit,
     },
     {
-      id: 'leave', title: 'To the Shoe Shop', sub: 'Let’s help Aniket buy the sneakers!',
+      id: 'leave', title: 'To the Shoe Shop', sub: 'Let’s help Amit buy the sneakers!',
       bg: FILM + 'exit-end.webp', // (14's film as it ends, blurred: Swifty speaks over it)
       kb: { origin: '50% 62%', from: 'scale(1.02)', to: 'scale(1.06) translate(-6px, -4px)' },
       lamps: [[167, 321, 230], [767, 334, 170], [1313, 299, 170], [1666, 275, 170]],
@@ -256,7 +256,7 @@
     },
     {
       id: 'sneakers', title: 'The Shoe Shop', sub: 'Wow, nice sneakers! I love them.',
-      bg: FILM + 'sneakers.webp', // Aniket at the stand, pointing at the sneakers (its film's first frame)
+      bg: FILM + 'sneakers.webp', // Amit at the stand, pointing at the sneakers (its film's first frame)
       kb: { origin: '63% 66%', from: 'scale(1.02)', to: 'scale(1.07)' }, // eases in towards the price tags
       lamps: [[1740, 160, 260], [1740, 370, 260], [120, 60, 180]], // shelf lights, a ceiling light
       dust: [600, 40, 1900, 720],
@@ -264,7 +264,7 @@
       play: playSneakers,
     },
     {
-      id: 'shoe', title: 'Tagged Price', sub: 'Aniket points at the ₹1800 tag',
+      id: 'shoe', title: 'Tagged Price', sub: 'Amit points at the ₹1800 tag',
       bg: FILM + 'shoe.webp',
       kb: { origin: '63% 66%', from: 'scale(1.02)', to: 'scale(1.07)' }, // eases in towards the price tags
       lamps: [[1740, 160, 260], [1740, 370, 260], [120, 60, 180]], // shelf lights, a ceiling light
@@ -293,7 +293,7 @@
     },
     {
       id: 'offmeans', title: 'What Does 30% OFF Mean?', sub: 'If this is a discount, how much do I actually have to pay?',
-      // The user's doc (2026-10-23): Aniket sees the 30% OFF tag and wonders; Swifty: "30% OFF means 30% discount here."
+      // The user's doc (2026-10-23): Amit sees the 30% OFF tag and wonders; Swifty: "30% OFF means 30% discount here."
       bg: FILM + 'offmeans.webp',
       react: STORY + 'he-thinks-about-the-shoes.webp', // (as its film goes: the close view the rest is worked out on)
       kb: null, origin: '63% 66%', still: true, // (screen 19's camera origin: it ends on the same view, so that change is seamless)
@@ -338,7 +338,7 @@
       play: playCheck,
     },
     {
-      id: 'topay', title: 'How Much to Pay?', sub: 'How much does Aniket have to pay?',
+      id: 'topay', title: 'How Much to Pay?', sub: 'How much does Amit have to pay?',
       swifty: true,
       bg: STORY + 'he-thinks-about-the-shoes.webp', // the shoe shop, the question on a small panel on it (practiceHost)
       kb: null, origin: '50% 50%', still: true,
@@ -367,7 +367,7 @@
     },
     {
       id: 'final', title: 'Final Answer', sub: 'After a 30% discount, I will pay ₹1260.',
-      bg: FILM + 'final.webp', // the same view as screens 23–34: Aniket pointing at the tags
+      bg: FILM + 'final.webp', // the same view as screens 23–34: Amit pointing at the tags
       kb: { origin: '63% 66%', from: 'scale(1.02)', to: 'scale(1.07)' },
       lamps: [[1740, 160, 260], [1740, 370, 260], [120, 60, 180]],
       dust: [600, 40, 1900, 720],
@@ -375,7 +375,7 @@
       play: playFinal,
     },
     {
-      id: 'boxed', title: 'Here Are Your Sneakers', sub: 'The shopkeeper hands Aniket the sneakers in a box',
+      id: 'boxed', title: 'Here Are Your Sneakers', sub: 'The shopkeeper hands Amit the sneakers in a box',
       bg: STORY + 'shopkeeper-gives-the-sneakers-box.webp',
       kb: { origin: '54% 56%', from: 'scale(1.02)', to: 'scale(1.07)' }, // eases in towards the box
       lamps: [[1760, 170, 240], [1760, 360, 240], [300, 85, 170]], // shelf lights, a ceiling light in the mall
@@ -398,7 +398,7 @@
       play: playReturn,
     },
     // Party Prep (the user's pictures of 2026-10-23, after screen 31): a message: Rohan's birthday party is tonight. His
-    // father gives him ₹5,000 (their talk, in its films), and at the mall Aniket walks where the player steers
+    // father gives him ₹5,000 (their talk, in its films), and at the mall Amit walks where the player steers
     // him, with four arrows, on its map seen from above: into a shop, and its own picture comes. In each he works out the
     // sale price of what he needs, and buys it. Then all set for the party.
     {
@@ -423,7 +423,7 @@
       play: playPartyDeal,
     },
     {
-      id: 'tomall', title: 'To the Mall', sub: 'Aniket walks into the mall',
+      id: 'tomall', title: 'To the Mall', sub: 'Amit walks into the mall',
       bg: PARTY + 'mall-entrance.webp',
       kb: { origin: '72% 52%', from: 'scale(1.02)', to: 'scale(1.1)' }, // in towards the doors
       lamps: [[1300, 560, 360]], dust: [700, 300, 1900, 900],
@@ -451,7 +451,7 @@
     {
       // His fit check once all four are bought (the user, 2026-10-27: "after all collection this video come with
       // celebration sound"): its film, with its own music; confetti as the beat starts. Then a cut to the party.
-      id: 'fitcheck', title: 'Fit Check!', sub: 'Aniket in his new outfit',
+      id: 'fitcheck', title: 'Fit Check!', sub: 'Amit in his new outfit',
       bg: FILM + 'fitcheck.webp',
       kb: null, origin: '50% 50%', still: true, lamps: [], dust: null,
       back: () => 'mallfloor',
@@ -460,7 +460,7 @@
     {
       // At Rohan's party he dances, in his new things (the user, 2026-10-28: "use this dancing video in the end, after the
       // fit check"): its film, with its own music. Then the summary, on its last frame.
-      id: 'dancing', title: 'At the Party!', sub: 'Aniket dances at Rohan’s party',
+      id: 'dancing', title: 'At the Party!', sub: 'Amit dances at Rohan’s party',
       bg: FILM + 'dancing.webp',
       kb: null, origin: '50% 50%', still: true, lamps: [], dust: null,
       play: playDancing,
@@ -490,7 +490,7 @@
 
   async function playTitle(ctx, scene) {
     const L = scene.layer;
-    FX.twinkles(L, [[380, 125], [760, 125], [570, 100], [870, 250], [230, 520], [420, 570], [900, 560]]); // round the title, off Aniket
+    FX.twinkles(L, [[380, 125], [760, 125], [570, 100], [870, 250], [230, 520], [420, 570], [900, 560]]); // round the title, off Amit
 
     const wrap = el('div', 'start-wrap', L, { left: `${START_AT[0]}px`, top: `${START_AT[1]}px` });
     const btn = el('button', 'start-btn', wrap);
@@ -535,8 +535,8 @@
     }, 380);
   }
 
-  // At home: Aniket, ready to go out, tells his father what he wants to buy at the mall; his father says yes, with a
-  // word of advice; Aniket promises. One of them talks at a time.
+  // At home: Amit, ready to go out, tells his father what he wants to buy at the mall; his father says yes, with a
+  // word of advice; Amit promises. One of them talks at a time.
   async function playHome(ctx, scene) {
     await pauseUnlessFilm(ctx, scene, 700);
     const plan = await picSay(ctx, scene, {
@@ -553,7 +553,7 @@
     advanceAfterFilm(ctx, scene); // then off to the mall
   }
 
-  // Aniket walks up to the bookstore and in (its film; the meeting of 2026-10-21: the door opens and he goes in, a real
+  // Amit walks up to the bookstore and in (its film; the meeting of 2026-10-21: the door opens and he goes in, a real
   // walk), and the screen moves on as it ends. Without it (reduced motion), its picture, the shop's sign lit up.
   async function playOutside(ctx, scene) {
     if (scene.rolling) {
@@ -568,7 +568,7 @@
     ctx.advance(1800);
   }
 
-  // Coming out of the bookstore: its film (Aniket comes out of the doors and walks off along the mall), and the screen
+  // Coming out of the bookstore: its film (Amit comes out of the doors and walks off along the mall), and the screen
   // moves on as it ends. Without it (reduced motion), its picture.
   async function playExit(ctx, scene) {
     if (scene.rolling) {
@@ -586,13 +586,13 @@
   async function playLeave(ctx, scene) {
     await ctx.wait(700);
     await swiftyCornerLines(ctx, scene, [
-      ['book-done', [{ t: 'Aniket bought the book and understood the ' }, { t: 'discount', cls: 'key' }, { t: '.' }]],
-      ['to-sneakers', [{ t: 'Let’s help Aniket buy the ' }, { t: 'sneakers', cls: 'stress' }, { t: '!' }]],
+      ['book-done', [{ t: 'Amit bought the book and understood the ' }, { t: 'discount', cls: 'key' }, { t: '.' }]],
+      ['to-sneakers', [{ t: 'Let’s help Amit buy the ' }, { t: 'sneakers', cls: 'stress' }, { t: '!' }]],
     ], { upTo: 1180 });
     ctx.advance(900); // then on to the shoe shop
   }
 
-  // The names of the three books on the display stand by the counter (on the screen where Aniket holds the book), each
+  // The names of the three books on the display stand by the counter (on the screen where Amit holds the book), each
   // written on its cover as if printed there: centred in the cover's top part and slanted with it (the books lean back
   // on the stand). On the pictures' layer, so they move with the camera. x, y: the title's centre (stage px); slant: how
   // far the cover leans (deg); tone: light words (on the green and the night-blue covers) or dark ones (on the pale
@@ -624,7 +624,7 @@
   }
 
   async function playAsk(ctx, scene) {
-    // First Aniket asks…
+    // First Amit asks…
     await pauseUnlessFilm(ctx, scene, 700);
     const question = await picSay(ctx, scene, {
       anchor: [778, 318], corner: 'bl', tip: [738, 372], text: 'How much is\nthis book?', rotate: -1.5,
@@ -638,7 +638,7 @@
     answer.emphasize();
     Sound.ding();
 
-    // Then (the user's doc, 2026-10-23) Aniket finds it too much, and the shopkeeper sends him to the price on the book:
+    // Then (the user's doc, 2026-10-23) Amit finds it too much, and the shopkeeper sends him to the price on the book:
     // one bubble at a time, as before.
     await nextLine(ctx, scene, answer, 'costly');
     const costly = await picSay(ctx, scene, {
@@ -1174,7 +1174,7 @@
   // of the screen, wide, the picture blurring behind it, and her voice reads why. 5 seconds later the story moves on.
   //  lines, options: the card's (see FX.question); title, why: its back; said: what her voice reads then (as recorded);
   //  hint: the hint's words (segments, as recorded); onHint(): what lights up meanwhile; id: names her lines.
-  async function cardQuestion(ctx, scene, { id, lines, options, title = 'Correct!', why, said, hint, onHint = null, fromLeft = false }) {
+  async function cardQuestion(ctx, scene, { id, lines, options, title = 'Correct!', why, said, hint, reason = null, onHint = null, fromLeft = false }) {
     const card = FX.question(scene.ui, {
       lines,
       options,
@@ -1191,6 +1191,12 @@
       const strip = hintStrip(card.card, [hint]);
       await ctx.wait(reducedMotion ? 60 : 450);
       await readLit(ctx, `${id}-hint`, plainOf(hint), strip.parts);
+      if (reason) { // then, a moment later, why (the user, 2026-10-28: "after 2–3 seconds write the reasoning"), under it
+        await ctx.wait(2200);
+        const both = hintStrip(card.card, [hint, reason]);
+        both.el.classList.add('has-reason');
+        await readLit(ctx, `${id}-reason`, plainOf(reason), [both.parts[1]]);
+      }
       card.unlock(); // another try (the wrong answer stays crossed out)
     }
     async function right(button) {
@@ -1234,6 +1240,7 @@
       why: 'The price printed on the book, {₹1000}, is its *marked price*.',
       said: 'Correct! The price printed on the book, ₹1000, is its marked price.',
       hint: [{ t: 'Not quite! Check the price printed on the book.' }],
+      reason: [{ t: 'The price printed on the book, ' }, { t: '₹1000', em: true }, { t: ', is its marked price.' }],
       onHint: () => { // the price on the book lights up
         FX.ring(scene.ui, { x: spot.x, y: spot.y, r: spot.r * 1.05 });
         Sound.sparkle();
@@ -1264,12 +1271,13 @@
     await ctx.wait(1300);
     await cardQuestion(ctx, scene, {
       id: 'dq',
-      lines: ['How much {discount} did', 'Aniket get on the book?'],
+      lines: ['How much {discount} did', 'Amit get on the book?'],
       options: [{ label: '₹200', correct: true }, { label: '₹800' }],
       title: 'Yes!',
-      why: 'Aniket paid {₹200} less than the *marked price*.',
-      said: 'Yes! Aniket paid ₹200 less than the marked price.',
+      why: 'Amit paid {₹200} less than the *marked price*.',
+      said: 'Yes! Amit paid ₹200 less than the marked price.',
       hint: [{ t: 'Not quite! ' }, { t: '₹800', em: true }, { t: ' is the shopkeeper’s ' }, { t: 'selling price', cls: 'tone-sp' }, { t: '.' }],
+      reason: [{ t: 'Amit paid ' }, { t: '₹200', em: true }, { t: ' less than the marked price.' }],
     });
   }
 
@@ -1345,13 +1353,13 @@
     if (!scene.rolling) await cut; // (on the film the card finishes as it goes on: the next screen starts with it done)
     line.emphasize(); // "discount." pulses: the new word
     Sound.ding();
-    // then Aniket wonders what it means: a moment more on "I gave you a discount." first (the user, 2026-10-28: "a little
+    // then Amit wonders what it means: a moment more on "I gave you a discount." first (the user, 2026-10-28: "a little
     // fast when the shopkeeper says I gave you a discount"); screen 9 starts on the frame its film stops on
     ctx.advance(scene.rolling ? Clips.left(scene) * 1000 + 1800 : 3000);
   }
 
   // "Discount?" Coming from screen 14 the picture, the card and the bubble are first exactly as they
-  // were; then the bubble and the card go, and the camera glides back to the middle. Aniket doesn't know
+  // were; then the bubble and the card go, and the camera glides back to the middle. Amit doesn't know
   // the shopkeeper's new word: on the film he asks what it is, his face puzzled; without it, his face turns puzzled
   // (PUZZLED fades in over the picture) and he wonders about it in a thought cloud.
   function setupDiscount(scene) {
@@ -1422,7 +1430,7 @@
     ctx.advance(2000); // then the question: how much discount did he get?
   }
 
-  // Aniket's thought: a cloud above and to the right of his head, its puffs rising from the top of his hair (`tip`: the
+  // Amit's thought: a cloud above and to the right of his head, its puffs rising from the top of his hair (`tip`: the
   // picture's px; on screen it follows the camera, see faceCamera).
   const DISCOUNT_THOUGHT = {
     tip: [697, 228],
@@ -1544,7 +1552,7 @@
     await ctx.wait(700);
 
     // In words, one part at a time; a picture comes over each price as it is said (the user, 2026-10-22): the photo of the
-    // counter (the book Aniket holds) glides from the corner over "Marked Price", and Aniket paying comes over "Selling
+    // counter (the book Amit holds) glides from the corner over "Marked Price", and Amit paying comes over "Selling
     // Price".
     fr.term(0);
     await reader.read('fr-1', 'Discount', [fr.longTerms[0]], 700);
@@ -1741,12 +1749,12 @@
     await readLit(ctx, `${id}-2`, 'Try again!', [strip.parts[1]]);
   }
 
-  // The blue sneakers on the stand in the shoe shop, as Aniket points at them (stage px), for the light sweeping
+  // The blue sneakers on the stand in the shoe shop, as Amit points at them (stage px), for the light sweeping
   // across them.
   const SNEAKERS = [[1045, 600], [1070, 545], [1150, 500], [1230, 462], [1330, 470], [1400, 448], [1505, 452], [1540, 520],
     [1540, 610], [1450, 640], [1150, 645], [1050, 630]];
 
-  // A new find: in a shoe shop in the mall, a pair of blue sneakers on the stand catches Aniket's eye, and he points
+  // A new find: in a shoe shop in the mall, a pair of blue sneakers on the stand catches Amit's eye, and he points
   // at them.
   async function playSneakers(ctx, scene) {
     const L = scene.layer;
@@ -1768,7 +1776,7 @@
     advanceAfterFilm(ctx, scene, 3000, { segue: true }); // then a closer look: the film goes straight on
   }
 
-  // Nothing to say here: Aniket looks at the sneakers' price, his hand going to his chin (the film goes on; the camera
+  // Nothing to say here: Amit looks at the sneakers' price, his hand going to his chin (the film goes on; the camera
   // eases in towards the tags). Without the film, a moment on the picture.
   async function playShoe(ctx, scene) {
     if (scene.rolling) return advanceAfterFilm(ctx, scene, 0, { segue: true });
@@ -1781,7 +1789,7 @@
   const OFF_TAG = { x: 1253, y: 733, w: 322, h: 141, round: 24 };
   const THINKING_OFF_TAG = { x: 1284, y: 778, w: 336, h: 153, round: 26 };
 
-  // Aniket, hand on his chin, looks at the sneakers' tags: he says what he sees, and asks how much he will actually
+  // Amit, hand on his chin, looks at the sneakers' tags: he says what he sees, and asks how much he will actually
   // pay, one bubble at a time, right of his face, the tail at his mouth by his hand (as the film of screen 18 shows him;
   // on 16 he leans in closer: SHOE_SAYS_LEANING).
   const SHOE_SAY = { anchor: [700, 290], corner: 'bl', tip: [640, 306], voice: 'boy', rotate: -1.5 };
@@ -1814,10 +1822,11 @@
     await cardQuestion(ctx, scene, {
       id: 'smq',
       lines: ['The {marked price} of', 'the sneakers is —'],
-      options: [{ label: '30%' }, { label: '₹1800', correct: true }, { label: '₹1830' }],
+      options: [{ label: '₹1770' }, { label: '₹1800', correct: true }, { label: '₹1830' }],
       why: '{₹1800} is the price tagged on the sneakers: their *marked price*.',
       said: 'Correct! ₹1800 is the price tagged on the sneakers: their marked price.',
       hint: [{ t: 'Not quite! Check the price tagged on the sneakers.' }],
+      reason: [{ t: '₹1800', em: true }, { t: ' is the price tagged on the sneakers: their marked price.' }],
       fromLeft: true,
       onHint: () => { // the price card on the sneakers lights up
         FX.ring(scene.ui, PRICE_CARD_FILM);
@@ -1911,10 +1920,10 @@
     await ctx.wait(400);
     const talk = await swiftyFromRight(ctx, scene, false, { bubbles: SHOES_BUBBLES });
     await ctx.wait(200);
-    // (The user's doc, 2026-10-23: "To calculate how much Aniket has to pay to buy these sneakers, let's recall the
+    // (The user's doc, 2026-10-23: "To calculate how much Amit has to pay to buy these sneakers, let's recall the
     // percentage of a value concept.")
     await talk.show([
-      { t: 'To calculate how much Aniket has to pay for these sneakers,', end: true },
+      { t: 'To calculate how much Amit has to pay for these sneakers,', end: true },
       { t: ' let’s first recall how ' }, { t: 'percentages', cls: 'key' }, { t: ' work.' },
     ]);
     FX.ring(scene.layer, THINKING_OFF_TAG); // the 30% OFF (on the picture: it moves with the camera)
@@ -2174,8 +2183,8 @@
     ctx.advance(NEXT_IN); // then the example
   }
 
-  // The example: "125 is what percent of 500?" (her voice on its own), worked out the same way; then a 10 × 10 grid shows
-  // it: 25 of the hundred squares shaded, 25 out of 100 = 25% (the revamp's new visual).
+  // The example: "125 is what percent of 500?" (her voice on its own), worked out the same way. (Its 10 × 10 grid, 25 of
+  // the hundred squares shaded, was taken out at the user's word, 2026-10-28: "remove this".)
   const WHAT_PERCENT = {
     question: [{ t: '125', role: 'part' }, { t: ' is what percent of ' }, { t: '500', role: 'whole' }, { t: '?' }],
     part: { label: 'Part', value: '125' },
@@ -2187,7 +2196,6 @@
   async function playWhatPercent(ctx, scene) {
     const voice = swiftyTalk(ctx, scene.ui, null, null);
     const f = FX.percentFormula(practiceHost(scene), WHAT_PERCENT);
-    const grid = FX.grid100(f.panel, { shade: 25, label: '25 out of 100 = 25%' }); // under the working (css .practice-host .g100)
     await percentStart(ctx, f, '125 is what percent of 500?', ['125', '500'], voice);
     await percentRule(ctx, voice, f);
     await voice.read('wp-work', '125 ÷ 500 × 100', [], 600);
@@ -2195,9 +2203,7 @@
     await readWith(ctx, voice, 'wp-equals', '= 25%.', 350, () => f.answer());
     markAnswer(scene, f);
     await ctx.wait(400);
-    grid.open();
-    await grid.fill(ctx);
-    await voice.read('wp-so', 'So, 125 is 25% of 500!', [grid.el], 600);
+    await voice.read('wp-so', 'So, 125 is 25% of 500!', [], 600);
     ctx.advance(NEXT_IN); // then a quick check
   }
 
@@ -2212,7 +2218,6 @@
 
   async function playCheck(ctx, scene) {
     const q = FX.questionPanel(practiceHost(scene), CHECK);
-    const grid = FX.grid100(q.slot, { shade: 25, label: '25 out of 100 = 25%' }); // under the answers, at the end
     await ctx.wait(450); // the formula finishes fading away first
     const arriving = cornerSwifty(ctx, scene); // she asks the question ("Let's have some practice!" is said before 23)
     arriving.catch(() => {});
@@ -2264,13 +2269,10 @@
         await read(2, '1000 is the whole.', 300, () => q.tag('whole'));
         await read(3, '250 ÷ 1000 × 100 = 25%.', 1900, () => answers.show(1));
       },
-      // Both ways: "So, 250 is 25% of 1000." while the grid shows 25 of 100 (where the hint was, if there was one).
+      // Both ways: "So, 250 is 25% of 1000." (no grid: the user, 2026-10-28, "remove this")
       async so(answers) {
         scene.ui.querySelectorAll('.remember').forEach(n => FX.settle(n.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 300, fill: 'forwards' })).then(() => n.remove()));
         dropHints(q.slot);
-        grid.open();
-        const filling = grid.fill(ctx);
-        filling.catch(() => {});
         await talk.show([
           { t: 'So, ' }, { t: '250', cls: 'tone-part' }, { t: ' is ' }, { t: '25%', em: true },
           { t: '\nof ' }, { t: '1000', cls: 'tone-whole' }, { t: '.' },
@@ -2280,7 +2282,6 @@
           q.tag('part');
           q.tag('whole');
         });
-        await filling;
       },
     });
   }
@@ -2374,16 +2375,16 @@
     const talk = await cornerSwifty(ctx, scene); // she rises in with her bubble
     const bird = talk.bird;
     bird.point();
-    await talk.say('pay-intro', 'Now, let’s find out how much money Aniket needs to pay.', 600);
+    await talk.say('pay-intro', 'Now, let’s find out how much money Amit needs to pay.', 600);
     await ctx.wait(400);
 
     // The question, asked straight away (the user's doc, 2026-10-23: "ask how much he has to pay directly, then give the
     // explanation"): she reads it out (its words are on the panel). One try: either way the next screens work it out.
-    const pq = FX.productQuestion(practiceHost(scene), Object.assign({ question: 'How much does Aniket have to pay?' }, SNEAKER_CARD));
+    const pq = FX.productQuestion(practiceHost(scene), Object.assign({ question: 'How much does Amit have to pay?' }, SNEAKER_CARD));
     pq.open();
     await pq.showQuestion(); // (with the panel: it is never empty)
     await ctx.wait(300);
-    await talk.read('pay-ask', 'How much does Aniket have to pay?', [scene.ui.querySelector('.pqp-question')], 1400);
+    await talk.read('pay-ask', 'How much does Amit have to pay?', [scene.ui.querySelector('.pqp-question')], 1400);
     bird.point();
     await ctx.wait(300);
 
@@ -2488,7 +2489,7 @@
     w.mark(2);
     await ctx.wait(400);
 
-    // The bar: ₹1800, split into ₹1260 paid and ₹540 discount; and Aniket's question is answered.
+    // The bar: ₹1800, split into ₹1260 paid and ₹540 discount; and Amit's question is answered.
     const bar = FX.barModel(w.el, {
       total: { value: '₹1800', label: 'Marked Price', tone: 'mp' },
       parts: [{ value: '₹1260', label: 'pay', tone: 'sp', share: 0.7 }, { value: '₹540', label: 'discount', tone: 'd', share: 0.3 }],
@@ -2503,8 +2504,8 @@
     ctx.advance(NEXT_IN);
   }
 
-  // The final answer, in Aniket's words. Coming from screen 34, the sheet slides down (Swifty's part is done) and
-  // Aniket is at the stand, pointing at the tags. As he
+  // The final answer, in Amit's words. Coming from screen 34, the sheet slides down (Swifty's part is done) and
+  // Amit is at the stand, pointing at the tags. As he
   // says "So, after a 30% discount, I will pay ₹1260.", the 30% OFF tag lights up and a red line crosses out
   // the ₹1800, then a green ₹1260 tag stamps onto the stand.
   const STRIKE_1800 = { from: [1244, 630], to: [1380, 580] }; // across the "₹1800" on the tag hanging from the sneakers (stage px)
@@ -2519,7 +2520,7 @@
   };
 
   async function playFinal(ctx, scene) {
-    await ctx.wait(600); // the sheet finishes sliding away: Aniket, pointing at the tags
+    await ctx.wait(600); // the sheet finishes sliding away: Amit, pointing at the tags
 
     const crossOut = FX.strike(scene.layer, STRIKE_1800);
     const paid = FX.stickTag(scene.layer, PAID_TAG);
@@ -2552,7 +2553,7 @@
     advanceAfterFilm(ctx, scene); // then the sneakers, in their box
   }
 
-  // The sneakers, in their box: over the counter, the shopkeeper hands them to Aniket. No words: a light sweeps
+  // The sneakers, in their box: over the counter, the shopkeeper hands them to Amit. No words: a light sweeps
   // across the box, with twinkles round it and a chime.
   const SNEAKER_BOX = [[905, 440], [1245, 452], [1292, 598], [1240, 700], [880, 775], [800, 700], [800, 600], [935, 520]]; // the box and its lid (stage px)
   async function playBoxed(ctx, scene) {
@@ -2582,6 +2583,9 @@
     const f = FX.percentFormula(scene.ui, PERCENT_OF_MP);
     await ctx.wait(300);
     const talk = await cornerSwifty(ctx, scene); // she introduces it…
+    // (first, what they have found, and what comes next: the user, 2026-10-28)
+    await talk.say('po-found', [{ t: 'We found the ' }, { t: 'discount', cls: 'key' }, { t: ' and ' }, { t: 'selling price', cls: 'stress' }, { t: '.' }], 500);
+    await talk.say('po-check', [{ t: 'Let’s check how ' }, { t: '30%', em: true }, { t: ' comes using the ' }, { t: 'discount', cls: 'key' }, { t: ' amount.' }], 700);
     await percentStart(ctx, f, '540 is what percent of 1800?', ['540', '1800'], talk);
     await swiftyDone(ctx, scene, talk); // …then leaves for the working (her voice goes on)
     const voice = swiftyTalk(ctx, scene.ui, null, null);
@@ -2610,7 +2614,7 @@
     ctx.advance(NEXT_IN); // then back home (the discount percentage's screen and its checkpoint were taken out on 2026-10-22)
   }
 
-  // Back home: his father asks how the shopping went, and Aniket says what he learnt. One of them talks at a time.
+  // Back home: his father asks how the shopping went, and Amit says what he learnt. One of them talks at a time.
   // (His father's "That’s useful, because you have another shopping job." was taken out on 2026-10-26, at the user's word.)
   async function playReturn(ctx, scene) {
     const DAD = { anchor: [1262, 252], corner: 'br', tip: [1330, 372] }; // on the wall up-left of his head, the tail at his mouth
@@ -2627,7 +2631,7 @@
   // ======================================================================
   // Party Prep (after screen 31: the user's pictures of 2026-10-23)
   // ======================================================================
-  // What Aniket buys for the party. In each shop (the user's showrooms of 2026-10-26) two of a kind are on show, each
+  // What Amit buys for the party. In each shop (the user's showrooms of 2026-10-26) two of a kind are on show, each
   // with its price and its discount printed on its tag (a percentage or an amount off): the better deal is the one that
   // costs less after its discount (the user, 2026-10-26: "Pick the better deal"). Each: its price, its discount (`pct`
   // or `flat`), where it is on the picture (picture px of 1672 × 941: the thing and its tag, what the player taps), and
@@ -2664,7 +2668,7 @@
   const dealPay = d => d.mp - dealOff(d);
   const bestDeal = it => it.deals.reduce((best, d) => (dealPay(d) < dealPay(best) ? d : best));
   const partyPay = it => dealPay(bestDeal(it));
-  // What Aniket has bought (ids), and which shop he came out of (where he stands on the map then). Fresh at the message.
+  // What Amit has bought (ids), and which shop he came out of (where he stands on the map then). Fresh at the message.
   const Party = { bought: new Set(), from: null };
   const partyMoney = () => PARTY_BUDGET - PARTY_ITEMS.filter(it => Party.bought.has(it.id)).reduce((sum, it) => sum + partyPay(it), 0);
   const partyDone = () => PARTY_ITEMS.every(it => Party.bought.has(it.id));
@@ -2744,7 +2748,7 @@
     };
   }
 
-  // The party message (screen 32): Aniket, on the sofa, reads his phone: the invite comes up out of it.
+  // The party message (screen 32): Amit, on the sofa, reads his phone: the invite comes up out of it.
   const PHONE_AT = [1000, 410]; // his phone (stage px)
   const SOFA_SAYS = { anchor: [1080, 236], corner: 'br', tip: [1180, 315], voice: 'boy' }; // left of his face, the tail at his mouth
   async function playInvite(ctx, scene) {
@@ -2768,7 +2772,7 @@
     advanceAfterFilm(ctx, scene);
   }
 
-  // Screen 33: his father holds out the money (it shines, cha-ching), says how much, and his advice; on the film Aniket
+  // Screen 33: his father holds out the money (it shines, cha-ching), says how much, and his advice; on the film Amit
   // takes the notes, holds them, and puts them in his pocket (the user, 2026-10-27).
   const NOTES_FAN = [[836, 436], [919, 396], [1010, 385], [1102, 402], [1148, 459], [1174, 540], [1102, 574], [988, 643], [947, 620], [873, 517]];
   const MONEY_SAYS = { anchor: [690, 236], corner: 'bl', tip: [650, 312] }; // up-right of his face, the tail at his mouth
@@ -2786,7 +2790,7 @@
     advanceAfterFilm(ctx, scene);
   }
 
-  // Screen 34: whatever is left after buying everything is his, his father says; then Aniket's answer, one bubble at a time.
+  // Screen 34: whatever is left after buying everything is his, his father says; then Amit's answer, one bubble at a time.
   async function playPartyDeal(ctx, scene) {
     const DAD = { anchor: [790, 330], corner: 'bl', tip: [742, 380] }; // up-right of his head, the tail at his mouth
     await pauseUnlessFilm(ctx, scene, 700);
@@ -2880,7 +2884,7 @@
     return u >= 0 && u <= door.len && Math.abs(dx * door.inward[0] + dy * door.inward[1]) <= DOOR_NEAR;
   };
 
-  // The map (from its first frame): the bar on top, a ✓ on every shop already done, and Aniket where he is: at the bottom
+  // The map (from its first frame): the bar on top, a ✓ on every shop already done, and Amit where he is: at the bottom
   // when he comes in, or outside the shop he has just come out of.
   function mallSetup(scene) {
     partyBar(scene);
@@ -3417,7 +3421,7 @@
     await FX.settle(table.el.animate([{ opacity: 1, transform: 'none' }, { opacity: 0, transform: 'translateY(30px) scale(.95)' }], { duration: 400, fill: 'forwards' }));
     table.el.remove();
     const mission = FX.partyMission(scene.ui, {
-      title: 'MISSION COMPLETE!', text: 'You have successfully helped Aniket get ready for the party!',
+      title: 'MISSION COMPLETE!', text: 'You have successfully helped Amit get ready for the party!',
       items: PARTY_ITEMS.map(it => ({ name: bestDeal(it).name, icon: bestDeal(it).pic })),
     });
     FX.confetti(scene.ui);
@@ -3425,7 +3429,7 @@
     tiles.catch(() => {});
     await mission.open(ctx);
     await tiles;
-    await readLit(ctx, 'md-text', 'You have successfully helped Aniket get ready for the party!', [mission.text]);
+    await readLit(ctx, 'md-text', 'You have successfully helped Amit get ready for the party!', [mission.text]);
     await swifty.say('md-wow', [{ t: 'Wow!', cls: 'stress' }, { t: ' You did it!' }]);
     ctx.advance(NEXT_IN);
   }
@@ -4221,7 +4225,7 @@
   // The pictures load as the player gets to them (the user's "smooth game and fast reload", 2026-10-27). The start screen
   // shows as soon as its picture, the Start button and the fonts are in (the loading bar counts only those). From then
   // on each screen loads the next three's pictures, the next one decoded too so it shows at once; the pictures most
-  // screens use (Swifty, Aniket, her books…) come with the first of them, Party Prep's with the way to the mall. A
+  // screens use (Swifty, Amit, her books…) come with the first of them, Party Prep's with the way to the mall. A
   // screen whose pictures aren't in yet (one jumped to from the scene list) waits for them: no screen shows without its
   // picture (see go). A screen's picture elements get their src once its pictures are in (data-src until then).
   const Pictures = {
@@ -4384,7 +4388,7 @@
 
     document.addEventListener('keydown', e => {
       if (e.altKey || e.ctrlKey || e.metaKey) return;
-      if (Game.steering && /^(Arrow(Up|Down|Left|Right)|[wasdWASD])$/.test(e.key)) return; // (they walk Aniket: the mall's arrows)
+      if (Game.steering && /^(Arrow(Up|Down|Left|Right)|[wasdWASD])$/.test(e.key)) return; // (they walk Amit: the mall's arrows)
       const focus = document.activeElement;
       const control = focus && (focus.tagName === 'BUTTON' || focus.tagName === 'INPUT' || focus.getAttribute('role') === 'button');
       switch (e.key) {

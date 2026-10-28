@@ -5,7 +5,7 @@
 29 of 39 clips to make: 10 not made yet, and 19 made with Gemini to make again on Higgsfield (the meeting of 2026-10-21: in the Gemini takes the people change from clip to clip, the lips move a little after the words, and the picture is soft). This file holds only those, by the picture you upload first, each with its prompt. Everything about them is in `docs/prompts/Animation Video Prompts.md`. Made with `python3 tools/make_videos.py --todo`; it is written again after each batch.
 
 **For every clip, on Higgsfield** (Seedance 2.5, image to video):
-1. **Start frame:** the picture named with the clip, from the game folder `assets`: `/Users/AniketChauhan/Desktop/profit and discount game/assets/`.
+1. **Start frame:** the picture named with the clip, from the game folder `assets`: `/Users/AmitChauhan/Desktop/profit and discount game/assets/`.
 2. **End frame:** the picture named as its end frame. For a talking clip or a quiet loop, that is the same picture again.
 3. Paste the prompt. Set the **length** given, **1080p**, 16:9, and **sound off**.
 4. Make 2 or 3 takes and keep the cleanest. The first and last frames must be the pictures, the faces must stay the same, and the prices and signs must stay sharp.
@@ -39,7 +39,7 @@ camera movement, zoom, pan, shake, cut, morphing, melting, warping, flicker, fac
 
 ## `story/bookstore-outside-view.webp`
 
-### 1. s03-walk-in.mp4 · Screen 3 · Aniket walks up to the bookstore; the glass door opens and he goes in (the meeting of 2026-10-21)
+### 1. s03-walk-in.mp4 · Screen 3 · Amit walks up to the bookstore; the glass door opens and he goes in (the meeting of 2026-10-21)
 
 - [ ] Start frame `story/bookstore-outside-view.webp` · end frame none (it ends on a new pose) · **6 s** · 1080p · sound off · save as `s03-walk-in.mp4`
 
@@ -47,9 +47,9 @@ camera movement, zoom, pan, shake, cut, morphing, melting, warping, flicker, fac
 In a bright shopping mall, in front of a bookstore with a big glass front and the sign "CHAUHAN BOOK STORE", a boy of about twelve (short, messy dark-brown hair, green T-shirt, navy backpack worn on both shoulders, blue jeans, white sneakers) walks in from the left edge of the frame along the shiny floor, at a calm, natural walking pace, his arms swinging gently, towards the bookstore's glass doors. As he reaches them, the right-hand glass door swings open into the shop, and he walks in through it, his back to us, and goes on inside between the shelves. Camera locked: no zoom, pan or shake. Same 2D cartoon illustration style as the picture (clean outlines, soft flat colours, warm light). The boy's face, hair, clothes and colours stay exactly the same from start to end. The sign, the shelves and the store stay sharp and in place. No added text, captions or speech bubbles.
 ```
 
-### 2. s20-out.mp4 · Screen 20 · Aniket comes out of the bookstore, stops, smiling, and walks off to the right (the first 4.6 s of your Gemini take `outgoing.mp4`)
+### 2. s20-out.mp4 · Screen 20 · Amit comes out of the bookstore, stops, smiling, and walks off to the right (the first 4.6 s of your Gemini take `outgoing.mp4`)
 
-**Make it again on Higgsfield as one 6 s clip (the meeting of 2026-10-21: Aniket must look the same as in the other pictures, and walk properly): I cut it into `s20-out` and `s21-walk`, as I did with your Gemini take `outgoing.mp4`. Give the whole prompt; the length here is only the first part.**
+**Make it again on Higgsfield as one 6 s clip (the meeting of 2026-10-21: Amit must look the same as in the other pictures, and walk properly): I cut it into `s20-out` and `s21-walk`, as I did with your Gemini take `outgoing.mp4`. Give the whole prompt; the length here is only the first part.**
 
 - [ ] Start frame `story/bookstore-outside-view.webp` · end frame none (it ends on a new pose) · **5 s** · 1080p · sound off · save as `s20-out.mp4`
 
@@ -57,7 +57,7 @@ In a bright shopping mall, in front of a bookstore with a big glass front and th
 In a shopping mall, in front of a bookstore with a big glass front and the sign "CHAUHAN BOOK STORE", the right-hand glass door is open and a boy (green T-shirt, navy backpack, blue jeans) walks out of the store towards us, stops in front of it and smiles. Then he turns to his left and walks off along the mall, past the glass front. Camera locked: no zoom, pan or shake. Same 2D cartoon illustration style as the picture (clean outlines, soft flat colours, warm light). His face, hairstyle, outfit, body shape and colours stay exactly the same. The sign and the store stay sharp and in place. No added text, captions or speech bubbles.
 ```
 
-### 3. s21-walk.mp4 · Screen 21 · Aniket walks on past the open door, to the shoe shop (the last 1.4 s of `outgoing.mp4`, from where your screenshot of Screen 21 shows him)
+### 3. s21-walk.mp4 · Screen 21 · Amit walks on past the open door, to the shoe shop (the last 1.4 s of `outgoing.mp4`, from where your screenshot of Screen 21 shows him)
 
 **Comes from the same take as `s20-out`: make that one, and I cut this part from it.**
 
@@ -69,7 +69,7 @@ In a shopping mall, in front of a bookstore with a big glass front and the sign 
 
 ## `story/aniket-holds-the-book.webp`
 
-### 4. s05-pickup.mp4 · Screen 5 · Aniket picks the book up from the display (made backwards: he puts it down; the import turns it round)
+### 4. s05-pickup.mp4 · Screen 5 · Amit picks the book up from the display (made backwards: he puts it down; the import turns it round)
 
 **Made backwards: in this take he puts the book down. I turn it round as I bring it in, so in the game he picks the book up, and it ends exactly on the picture.**
 
@@ -115,7 +115,7 @@ At a bookshop counter, the shopkeeper on the right (glasses, light-blue shirt, n
 At a bookshop counter, the shopkeeper on the right (glasses, light-blue shirt, navy apron) finishes with a big, friendly smile: "So, you got a two hundred rupee discount." His lips move in time with these words from the very first second, with natural mouth shapes; he nods once, and his open hand makes a small, pleased gesture and returns to exactly where it was. He finishes speaking by about 3 seconds, then smiles with his mouth closed. The boy on the left listens, holding the blue book still, and blinks. Start and end on exactly this picture with the shopkeeper's mouth closed. Camera locked: no zoom, pan or shake. Same 2D cartoon illustration style as the picture (clean outlines, soft flat colours, warm light). Every face, hairstyle, outfit, body shape and colour stays exactly the same. Everything not described stays perfectly still. All signs and printed words stay sharp and in place. No added text, captions or speech bubbles.
 ```
 
-### 9. s14-to-s15.mp4 · Screen 14 → 15 · Aniket's face turns puzzled
+### 9. s14-to-s15.mp4 · Screen 14 → 15 · Amit's face turns puzzled
 
 - [ ] Start frame `story/aniket-gives-a-book-to-shopkeeper.webp` · end frame `story/what-is-a-discount.webp` · **4 s** · 1080p · sound off · save as `s14-to-s15.mp4`
 
@@ -125,7 +125,7 @@ At a bookshop counter, the boy on the left (green T-shirt, navy backpack), holdi
 
 ## `story/shocked-aniket.webp`
 
-### 10. s10-aniket.mp4 · Screen 10 · Aniket: "₹1000? What is this?"
+### 10. s10-aniket.mp4 · Screen 10 · Amit: "₹1000? What is this?"
 
 - [ ] Start frame `story/shocked-aniket.webp` · end frame the same picture · **5 s** · 1080p · sound off · save as `s10-aniket.mp4`
 
@@ -135,7 +135,7 @@ Seen from just behind a boy's shoulder (navy backpack, green T-shirt), he holds 
 
 ## `story/what-is-a-discount.webp`
 
-### 11. s15-idle.mp4 · Screen 15 · Aniket thinks (mouth closed)
+### 11. s15-idle.mp4 · Screen 15 · Amit thinks (mouth closed)
 
 - [ ] Start frame `story/what-is-a-discount.webp` · end frame the same picture · **5 s** · 1080p · sound off · save as `s15-idle.mp4`
 
@@ -145,7 +145,7 @@ At a bookshop counter, the boy on the left (green T-shirt, navy backpack), holdi
 
 ## `story/he-sees-a-shoe.webp`
 
-### 12. s22-aniket-1.mp4 · Screen 22, 35 · Aniket: "These sneakers look good!" (on 35: "So, after a 30% discount,")
+### 12. s22-aniket-1.mp4 · Screen 22, 35 · Amit: "These sneakers look good!" (on 35: "So, after a 30% discount,")
 
 **Make it again on Higgsfield (the meeting of 2026-10-21): the Gemini take is in the game for now, but its people change from clip to clip and it is soft. Keep the people exactly as in the picture, and their faces showing what they say.**
 
@@ -155,7 +155,7 @@ At a bookshop counter, the boy on the left (green T-shirt, navy backpack), holdi
 In a shoe shop, a boy (green T-shirt, navy backpack) stands by the display stand, pointing at the blue sneakers with one arm stretched out. He says happily: "These sneakers look good!" His lips move in time with these words from the very first second, with natural mouth shapes; his eyebrows rise and his head nods slightly. He finishes speaking by about 3 seconds, then smiles with his mouth closed. His pointing arm, body and legs stay in the same pose. The sneakers, the white "₹1800" tag and the red "30% OFF" label stay exactly in place, sharp and readable. Start and end on exactly this picture with his mouth closed. Camera locked: no zoom, pan or shake. Same 2D cartoon illustration style as the picture (clean outlines, soft flat colours, warm light). Every face, hairstyle, outfit, body shape and colour stays exactly the same. Everything not described stays perfectly still. No added text, captions or speech bubbles.
 ```
 
-### 13. s22-aniket-2.mp4 · Screen 22 · Aniket: "What does 30% OFF mean here?"
+### 13. s22-aniket-2.mp4 · Screen 22 · Amit: "What does 30% OFF mean here?"
 
 **Make it again on Higgsfield (the meeting of 2026-10-21): the Gemini take is in the game for now, but its people change from clip to clip and it is soft. Keep the people exactly as in the picture, and their faces showing what they say.**
 
@@ -165,7 +165,7 @@ In a shoe shop, a boy (green T-shirt, navy backpack) stands by the display stand
 In a shoe shop, a boy (green T-shirt, navy backpack), pointing at the blue sneakers on the display stand, notices the red "30% OFF" label on the display stand and asks, curious: "What does thirty percent off mean here?" His lips move in time with these words from the very first second, with natural mouth shapes; his eyebrows rise and draw together a little. He finishes speaking by about 3 seconds, then looks at the label with his mouth closed. His pointing arm, body and legs stay in the same pose. The sneakers, the white "₹1800" tag and the red "30% OFF" label stay exactly in place, sharp and readable. Start and end on exactly this picture with his mouth closed. Camera locked: no zoom, pan or shake. Same 2D cartoon illustration style as the picture (clean outlines, soft flat colours, warm light). Every face, hairstyle, outfit, body shape and colour stays exactly the same. Everything not described stays perfectly still. No added text, captions or speech bubbles.
 ```
 
-### 14. s22-aniket-3.mp4 · Screen 22, 35 · Aniket: "Is this also a discount?" (on 35: "I will pay ₹1260.")
+### 14. s22-aniket-3.mp4 · Screen 22, 35 · Amit: "Is this also a discount?" (on 35: "I will pay ₹1260.")
 
 **Make it again on Higgsfield (the meeting of 2026-10-21): the Gemini take is in the game for now, but its people change from clip to clip and it is soft. Keep the people exactly as in the picture, and their faces showing what they say.**
 
@@ -175,7 +175,7 @@ In a shoe shop, a boy (green T-shirt, navy backpack), pointing at the blue sneak
 In a shoe shop, a boy (green T-shirt, navy backpack), pointing at the blue sneakers on the display stand, wonders aloud: "Is this also a discount?" His lips move in time with these words from the very first second, with natural mouth shapes; his head tilts slightly as he thinks. He finishes speaking by about 3 seconds, then keeps looking at the sneakers with his mouth closed. His pointing arm, body and legs stay in the same pose. The sneakers, the white "₹1800" tag and the red "30% OFF" label stay exactly in place, sharp and readable. Start and end on exactly this picture with his mouth closed. Camera locked: no zoom, pan or shake. Same 2D cartoon illustration style as the picture (clean outlines, soft flat colours, warm light). Every face, hairstyle, outfit, body shape and colour stays exactly the same. Everything not described stays perfectly still. No added text, captions or speech bubbles.
 ```
 
-### 15. s23-idle.mp4 · Screen 22, 35 · Aniket points (no words)
+### 15. s23-idle.mp4 · Screen 22, 35 · Amit points (no words)
 
 **Make it again on Higgsfield (the meeting of 2026-10-21): the Gemini take is in the game for now, but its people change from clip to clip and it is soft. Keep the people exactly as in the picture, and their faces showing what they say.**
 
@@ -185,7 +185,7 @@ In a shoe shop, a boy (green T-shirt, navy backpack), pointing at the blue sneak
 In a shoe shop, a boy (green T-shirt, navy backpack) stands by the display stand, pointing at the blue sneakers with one arm stretched out, smiling. He breathes gently and blinks once or twice; his pointing hand stays where it is. Nobody talks. The sneakers, the white "₹1800" tag and the red "30% OFF" label stay exactly in place, sharp and readable. Start and end on exactly this picture, so the clip loops seamlessly. Camera locked: no zoom, pan or shake. Same 2D cartoon illustration style as the picture (clean outlines, soft flat colours, warm light). Every face, hairstyle, outfit, body shape and colour stays exactly the same. Everything not described stays perfectly still. No added text, captions or speech bubbles.
 ```
 
-### 16. s23-zoom.mp4 · Screen 23 · Aniket points; the camera moves in on the ₹1800 and 30% OFF tags
+### 16. s23-zoom.mp4 · Screen 23 · Amit points; the camera moves in on the ₹1800 and 30% OFF tags
 
 **Make it again on Higgsfield (the meeting of 2026-10-21): the Gemini take is in the game for now, but its people change from clip to clip and it is soft. Keep the people exactly as in the picture, and their faces showing what they say.**
 
@@ -197,7 +197,7 @@ In a shoe shop, a boy (green T-shirt, navy backpack) stands by the display stand
 
 ## `story/he-thinks-about-the-shoes.webp`
 
-### 17. s25-idle.mp4 · Screen 25 · Aniket thinks, hand on chin (no words)
+### 17. s25-idle.mp4 · Screen 25 · Amit thinks, hand on chin (no words)
 
 **Make it again on Higgsfield (the meeting of 2026-10-21): the Gemini take is in the game for now, but its people change from clip to clip and it is soft. Keep the people exactly as in the picture, and their faces showing what they say.**
 
@@ -207,7 +207,7 @@ In a shoe shop, a boy (green T-shirt, navy backpack) stands by the display stand
 In a shoe shop, a boy (green T-shirt, navy backpack), his hand on his chin, looks at the sneakers' tags, puzzled. He breathes gently and blinks; his eyes move between the white "₹1800" tag and the red "30% OFF" label. Nobody talks: his mouth stays closed. The sneakers and both tags stay exactly in place, sharp and readable. Start and end on exactly this picture. Camera locked: no zoom, pan or shake. Same 2D cartoon illustration style as the picture (clean outlines, soft flat colours, warm light). His face, hair, clothes and colours stay exactly the same. Everything not described stays perfectly still. No added text, captions or speech bubbles.
 ```
 
-### 18. s25-aniket-1.mp4 · Screen 25 · Aniket: "The tag says ₹1800."
+### 18. s25-aniket-1.mp4 · Screen 25 · Amit: "The tag says ₹1800."
 
 **Make it again on Higgsfield (the meeting of 2026-10-21): the Gemini take is in the game for now, but its people change from clip to clip and it is soft. Keep the people exactly as in the picture, and their faces showing what they say.**
 
@@ -217,7 +217,7 @@ In a shoe shop, a boy (green T-shirt, navy backpack), his hand on his chin, look
 In a shoe shop, a boy (green T-shirt, navy backpack), his hand on his chin, looks at the sneakers' white price tag and says, thinking aloud: "The tag says one thousand eight hundred rupees." His lips move in time with these words from the very first second, with natural mouth shapes; his eyebrows lift a little. He finishes speaking by about 3.5 seconds, then keeps thinking with his mouth closed. His hand stays on his chin. The sneakers, the white "₹1800" tag and the red "30% OFF" label stay exactly in place, sharp and readable. Start and end on exactly this picture with his mouth closed. Camera locked: no zoom, pan or shake. Same 2D cartoon illustration style as the picture (clean outlines, soft flat colours, warm light). Every face, hairstyle, outfit, body shape and colour stays exactly the same. Everything not described stays perfectly still. No added text, captions or speech bubbles.
 ```
 
-### 19. s25-aniket-2.mp4 · Screen 25 · Aniket: "With 30% off, how much do I actually pay?"
+### 19. s25-aniket-2.mp4 · Screen 25 · Amit: "With 30% off, how much do I actually pay?"
 
 **Make it again on Higgsfield (the meeting of 2026-10-21): the Gemini take is in the game for now, but its people change from clip to clip and it is soft. Keep the people exactly as in the picture, and their faces showing what they say.**
 
@@ -231,7 +231,7 @@ In a shoe shop, a boy (green T-shirt, navy backpack), his hand on his chin, look
 
 ### 20. s36-box.mp4 · Screen 36 · the shopkeeper hands over the box
 
-**Make it again on Higgsfield (the meeting of 2026-10-21: the people change completely in the Gemini take). Check the picture too: the shopkeeper and Aniket must look as they do on the other shop screens.**
+**Make it again on Higgsfield (the meeting of 2026-10-21: the people change completely in the Gemini take). Check the picture too: the shopkeeper and Amit must look as they do on the other shop screens.**
 
 - [ ] Start frame `story/shopkeeper-gives-the-sneakers-box.webp` · end frame none (it ends on a new pose) · **5 s** · 1080p · sound off · save as `s36-box.mp4`
 
@@ -261,7 +261,7 @@ At home, a boy on the left (green T-shirt, navy backpack, a blue book held again
 At home, the father at the dining table on the right (light-blue shirt, moustache, a white tea cup and a newspaper) looks up at his son and asks warmly: "How was your shopping?" His lips move under his moustache in time with these words from the very first second, with natural mouth shapes; his eyebrows lift, and he lowers his tea cup a little and brings it back to exactly where it was. He finishes speaking by about 2 seconds, then smiles with his mouth closed. The boy on the left listens with a smile and blinks. Start and end on exactly this picture with the father's mouth closed. Camera locked: no zoom, pan or shake. Same 2D cartoon illustration style as the picture (clean outlines, soft flat colours, warm light). Every face, hairstyle, outfit, body shape and colour stays exactly the same. Everything not described stays perfectly still. The wall signs stay sharp and in place. No added text, captions or speech bubbles.
 ```
 
-### 23. s40-aniket.mp4 · Screen 40 · Aniket: "Great! I learnt about marked price, discount and discount percentage."
+### 23. s40-aniket.mp4 · Screen 40 · Amit: "Great! I learnt about marked price, discount and discount percentage."
 
 **Make it again on Higgsfield (the meeting of 2026-10-21): the Gemini take is in the game for now, but its people change from clip to clip and it is soft. Keep the people exactly as in the picture, and their faces showing what they say.**
 
@@ -313,7 +313,7 @@ At home, the father at the dining table on the left (light-blue shirt, moustache
 At home, the father at the dining table on the left (light-blue shirt, moustache) adds with a playful smile: "Whatever is left after buying everything is yours." His lips move under his moustache in time with these words from the very first second, with natural mouth shapes; his open hand makes a small, generous gesture towards his son and returns to exactly where it was. He finishes speaking by about 4 seconds, then smiles with his mouth closed. The boy on the right listens, his eyes widening, and blinks. Start and end on exactly this picture with the father's mouth closed. Camera locked: no zoom, pan or shake. Same 2D cartoon illustration style as the picture (clean outlines, soft flat colours, warm light). Every face, hairstyle, outfit, body shape and colour stays exactly the same. Everything not described stays perfectly still. The wall signs stay sharp and in place. No added text, captions or speech bubbles.
 ```
 
-### 28. s45-aniket-1.mp4 · Screen 45 · Aniket: "Really?"
+### 28. s45-aniket-1.mp4 · Screen 45 · Amit: "Really?"
 
 **Make it again on Higgsfield (the meeting of 2026-10-21): the Gemini take is in the game for now, but its people change from clip to clip and it is soft. Keep the people exactly as in the picture, and their faces showing what they say.**
 
@@ -323,7 +323,7 @@ At home, the father at the dining table on the left (light-blue shirt, moustache
 At home, the boy standing on the right (green T-shirt, navy backpack, one hand on a strap, the other in his pocket), surprised and delighted, asks his father: "Really?" His lips move in time with this one word in the very first second; his eyebrows shoot up and his eyes widen. Then he grins with his mouth closed until the end. The father at the table on the left smiles and blinks. Start and end on exactly this picture with the boy's mouth closed. Camera locked: no zoom, pan or shake. Same 2D cartoon illustration style as the picture (clean outlines, soft flat colours, warm light). Every face, hairstyle, outfit, body shape and colour stays exactly the same. Everything not described stays perfectly still. The wall signs stay sharp and in place. No added text, captions or speech bubbles.
 ```
 
-### 29. s45-aniket-2.mp4 · Screen 45 · Aniket: "Then I'm definitely finding the best offers!"
+### 29. s45-aniket-2.mp4 · Screen 45 · Amit: "Then I'm definitely finding the best offers!"
 
 **Make it again on Higgsfield (the meeting of 2026-10-21): the Gemini take is in the game for now, but its people change from clip to clip and it is soft. Keep the people exactly as in the picture, and their faces showing what they say.**
 

@@ -7,7 +7,7 @@ Before you paste it:
 
 ---------------------------------------------------------------------------
 
-You are the language editor for a children's maths game for [GRADE] learners in India. It teaches Marked Price, Selling Price, Discount and Discount Percentage through a story: Aniket shops at a mall, and Swifty, a friendly bird, explains the maths. At the end the learner plays a shopping game.
+You are the language editor for a children's maths game for [GRADE] learners in India. It teaches Marked Price, Selling Price, Discount and Discount Percentage through a story: Amit shops at a mall, and Swifty, a friendly bird, explains the maths. At the end the learner plays a shopping game.
 
 Below is every line in the order the learner meets it, as a table with these columns:
 # | Screen | Screen name | Path | Who | Type | Text | Voice clip | Words that must not change
@@ -19,7 +19,7 @@ Below is every line in the order the learner meets it, as a table with these col
 Check each line, and suggest a change only where it helps. A good line:
 - is correct, natural English that Indian learners of this grade understand easily;
 - is short and clear: one idea, ideally under 15 words;
-- sounds like its speaker: Aniket is an excited boy, his father is warm and wise, the shopkeeper is polite, Swifty is a friendly teacher; conversational, never textbook-like;
+- sounds like its speaker: Amit is an excited boy, his father is warm and wise, the shopkeeper is polite, Swifty is a friendly teacher; conversational, never textbook-like;
 - keeps its meaning.
 
 Do not change:

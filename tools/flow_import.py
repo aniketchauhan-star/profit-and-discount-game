@@ -67,7 +67,7 @@ TAKES = {
     'shoes-3': 'So, after a thirty percent discount,.mp4',
     'back-home': 'How was your shopping?" .mp4',
     'party-message': "Wow! Rohan's birthday party is tonight!.mp4",
-    'money-1': '"Here\'s five thousand rupees." | | 2.2 s | | Aniket takes the notes and holds them, .mp4',
+    'money-1': '"Here\'s five thousand rupees." | | 2.2 s | | Amit takes the notes and holds them, .mp4',
     'money-2': 'Whatever is left after buying everything is yours." |.mp4',
     'fitcheck': 'fitcheck.mp4',
     'dancing': 'dancing.mp4',
@@ -92,7 +92,7 @@ STILLS = {
 # line ids): about when each starts, in seconds into the film as cut, and its recording (assets/vo/); `end`: its last
 # frame is the next screen's picture too. Where a take goes on from one screen to the next, the second part starts where
 # the first ends. Cut out: what the takes add that the game doesn't say (the shopkeeper's lips again after "It is too
-# costly, uncle."; the extra words at the ends of the party message and of the ₹5,000), and Aniket's "Oh! The price
+# costly, uncle."; the extra words at the ends of the party message and of the ₹5,000), and Amit's "Oh! The price
 # printed on it is ₹1000." (the user, 2026-10-27: it is said on the close-up of the book, game screen 5).
 FILMS = {
     'home': {'parts': [('home', 0, None)], 'lines': {'plan': (0.5, 'vo001'), 'advice': (5.0, 'vo002'), 'promise': (9.0, 'vo003')}},

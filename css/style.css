@@ -150,7 +150,7 @@ button:focus-visible, .switch input:focus-visible + .switch-track {
 /* The sharp picture's right edge feathers into that backdrop (the fade starts off to the right): the picture and its
    clips together, in one layer (game.js: .scene-pic), so the picture never shows through a fading clip. */
 .scene-pic { position: absolute; inset: 0; }
-/* A reaction picture (e.g. Aniket puzzled) that lines up exactly with the picture under it, faded in by
+/* A reaction picture (e.g. Amit puzzled) that lines up exactly with the picture under it, faded in by
    the screen's script, so only the character's face visibly changes. It only fades in; resetting it
    (when the screen starts again) is instant. */
 .scene-bg.scene-react { opacity: 0; transition: none; }
@@ -338,7 +338,7 @@ button:focus-visible, .switch input:focus-visible + .switch-track {
   100% { transform: scale(1); }
 }
 
-/* "!" above Aniket's head */
+/* "!" above Amit's head */
 .exclaim { position: absolute; width: 0; height: 0; }
 .exclaim-inner { position: absolute; animation: exclaim-wiggle 1.2s ease-in-out infinite; }
 .exclaim svg { position: absolute; left: -90px; top: -130px; overflow: visible; }
@@ -627,7 +627,7 @@ button:focus-visible, .switch input:focus-visible + .switch-track {
 }
 .qback-text .hl { color: var(--teal); font-weight: 800; }
 
-/* The names of the books on the display stand (where Aniket holds the book), as if printed on their covers (see standTitles) */
+/* The names of the books on the display stand (where Amit holds the book), as if printed on their covers (see standTitles) */
 .cover-title {
   position: absolute;
   display: flex;
@@ -1876,8 +1876,11 @@ kbd {
   --pen: #d23b2f;            /* the red pen circling an answer */
   --tape: rgba(234, 222, 188, .85);
   --grid: #dbe7f3;           /* graph paper and the lines of an index card */
-  --muted: #9aa5ab;          /* a wrong answer, crossed out */
+  --muted: #9aa5ab;          /* grey: what is no longer in play */
   --muted-tint: #eef0f1;
+  /* a wrong answer and what is said about it: a red shade (the user, 2026-10-28: "make the incorrect feedback red colour
+     shade, wherever available"); its edge 4.3:1 on the cream, its words 7:1 on the tint */
+  --wrong: #d93a2f; --wrong-tint: #fde6e3; --wrong-ink: #8f1f18;
   --paper-shadow: 0 12px 24px rgba(27, 42, 51, .13), 0 2px 4px rgba(27, 42, 51, .10);
   --soft-shadow: 0 12px 30px rgba(27, 42, 51, .10), 0 2px 6px rgba(27, 42, 51, .06);
   /* the same colours, as shadows and lines: ink and the deep teal at a little strength, a soft glow of a meaning colour */
@@ -2091,8 +2094,8 @@ kbd {
 .is-v2 .q-opt.is-correct { border-color: var(--ok); background: var(--ok-tint); box-shadow: 0 2px 0 var(--ok); color: var(--ok); }
 .is-v2 .q-opt.is-correct .q-chip { background: var(--ok); transform: scale(1.12) rotate(-8deg); }
 .is-v2 .q-opt.is-correct .q-chip svg { stroke: var(--white); stroke-width: 8; } /* a marker tick */
-.is-v2 .q-opt.is-wrong { border-color: var(--muted); background: var(--muted-tint); box-shadow: 0 2px 0 var(--muted); color: var(--ink-2); text-decoration: line-through; text-decoration-thickness: 4px; } /* grey, but readable (4.8:1) */
-.is-v2 .q-opt.is-wrong .q-chip { background: var(--muted); }
+.is-v2 .q-opt.is-wrong { border-color: var(--wrong); background: var(--wrong-tint); box-shadow: 0 2px 0 var(--wrong); color: var(--wrong-ink); text-decoration: line-through; text-decoration-thickness: 4px; } /* red, crossed out */
+.is-v2 .q-opt.is-wrong .q-chip { background: var(--wrong); }
 .is-v2 .q-opt.is-wrong .q-chip svg { stroke: var(--white); }
 
 /* Screen 8: the question card, and its "Correct!" side */
@@ -2398,8 +2401,8 @@ kbd {
 /* Screen 6, a wrong answer (game.js answerWrongPop; the user, 2026-10-22: as a right one, over the blurred picture, in a
    small panel): the card turns over to "Not quite!" in grey, with a ✗; then a small panel with the two cards and the line
    that ties them to the story */
-.is-v2 .qcard-back.is-wrong .qback-head { background: var(--muted-tint); color: var(--ink); }
-.is-v2 .qcard-back.is-wrong .qback-tick { background: var(--muted); }
+.is-v2 .qcard-back.is-wrong .qback-head { background: var(--wrong-tint); color: var(--wrong-ink); }
+.is-v2 .qcard-back.is-wrong .qback-tick { background: var(--wrong); }
 .is-v2 .qcard-back.is-wrong .qback-tick svg { stroke: var(--white); }
 
 /* Screen 6, a wrong answer: Swifty in the picture's bottom-left corner, pointing at her bubble on her right, "✗ Not quite!"
@@ -2558,9 +2561,13 @@ kbd {
    book, only voice"): its words on a grey strip, an ✗ before them, on the question card (under its answers), on the
    practice panels (under the answers) and under the working on screen 27. Its words light up as they are said. */
 .is-v2 .hint-strip { display: flex; align-items: center; gap: 16px; margin-top: 24px; padding: 14px 26px 16px 16px; border-radius: 20px;
-  background: var(--muted-tint); box-shadow: inset 0 0 0 3px var(--muted); color: var(--ink); font-size: 36px; font-weight: 700;
+  background: var(--wrong-tint); box-shadow: inset 0 0 0 3px var(--wrong); color: var(--ink); font-size: 36px; font-weight: 700;
   line-height: 1.25; text-align: left; text-wrap: pretty; }
-.is-v2 .hint-strip .hs-chip { flex: none; display: grid; place-items: center; width: 52px; height: 52px; border-radius: 50%; background: var(--muted); }
+.is-v2 .hint-strip .hs-chip { flex: none; display: grid; place-items: center; width: 52px; height: 52px; border-radius: 50%; background: var(--wrong); }
+/* (a question card's hint, then why, under it a moment later: one to a line) */
+.is-v2 .hint-strip.has-reason { align-items: flex-start; }
+.is-v2 .hint-strip.has-reason .hs-part { display: block; }
+.is-v2 .hint-strip.has-reason .hs-part + .hs-part { margin-top: 10px; padding-top: 10px; border-top: 2px solid rgba(217, 58, 47, .35); font-weight: 600; }
 .is-v2 .hint-strip .hs-chip svg { width: 28px; height: 28px; fill: none; stroke: var(--white); stroke-width: 4; stroke-linecap: round; }
 .is-v2 .hint-strip .em { font-weight: 800; }
 .is-v2 .practice-host .hint-strip { margin-top: 0; font-size: 40px; }
@@ -2570,7 +2577,7 @@ kbd {
 .is-v2 .q-slot:has(> .hint-strip) > .remember { grid-area: 2 / 1; margin-top: 18px; }
 
 /* ---------- Party Prep (after screen 31: the user's pictures of 2026-10-23) ----------
-   The mall on its map, Aniket walked with four arrows, and its shops, each with a card for the sale price. Drawn in the
+   The mall on its map, Amit walked with four arrows, and its shops, each with a card for the sale price. Drawn in the
    game's party look: navy words, cream cards with a gold edge, white pills, green and orange buttons. Stage px. */
 .scene { --pp-ink: #1d2f6f; --pp-cream: #fffaf0; --pp-gold: #f3c34f; --pp-red: #e0303f; --pp-green: #17923d; }
 .pc2 { position: absolute; z-index: 4; font-family: 'Baloo 2', system-ui, sans-serif; pointer-events: auto; }
@@ -2667,7 +2674,7 @@ kbd {
 .scene[data-scene$="shop"] :is(.bird, .bubble, .qcard-pos, .pc2, .spark) { z-index: 10; }
 .scene[data-scene$="shop"] :is(.party-fly, .fly-chip) { z-index: 11; }
 
-/* Aniket seen from above, his shadow under his feet (on the map's own layer: he walks under the bar, the arrows and the bubbles) */
+/* Amit seen from above, his shadow under his feet (on the map's own layer: he walks under the bar, the arrows and the bubbles) */
 .scene[data-scene="mallfloor"] .scene-layer { isolation: isolate; }
 .tw { position: absolute; left: 0; top: 0; z-index: 3; width: 0; height: 0; transform-origin: 0 0; pointer-events: none; will-change: transform; } /* (a layer of its own: he glides) */
 .tw-body { position: absolute; background-repeat: no-repeat; }
@@ -2711,7 +2718,7 @@ kbd {
 .deal-spot:disabled { cursor: default; }
 .deal-spot:disabled::after { animation: none; opacity: 0; }
 .deal-spot.is-wrong { animation: deal-shake .42s ease; }
-.deal-spot.is-wrong::before { border-color: #9aa5ab; box-shadow: 0 0 0 3px rgba(255, 255, 255, .6); }
+.deal-spot.is-wrong::before { border-color: var(--wrong); box-shadow: 0 0 0 3px rgba(255, 255, 255, .6), 0 0 22px 4px rgba(217, 58, 47, .45); }
 .deal-spot.is-right::before { border-color: #2fb35a; box-shadow: 0 0 0 3px rgba(255, 255, 255, .85), 0 0 34px 12px rgba(47, 179, 90, .5); }
 .deal-spot.is-done::before { opacity: 0; }
 @keyframes deal-shake { 20% { translate: -12px 0; } 45% { translate: 12px 0; } 70% { translate: -7px 0; } }
@@ -2769,7 +2776,7 @@ kbd {
 .dc-row:last-child { margin-bottom: 0; }
 .dc-buy { grid-column: 1 / 4; grid-row: 3; height: 76px; margin-top: 12px; border-radius: 22px; font-size: 38px; }
 .dc-buy svg { width: 40px; height: 40px; }
-.dc-row.is-wrong { border-color: #9aa5ab; background: #eef0f1; }
-.dc-row.is-wrong :is(.dc-name, .dc-pay, .dc-sum) { color: #4f5d65; text-decoration: line-through; text-decoration-thickness: 3px; }
+.dc-row.is-wrong { border-color: var(--wrong); background: var(--wrong-tint); }
+.dc-row.is-wrong :is(.dc-name, .dc-pay, .dc-sum) { color: var(--wrong-ink); text-decoration: line-through; text-decoration-thickness: 3px; }
 .dc-row.is-wrong .dc-pic { opacity: .6; }
 .dc .dc-stamp { top: 50%; right: auto; bottom: auto; left: 8px; translate: 0 -50%; padding: 0 10px; border-width: 5px; font-size: 30px; letter-spacing: 2px; } /* (on its picture: its name and price clear) */

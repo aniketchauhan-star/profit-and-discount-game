@@ -29,13 +29,13 @@ The brief is `docs/briefs/Bookstore Journey - Revamp Brief.docx` ("Changes for S
 | 11 | Photo; ₹1000 flies; Swifty stays; "It is called the Marked Price (MP)" voice only; amber | Done. |
 | 12 | No Swifty; lined index card | Done. |
 | 13 | Two lines voice only, the question kept; taped notes; one arrow colour | Done (every arrow is grey now). |
-| 14–15 | The result on the picture going back; the shopkeeper's hands, Aniket's face as movements | "₹1000 → ₹800" on the picture: taken out (it covered the shopkeeper's first bubble). Movements: not done. |
+| 14–15 | The result on the picture going back; the shopkeeper's hands, Amit's face as movements | "₹1000 → ₹800" on the picture: taken out (it covered the shopkeeper's first bubble). Movements: not done. |
 | 16 | The thought becomes the heading; Swifty stays | Done: the thought lifts from where the cloud was to the top of the panel. |
 | 17 | No Swifty; the bar ₹1000 = ₹800 paid + ₹200 discount | Done. |
 | 18 | No Swifty | Done. |
 | 19 | Checkpoint 1 | Done. |
 | 20 | "D = MP − SP" on the picture | Done ("Discount = MP − SP", the checkpoint's own note). |
-| 22–25 | One movement; tags sharp; the question to the top on 26 until 34 | The question: done (answered "→ ₹1260 ✓" on 34; the "Aniket asks" label over it was taken out). The shoe shop is all video: on 22 Aniket points at the sneakers and talks (the picture his clips start on, instead of walking in), on 23 the camera moves in on the ₹1800 and 30% OFF tags, then his thinking loops on 24 and 25 and his two lines on 25. Not done: the movement from 24 to 25 (to make on Higgsfield, which takes an end frame). |
+| 22–25 | One movement; tags sharp; the question to the top on 26 until 34 | The question: done (answered "→ ₹1260 ✓" on 34; the "Amit asks" label over it was taken out). The shoe shop is all video: on 22 Amit points at the sneakers and talks (the picture his clips start on, instead of walking in), on 23 the camera moves in on the ₹1800 and 30% OFF tags, then his thinking loops on 24 and 25 and his two lines on 25. Not done: the movement from 24 to 25 (to make on Higgsfield, which takes an end frame). |
 | 26 | Photo; the tag flies; Swifty stays | Done. |
 | 27 | Checkpoint 1's card first; the bubble kept; a small sneakers card in a corner until 30 | Done. The "sneakers card" is the photo itself, zoomed on the sneakers and both tags, on every screen 26–34 (and 37–38). |
 | 28–29 | No Swifty, words lit as said; new Part / Whole colours; one question strip colour; 10 × 10 grid | Done (the grid on 29). |
@@ -45,13 +45,13 @@ The brief is `docs/briefs/Bookstore Journey - Revamp Brief.docx` ("Changes for S
 | 33 | Swifty stays | Done. |
 | 34 | Swifty only for the drag and its hints; the working voice only; the bar ₹1260 / ₹540; one rule band colour | Done. Before the working, the screen's question is hers too: she says what to find and reacts to the answer in bubbles, and reads the question and its hint with none. The working has no bubbles. The question's own sneakers picture is gone (the photo shows them). |
 | 35 | The green ₹1260 tag kept; Checkpoint 3 after | Done. Checkpoint 3's Discount card shows the sneakers' working, "30% of ₹1800 = 30/100 × 1800", which Swifty's recorded lines read, rather than a general "Discount = % × Marked Price" (that would need new words and new recordings: for the content team). |
-| 36 | The box handed over as a movement | Done: the shopkeeper hands the box over in the clip; the chime plays as Aniket takes it, and the light sweeps over the box once it's in his hands. |
+| 36 | The box handed over as a movement | Done: the shopkeeper hands the box over in the clip; the chime plays as Amit takes it, and the light sweeps over the box once it's in his hands. |
 | 37 | Checkpoint 3's card first; the sneakers card; Swifty introduces, then leaves; Part → Discount red, Whole → Marked Price amber | Done. |
 | 38 | No Swifty; the same rule band as 34 | Done. |
 | 39 | Checkpoint 4; no repeated bubbles; Swifty only to celebrate | Done. |
 | 40, 41, 45 | Talking loops | Done: a quiet loop and a talking clip with each line (the father's second line on 41 and 45 uses his first clip until its own is made). The new bubbles: done. |
 | 42–44 | One movement: the list, the notes, the pocket | The list, then the notes: done (42 → 43), and the father talks on 43. Screen 44 (into the pocket) was taken out (2026-10-21): 43 fades into 45. |
-| 46 | A small movement on Aniket; optional notebook cards as "your tools for shopping" | Aniket waves: done. The notebook cards: not done. |
+| 46 | A small movement on Amit; optional notebook cards as "your tools for shopping" | Amit waves: done. The notebook cards: not done. |
 
 ## Language check
 

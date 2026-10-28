@@ -16,7 +16,7 @@
   if (!mode || mode === '0') return;
   const PATH = /^(right|wrong)$/i.test(mode) ? mode.toLowerCase() : '';
   const STORE = 'bj.log';
-  const WHO = { boy: 'Aniket', man: 'Shopkeeper', dad: 'Father', bird: 'Swifty' };
+  const WHO = { boy: 'Amit', man: 'Shopkeeper', dad: 'Father', bird: 'Swifty' };
   const CLIPS = typeof VO_LINES === 'object' ? VO_LINES : {};
   const run = Date.now();
 
@@ -155,7 +155,7 @@
 
   // Words a language edit must leave as they are: formulas, amounts, numbers, the maths terms, the names.
   const FORMULA = /[\w₹%(](?:[^.!?;:,]|,(?=\d))*?=(?:[^.!?;,]|,(?=\d))*/g;
-  const TERMS = /\b(?:Marked Price|Selling Price|Cost Price|Discount Percentage|Discount %|Discount|Percentage|Part|Whole|MP|SP|CP|Aniket|Swifty)(?!\w)/gi;
+  const TERMS = /\b(?:Marked Price|Selling Price|Cost Price|Discount Percentage|Discount %|Discount|Percentage|Part|Whole|MP|SP|CP|Amit|Swifty)(?!\w)/gi;
   const AMOUNTS = /₹\s?\d(?:[\d,]*\d)?|\b\d+(?:\.\d+)?%|\b\d(?:[\d,]*\d)?\b/g;
   function keep(text) {
     const formulas = (text.match(FORMULA) || []).map(f => f.trim());
