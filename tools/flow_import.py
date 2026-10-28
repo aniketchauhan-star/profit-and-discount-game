@@ -67,6 +67,7 @@ TAKES = {
     'money-1': '"Here\'s five thousand rupees." | | 2.2 s | | Aniket takes the notes and holds them, .mp4',
     'money-2': 'Whatever is left after buying everything is yours." |.mp4',
     'fitcheck': 'fitcheck.mp4',
+    'dancing': 'dancing.mp4',
 }
 
 # How much slower each film plays than its take (see the top). Each the median, over its lines, of how much longer a
@@ -107,7 +108,10 @@ FILMS = {
                   'lines': {'deal-left': (0.35, 'vo134'), 'deal-really': (4.0, 'vo135'), 'deal-offers': (5.0, 'vo136')}},
     # His fit check in his new things, once all four are bought (the user, 2026-10-27), with its own music: `sound`, the
     # take's sound kept (brought to SOUND_LEVEL), the one film the game doesn't play muted.
-    'fitcheck': {'parts': [('fitcheck', 0, None)], 'lines': {}, 'end': True, 'sound': True},
+    'fitcheck': {'parts': [('fitcheck', 0, None)], 'lines': {}, 'sound': True},
+    # Then at Rohan's party, he dances (the user, 2026-10-28: "use this dancing video in the end, after the fit check"),
+    # with its own music too; the summary comes in on its last frame.
+    'dancing': {'parts': [('dancing', 0, None)], 'lines': {}, 'end': True, 'sound': True},
 }
 
 

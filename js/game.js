@@ -451,7 +451,7 @@
       })),
     {
       // His fit check once all four are bought (the user, 2026-10-27: "after all collection this video come with
-      // celebration sound"): its film, with its own music; confetti as the beat starts. Then the summary, on its last frame.
+      // celebration sound"): its film, with its own music; confetti as the beat starts. Then a cut to the party.
       id: 'fitcheck', title: 'Fit Check!', sub: 'Aniket in his new outfit',
       bg: FILM + 'fitcheck.webp',
       kb: null, origin: '50% 50%', still: true, lamps: [], dust: null,
@@ -459,8 +459,16 @@
       play: playFitCheck,
     },
     {
+      // At Rohan's party he dances, in his new things (the user, 2026-10-28: "use this dancing video in the end, after the
+      // fit check"): its film, with its own music. Then the summary, on its last frame.
+      id: 'dancing', title: 'At the Party!', sub: 'Aniket dances at Rohan’s party',
+      bg: FILM + 'dancing.webp',
+      kb: null, origin: '50% 50%', still: true, lamps: [], dust: null,
+      play: playDancing,
+    },
+    {
       id: 'partydone', title: 'All Set for the Party!', sub: 'Total ₹4,470, ₹530 left',
-      bg: FILM + 'fitcheck-end.webp', // (his fit check as it ends, blurred: the summary over it)
+      bg: FILM + 'dancing-end.webp', // (the party as his dance ends, blurred: the summary over it)
       kb: null, origin: '50% 50%', still: true, lamps: [], dust: null,
       back: () => 'mallfloor',
       setup: scene => allBlur(scene),
@@ -3372,7 +3380,7 @@
 
   // ---------- His fit check (screen 41), once all four are bought ----------
   // Its film plays with its own music (the celebration: the game's music steps back for it), and confetti comes down as
-  // the beat starts; then the summary, on its last frame. Without the film, its first frame, confetti and a chime.
+  // the beat starts; then a cut to him dancing at the party. Without the film, its first frame, confetti and a chime.
   const FITCHECK_BEAT = 2.9; // s into its film: the music's beat starts
   async function playFitCheck(ctx, scene) {
     if (!scene.rolling) {
@@ -3387,10 +3395,25 @@
     FX.confetti(scene.ui, { count: 140, ms: 3200 });
     await Clips.until(ctx, scene, FITCHECK_BEAT + 3.6);
     FX.confetti(scene.ui, { count: 90 });
-    advanceAfterFilm(ctx, scene, 3000, { segue: true }); // (on as it ends: the summary comes in on its last frame)
+    advanceAfterFilm(ctx, scene, 3000, { segue: true }); // (on as it ends: a cut to the party)
   }
 
-  // ---------- The end (screen 42): all set for the party ----------
+  // ---------- At the party (screen 42): he dances ----------
+  // Its film plays with its own music (the game's steps back for it); as it ends, the summary comes in on its last frame.
+  // Without the film, its first frame, confetti and a chime.
+  async function playDancing(ctx, scene) {
+    if (!scene.rolling) {
+      await ctx.wait(600);
+      FX.confetti(scene.ui);
+      Sound.correct();
+      ctx.advance(3000);
+      return;
+    }
+    Sound.duck(true);
+    advanceAfterFilm(ctx, scene, 3000, { segue: true });
+  }
+
+  // ---------- The end (screen 43): all set for the party ----------
   async function playPartyDone(ctx, scene) {
     const total = PARTY_BUDGET - partyMoney();
     const bought = PARTY_ITEMS.filter(it => Party.bought.has(it.id));
@@ -3889,7 +3912,7 @@
   const SHOP_IDS = ['shirtshop', 'pantsshop', 'watchshop', 'sunshop'];
   const FADES = [...PARTY_IDS.slice(1).map((id, i) => [PARTY_IDS[i], id]), ...SHOP_IDS.flatMap(id => [['mallfloor', id], [id, 'fitcheck']]),
     ['mallfloor', 'fitcheck'], ['home', 'outside'], ['mpcard', 'reveal'], ['pay', 'exit'], ['outside', 'browse'], ['browse', 'ask'], ['leave', 'sneakers'], ['final', 'boxed']];
-  const FORWARD_FADES = [['exit', 'leave'], ['fitcheck', 'partydone'], // (a film into its own last frame, blurred)
+  const FORWARD_FADES = [['exit', 'leave'], ['dancing', 'partydone'], // (a film into its own last frame, blurred)
     ['mp', 'mpcard'], ['formula', 'formula-reveal'], ['confused', 'smcard'], ['smcard', 'offmeans'], ['percentrule', 'whatpercent'],
     ['whatpercent', 'check'], ['check', 'topay'], ['topay', 'thirty'], ['thirty', 'paywork'], ['paywork', 'final']];
   const FADE_MS = 1200; // not stretched by PACE: changing screens stays brisk

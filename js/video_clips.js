@@ -21,4 +21,5 @@ const VIDEO_CLIPS = {
   "partymoney": {"seconds": 11.5, "lines": {"money": 0.58, "deal-use": 3.98}},
   "partydeal": {"seconds": 10.667, "lines": {"deal-left": 0.44, "deal-really": 5.03, "deal-offers": 6.23}},
   "fitcheck": {"seconds": 10.0, "lines": {}, "sound": true},
+  "dancing": {"seconds": 8.0, "lines": {}, "sound": true},
 };
