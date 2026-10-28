@@ -23,7 +23,7 @@ const VO_LINES = {
   "is called a discount.": ["vo151", 2.27],
   "Not quite! ₹800 is the shopkeeper’s selling price.": ["vo152", 5.7],
   "Yes! Amit paid ₹200 less than the marked price.": ["vo153", 5.66],
-  "Thank you, uncle!": ["vo154", 1.95],
+  "Thank you, uncle!": ["vo154", 2.03],
   "Amit bought the book and understood the discount.": ["vo155", 3.73],
   "Let’s help Amit buy the sneakers!": ["vo156", 3.18],
   "Marked Price,": ["vo026", 1.74],
