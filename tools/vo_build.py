@@ -151,9 +151,16 @@ def ogg_seconds(ogg):
     return (granule - preskip) / 48000
 
 
-def make_clip(mp3, ogg, serial):
+# A line that is thought, not said (vo_script.json: "thought": true), sounds like it: a soft echo, an inner voice (the
+# user, 2026-10-29, of Amit's "Discount? What is that?" in his thought cloud, his lips still: "add a voice of this"). (With
+# ffmpeg only: afconvert copies a clip as it is.)
+THOUGHT = 'apad=pad_dur=0.3,aecho=0.9:0.75:70|140:0.32|0.16,volume=1.22'  # (about 1.5 dB under the said lines)
+
+
+def make_clip(mp3, ogg, serial, thought=False):
     if shutil.which('ffmpeg'):
-        subprocess.run(['ffmpeg', '-y', '-loglevel', 'error', '-i', str(mp3), '-ac', '1', '-c:a', 'libopus', '-b:a', '32k', str(ogg)], check=True)
+        subprocess.run(['ffmpeg', '-y', '-loglevel', 'error', '-i', str(mp3), *(['-af', THOUGHT] if thought else []),
+                        '-ac', '1', '-c:a', 'libopus', '-b:a', '32k', str(ogg)], check=True)
         return
     with tempfile.TemporaryDirectory() as tmp:
         caf = Path(tmp) / 'clip.caf'
@@ -163,6 +170,7 @@ def make_clip(mp3, ogg, serial):
 
 def build_from_zips(zips, script):
     ids = {e['id'] for e in script}
+    thoughts = {e['id'] for e in script if e.get('thought')}
     CLIPS.mkdir(parents=True, exist_ok=True)
     made = []
     with tempfile.TemporaryDirectory() as tmp:
@@ -174,7 +182,7 @@ def build_from_zips(zips, script):
                         continue
                     mp3 = Path(tmp) / f'{m[1]}.mp3'
                     mp3.write_bytes(archive.read(name))
-                    make_clip(mp3, CLIPS / f'{m[1]}.ogg', serial=int(m[1][2:]))
+                    make_clip(mp3, CLIPS / f'{m[1]}.ogg', serial=int(m[1][2:]), thought=m[1] in thoughts)
                     made.append(m[1])
     for e in script:  # a clip made again: its Devanagari is only known if a log of that run is read in (--log)
         if e['id'] in made:

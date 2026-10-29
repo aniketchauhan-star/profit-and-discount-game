@@ -207,7 +207,7 @@ Taken out on 2026-10-22, at the user's word ("remove this screen"): Screen 12 go
 
 ### Screen 15 — Discount? What Is That? (game 9)
 - The same picture, carried straight on from Screen 14; then his bubble goes, the card **swings back out**, and the camera **glides back to the middle**.
-- Amit doesn't know the word: his face **turns puzzled** (`story/what-is-a-discount.webp` fades in over the picture), and **the camera moves in on his face**, the shopkeeper out of the picture. He **wonders in a thought cloud**, big, read in his voice: **"Discount? What is that?"** (the user’s doc of 2026-10-23; "Discount?" in red).
+- Amit doesn't know the word: his face **turns puzzled** (`story/what-is-a-discount.webp` fades in over the picture), and **the camera moves in on his face**, the shopkeeper out of the picture. He **wonders in a thought cloud**, big: **"Discount? What is that?"** (the user’s doc of 2026-10-23; "Discount?" in red), **in his voice as a thought** once the cloud has formed (the user, 2026-10-29: "add a voice of this"): his recording with a soft echo, an inner voice, a little softer than what he says, his lips still (`tools/vo_script.json`: `"thought": true`; `tools/vo_build.py` adds the echo).
 - **Then the answer** (the user’s doc of 2026-10-23: "Swifty comes and says the definition of discount"): his thought goes, **the picture blurs and dims**, and **Swifty slides in from the right** on her books and says, in her bubble, **"The reduction given on the marked price of an item is called a discount."** ("reduction" and "discount" red), in two parts, with a soft "ding". Then she slides back out with her bubble, and the picture clears.
 - About 2 seconds later: the question card (game 10), starting on this view.
 

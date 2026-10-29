@@ -18,7 +18,7 @@ const VO_LINES = {
   "See, the price printed on the book is ₹1000,": ["vo146", 6.0],
   "but I am selling it to you at ₹800.": ["vo147", 4.33],
   "I gave you a discount.": ["vo148", 2.0],
-  "Discount? What is that?": ["vo149", 3.2],
+  "Discount? What is that?": ["vo149", 3.64],
   "The reduction given on the marked price of an item": ["vo150", 3.56],
   "is called a discount.": ["vo151", 2.27],
   "Not quite! ₹800 is the shopkeeper’s selling price.": ["vo152", 5.7],

@@ -1404,7 +1404,8 @@
     // He doesn't know the word: he thinks about it, his face puzzled (the user, 2026-10-28: "he is thinking, not saying;
     // zoom his face"; "do not make him speak 'Discount?' 'What is that?': just make him think, and confused, and excited
     // then"): the still frame his film stops on as screen 8 ends (no lips moving), the camera moving in on his face, and
-    // his thought in a cloud beside his head, unspoken (a wondering sound), long enough to read.
+    // his thought in a cloud beside his head, in his voice as a thought (2026-10-29: "add a voice of this"; a soft echo
+    // on it: tools/vo_build.py, a thought), long enough to read.
     const cam = faceCamera(scene, FACE_ZOOM);
     moveCamera(scene, cam.transform, reducedMotion ? 1 : 1400);
     Sound.wonder();
@@ -1413,7 +1414,7 @@
     const wondering = FX.thought(scene.ui, Object.assign({}, DISCOUNT_THOUGHT, { tip, at: [tip[0] + 340, tip[1] - 70] }));
     await wondering.show();
     wondering.emphasize();
-    await ctx.wait(3600);
+    await Promise.all([sayHere(ctx, 'disc-thought', 'Discount? What is that?', 'boy'), ctx.wait(3600)]); // (and a moment more)
 
     // Then the answer, on this screen (the user's doc, 2026-10-23: "Swifty comes and says the definition of discount"): his
     // thought goes, the picture blurs and dims, and Swifty slides in from the right and says it in her bubble, as on

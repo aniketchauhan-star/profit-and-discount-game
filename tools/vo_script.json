@@ -99,7 +99,8 @@
     "id": "vo149",
     "line": "Discount? What is that?",
     "spoken": "Discount? What is that?",
-    "speaker": "Amit"
+    "speaker": "Amit",
+    "thought": true
   },
   {
     "id": "vo150",
