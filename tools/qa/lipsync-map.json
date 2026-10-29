@@ -1,0 +1,110 @@
+{
+ "vo001": [
+  "home",
+  "plan"
+ ],
+ "vo002": [
+  "home",
+  "advice"
+ ],
+ "vo003": [
+  "home",
+  "promise"
+ ],
+ "vo004": [
+  "browse",
+  "browse"
+ ],
+ "vo005": [
+  "ask",
+  "ask"
+ ],
+ "vo006": [
+  "ask",
+  "price"
+ ],
+ "vo139": [
+  "ask",
+  "costly"
+ ],
+ "vo140": [
+  "ask",
+  "check-price"
+ ],
+ "vo146": [
+  "reveal",
+  "reveal-1"
+ ],
+ "vo147": [
+  "reveal",
+  "reveal-2"
+ ],
+ "vo148": [
+  "reveal",
+  "reveal-3"
+ ],
+ "vo154": [
+  "pay",
+  "thanks"
+ ],
+ "vo157": [
+  "sneakers",
+  "sneakers"
+ ],
+ "vo048": [
+  "confused",
+  "shoe-price"
+ ],
+ "vo046": [
+  "offmeans",
+  "off-what"
+ ],
+ "vo049": [
+  "offmeans",
+  "shoe-ask"
+ ],
+ "vo102": [
+  "final",
+  "final-1"
+ ],
+ "vo103": [
+  "final",
+  "final-2"
+ ],
+ "vo127": [
+  "return",
+  "home-ask"
+ ],
+ "vo128": [
+  "return",
+  "home-learnt"
+ ],
+ "vo165": [
+  "invite",
+  "inv-1"
+ ],
+ "vo166": [
+  "invite",
+  "inv-2"
+ ],
+ "vo132": [
+  "partymoney",
+  "money"
+ ],
+ "vo133": [
+  "partymoney",
+  "deal-use"
+ ],
+ "vo134": [
+  "partydeal",
+  "deal-left"
+ ],
+ "vo135": [
+  "partydeal",
+  "deal-really"
+ ],
+ "vo136": [
+  "partydeal",
+  "deal-offers"
+ ]
+}
