@@ -3075,12 +3075,14 @@
    * it isn't yet); and a Buy under each thing in the shop (`buyAt`: the middle of its top edge, stage px; showBuys()).
    * choose() resolves with the one whose Buy is pressed (a press before it is asked counts); wrong(i): that one crossed
    * out, red, its Buy gone, the other still to buy; right(i): ticked and green, "Better deal" on it, the other's Buy gone
-   * too; stamp(i): PAID on it. pic(i): its picture (to fly onto the shopping list).
+   * too; stamp(i): PAID on it. pic(i): its picture (to fly onto the shopping list). `title`: a tab on its top edge,
+   * saying what the prices are (the user, 2026-10-29: "write discount on the upper side, attached to the panel").
    *  deals [{ name, pic, pay }]
    */
-  function dealCard(parent, { deals, buyAt, cls = '' }) {
+  function dealCard(parent, { deals, buyAt, title = '', cls = '' }) {
     const root = el('div', classes('pc2 dc', cls), parent);
     const card = el('div', 'pc2-card dc-card', root);
+    if (title) el('div', 'dc-tab', root).textContent = title;
     let choosing = null;
     let early = null;
     let shown = false;

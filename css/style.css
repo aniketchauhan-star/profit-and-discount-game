@@ -2759,7 +2759,11 @@ kbd {
    its picture and its selling price, big ("?" till it is found); the better one ticked and green, one bought by
    mistake crossed out. A Buy under each of the two in the shop ("place the Buy down side of the things"). */
 .scene[data-scene] .pc2.dc { left: auto; right: 116px; top: 500px; translate: 0 -50%; width: 440px; } /* (clear of her bubble under it) */
-.dc-card { display: grid; gap: 22px; padding: 28px; }
+.dc-card { display: grid; gap: 22px; padding: 46px 28px 28px; } /* (room at the top for its tab) */
+/* (its tab, on the card's top edge: what the prices are, in the selling price's blue; the user, 2026-10-29: "write
+   discount on the upper side, attached to the panel") */
+.dc-tab { position: absolute; left: 50%; top: 0; z-index: 1; translate: -50% -50%; padding: 6px 28px 3px; border: 4px solid #fff; border-radius: 24px;
+  background: var(--sp); color: #fff; font-size: 30px; font-weight: 800; line-height: 1.25; white-space: nowrap; box-shadow: 0 6px 14px rgba(15, 25, 55, .3); }
 .dc-row { position: relative; display: flex; align-items: center; gap: 28px; padding: 12px 24px 12px 12px; border: 3px solid #d6e2f3; border-radius: 24px;
   background: #fff; }
 .dc-pic { flex: none; display: grid; place-items: center; width: 128px; height: 128px; overflow: hidden; border-radius: 18px; background: #f6efe2; }

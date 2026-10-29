@@ -3282,6 +3282,7 @@
       cls: `dc--${it.id}`,
       deals: it.deals.map(d => ({ name: d.name, pic: d.pic, pay: dealPay(d) })),
       buyAt: sides.map(([x, y, w, h]) => [x + w / 2, y + h + SHOP_BUY.gap]),
+      title: 'Price after discount', // (the user, 2026-10-29: "write discount on the upper side"; what they cost, not the discount itself)
     });
     const light = (which, withBuys = false) => { // the light's window round those (`which`): each and its tag (and its Buy)
       const boxes = which.map(i => {
