@@ -83,7 +83,7 @@
   // in the picture's px. A speech bubble on the picture moves around them (FX.bubble: avoid).
   const KEEP_CLEAR = {
     home: [[500, 48, 758, 276], [1273, 185, 1500, 412]],                                  // Amit's face, his father's
-    browse: [[630, 79, 903, 352], [888, 382, 1161, 639]],                                 // Amit's head, the book
+    browse: [[630, 120, 850, 400], [690, 470, 950, 770]],                                 // Amit's head, the book in his hands
     ask: [[530, 164, 773, 406], [742, 482, 939, 694], [1288, 164, 1515, 406]],            // Amit, the book, the shopkeeper
     shock: [[STICKER.shock.x - 106, STICKER.shock.y - 106, STICKER.shock.x + 106, STICKER.shock.y + 106], [1509, 133, 1812, 406]],
     sneakers: [[436, 73, 664, 345], [1100, 492, 1482, 662], [1088, 679, 1406, 800]],     // Amit, the sneakers and ₹1800, 30% OFF
@@ -614,12 +614,14 @@
     });
   }
 
+  // Screen 3 (the user's take of 2026-10-29, "he sees a book, then holds the book"): at the display he thinks, sees
+  // the blue book, picks it up, and says it as he looks at it.
   async function playBrowse(ctx, scene) {
-    FX.glow(scene.layer, 1030, 510, 420, 420, { cls: 'glow--book', delay: 0 });
+    FX.glow(scene.layer, 900, 600, 420, 420, { cls: 'glow--book', delay: 0 }); // (from the display to his hands)
     await pauseUnlessFilm(ctx, scene, 700);
     await picSay(ctx, scene, {
-      anchor: [962, 296], corner: 'bl', tip: [905, 334], // right of his face, above the book; the tail at his mouth
-      text: 'This book looks\ninteresting!', rotate: -1.5,
+      anchor: [872, 238], corner: 'bl', tip: [770, 322], within: [872, 1200], // right of his face, in two lines: clear of
+      text: 'This book looks\ninteresting!', rotate: -1.5,                     // the sign and its logo; the tail at his mouth
     }, 'browse', 'boy');
     advanceAfterFilm(ctx, scene); // "wait 3 seconds, then next screen"
   }

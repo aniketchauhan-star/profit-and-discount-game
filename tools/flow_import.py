@@ -57,7 +57,7 @@ SLOW = 'minterpolate=fps={fps}:mi_mode=mci:mc_mode=aobmc:me_mode=bidir:vsbmc=1'
 TAKES = {
     'home': 'start home..mp4',
     'walk-in': 'inter in showroom. .mp4',
-    'book': 'this book look interesting .mp4',  # (the user's new take of 2026-10-28, in place of "hold the book .mp4")
+    'book': 'think and hold the book.mp4',  # (the user's take of 2026-10-29: he thinks, sees the book, picks it up and says it; in place of "this book look interesting .mp4")
     'counter-1': 'much is this bookHow?.mp4',
     'counter-2': 'Oh! The price printed on it is one thousand rupees." |.mp4',
     'counter-3': 'but I am selling it to you at eight hundred rupees." |.mp4',
@@ -96,7 +96,8 @@ STILLS = {
 SMALLER = {'shoes-1': SNEAKERS_FILM, 'shoes-2': SNEAKERS_FILM, 'shoes-3': SNEAKERS_FILM}
 
 # Each screen's film: its parts (take, from, to: seconds in the take; to None: its end); the lines said on it (the game's
-# line ids): about when each starts, in seconds into the film as cut, and its recording (assets/vo/); `end`: its last
+# line ids): about when each starts, in seconds into the film as cut, and its recording (assets/vo/), and, where the
+# take's sound runs on after the lips (a breath, a laugh), when they stop; `end`: its last
 # frame is the next screen's picture too. Where a take goes on from one screen to the next, the second part starts where
 # the first ends. Cut out: what the takes add that the game doesn't say (the shopkeeper's lips again after "It is too
 # costly, uncle."; the extra words at the ends of the party message and of the ₹5,000), and Amit's "Oh! The price
@@ -105,8 +106,8 @@ FILMS = {
     'home': {'parts': [('home', 0, None)], 'lines': {'plan': (0.5, 'vo001'), 'advice': (5.0, 'vo002'), 'promise': (9.0, 'vo003')}},
     'outside': {'parts': [('walk-in', 0, None)], 'lines': {}},
     # (`clean`: the garbled titles on the three books on the stand painted out, for the game to print theirs on: STAND_BOOKS)
-    'browse': {'parts': [('book', 0, 4.6)], 'lines': {'browse': (1.2, 'vo004')},
-               'clean': [(1316, 643, 1402, 714), (1463, 666, 1527, 739), (1596, 678, 1657, 747)]},
+    'browse': {'parts': [('book', 0, 6.6)], 'lines': {'browse': (4.06, 'vo004', 5.42)},  # (his lips stop at 5.42 s)
+               'clean': [(1311, 639, 1407, 737), (1457, 661, 1532, 746), (1590, 673, 1663, 756)]},
     'ask': {'parts': [('counter-1', 0, 5.3), ('counter-1', 7.0, None)],
             'lines': {'ask': (0.5, 'vo005'), 'price': (1.8, 'vo006'), 'costly': (3.6, 'vo139'), 'check-price': (5.75, 'vo140')}},
     'reveal': {'parts': [('counter-2', 4.45, None), ('counter-3', 0, 5.6)],
@@ -186,16 +187,18 @@ def plan(name, log=print):
     spans.sort()
     pace = PACE.get(name, 1.0)
     lines = []
-    for line, (t, vo) in FILMS[name]['lines'].items():
+    for line, (t, vo, *till) in FILMS[name]['lines'].items():
         cue = min((s for s, _ in spans), key=lambda s: abs(s - t), default=None)
         if cue is None or abs(cue - t) > 0.6:
             log(f'  {name}: no speech near {t:.2f} s for "{line}": kept {t:.2f} s')
             cue = t
-        lines.append({'id': line, 'vo': vo, 'cue': cue, 'at': cue * pace})
+        lines.append({'id': line, 'vo': vo, 'cue': cue, 'at': cue * pace, 'till': till[0] if till else None})
     lines.sort(key=lambda l: l['cue'])
     for i, ln in enumerate(lines):
         nxt = lines[i + 1]['cue'] if i + 1 < len(lines) else total / FPS
-        ln['spans'] = [(max(0.0, s - ln['cue']), e - ln['cue']) for s, e in spans if ln['cue'] - 0.05 <= s < nxt] or [(0.0, 0.5)]
+        till = ln['till']  # (where the lips stop, if the take's sound runs on after them: a breath, a laugh)
+        ln['spans'] = [(max(0.0, s - ln['cue']), (min(e, till) if till else e) - ln['cue'])
+                       for s, e in spans if ln['cue'] - 0.05 <= s < (min(nxt, till) if till else nxt)] or [(0.0, 0.5)]
     return lines, total, pace
 
 
