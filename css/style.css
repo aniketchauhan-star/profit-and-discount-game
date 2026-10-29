@@ -2677,6 +2677,10 @@ kbd {
 .scene[data-scene$="shop"] :is(.bird, .bubble, .qcard-pos, .pc2, .spark) { z-index: 10; }
 .scene[data-scene$="shop"] :is(.party-fly, .fly-chip) { z-index: 11; }
 
+/* (in the mall, as Swifty says how to walk: all of it dim but her, her words and the controller; the user, 2026-10-29:
+   "only Swifty and the controller visible") */
+.scene[data-scene="mallfloor"].is-introducing :is(.bird, .bubble, .joy2) { z-index: 10; }
+
 /* Amit seen from above, his shadow under his feet (on the map's own layer: he walks under the bar, the arrows and the bubbles) */
 .scene[data-scene="mallfloor"] .scene-layer { isolation: isolate; }
 .tw { position: absolute; left: 0; top: 0; z-index: 3; width: 0; height: 0; transform-origin: 0 0; pointer-events: none; will-change: transform; } /* (a layer of its own: he glides) */

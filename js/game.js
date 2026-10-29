@@ -2878,6 +2878,9 @@
   // covers: a cycle of them (10 frames up or down, 7 sideways) is about 85 px, two steps. His size (the user, 2026-10-28:
   // "the boy is too big, the showroom is smaller than him"): about half a shop's doorway, 110 px tall (WALK_SCALE of his
   // sheet's 200 px); his pace and his steps go with it.
+  // Swifty in the mall as she says how to walk: right beside the controller's place (bottom left: css .joy2), her words on
+  // her right, no further right than `upTo` (the user, 2026-10-29: "Swifty is near the controller").
+  const MALL_SWIFTY = { x: 530, y: 1066, s: 0.74, upTo: 1240 };
   const WALK_SCALE = 0.55;
   const WALK_SPEED = 110; // stage px a second
   const WALK_EASE = 6;
@@ -2950,10 +2953,14 @@
     const cleanup = () => { pad.destroy(); if (Game.steering === steer) Game.steering = false; };
     // The controller comes in only as Swifty names it (the user, 2026-10-28: "Swifty and the controller show only when
     // Swifty says this is the controller"), each time the mall comes: the first time how to walk, back out of a shop
-    // where to go next. It pops in at the bottom left as she says "controller", and glows till it is used. (He can walk
-    // with the arrow keys meanwhile; the list on top says what to buy.)
+    // where to go next. It pops in at the bottom left as she says "controller", and glows till it is used.
+    // Meanwhile the mall is dimmed, and only she and the controller are bright (the user, 2026-10-29: "fade the screen
+    // and focus on Swifty and the controller; Swifty near the controller, only Swifty and the controller visible"): she
+    // comes up right beside its place. When she has said it, the mall comes back and she goes, and then he walks ("then
+    // Swifty goes, and it's time to move the character"; not before, so nothing moves under the dimming).
     pad.el.classList.add('is-away');
     let padIn = false;
+    let ready = false; // (he walks once she has gone)
     const showPad = () => {
       if (padIn || !ctx.alive()) return;
       padIn = true;
@@ -2962,13 +2969,21 @@
         { duration: reducedMotion ? 1 : 560, easing: 'cubic-bezier(.2,.8,.3,1)' });
       Sound.pop();
       pad.el.classList.add('is-glowing');
-      Promise.race([pad.pressed().then(() => ctx.wait(1200)), ctx.wait(6000)]).then(() => pad.el.classList.remove('is-glowing'), () => {});
     };
-    if (partyDone()) showPad(); // (here again from the scene list, all bought: nothing left to walk to)
-    else {
-      const swifty = partyBird(ctx, scene, { side: 'right', size: 38 });
+    const glowTillUsed = () => Promise.race([pad.pressed().then(() => ctx.wait(1200)), ctx.wait(6000)])
+      .then(() => pad.el.classList.remove('is-glowing'), () => {});
+    if (partyDone()) { // (here again from the scene list, all bought: nothing left to walk to)
+      showPad();
+      ready = true;
+      glowTillUsed();
+    } else {
+      const swifty = partyBird(ctx, scene, { at: MALL_SWIFTY, upTo: MALL_SWIFTY.upTo, size: 38 });
+      const veil = FX.focusVeil(scene.ui);
+      scene.el.classList.add('is-introducing'); // (she, her words and the controller over the dimming: css)
       (async () => {
-        await ctx.wait(600);
+        await ctx.wait(300);
+        veil.on([]); // (no hole: all of it dim)
+        await ctx.wait(300);
         const named = whenSaid(scene.ui, 'controller', showPad);
         try {
           await swifty.say(Party.from ? 'mall-next' : 'mall-how',
@@ -2977,8 +2992,14 @@
           named();
           showPad(); // (at the latest as she ends)
         }
-        await swifty.hide();
-      })().catch(err => { if (err !== CANCELLED) console.error(err); });
+        await ctx.wait(300);
+        await Promise.all([veil.off(), swifty.hide()]);
+        veil.el.remove();
+        scene.el.classList.remove('is-introducing');
+      })().catch(err => { if (err !== CANCELLED) console.error(err); }).finally(() => {
+        ready = true;
+        glowTillUsed();
+      });
     }
     try {
       let way = walker.way;
@@ -2990,7 +3011,7 @@
           if (!ctx.alive()) return reject(CANCELLED);
           const dt = last === null ? 0 : Math.min(0.05, (now - last) / 1000);
           last = now;
-          const v = pad.value();
+          const v = ready ? pad.value() : { x: 0, y: 0 };
           const pressed = v.x !== 0 || v.y !== 0;
           const k = 1 - Math.exp(-WALK_EASE * dt);
           vel = [vel[0] + (v.x * WALK_SPEED - vel[0]) * k, vel[1] + (v.y * WALK_SPEED - vel[1]) * k];
@@ -3805,7 +3826,7 @@
     scene.layer.replaceChildren();
     scene.ui.replaceChildren();
     scene.bird = null; // (Swifty comes with her first bubble: see cornerSwifty)
-    scene.el.classList.remove('is-leaving', 'is-entering', 'is-feathered', 'is-asking', 'is-hushed', 'is-instant', 'is-reacting', 'is-closeup', 'has-sheet');
+    scene.el.classList.remove('is-leaving', 'is-entering', 'is-feathered', 'is-asking', 'is-hushed', 'is-instant', 'is-reacting', 'is-closeup', 'is-introducing', 'has-sheet');
     scene.el.classList.add('is-active');
     if (mode === 'cut' && !reducedMotion && !scene.still) {
       void scene.el.offsetWidth; // restart the settle-in animation
@@ -3857,7 +3878,7 @@
   }
 
   function deactivate(scene) {
-    scene.el.classList.remove('is-active', 'is-entering', 'is-leaving', 'is-feathered', 'is-asking', 'is-hushed', 'is-instant', 'is-reacting', 'is-closeup', 'has-sheet');
+    scene.el.classList.remove('is-active', 'is-entering', 'is-leaving', 'is-feathered', 'is-asking', 'is-hushed', 'is-instant', 'is-reacting', 'is-closeup', 'is-introducing', 'has-sheet');
     scene.el.style.zIndex = '';
     scene.el.style.transitionDuration = '';
     unsnap(scene);
