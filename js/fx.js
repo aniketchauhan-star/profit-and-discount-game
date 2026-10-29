@@ -907,7 +907,7 @@
             { opacity: 0, transform: 'translateY(22px)' },
             { opacity: 1, transform: 'none' },
           ], { duration: T(420), easing: 'cubic-bezier(.2,.8,.3,1)' });
-          await ctx.wait(130);
+          await ctx.wait(200); // (one line, then the next: the user, 2026-10-29, "things come one by one")
         }
 
         if (marks.length) Sound.pop();
@@ -927,7 +927,7 @@
             { opacity: 1, transform: 'none' },
           ], { duration: T(520), easing: 'cubic-bezier(.2,.8,.3,1)' });
           Sound.bloop();
-          await ctx.wait(150);
+          await ctx.wait(280); // (each answer on its own, in turn)
         }
 
         await ctx.wait(300);
@@ -1109,6 +1109,7 @@
         return seg;
       });
     if (tenths) segs.forEach(seg => { el('small', '', seg).textContent = tenths.each; });
+    segs.forEach((seg, i) => seg.style.setProperty('--i', String(i))); // (split: they come in turn, left to right: css)
     const note = tenths ? el('div', `bm-note tone-${tenths.tone}`, root) : null;
     if (note) note.textContent = tenths.label;
     root.setAttribute('role', 'img');
@@ -3121,9 +3122,11 @@
       settle(buy.animate([{ opacity: 1, transform: 'none' }, { opacity: 0, transform: 'scale(.7)' }], { duration: 280, easing: 'ease-in', fill: 'forwards' }))
         .then(() => { buy.style.display = 'none'; });
     };
-    const open = async () => {
+    const open = async () => { // the card comes in, then its rows, one after the other
       if (shown) return;
       shown = true;
+      rows.forEach(({ row }, k) => reveal(row, [{ opacity: 0, transform: 'translateX(28px)' }, { opacity: 1, transform: 'none' }],
+        { duration: reducedMotion ? 1 : 400, delay: reducedMotion ? 0 : 180 + k * 260, easing: 'cubic-bezier(.2,.8,.3,1)' }));
       await springIn(root, 620);
     };
     root.style.opacity = '0';
@@ -3148,7 +3151,7 @@
         rows.forEach(({ buy }, i) => {
           buy.disabled = false;
           reveal(buy, [{ opacity: 0, transform: 'translateY(16px) scale(.8)' }, { opacity: 1, transform: 'scale(1.06)', offset: 0.65 }, { opacity: 1, transform: 'none' }],
-            { duration: reducedMotion ? 1 : 480, delay: reducedMotion ? 0 : i * 140, easing: 'cubic-bezier(.2,.8,.3,1)' });
+            { duration: reducedMotion ? 1 : 480, delay: reducedMotion ? 0 : i * 260, easing: 'cubic-bezier(.2,.8,.3,1)' });
         });
       },
       choose() {
@@ -3279,7 +3282,7 @@
       async tiles(ctx) {
         for (const t of tiles) {
           popIn(t, 420);
-          await ctx.wait(140);
+          await ctx.wait(260); // (each in turn)
         }
       },
     };

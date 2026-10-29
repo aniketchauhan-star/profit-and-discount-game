@@ -2217,12 +2217,17 @@ kbd {
   justify-content: center;
   gap: 4px;
   flex: 1;
-  transition: background-color .5s ease;
+  transition: background-color .5s ease calc(var(--i, 0) * var(--bm-step));
 }
-.bm-seg > * { opacity: 0; transition: opacity .4s ease .2s; }
+/* (split: the cut first, then each part's colour and words in turn, left to right, so they read one at a time; the user,
+   2026-10-29: "things come one by one") */
+.bm { --bm-step: .45s; }
+.bm-seg > * { opacity: 0; transition: opacity .4s ease calc(.2s + var(--i, 0) * var(--bm-step)); }
 .bm-seg b { font-size: 42px; line-height: 1; }
 .bm-seg small { color: var(--ink-2); font-size: 24px; font-weight: 700; }
-.bm-seg + .bm-seg { border-left: 3px dashed transparent; transition: border-color .4s ease; }
+.bm-seg + .bm-seg { border-left: 3px dashed transparent;
+  transition: border-color .4s ease, background-color .5s ease calc(var(--i, 0) * var(--bm-step)); } /* (its own tint fades too) */
+.bm:has(.bm-tenth) { --bm-step: .1s; } /* (ten of them: a quick run, each still seen) */
 .bm.is-split .bm-seg + .bm-seg { border-left-color: var(--ink-45); }
 .bm.is-split .bm-seg > * { opacity: 1; }
 .bm.is-split .bm-seg--sp { background: var(--sp-tint); }

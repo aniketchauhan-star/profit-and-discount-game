@@ -943,7 +943,7 @@
   // ({ t, em, cls }), in a span each (so a word said twice lights up in the right part). Returns { el, parts }.
   const CROSS_SVG = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>';
   const plainOf = segments => segments.map(seg => seg.t).join('').replace(/\s+/g, ' ').trim();
-  function hintStrip(host, parts, { first = false } = {}) {
+  function hintStrip(host, parts, { first = false, cls = '' } = {}) {
     let strip = host.querySelector(':scope > .hint-strip');
     const fresh = !strip;
     if (fresh) {
@@ -951,7 +951,10 @@
       if (first) host.prepend(strip);
       else host.appendChild(strip);
     }
+    const had = fresh ? 0 : strip.querySelectorAll('.hs-part').length; // (a part more: it comes in under the others)
+    const before = fresh ? 0 : strip.offsetHeight;
     strip.replaceChildren();
+    if (cls) strip.classList.add(cls);
     el('span', 'hs-chip', strip).innerHTML = CROSS_SVG;
     const words = el('span', 'hs-text', strip);
     const spans = parts.map((segments, k) => {
@@ -971,6 +974,14 @@
       strip.style.overflow = 'hidden';
       FX.settle(strip.animate([{ height: '0px', marginTop: '0px', paddingTop: '0px', paddingBottom: '0px', opacity: 0 }, Object.assign({ opacity: 1 }, to)],
         { duration: 420, easing: 'cubic-bezier(.2,.8,.3,1)' })).then(() => { strip.style.overflow = ''; });
+    } else if (had && spans.length > had && !reducedMotion) { // a part more (the reason under a hint): the strip grows to
+      // make room smoothly and the new part fades in there, the words before it staying as they were (the user,
+      // 2026-10-29: "things come one by one", "seamless")
+      strip.style.overflow = 'hidden';
+      FX.settle(strip.animate([{ height: `${before}px` }, { height: `${strip.offsetHeight}px` }], { duration: 420, easing: 'cubic-bezier(.2,.8,.3,1)' }))
+        .then(() => { strip.style.overflow = ''; });
+      spans.slice(had).forEach(span => FX.reveal(span, [{ opacity: 0, transform: 'translateY(8px)' }, { opacity: 1, transform: 'none' }],
+        { duration: 420, delay: 180, easing: 'cubic-bezier(.2,.8,.3,1)' }));
     } else if (!reducedMotion) {
       replayPing(strip);
     }
@@ -1196,8 +1207,7 @@
       await readLit(ctx, `${id}-hint`, plainOf(hint), strip.parts);
       if (reason) { // then, a moment later, why (the user, 2026-10-28: "after 2–3 seconds write the reasoning"), under it
         await ctx.wait(2200);
-        const both = hintStrip(card.card, [hint, reason]);
-        both.el.classList.add('has-reason');
+        const both = hintStrip(card.card, [hint, reason], { cls: 'has-reason' });
         await readLit(ctx, `${id}-reason`, plainOf(reason), [both.parts[1]]);
       }
       card.unlock(); // another try (the wrong answer stays crossed out)
@@ -2799,9 +2809,17 @@
     const r = card.getBoundingClientRect(); // (from the phone)
     void r;
     card.style.transformOrigin = `${PHONE_AT[0] - 150}px ${PHONE_AT[1] - 200}px`;
+    // the card comes up out of his phone with its "You're invited!" on top; then what it says, one line after another
+    // (the user, 2026-10-29: "things come one by one, so the user can easily understand")
+    const lines = [...card.querySelectorAll('.ic-title, .ic-row')];
+    lines.forEach(n => { n.style.opacity = '0'; });
     await FX.reveal(card, [{ opacity: 0, transform: 'scale(.1)' }, { opacity: 1, transform: 'scale(1.04)', offset: 0.7 }, { opacity: 1, transform: 'none' }],
       { duration: reducedMotion ? 1 : 700, easing: 'cubic-bezier(.2,.8,.3,1)' });
-    await ctx.wait(500);
+    for (const n of lines) {
+      FX.reveal(n, [{ opacity: 0, transform: 'translateY(16px)' }, { opacity: 1, transform: 'none' }], { duration: reducedMotion ? 1 : 420, easing: 'cubic-bezier(.2,.8,.3,1)' });
+      await ctx.wait(320);
+    }
+    await ctx.wait(400);
     if (Clips.of(scene) && scene.clipBox) Clips.roll(scene); // (his film: he reads it, and says so)
     const line = await picSay(ctx, scene, Object.assign({ text: [{ t: 'Wow! Rohan’s ' }, { t: 'birthday party', cls: 'key' }, { t: ' is tonight!' }] }, SOFA_SAYS), 'inv-1', 'boy');
     await nextLine(ctx, scene, line, 'inv-2');
@@ -3444,8 +3462,9 @@
     FX.confetti(scene.ui);
     Sound.chime();
     table.open();
-    items.forEach((_, i) => ctx.wait(160 + i * 140).then(() => { Sound.pop(); table.row(i); }, () => {}));
-    await ctx.wait(1300);
+    // its rows come in one after another (the user, 2026-10-29: "things come one by one"), then the total
+    items.forEach((_, i) => ctx.wait(300 + i * 360).then(() => { Sound.pop(); table.row(i); }, () => {}));
+    await ctx.wait(300 + items.length * 360 + 450);
     Sound.ding();
     await table.showTotal();
     await readLit(ctx, 'as-total', `Total amount: ${inr(shown)}.`, [table.totalRow]);
