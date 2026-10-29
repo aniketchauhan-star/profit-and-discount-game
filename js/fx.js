@@ -3069,28 +3069,31 @@
   }
 
   /**
-   * A shop's two deals side by side, their selling prices found (the user, 2026-10-27: "which deal is better, then buy
-   * a shirt, buy another shirt"): for each, its picture, its name, its price less its discount worked out ("₹1,200 −
-   * 20% (₹240)"), what it costs then, big, and a Buy of its own. choose() resolves with the one whose Buy is pressed (a
-   * press before it is asked counts); wrong(i): that one crossed out, grey, its Buy gone, the other still to buy;
-   * right(i): ticked and green, "Better deal" on it, the other's Buy gone too; stamp(i): PAID across it. pic(i): its
-   * picture (to fly onto the shopping list).
-   *  deals [{ name, pic, mp, off, pct, pay }]
+   * A shop's two deals and what each costs after its discount (the user, 2026-10-29: "on the right side show only the
+   * glasses' picture and the discount price"; "place the Buy down side of the things"): a card on the right with a row
+   * for each, its picture and its selling price, big ("?" till it is found: fill(i), which brings the card in first if
+   * it isn't yet); and a Buy under each thing in the shop (`buyAt`: the middle of its top edge, stage px; showBuys()).
+   * choose() resolves with the one whose Buy is pressed (a press before it is asked counts); wrong(i): that one crossed
+   * out, red, its Buy gone, the other still to buy; right(i): ticked and green, "Better deal" on it, the other's Buy gone
+   * too; stamp(i): PAID on it. pic(i): its picture (to fly onto the shopping list).
+   *  deals [{ name, pic, pay }]
    */
-  function dealCard(parent, { deals, cls = '' }) {
+  function dealCard(parent, { deals, buyAt, cls = '' }) {
     const root = el('div', classes('pc2 dc', cls), parent);
     const card = el('div', 'pc2-card dc-card', root);
     let choosing = null;
     let early = null;
+    let shown = false;
     const rows = deals.map((d, i) => {
       const row = el('div', 'dc-row', card);
       const pic = el('div', 'dc-pic', row);
-      const img = Object.assign(el('img', '', pic), { src: d.pic, alt: '' });
-      el('b', 'dc-name', row).textContent = d.name;
-      el('b', 'dc-pay', row).textContent = inr(d.pay);
-      el('span', 'dc-sum', row).textContent = `${inr(d.mp)} − ${d.pct ? `${d.pct}% (${inr(d.off)})` : inr(d.off)}`;
-      const buy = el('button', 'pc2-btn pc2-btn--buy dc-buy', row);
+      const img = Object.assign(el('img', '', pic), { src: d.pic, alt: d.name });
+      const pay = el('b', 'dc-pay is-unknown', row);
+      pay.textContent = '?';
+      const buy = el('button', 'pc2-btn pc2-btn--buy dc-buy', parent, { left: px(buyAt[i][0]), top: px(buyAt[i][1]), opacity: '0' });
       buy.type = 'button';
+      buy.dataset.deal = String(i);
+      buy.disabled = true; // (till showBuys)
       buy.innerHTML = `${PARTY_ICONS.cart}<span>Buy</span>`;
       buy.setAttribute('aria-label', `Buy the ${d.name.toLowerCase()}, ${inr(d.pay)}`);
       buy.addEventListener('click', () => {
@@ -3105,26 +3108,47 @@
           buy.classList.add('is-pressed');
         }
       });
-      return { row, img, buy };
+      return { row, img, pay, buy };
     });
-    const gone = buy => { // (a Buy goes: it fades, then its room closes up)
+    const gone = buy => { // (a Buy goes: it fades and shrinks away)
       buy.disabled = true;
       if (reducedMotion) {
         buy.style.display = 'none';
         return;
       }
-      const none = { height: '0px', marginTop: '0px', paddingTop: '0px', paddingBottom: '0px', borderTopWidth: '0px', borderBottomWidth: '0px' };
-      settle(buy.animate([{ opacity: 1, transform: 'none' }, { opacity: 0, transform: 'scale(.8)' }], { duration: 260, easing: 'ease-in', fill: 'forwards' }))
-        .then(() => settle(buy.animate([{ height: `${buy.offsetHeight}px`, marginTop: getComputedStyle(buy).marginTop }, none],
-          { duration: 280, easing: 'cubic-bezier(.4,0,.2,1)', fill: 'forwards' })))
+      settle(buy.animate([{ opacity: 1, transform: 'none' }, { opacity: 0, transform: 'scale(.7)' }], { duration: 280, easing: 'ease-in', fill: 'forwards' }))
         .then(() => { buy.style.display = 'none'; });
+    };
+    const open = async () => {
+      if (shown) return;
+      shown = true;
+      await springIn(root, 620);
     };
     root.style.opacity = '0';
     return {
       el: root,
       card,
       pic: i => rows[i].img,
-      open: () => springIn(root, 620),
+      open,
+      // Its selling price comes into its row (`instant`: already there).
+      async fill(i, { instant = false } = {}) {
+        const { pay } = rows[i];
+        pay.textContent = inr(deals[i].pay);
+        pay.classList.remove('is-unknown');
+        if (instant) return;
+        await open();
+        Sound.pop();
+        await reveal(pay, [{ opacity: 0, transform: 'scale(.5)' }, { opacity: 1, transform: 'scale(1.15)', offset: 0.6 }, { opacity: 1, transform: 'none' }],
+          { duration: reducedMotion ? 1 : 460, easing: 'cubic-bezier(.2,.8,.3,1)' });
+      },
+      // The Buys under the two pop up.
+      showBuys() {
+        rows.forEach(({ buy }, i) => {
+          buy.disabled = false;
+          reveal(buy, [{ opacity: 0, transform: 'translateY(16px) scale(.8)' }, { opacity: 1, transform: 'scale(1.06)', offset: 0.65 }, { opacity: 1, transform: 'none' }],
+            { duration: reducedMotion ? 1 : 480, delay: reducedMotion ? 0 : i * 140, easing: 'cubic-bezier(.2,.8,.3,1)' });
+        });
+      },
       choose() {
         if (early !== null) {
           const i = early;
@@ -3160,6 +3184,7 @@
           { opacity: 1, transform: 'rotate(-10deg)' }], { duration: 480, easing: 'cubic-bezier(.3,.7,.4,1)' });
       },
       async close() {
+        rows.forEach(r => r.buy.remove());
         await settle(root.animate([{ opacity: 1, transform: 'none' }, { opacity: 0, transform: 'translateY(24px) scale(.96)' }],
           { duration: 320, easing: 'ease-in', fill: 'forwards' }));
         root.remove();

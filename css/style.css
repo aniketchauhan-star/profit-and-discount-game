@@ -2740,15 +2740,6 @@ kbd {
 .deal-spot.is-now::before { border-color: #fff27a; box-shadow: 0 0 0 3px #fff, 0 0 44px 16px rgba(255, 214, 80, .8), inset 0 0 18px rgba(255, 220, 90, .45); }
 .deal-spot.is-now::after { animation: deal-pulse 1.6s ease-out infinite; opacity: 1; }
 .deal-spot.is-found::before { box-shadow: 0 0 0 3px rgba(255, 255, 255, .7), 0 0 18px 4px rgba(255, 205, 60, .4); }
-/* …its selling price, under it (game.js priceUnder): white, a green edge; green once it is the better deal, faded if
-   it was bought by mistake */
-.deal-sp { position: absolute; z-index: 3; display: flex; align-items: baseline; gap: 10px; padding: 5px 22px 1px; translate: -50% 0; border: 4px solid #2fb35a;
-  border-radius: 22px; background: #fff; color: var(--pp-ink); font: 700 26px/1.3 'Baloo 2', system-ui, sans-serif; white-space: nowrap;
-  box-shadow: 0 8px 18px rgba(15, 25, 55, .35); pointer-events: none; transition: background-color .3s ease, opacity .3s ease; }
-.deal-sp b { color: var(--pp-green); font-size: 42px; font-weight: 900; }
-.deal-sp.is-best { background: #2fb35a; color: #fff; }
-.deal-sp.is-best b { color: #fff; }
-.deal-sp.is-out { opacity: .6; }
 /* …its question card (FX.question, right of the two): the shop's cream and gold; on top, the thing's picture and its name
    (its price and discount are on its tag in the shop) */
 .qcard-pos--deal { width: 560px; }
@@ -2763,27 +2754,27 @@ kbd {
 .qcard-pos--deal .q-mark { margin: 0; padding: 0 4px; font-size: 42px; color: var(--sp); }
 .qcard-pos--deal .qcard-options { gap: 18px; margin-top: 24px; }
 .qcard-pos--deal .q-opt { height: 96px; font-size: 44px; }
-/* …then the two side by side, their selling prices found (FX.dealCard), each with its Buy: the better one ticked,
-   one bought by mistake crossed out */
-.scene[data-scene] .pc2.dc { left: 1290px; top: 168px; width: 600px; }
-.dc-card { padding: 30px 24px 24px; }
-.dc-row { position: relative; display: grid; grid-template-columns: 100px 1fr auto; grid-template-rows: auto auto auto; column-gap: 14px; margin-bottom: 22px;
-  padding: 12px 18px 12px 12px; border: 3px solid #d6e2f3; border-radius: 22px; background: #fff; }
-.dc-pic { grid-column: 1; grid-row: 1 / 3; display: grid; place-items: center; width: 100px; height: 100px; overflow: hidden; border-radius: 16px; background: #f6efe2; }
+/* …then what each costs (FX.dealCard; the user, 2026-10-29: "on the right side show only the glasses' picture and the
+   discount price"): a card on the right, in the question card's place (one covers it while it asks), a row for each:
+   its picture and its selling price, big ("?" till it is found); the better one ticked and green, one bought by
+   mistake crossed out. A Buy under each of the two in the shop ("place the Buy down side of the things"). */
+.scene[data-scene] .pc2.dc { left: auto; right: 116px; top: 500px; translate: 0 -50%; width: 440px; } /* (clear of her bubble under it) */
+.dc-card { display: grid; gap: 22px; padding: 28px; }
+.dc-row { position: relative; display: flex; align-items: center; gap: 28px; padding: 12px 24px 12px 12px; border: 3px solid #d6e2f3; border-radius: 24px;
+  background: #fff; }
+.dc-pic { flex: none; display: grid; place-items: center; width: 128px; height: 128px; overflow: hidden; border-radius: 18px; background: #f6efe2; }
 .dc-pic img { width: 100%; height: 100%; object-fit: contain; }
-/* (the name and what it costs on top; the price less its discount under both: the longest, "₹1,800 − 30% (₹540)", fits) */
-.dc-name { grid-column: 2; grid-row: 1; align-self: end; color: var(--pp-ink); font-size: 32px; font-weight: 800; line-height: 1.15; white-space: nowrap; }
-.dc-pay { grid-column: 3; grid-row: 1; align-self: end; color: var(--pp-ink); font-size: 46px; font-weight: 900; line-height: 1.05; }
-.dc-sum { grid-column: 2 / 4; grid-row: 2; align-self: start; color: #5a6378; font-size: 28px; font-weight: 700; white-space: nowrap; }
+.dc-pay { flex: 1; text-align: center; color: var(--pp-ink); font-size: 64px; font-weight: 900; line-height: 1; white-space: nowrap; }
+.dc-pay.is-unknown { color: #aab3c5; }
 .dc-row.is-best { border-color: #2fb35a; background: #eafbee; box-shadow: 0 0 0 5px rgba(47, 179, 90, .18); }
 .dc-row.is-best .dc-pay { color: var(--pp-green); }
 .dc-badge { position: absolute; top: -22px; right: 18px; display: flex; align-items: center; gap: 6px; padding: 2px 16px 0 10px; border-radius: 16px; background: #2fb35a;
   color: #fff; font-size: 26px; font-weight: 800; }
 .dc-badge svg { width: 26px; height: 26px; fill: none; stroke: #fff; stroke-width: 7; stroke-linecap: round; stroke-linejoin: round; }
-.dc-row:last-child { margin-bottom: 0; }
-.dc-buy { grid-column: 1 / 4; grid-row: 3; height: 76px; margin-top: 12px; border-radius: 22px; font-size: 38px; }
-.dc-buy svg { width: 40px; height: 40px; }
 .dc-row.is-wrong { border-color: var(--wrong); background: var(--wrong-tint); }
-.dc-row.is-wrong :is(.dc-name, .dc-pay, .dc-sum) { color: var(--wrong-ink); text-decoration: line-through; text-decoration-thickness: 3px; }
+.dc-row.is-wrong .dc-pay { color: var(--wrong-ink); text-decoration: line-through; text-decoration-thickness: 4px; }
 .dc-row.is-wrong .dc-pic { opacity: .6; }
-.dc .dc-stamp { top: 50%; right: auto; bottom: auto; left: 8px; translate: 0 -50%; padding: 0 10px; border-width: 5px; font-size: 30px; letter-spacing: 2px; } /* (on its picture: its name and price clear) */
+.dc .dc-stamp { top: 50%; right: auto; bottom: auto; left: 8px; translate: 0 -50%; padding: 0 10px; border-width: 5px; font-size: 30px; letter-spacing: 2px; } /* (on its picture: its price clear) */
+.dc-buy { position: absolute; z-index: 10; flex: none; width: 260px; height: 84px; margin-left: -130px; border-radius: 24px; font-family: 'Baloo 2', system-ui, sans-serif;
+  font-size: 40px; font-weight: 800; pointer-events: auto; }
+.dc-buy svg { width: 40px; height: 40px; }
