@@ -70,7 +70,9 @@ right and wrong answers, both hints, a wrong Buy, then the right one.
 or more things came into view within 150 ms. One unit arriving whole (a picture with its title, a table row, the bar
 on top) is fine; separate things (answers, lines, rows) are not.
 
-**E. Look at it.** Take screenshots of each screen at its key moments (1920 × 1080, silent) and read them: every word
+**E. Look at it.** `node tools/qa/contact_sheet.js OUT 6` takes a picture of every screen 6 seconds in (try other
+moments too, e.g. 3 and 12); put them on sheets (`ffmpeg -pattern_type glob -i 'OUT/*.png' -vf "scale=384:-1,tile=5x5"
+-frames:v 1 sheet.jpg`) and read them, and take closer pictures of each screen's key moments: every word
 readable; nothing over a face, a price tag or Swifty; the right picture for the story; the maths right (₹1000 − ₹800 =
 ₹200; 20% of ₹1000 = ₹200; 30% of ₹1800 = ₹540; ₹1800 − ₹540 = ₹1260; the shops' prices and the totals).
 
