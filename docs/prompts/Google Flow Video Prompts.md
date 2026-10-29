@@ -33,7 +33,7 @@ use Extend with 8-second clips, tell me and I'll re-time the parts for that.
 **The times:** each part's times count from the start of that part. They come from the game's voices, so the game's
 voices fit the mouths.
 
-**The pictures are WebP** (in `assets/story/` and `assets/party/`). If Flow won't take a WebP, open it in Preview and
+**The pictures are WebP** (the films' first frames, in `assets/video/`; since 2026-10-29 they stand for the pictures the takes were first made from, which were taken out of the game). If Flow won't take a WebP, open it in Preview and
 choose File → Export → PNG, or ask me for PNG copies.
 
 **Sound:** the game plays its own voices over the video: Swifty's recording, and the boy's, the father's and the
@@ -54,7 +54,7 @@ while she talks.
 
 ## Video 1: At home, Dad and Amit (game screen 1)
 
-`flow-1-home.mp4`. One clip, 10 seconds. First frame: `assets/story/boy-talks-with-father.webp`.
+`flow-1-home.mp4`. One clip, 10 seconds. First frame: `assets/video/home.webp`.
 
 | At | Who | Says |
 |---|---|---|
@@ -76,7 +76,7 @@ blue book and says 'This book looks interesting!'": one video, in place of scree
 
 ### Shot 1: he walks in
 
-First frame: `assets/story/bookstore-outside-view.webp`. No lines.
+First frame: `assets/video/outside.webp`. No lines.
 
 ```text
 In a bright shopping mall, in front of a bookstore with a big glass front and the sign "CHAUHAN BOOK STORE", a boy of about twelve (short, messy dark-brown hair, green T-shirt, navy backpack on both shoulders, blue jeans, white sneakers) walks in from the left edge of the frame along the shiny floor, at a calm, natural walking pace, his arms swinging gently, to the bookstore's glass doors. The right-hand glass door swings open into the shop, he walks in through it, his back to us, and goes on inside between the shelves; the door swings shut behind him. Nobody talks. End on exactly this picture: the store front with nobody outside it and the doors closed. Camera locked: no zoom, pan or shake. Same 2D cartoon illustration style as the picture (clean outlines, soft flat colours, warm light). The boy's face, hair, clothes and colours stay the same all the way. The sign, the shelves and the store stay sharp and in place. No subtitles, captions, on-screen text or speech bubbles. No music; only soft footsteps.
@@ -186,7 +186,7 @@ take, start it from the game's own first frame, `assets/video/sneakers.webp`, wh
 
 ### Part 1 (10 seconds)
 
-First frame: `assets/story/he-sees-a-shoe.webp`.
+First frame: `assets/video/sneakers.webp`.
 
 | At | Who | Says |
 |---|---|---|
@@ -237,7 +237,7 @@ At a shoe shop counter, the shopkeeper (teal polo shirt, short beard) and a boy 
 
 ### Optional first shot (out of the bookstore, 8 seconds)
 
-First frame: `assets/story/bookstore-outside-view.webp`. No lines.
+First frame: `assets/video/outside.webp`. No lines.
 
 ```text
 In a bright shopping mall, in front of a bookstore with a big glass front and the sign "CHAUHAN BOOK STORE", the right-hand glass door opens and a boy of about twelve (short, messy dark-brown hair, green T-shirt, navy backpack, blue jeans, white sneakers) walks out of the store towards us, happy, a blue book in his hand. He stops in front of the store for a moment and smiles, then turns to his left and walks off along the mall, past the glass front, out of the frame, as the door swings shut. Nobody talks. Camera locked: no zoom, pan or shake. Same 2D cartoon illustration style as the picture (clean outlines, soft flat colours, warm light). His face, hair, clothes and colours stay the same all the way. The sign and the store stay sharp and in place. No subtitles, captions, on-screen text or speech bubbles. No music; only soft footsteps.
@@ -247,7 +247,7 @@ In a bright shopping mall, in front of a bookstore with a big glass front and th
 
 ## Video 5: Back home (game screen 31)
 
-`flow-5-back-home.mp4`. One clip, 10 seconds. First frame: `assets/story/boy-returns-home.webp`.
+`flow-5-back-home.mp4`. One clip, 10 seconds. First frame: `assets/video/return.webp`.
 
 | At | Who | Says |
 |---|---|---|
@@ -267,7 +267,7 @@ two parts, the second made from the last frame of the first.
 
 ### Shot 1: the party message (8 seconds)
 
-First frame: `assets/party/party-message.webp`.
+First frame: `assets/video/invite.webp`.
 
 | At | Who | Says |
 |---|---|---|
@@ -280,7 +280,7 @@ At home in a bright living room, a boy of about twelve (short, messy dark-brown 
 
 ### Shot 2, Part 1: five thousand rupees, and into his pocket (10 seconds)
 
-First frame: `assets/story/father-gives-him-money.webp`.
+First frame: `assets/video/partymoney.webp`.
 
 | At | Who | Says |
 |---|---|---|
@@ -314,12 +314,12 @@ At home by the dining table, the father on the left (light-blue shirt, moustache
 
 | Video | File | How it is made | First pictures |
 |---|---|---|---|
-| 1. At home | `flow-1-home.mp4` | one clip (10 s) | `story/boy-talks-with-father.webp` |
-| 2. The bookstore | `flow-2-bookstore.mp4` | two shots (10 + 8 s): he walks in; he sees the book, picks it up and says it | `story/bookstore-outside-view.webp`; for the second, an edit of `flow video new/frames/screen 3 picture (edit it for the first frame).png` |
+| 1. At home | `flow-1-home.mp4` | one clip (10 s) | `video/home.webp` |
+| 2. The bookstore | `flow-2-bookstore.mp4` | two shots (10 + 8 s): he walks in; he sees the book, picks it up and says it | `video/outside.webp`; for the second, an edit of `flow video new/frames/screen 3 picture (edit it for the first frame).png` |
 | 3. At the counter | `flow-3-counter.mp4` | four parts (10 + 6 + 10 + 10 s), each from the last frame of the one before | `story/aniket-gives-a-book-to-shopkeeper.webp` |
-| 4. The shoe shop | `flow-4-shoe-shop.mp4` | three parts at the stand (10 + 8 + 8 s), then the box (8 s), and the walk out if you like (8 s) | `story/he-sees-a-shoe.webp`, `story/shopkeeper-gives-the-sneakers-box.webp`, `story/bookstore-outside-view.webp` |
-| 5. Back home | `flow-5-back-home.mp4` | one clip (10 s) | `story/boy-returns-home.webp` |
-| 6. The party at home | `flow-6-party.mp4` | the sofa (8 s), then the table in two parts (10 + 10 s) | `party/party-message.webp`, `story/father-gives-him-money.webp` |
+| 4. The shoe shop | `flow-4-shoe-shop.mp4` | three parts at the stand (10 + 8 + 8 s), then the box (8 s), and the walk out if you like (8 s) | `video/sneakers.webp`, `story/shopkeeper-gives-the-sneakers-box.webp`, `video/outside.webp` |
+| 5. Back home | `flow-5-back-home.mp4` | one clip (10 s) | `video/return.webp` |
+| 6. The party at home | `flow-6-party.mp4` | the sofa (8 s), then the table in two parts (10 + 10 s) | `video/invite.webp`, `video/partymoney.webp` |
 
 All the pictures are in `assets/` in this game's folder. The lines' times come from each line's voice in the game
 (`assets/vo/`, timed from where the speech starts and ends). The earlier versions of this file, with Start and Extend

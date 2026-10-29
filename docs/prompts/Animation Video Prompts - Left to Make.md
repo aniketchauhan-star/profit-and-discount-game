@@ -1,3 +1,5 @@
+> **Historical.** These clips were replaced by the Google Flow films on 2026-10-27 (`docs/prompts/Google Flow Video Prompts.md`), and the pictures they start from were taken out of `assets/` on 2026-10-29 (in git history).
+
 # Animation clips left to make
 
 > **No longer in the game (2026-10-27):** the user's Google Flow films took the place of these clips (the prompts: `Google Flow Video Prompts.md`; how they are brought in: `tools/flow_import.py`). The clips and the tools that made them were taken out (they are in git's history); this file is kept for the record.
