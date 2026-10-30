@@ -136,7 +136,6 @@
       lamps: [[1065, 140, 300], [1570, 116, 300]],
       dust: [200, 80, 1800, 800],
       shot: 'shelf',
-      setup: standTitles,
       play: playBrowse,
     },
     {
@@ -591,27 +590,6 @@
       ['to-sneakers', [{ t: 'Let’s help Amit buy the ' }, { t: 'sneakers', cls: 'stress' }, { t: '!' }]],
     ], { upTo: 1180 });
     ctx.advance(900); // then on to the shoe shop
-  }
-
-  // The names of the three books on the display stand by the counter (on the screen where Amit holds the book), each
-  // written on its cover as if printed there: centred in the cover's top part and slanted with it (the books lean back
-  // on the stand). On the pictures' layer, so they move with the camera. x, y: the title's centre (stage px); slant: how
-  // far the cover leans (deg); tone: light words (on the green and the night-blue covers) or dark ones (on the pale
-  // sunset sky). (The screen's film starts on its picture and its camera stays put, so they stay on the covers; the
-  // garbled words its take wrote there are painted out of it: tools/flow_import.py, `clean`.)
-  const STAND_BOOKS = [
-    { lines: ['Magic', 'Tree'], x: 1359, y: 679, slant: 13.5, tone: 'light' },
-    { lines: ['Golden', 'Hills'], x: 1495, y: 702, slant: 10.8, tone: 'dark' },
-    { lines: ['Starry', 'Nights'], x: 1626, y: 712, slant: 10.3, tone: 'light' },
-  ];
-
-  function standTitles(scene) {
-    const names = el('div', 'stand-names', scene.layer);
-    STAND_BOOKS.forEach(book => {
-      const title = el('div', `cover-title cover-title--${book.tone}`, names);
-      book.lines.forEach(line => { el('span', '', title).textContent = line; });
-      Object.assign(title.style, { left: book.x + 'px', top: book.y + 'px', transform: `translate(-50%, -50%) skewX(${-book.slant}deg)` });
-    });
   }
 
   // Screen 3 (the user's take of 2026-10-29, "he sees a book, then holds the book"): at the display he thinks, sees
