@@ -277,7 +277,8 @@ def export_xlsx(ids, script):
             name = f'vo_batch_{speaker.lower()}.xlsx'
             write_xlsx(name, [['filename', 'text']] + rows)
             print(f'{name}: {len(rows)} rows. In the studio: Batch Generation, Language Hindi, Format .MP3, Voice {voice}, '
-                  f'Text Column text, Filename Column filename, Start Row 1, Quantity {len(rows)}, Concurrency 3 (Recommended).')
+                  f'Text Column text, Filename Column filename, Start Row 1, Quantity {len(rows)}, Concurrency 1 (Safest). '
+                  'More than 6 rows: 6 at a time (Start Row 1, 7, 13 …), a minute apart (the voice\'s quota).')
 
 
 def read_logs(logs, script):
@@ -324,7 +325,7 @@ def check(script):
             pace = len(e['spoken']) / secs if secs else 0
             if not 6 <= pace <= 22:
                 notes.append(f'pace {pace:.1f} characters/s over {secs:.2f} s')
-        dev = e.get('devanagari')  # (only a clip made in the studio has it: none since 2026-10-26, so nothing to check)
+        dev = e.get('devanagari')  # (only a clip made in the studio has it: Swifty's, since 2026-10-30)
         if dev:
             words = re.findall(r'[ऀ-ॿ]+', dev)
             nums = [w for w in words if w in HINDI_NUMBERS]
