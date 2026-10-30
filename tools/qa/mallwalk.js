@@ -1,6 +1,7 @@
-// Party Prep from the mall to the end, silent: the controller hidden till Swifty names it (and which word was being said
-// as it came in); walk (arrow keys) into each shop in turn; the way in (camera zoom, he fades); in the shop, both
-// selling prices right and Buy the better deal (mouse); back out; …; his fit check; the end.   node tools/qa/mallwalk.js OUT
+// Party Prep from the mall to the end, silent: the first time, the controller hidden till Swifty names it (and which word
+// was being said as it came in); back out of a shop, no introduction, the controller alone (and when it came in); walk
+// (arrow keys) into each shop in turn; the way in (camera zoom, he fades); in the shop, both selling prices right and
+// Buy the better deal (mouse); back out; …; his fit check; the end.   node tools/qa/mallwalk.js OUT
 const { chromium, GAME, LAUNCH } = require('./browser');
 const fs = require('fs');
 const OUT = process.argv[2]; fs.mkdirSync(OUT, { recursive: true });
@@ -20,11 +21,17 @@ const inr = n => '₹' + n.toLocaleString('en-IN');
     window.setInterval = (fn, ms = 0, ...a) => si(fn, ms / F, ...a);
     if (window.speechSynthesis) { const s = speechSynthesis.speak.bind(speechSynthesis); speechSynthesis.speak = u => { u.volume = 0; u.rate = Math.min(10, F); s(u); }; }
     const play = HTMLMediaElement.prototype.play; HTMLMediaElement.prototype.play = function () { this.muted = true; this.volume = 0; return play.call(this); };
-    // when the controller comes in: the word lit in Swifty's bubble then
+    // when the controller comes in: the word lit in Swifty's bubble then, and how long after the mall came; and whether
+    // Swifty's dimmed introduction came (since 2026-10-30 only the first time: after a shop, the controller alone)
     window.__padIn = [];
-    new MutationObserver(ms => ms.forEach(m => { const t = m.target; if (t.classList && t.classList.contains('joy2') && m.oldValue && /is-away/.test(m.oldValue) && !t.classList.contains('is-away')) {
-      const w = document.querySelector('.scene.is-active .b-word.is-now'); const b = document.querySelector('.scene.is-active .bubble');
-      window.__padIn.push({ word: w ? w.textContent : null, bubble: b ? b.textContent.replace(/\s+/g, ' ').trim() : null }); } }))
+    window.__mallIn = [];
+    window.__intro = [];
+    new MutationObserver(ms => ms.forEach(m => { const t = m.target; if (!t.classList) return;
+      if (t.dataset && t.dataset.scene === 'mallfloor' && t.classList.contains('is-active') && !/is-active/.test(m.oldValue || '')) window.__mallIn.push(performance.now());
+      if (t.dataset && t.dataset.scene === 'mallfloor' && t.classList.contains('is-introducing') && !/is-introducing/.test(m.oldValue || '')) window.__intro.push(performance.now());
+      if (t.classList.contains('joy2') && m.oldValue && /is-away/.test(m.oldValue) && !t.classList.contains('is-away')) {
+        const w = document.querySelector('.scene.is-active .b-word.is-now'); const b = document.querySelector('.scene.is-active .bubble');
+        window.__padIn.push({ at: performance.now(), word: w ? w.textContent : null, bubble: b ? b.textContent.replace(/\s+/g, ' ').trim() : null }); } }))
       .observe(document, { subtree: true, attributes: true, attributeFilter: ['class'], attributeOldValue: true });
   }, F);
   const errors = [];
@@ -67,8 +74,13 @@ const inr = n => '₹' + n.toLocaleString('en-IN');
     await until(() => { const j = document.querySelector('.scene.is-active .joy2'); return j && !j.classList.contains('is-away'); });
     await page.waitForTimeout(150);
     await page.screenshot({ path: `${OUT}/mall-${visit}-controller.jpg`, type: 'jpeg', quality: 70 });
-    const padIn = await page.evaluate(() => window.__padIn.at(-1));
-    console.log(`mall, visit ${visit}: controller hidden at first: ${early}; it came in on the word "${padIn && padIn.word}" of "${padIn && padIn.bubble}"`);
+    const { padIn, after, intro } = await page.evaluate(() => {
+      const padIn = window.__padIn.at(-1), came = window.__mallIn.at(-1);
+      return { padIn, after: padIn && came ? Math.round(padIn.at - came) : null, intro: window.__intro.some(t => t >= came) };
+    });
+    console.log(`mall, visit ${visit}: Swifty's dimmed introduction: ${intro}; ` + (intro
+      ? `the controller hidden at first: ${early}; it came in on the word "${padIn && padIn.word}" of "${padIn && padIn.bubble}"`
+      : `the controller came in ${after} ms after the mall (timers ${F}× fast)${padIn && padIn.bubble ? `, with a bubble: "${padIn.bubble}"` : ', no bubble'}`));
     const along = [b[0] - a[0], b[1] - a[1]]; const len = Math.hypot(...along);
     const inward = [along[1] / len, -along[0] / len];
     const midDoor = [(a[0] + b[0]) / 2 * K, (a[1] + b[1]) / 2 * K];

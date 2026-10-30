@@ -2694,8 +2694,9 @@
   const dealPay = d => d.mp - dealOff(d);
   const bestDeal = it => it.deals.reduce((best, d) => (dealPay(d) < dealPay(best) ? d : best));
   const partyPay = it => dealPay(bestDeal(it));
-  // What Amit has bought (ids), and which shop he came out of (where he stands on the map then). Fresh at the message.
-  const Party = { bought: new Set(), from: null };
+  // What Amit has bought (ids), which shop he came out of (where he stands on the map then), and whether Swifty has shown
+  // him the controller yet (she does it once: see playMall). Fresh at the message.
+  const Party = { bought: new Set(), from: null, taught: false };
   const partyMoney = () => PARTY_BUDGET - PARTY_ITEMS.filter(it => Party.bought.has(it.id)).reduce((sum, it) => sum + partyPay(it), 0);
   const partyDone = () => PARTY_ITEMS.every(it => Party.bought.has(it.id));
   const sceneIndex = id => SCENES.findIndex(s => s.id === id);
@@ -2780,6 +2781,7 @@
   async function playInvite(ctx, scene) {
     Party.bought.clear(); // (the shopping starts afresh)
     Party.from = null;
+    Party.taught = false;
     await ctx.wait(800);
     Sound.chime();
     const card = el('div', 'invite-card', scene.ui);
@@ -2951,15 +2953,18 @@
     });
     const cleanup = () => { pad.destroy(); if (Game.steering === steer) Game.steering = false; };
     // The controller comes in only as Swifty names it (the user, 2026-10-28: "Swifty and the controller show only when
-    // Swifty says this is the controller"), each time the mall comes: the first time how to walk, back out of a shop
-    // where to go next. It pops in at the bottom left as she says "controller", and glows till it is used.
-    // Meanwhile the mall is dimmed, and only she and the controller are bright (the user, 2026-10-29: "fade the screen
-    // and focus on Swifty and the controller; Swifty near the controller, only Swifty and the controller visible"): she
-    // comes up right beside its place. When she has said it, the mall comes back and she goes, and then he walks ("then
-    // Swifty goes, and it's time to move the character"; not before, so nothing moves under the dimming).
+    // Swifty says this is the controller"), the first time the mall comes: how to walk (or, if he first comes into it out
+    // of a shop opened from the scene list, where to go next). It pops in at the bottom left as she says "controller",
+    // and glows till it is used. Meanwhile the mall is dimmed, and only she and the controller are bright (the user,
+    // 2026-10-29: "fade the screen and focus on Swifty and the controller; Swifty near the controller, only Swifty and
+    // the controller visible"): she comes up right beside its place. When she has said it, the mall comes back and she
+    // goes, and then he walks ("then Swifty goes, and it's time to move the character"; not before, so nothing moves
+    // under the dimming). She shows it once (the user, 2026-10-30: "when we already give tutorial of controller do not
+    // give again after 1 complete shop"): back out of a shop, the mall comes back as it was, no dimming and no Swifty,
+    // and a beat after its fade-in the controller pops in at its place, glowing, and he can walk.
     pad.el.classList.add('is-away');
     let padIn = false;
-    let ready = false; // (he walks once she has gone)
+    let ready = false; // (he walks once she has gone, or once the controller is in when she doesn't come)
     const showPad = () => {
       if (padIn || !ctx.alive()) return;
       padIn = true;
@@ -2971,10 +2976,12 @@
     };
     const glowTillUsed = () => Promise.race([pad.pressed().then(() => ctx.wait(1200)), ctx.wait(6000)])
       .then(() => pad.el.classList.remove('is-glowing'), () => {});
-    if (partyDone()) { // (here again from the scene list, all bought: nothing left to walk to)
-      showPad();
-      ready = true;
-      glowTillUsed();
+    if (Party.taught || partyDone()) { // (or here again from the scene list, all bought: nothing left to walk to)
+      ctx.wait(FADE_MS * 0.55 + 300, { real: true }).then(() => { // (the fade-in ends FADE_MS × 0.55 after this starts: see go)
+        showPad();
+        ready = true;
+        glowTillUsed();
+      }, () => {});
     } else {
       const swifty = partyBird(ctx, scene, { at: MALL_SWIFTY, upTo: MALL_SWIFTY.upTo, size: 38 });
       const veil = FX.focusVeil(scene.ui);
@@ -2987,6 +2994,7 @@
         try {
           await swifty.say(Party.from ? 'mall-next' : 'mall-how',
             [{ t: 'Use the ' }, { t: 'controller', cls: 'key' }, { t: Party.from ? ' to walk to the next shop!' : ' to walk into a shop!' }], 400);
+          Party.taught = true; // (said in full: not again)
         } finally {
           named();
           showPad(); // (at the latest as she ends)
