@@ -125,7 +125,6 @@ const VO_LINES = {
   "Which bottomwear is the better deal? Tap it!": ["vo200", 3.94],
   "Which watch is the better deal? Tap it!": ["vo201", 3.77],
   "Which sunglasses are the better deal? Tap them!": ["vo202", 4.3],
-  "Not quite! Work out both sale prices.": ["vo203", 4.54],
   "Blue shirt: ₹1,200 − ₹240 = ₹960.": ["vo204", 9.86],
   "Green shirt: ₹1,000 − ₹150 = ₹850.": ["vo205", 7.85],
   "Jeans: ₹1,800 − ₹540 = ₹1,260.": ["vo206", 10.1],

@@ -324,7 +324,7 @@ def check(script):
             pace = len(e['spoken']) / secs if secs else 0
             if not 6 <= pace <= 22:
                 notes.append(f'pace {pace:.1f} characters/s over {secs:.2f} s')
-        dev = e.get('devanagari')
+        dev = e.get('devanagari')  # (only a clip made in the studio has it: none since 2026-10-26, so nothing to check)
         if dev:
             words = re.findall(r'[ऀ-ॿ]+', dev)
             nums = [w for w in words if w in HINDI_NUMBERS]
@@ -335,8 +335,6 @@ def check(script):
                 notes.append('translated words: ' + ' '.join(hindi))
             if re.search(r'[0-9०-९]', dev):
                 notes.append('digits')
-        else:
-            notes.append('Devanagari not recorded')
         if notes:
             problems += 1
             print(f"{e['id']} ({e['speaker']}): {'; '.join(notes)} | {e['spoken']} | {dev or ''}")
