@@ -1,28 +1,30 @@
 #!/usr/bin/env python3
-"""Makes the story's films from the user's Google Flow takes (in "flow video new/", 2026-10-27).
+"""Makes the story's films from the user's Google Flow takes (in "making/flow takes/", 2026-10-27).
 
 Each story screen with a film gets its part of a take (two takes joined, for one), cut to the frame:
-  * the Gemini sparkle taken off (tools/flow_sparkle.py);
+  * the Gemini sparkle taken off (making/tools/flow_sparkle.py);
   * where two parts join, the first fades into the second over JOIN seconds;
   * the whole film a little slower than the take, evenly (PACE: the user, 2026-10-28, of the 2-second breaks made after
     each line the day before by slowing the take's quiet moments: "it's lagging and awkward; if you make the video
     slow, this won't come"): its in-between frames made by motion interpolation, so the talk keeps the take's own
     rhythm, at a calmer pace, with no moment slower than the rest;
   * enhanced (ENHANCE: a non-local-means clean-up of the take's compression, then contrast-adaptive sharpening) and
-    encoded well (H.264, CRF 20, tuned for animation), without sound (the game says the lines), 1920 x 1080, 24 fps,
-    marked as the takes are (BT.601, sRGB), so the browser shows it in the same colours as its picture;
+    encoded small (H.264 at x264's slowest preset, CRF 26, tuned for animation, a keyframe at most every GOP frames;
+    4 reference frames, level 4.1, which the plainest tablets' decoders take at 1080p),
+    without sound (the game says the lines), 1920 x 1080, 24 fps, marked as the takes are (BT.601, sRGB), so the browser
+    shows it in the same colours as its picture;
   * as assets/video/<screen>.mp4, with its first frame as assets/video/<screen>.webp (the screen's picture: the film
     starts on exactly what the screen shows) and, where the next screen goes on from it, its last frame as
     <screen>-end.webp.
 Then js/video_clips.js: each film's length, and for each line said on it when its speaker's lips start to move in it
 (from the take's own voices: the start of the speech nearest the time given in FILMS, at the film's pace).
 
-  ~/.cache/bj-voices/venv/bin/python tools/flow_import.py              all the films
-  ~/.cache/bj-voices/venv/bin/python tools/flow_import.py home ask     only these (js/video_clips.js lists them all)
+  ~/.cache/bj-voices/venv/bin/python making/tools/flow_import.py              all the films
+  ~/.cache/bj-voices/venv/bin/python making/tools/flow_import.py home ask     only these (js/video_clips.js lists them all)
   ... --index                                                          only js/video_clips.js
   ... --stills                                                         the stills (STILLS) only
   ... --timing                                                         each line's lips (when they move, from its
-      start, at its film's pace) into tools/voices/lengths.json, for the game's voices to be made to (voices.py)
+      start, at its film's pace) into making/tools/voices/lengths.json, for the game's voices to be made to (voices.py)
 
 Needs numpy and scipy, ffmpeg (with libx264) and cwebp.
 """
@@ -40,14 +42,15 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from flow_resize import SNEAKERS_FILM, smaller  # noqa: E402
 from flow_sparkle import Sparkle, planes  # noqa: E402
 
-ROOT = Path(__file__).resolve().parent.parent
-TAKES_DIR = ROOT / 'flow video new'
+ROOT = Path(__file__).resolve().parents[2]  # the project (this tool is in making/tools/)
+TAKES_DIR = ROOT / 'making' / 'flow takes'
 OUT = ROOT / 'assets' / 'video'
 INDEX = ROOT / 'js' / 'video_clips.js'
 FW, FH, FPS = 1920, 1080, 24
 FRAME = FW * FH * 3 // 2
 JOIN = 0.33        # seconds: one part fading into the next
-CRF = 20
+CRF = 26           # (20 until 2026-11-03, when the user asked for a smaller game: "more small size")
+GOP = 300          # frames: a keyframe at most every 12.5 s, longer than any film (the game plays each from its start)
 SOUND_LEVEL = 'loudnorm=I=-19:TP=-2:LRA=11'  # a film with its own sound: about as loud as the game's music
 ENHANCE = 'nlmeans=s=3:p=7:r=9,cas=strength=0.5'
 SLOW = 'minterpolate=fps={fps}:mi_mode=mci:mc_mode=aobmc:me_mode=bidir:vsbmc=1'
@@ -80,7 +83,7 @@ TAKES = {
 PACE = {'home': 1.25, 'browse': 1.30, 'ask': 1.35, 'reveal': 1.15, 'pay': 1.25, 'sneakers': 1.10,
         'shoe': 1.10, 'confused': 1.10, 'offmeans': 1.10, 'final': 1.20, 'return': 1.25, 'invite': 1.35, 'partymoney': 1.35,
         'partydeal': 1.25}
-VOICES = ROOT / 'tools' / 'voices' / 'lengths.json'
+VOICES = ROOT / 'making' / 'tools' / 'voices' / 'lengths.json'
 # Stills from the takes, for screens without a film (the user, 2026-10-28, of screen 9: "he is thinking, not saying;
 # zoom his face"), or a close-up a film cuts away to: a frame (take, seconds), the sparkle off and enhanced as the films
 # are, made twice the screen's size (Lanczos, then sharpened) so it stays sharp with the camera close:
@@ -91,7 +94,7 @@ STILLS = {
 }
 
 # Takes whose sneakers are made smaller where they stand, in every film and still cut from them (the user, 2026-10-28:
-# "The size of the sneakers too large if we compare with Aniket's size. Fix the size."; tools/flow_resize.py: Smaller).
+# "The size of the sneakers too large if we compare with Aniket's size. Fix the size."; making/tools/flow_resize.py: Smaller).
 SMALLER = {'shoes-1': SNEAKERS_FILM, 'shoes-2': SNEAKERS_FILM, 'shoes-3': SNEAKERS_FILM}
 
 # Each screen's film: its parts (take, from, to: seconds in the take; to None: its end); the lines said on it (the game's
@@ -235,7 +238,7 @@ def rgb_yuv(rgb):
 
 
 class Smaller:
-    """A take's sneakers made smaller where they stand (SMALLER; tools/flow_resize.py): its camera never moves, so it is
+    """A take's sneakers made smaller where they stand (SMALLER; making/tools/flow_resize.py): its camera never moves, so it is
     one still patch, made on the take's median picture and laid over every frame; it follows the frame's light (an AI
     take flickers a little). Nothing passes in front of the sneakers in these takes (his hand points from further left):
     a frame where something big moves there is reported, to be looked at (the patch would cover it)."""
@@ -321,8 +324,8 @@ def make(name, sparkle, log):
                             '-r', str(FPS), '-i', '-',
                             *(['-i', str(take_path(FILMS[name]['parts'][0][0]))] if FILMS[name].get('sound') else []),
                             '-vf', ENHANCE if pace == 1 else f'setpts={pace}*PTS,{SLOW.format(fps=FPS)},{ENHANCE}',
-                            '-c:v', 'libx264', '-preset', 'slow', '-tune', 'animation',
-                            '-crf', str(CRF), '-pix_fmt', 'yuv420p', '-g', str(2 * FPS), '-colorspace', 'smpte170m',
+                            '-c:v', 'libx264', '-preset', 'veryslow', '-tune', 'animation', '-refs', '4', '-level', '4.1',
+                            '-crf', str(CRF), '-pix_fmt', 'yuv420p', '-g', str(GOP), '-colorspace', 'smpte170m',
                             '-color_trc', 'iec61966-2-1', '-color_primaries', 'bt709', '-color_range', 'tv',
                             '-movflags', '+faststart', *sound, str(tmp)], stdin=subprocess.PIPE)
     raw = None
@@ -388,7 +391,7 @@ def index(log):
             films[name]['sound'] = True
     body = ',\n'.join(f'  {json.dumps(k)}: {json.dumps(v, ensure_ascii=False)}' for k, v in films.items())
     INDEX.write_text(
-        '// Made by tools/flow_import.py from the user\'s Google Flow takes: do not edit by hand.\n'
+        '// Made by making/tools/flow_import.py from the user\'s Google Flow takes: do not edit by hand.\n'
         '// Each story screen\'s film in "assets/video/" (its first frame, the screen\'s picture: "<screen>.webp"): its length\n'
         '// in seconds, and when each line said on it starts in it (seconds: its speaker\'s lips start to move); `sound`: it\n'
         '// plays with its own sound (the others are muted: the game says the lines). The game plays only the films listed here.\n'
@@ -398,7 +401,7 @@ def index(log):
 
 def timing(log):
     """Each film line's lips, at its film's pace: when they move, from the line's start ([[from, to] …], seconds), into
-    tools/voices/lengths.json (the lines said on no film keep their lengths there)."""
+    making/tools/voices/lengths.json (the lines said on no film keep their lengths there)."""
     want = json.loads(VOICES.read_text())
     for name in FILMS:
         lines, _, pace = plan(name, log)

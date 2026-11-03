@@ -1,7 +1,7 @@
 // Party Prep from the mall to the end, silent: the first time, the controller hidden till Swifty names it (and which word
 // was being said as it came in); back out of a shop, no introduction, the controller alone (and when it came in); walk
 // (arrow keys) into each shop in turn; the way in (camera zoom, he fades); in the shop, both selling prices right and
-// Buy the better deal (mouse); back out; …; his fit check; the end.   node tools/qa/mallwalk.js OUT
+// Buy the better deal (mouse); back out; …; his fit check; the end.   node making/tools/qa/mallwalk.js OUT
 const { chromium, GAME, LAUNCH } = require('./browser');
 const fs = require('fs');
 const OUT = process.argv[2]; fs.mkdirSync(OUT, { recursive: true });

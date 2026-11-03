@@ -1,7 +1,7 @@
 // QA, silent, real time (at 1920 × 1080, or VIEWPORT=WxH): each screen in a fresh page (autoplay on; answers, things to tap and Buys pressed with the
 // mouse), and every half second: files that failed to load, console errors, words cut off in a bubble / card / strip /
 // panel (their text wider or taller than their box), a bubble or card running off the screen, and bubbles over other
-// bubbles, over a card or over Swifty.   node tools/qa/qa_run.js OUT [id …]   (writes OUT/qa.json; prints a line per screen)
+// bubbles, over a card or over Swifty.   node making/tools/qa/qa_run.js OUT [id …]   (writes OUT/qa.json; prints a line per screen)
 const { chromium, GAME, LAUNCH } = require('./browser');
 const fs = require('fs');
 const [OUT, ...ONLY] = process.argv.slice(2);

@@ -2,7 +2,7 @@
 // tapped, Buys pressed, with the mouse), and when each piece on it comes into view: a block of text or a picture in the
 // screen's own layers (words in one bubble or line are one piece). Logs, per screen, the moments where three or more
 // pieces came in together (within 150 ms), and pieces that came in at once (no fade: hidden one sample, fully there the
-// next).   node tools/qa/seamless_audit.js OUT [id …]
+// next).   node making/tools/qa/seamless_audit.js OUT [id …]
 const { chromium, GAME, LAUNCH } = require('./browser');
 const fs = require('fs');
 const [OUT, ...ONLY] = process.argv.slice(2);

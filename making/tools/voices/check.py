@@ -1,5 +1,5 @@
 # Every clip in DIR (voNNN.wav): does whisper (large-v3-turbo) hear exactly its words?
-#   ~/.cache/bj-voices/venv/bin/python tools/voices/check.py DIR
+#   ~/.cache/bj-voices/venv/bin/python making/tools/voices/check.py DIR
 import glob, json, os, subprocess, sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from swifty_cut import tokens

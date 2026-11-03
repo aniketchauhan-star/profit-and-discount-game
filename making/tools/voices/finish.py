@@ -1,7 +1,7 @@
-# New clips made ready for tools/vo_build.py: 0.30 s of silence before the voice and 0.40 s after it (as the studio's
+# New clips made ready for making/tools/vo_build.py: 0.30 s of silence before the voice and 0.40 s after it (as the studio's
 # clips have: the game's typing is timed to that), no louder than −1 dBFS, as MP3 (192 kbps) named by line id, in a zip
 # as the studio's download is (voiceovers/voNNN.mp3).
-#   ~/.cache/bj-voices/venv/bin/python tools/voices/finish.py ZIP DIR [DIR …]   (each DIR holds voNNN.wav)
+#   ~/.cache/bj-voices/venv/bin/python making/tools/voices/finish.py ZIP DIR [DIR …]   (each DIR holds voNNN.wav)
 import glob, os, subprocess, sys, tempfile, zipfile
 import numpy as np, soundfile as sf
 

@@ -1,6 +1,6 @@
 // Each shop, silent and sped up, pressed with the mouse: tap a thing; its price card (wrong answers: Swifty's hints on
 // the left, then the answer; or right at once); the other's; then a wrong Buy, then the right one. Logs the light's
-// window, the red glow on a wrong answer, and any overlap.   node tools/qa/shops.js OUT [F]
+// window, the red glow on a wrong answer, and any overlap.   node making/tools/qa/shops.js OUT [F]
 const { chromium, GAME, LAUNCH } = require('./browser');
 const fs = require('fs');
 const OUT = process.argv[2]; fs.mkdirSync(OUT, { recursive: true });

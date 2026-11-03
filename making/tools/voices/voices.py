@@ -1,23 +1,23 @@
 # Amit (the boy), his father and the shopkeeper, voiced with Chatterbox (Resemble AI's open-source voice model, MIT
 # licence), each cloned from his reference in refs/: his own studio clips (the TTS studio's Puck, Fenrir and Charon) shaped
-# with the WORLD vocoder as tools/vo_deepen.py does, made on 2026-10-26 from the clips in git before that day's commit:
+# with the WORLD vocoder as making/tools/vo_deepen.py does, made on 2026-10-26 from the clips in git before that day's commit:
 #   Amit      vo001 vo047 vo102 vo005   pitch × 1.25, throat × 1.10: younger, a boy's voice (about 245 Hz; the studio's
 #                                         "Male Child" was nearer a teenager, about 185 Hz)
 #   Father      vo002 vo133 vo134         as they were (deepened before, about 135 Hz)
 #   Shopkeeper  vo021 vo022 vo023         pitch × 0.66, throat × 0.88: deeper (about 125 Hz; his studio clips were at about
 #                                         195 Hz, a woman's range)
 # Don't shape the clips in assets/vo again: they are these voices already. Each line (its spoken form, from
-# tools/vo_script.json): takes (seeds 1000, 1001, …) until one has exactly its words (whisper) and its pitch in the voice's
+# making/tools/vo_script.json): takes (seeds 1000, 1001, …) until one has exactly its words (whisper) and its pitch in the voice's
 # range, at least TAKES and at most MAX_TAKES; the likest of those to the voice kept, trimmed, as loud as Swifty's clips
 # (−16 LUFS): OUT/<id>.wav. A line already in OUT is skipped (a run cut short goes on where it stopped). Then
-# tools/voices/finish.py and tools/vo_build.py. Needs ~/.cache/bj-voices/venv (chatterbox-tts, praat-parselmouth,
+# making/tools/voices/finish.py and making/tools/vo_build.py. Needs ~/.cache/bj-voices/venv (chatterbox-tts, praat-parselmouth,
 # pyloudnorm) and whisper.cpp's whisper-cli with ~/.cache/whisper-models/ggml-large-v3-turbo.bin. Files only: nothing is
 # played.
-#   ~/.cache/bj-voices/venv/bin/python tools/voices/voices.py OUT [id …]        (no ids: every line of the three)
+#   ~/.cache/bj-voices/venv/bin/python making/tools/voices/voices.py OUT [id …]        (no ids: every line of the three)
 # On 2026-10-28 the user found the three "too fast", "like reading, not a conversation", and asked for the films' lips to
 # go with the words: they talk livelier and slower now (VOICES: exaggeration up, cfg 0.3, as Chatterbox's notes advise
 # for a calmer pace), and with TARGETS=file.json each line is made to it: {id: seconds} as long as that, or (a line on a
-# film: tools/flow_import.py --timing) {id: [[from, to] …]} on its character's lips, each phrase starting as they start
+# film: making/tools/flow_import.py --timing) {id: [[from, to] …]} on its character's lips, each phrase starting as they start
 # moving again (see align). Of its takes (with SEED=2000 … more of them), the likest that fits with little stretch,
 # fitted with ffmpeg's atempo (the pitch kept), by no more than STRETCH.
 import json, os, re, subprocess, sys, warnings
@@ -26,7 +26,7 @@ os.environ.setdefault('PYTORCH_ENABLE_MPS_FALLBACK', '1')
 import numpy as np, soundfile as sf, torch, parselmouth, pyloudnorm as pyln, librosa
 
 HERE = os.path.dirname(os.path.abspath(__file__)) + '/'
-GAME = os.path.dirname(os.path.dirname(HERE.rstrip('/'))) + '/'
+GAME = os.path.dirname(os.path.dirname(os.path.dirname(HERE.rstrip('/')))) + '/'  # the project (this is making/tools/voices/)
 MODEL = os.path.expanduser('~/.cache/whisper-models/ggml-large-v3-turbo.bin')
 OUT = sys.argv[1]
 ONLY = set(sys.argv[2:])
@@ -184,8 +184,8 @@ def align(y, sr, target):
 
 
 def speech_seconds(y, sr):
-    """How long a voice talks, measured as tools/flow_import.py measures the game's clips: with the quiet the finished
-    clip has before and after it (tools/voices/finish.py: 0.30 s and 0.40 s), its quiet start and end left out."""
+    """How long a voice talks, measured as making/tools/flow_import.py measures the game's clips: with the quiet the finished
+    clip has before and after it (making/tools/voices/finish.py: 0.30 s and 0.40 s), its quiet start and end left out."""
     path = f'{OUT}/measure.wav'
     sf.write(path, np.concatenate([np.zeros(int(0.30 * sr)), y, np.zeros(int(0.40 * sr))]).astype(np.float32), sr)
     out = subprocess.run(['ffmpeg', '-hide_banner', '-nostats', '-i', path, '-af', 'silencedetect=noise=-38dB:d=0.18', '-f', 'null', '-'],
@@ -220,7 +220,7 @@ def heard(path):
 
 
 # ---------- the lines ----------
-script = {e['id']: e for e in json.load(open(GAME + 'tools/vo_script.json'))}
+script = {e['id']: e for e in json.load(open(GAME + 'making/tools/vo_script.json'))}
 parts = [r for r in json.load(open(HERE + 'pieces.json')) if r['speaker'] != 'Swifty']
 if ONLY:  # (any line of the script, by its id)
     parts = [{'id': e['id'], 'speaker': e['speaker'], 'line': e['line']} for e in script.values() if e['id'] in ONLY]

@@ -1,6 +1,6 @@
 // Every line said on a film, in real time and silent: when its voice starts talking (the clip's 0.30 s lead after
 // play(), less any #t= start) against the film's own clock, and where that line's lips start in the film (its cue in
-// js/video_clips.js). Also the gap after each line before the next one (or the film's end).   node tools/qa/lipsync.js MAP.json
+// js/video_clips.js). Also the gap after each line before the next one (or the film's end).   node making/tools/qa/lipsync.js MAP.json
 const { chromium, GAME, LAUNCH } = require('./browser');
 const fs = require('fs');
 const MAP = JSON.parse(fs.readFileSync(process.argv[2], 'utf8')); // { voNNN: [film, line] }

@@ -1,6 +1,6 @@
 // The QA scripts' shared start: Playwright (the project's, the PLAYWRIGHT path, or the one npx keeps), the game's
 // index.html (wherever the project is), and the page made silent: no music, no voices heard, every film and clip muted
-// (nothing may be heard while testing: the user's rule). Each script: node tools/qa/<script>.js OUT [screen ids …]
+// (nothing may be heard while testing: the user's rule). Each script: node making/tools/qa/<script>.js OUT [screen ids …]
 const path = require('path');
 
 function playwright() {
@@ -13,7 +13,7 @@ function playwright() {
 }
 
 const { chromium } = playwright();
-const GAME = 'file://' + encodeURI(path.resolve(__dirname, '..', '..', 'index.html'));
+const GAME = 'file://' + encodeURI(path.resolve(__dirname, '..', '..', '..', 'index.html')); // (this is making/tools/qa/)
 const LAUNCH = { headless: true, args: ['--mute-audio', '--autoplay-policy=no-user-gesture-required'] };
 
 // For page.addInitScript: music off, autoplay as asked, the device's speech at volume 0, media muted when played.

@@ -1,5 +1,5 @@
 // Every screen, silent: a picture of each `at` seconds in (autoplay off, so it stays), for looking at them all at
-// once (OUT/<n>-<id>.png; put them on a sheet with ffmpeg's tile).   node tools/qa/contact_sheet.js OUT [at]
+// once (OUT/<n>-<id>.png; put them on a sheet with ffmpeg's tile).   node making/tools/qa/contact_sheet.js OUT [at]
 const fs = require('fs');
 const { chromium, GAME, LAUNCH, silent } = require('./browser');
 const [OUT, AT = '6'] = process.argv.slice(2);

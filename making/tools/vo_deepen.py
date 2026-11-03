@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
 """Gives a speaker's voice clips a man's voice, where the TTS studio made them too high. See docs/VOICEOVER.md.
 
-  python3 tools/vo_deepen.py Father                  the father's clips (every line tools/vo_script.json gives him)
-  python3 tools/vo_deepen.py Father --pitch 0.5      lower still (default 0.52: about 240 Hz → 125 Hz)
-  python3 tools/vo_deepen.py Father --check          only say which clips are done
+  python3 making/tools/vo_deepen.py Father                  the father's clips (every line making/tools/vo_script.json gives him)
+  python3 making/tools/vo_deepen.py Father --pitch 0.5      lower still (default 0.52: about 240 Hz → 125 Hz)
+  python3 making/tools/vo_deepen.py Father --check          only say which clips are done
 
 The studio's "Male Senior" clips came out at about 240-270 Hz, a woman's pitch (a man speaks at about 85-155 Hz).
 Each clip is taken apart with the WORLD vocoder (its pitch, its voice's colour, its breath), its pitch multiplied by
 --pitch, its colour moved down as a man's longer throat would make it (--throat, 0.85), and put back together: the
-same length, as loud as before, written over the clip (Ogg Opus, 32 kbps, mono, as tools/vo_build.py writes them)
+same length, as loud as before, written over the clip (Ogg Opus, 32 kbps, mono, as making/tools/vo_build.py writes them)
 and marked as done, so running it again changes nothing. Clips remade in the studio need this again.
 Needs numpy and pyworld (python3 -m pip install numpy pyworld) and ffmpeg.
 """
@@ -20,8 +20,8 @@ from pathlib import Path
 import numpy as np
 import pyworld as pw
 
-ROOT = Path(__file__).resolve().parent.parent
-SCRIPT = ROOT / 'tools' / 'vo_script.json'
+ROOT = Path(__file__).resolve().parents[2]  # the project (this tool is in making/tools/)
+SCRIPT = ROOT / 'making' / 'tools' / 'vo_script.json'
 CLIPS = ROOT / 'assets' / 'vo'
 RATE = 24000   # the studio's sample rate
 FRAME = 5.0    # ms between the vocoder's frames
@@ -70,7 +70,7 @@ def deepen(x, pitch, throat):
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__.split('\n')[0])
-    ap.add_argument('speaker', help='as tools/vo_script.json names them, e.g. Father')
+    ap.add_argument('speaker', help='as making/tools/vo_script.json names them, e.g. Father')
     ap.add_argument('--pitch', type=float, default=0.52, help='the pitch is multiplied by this')
     ap.add_argument('--throat', type=float, default=0.85, help="the voice's colour (its formants) moves down by this")
     ap.add_argument('--check', action='store_true', help='only say which clips are done')

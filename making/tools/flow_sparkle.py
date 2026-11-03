@@ -1,19 +1,19 @@
 #!/usr/bin/env python3
-"""The Gemini sparkle on the user's Google Flow takes, and how it comes off (tools/flow_import.py uses it).
+"""The Gemini sparkle on the user's Google Flow takes, and how it comes off (making/tools/flow_import.py uses it).
 
 The sparkle: a white four-pointed star, |dx/R|^(2/3) + |dy/R|^(2/3) <= 1 with R = 39 px, at (1740, 900) on every
 1920 x 1080 take, laid over it see-through: out = alpha * white + (1 - alpha) * under. It comes off in the video's own
 planes (yuv420p: Y at full size, U and V at half size, so its colour edge, which the video keeps at half size, comes
 off too):
-  1. exactly: under = (out - alpha * white) / (1 - alpha), alpha learnt pixel by pixel (tools/flow_sparkle.npz);
+  1. exactly: under = (out - alpha * white) / (1 - alpha), alpha learnt pixel by pixel (making/tools/flow_sparkle.npz);
   2. its outline, where compression smeared the star's edge differently on every take (no fixed alpha undoes that):
      in a 2 px band along it, each pixel becomes the median of 7 points across the outline (along its normal), twice.
      A thin line along the outline goes; an edge crossing it stays.
 
-  ~/.cache/bj-voices/venv/bin/python tools/flow_sparkle.py learn TAKE.mp4 ...
-      learns alpha again from takes (as many as there are) and writes tools/flow_sparkle.npz.
+  ~/.cache/bj-voices/venv/bin/python making/tools/flow_sparkle.py learn TAKE.mp4 ...
+      learns alpha again from takes (as many as there are) and writes making/tools/flow_sparkle.npz.
 
-How alpha was learnt (2026-10-27, from the user's 15 takes in "flow video new/"):
+How alpha was learnt (2026-10-27, from the user's 15 takes in "making/flow takes/"):
   a. Its shape. In each take, what lies under the star is guessed by filling it smoothly (Laplace) from round it, and
      alpha fitted to white over the take; then the median over the takes (each one's furniture biases another place),
      and that as a function of the distance to the outline (near it) and of the star's shape value (inside).

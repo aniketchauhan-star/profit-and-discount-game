@@ -7,10 +7,10 @@ straight down; on the stand's top, across from either side), and the pair is put
 a card standing in front of it a little less small, so its price still reads.
 
 The camera never moves in the shoe shop's takes, so a take's sneakers are one still patch, made on its median picture
-and laid over every frame (tools/flow_import.py: Smaller). The picture the working is done on, which shows the stand
+and laid over every frame (making/tools/flow_import.py: Smaller). The picture the working is done on, which shows the stand
 closer, is made here from its original in git:
 
-    python3 tools/flow_resize.py      assets/story/he-thinks-about-the-shoes.webp again
+    python3 making/tools/flow_resize.py      assets/story/he-thinks-about-the-shoes.webp again
 """
 import subprocess
 import sys
@@ -21,7 +21,7 @@ import numpy as np
 from PIL import Image, ImageDraw
 from scipy import ndimage as ndi
 
-ROOT = Path(__file__).resolve().parent.parent
+ROOT = Path(__file__).resolve().parents[2]  # the project (this tool is in making/tools/)
 
 # The pair as the shoe shop's films show it (stage px): where it is (roi), the stand top's back edge behind its soles
 # (edge: its dark line, over the lit rim), how much smaller it is made (scale), and the tent card in front of it (its
