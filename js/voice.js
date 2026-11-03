@@ -1,9 +1,10 @@
 /* ==========================================================================
    Bookstore Journey — voices
-   The characters speak their lines in Indian English: Swifty in the TTS studio
-   "Ai Wala Human By Aamir" (Hindi, Female Teacher (Standard), 2026-10-30),
-   Amit, his father and the shopkeeper in voices made with an open-source voice
-   model, each cloned from his voice in that studio (see docs/VOICEOVER.md).
+   The characters speak their lines in Indian English, in the voices the user
+   gave on 2026-11-03: Swifty, Amit, his father and the shopkeeper
+   (making/source/FINAL.mp3, boy.mp3, father.mp3 and shop.mp3, cut into their
+   lines by making/tools/voices/recording_cut.py, the men's laid on their lips
+   in the films).
    Each clip is found by the exact text its line shows (js/vo_lines.js). A line
    without a clip, a browser that can't play Ogg Opus, or ?vo=0 in the address
    uses the text-to-speech voices already on the player's device instead (Web

@@ -47,8 +47,8 @@
     },
   };
 
-  // The counter picture once more, with Amit puzzled by the word "discount": it lines up exactly with
-  // "story/aniket-gives-a-book-to-shopkeeper.webp" (only his face differs), so it can fade in over it.
+  // The counter picture once more, with Amit puzzled by the word "discount": the photo the formula screens show framed
+  // on the left (their `snap`).
   const PUZZLED = STORY + 'what-is-a-discount.webp';
 
   // Sheets: the teaching screens are on one big cream panel that fills the screen (`sheet: 'panel'`, drawn by the
