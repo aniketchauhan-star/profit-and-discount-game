@@ -1,82 +1,110 @@
 The price printed on an item is called its marked price.
 Not quite! Check the price printed on the book.
-Correct! The price printed on the book, ₹1000, is its marked price.
+The price printed on the book, one thousand rupees, is its marked price.
+Correct! The price printed on the book, one thousand rupees, is its marked price.
 The reduction given on the marked price of an item is called a discount.
-Not quite! ₹800 is the shopkeeper’s selling price.
-Yes! Aniket paid ₹200 less than the marked price.
+Not quite! Eight hundred rupees is the shopkeeper's selling price.
+Amit paid two hundred rupees less than the marked price.
+Yes! Amit paid two hundred rupees less than the marked price.
 Marked Price, minus Selling Price, equals Discount.
-So, the discount is ₹200.
+So, the discount is two hundred rupees.
 Discount equals Marked Price, minus Selling Price.
-Let’s write it in short.
-D for Discount, MP for Marked Price, SP for Selling Price.
-So, D = MP − SP.
-Aniket bought the book and understood the discount.
-Let’s help Aniket buy the sneakers!
+Let's write it in short.
+D for Discount, M P for Marked Price, S P for Selling Price.
+So, D equals M P minus S P.
+Amit bought the book and understood the discount.
+Let's help Amit buy the sneakers!
 Not quite! Check the price tagged on the sneakers.
-Correct! ₹1800 is the price tagged on the sneakers: their marked price.
-30% OFF means 30% discount here.
-To calculate how much Aniket has to pay for these sneakers, let’s first recall how percentages work.
-a is what percent of b?
-a is the part, and b is the whole.
-To find the percentage, divide the part by the whole, then multiply by 100.
+One thousand eight hundred rupees is the price tagged on the sneakers: their marked price.
+Correct! One thousand eight hundred rupees is the price tagged on the sneakers: their marked price.
+Thirty percent off means thirty percent discount here.
+To calculate how much Amit has to pay for these sneakers, let's first recall how percentages work.
+A is what percent of B?
+A is the part, and B is the whole.
+To find the percentage, divide the part by the whole, then multiply by one hundred.
 Put the part on top, and the whole below.
-Then put a % sign after it.
-Let’s have some practice!
-125 is what percent of 500?
-125 is the part, and 500 is the whole.
-125 ÷ 500 × 100 = 25%.
-So, 125 is 25% of 500!
-250 is what percent of 1000?
+Then put a percent sign after it.
+Let's have some practice!
+One hundred and twenty-five is what percent of five hundred?
+One hundred and twenty-five is the part, and five hundred is the whole.
+One hundred and twenty-five divided by five hundred, times one hundred equals twenty-five percent.
+So, one hundred and twenty-five is twenty-five percent of five hundred!
+Two hundred and fifty is what percent of one thousand?
 Not quite!
 Try again!
-Correct! 250 ÷ 1000 × 100 = 25%.
-Not quite! 250 is the part, 1000 is the whole. 250 ÷ 1000 × 100 = 25%.
-So, 250 is 25% of 1000.
-Now, let’s find out how much money Aniket needs to pay.
-How much does Aniket have to pay?
+Two hundred and fifty is the part, one thousand is the whole.
 Correct!
-Let’s see how to work it out!
-30% means 30 out of 100.
-So, 30% of ₹1800 = 30/100 × 1800
-1800 ÷ 100 = 18, and 18 × 30 = 540.
-So, it’s ₹540!
-So, the discount is ₹540.
+Two hundred and fifty divided by one thousand, times one hundred, equals twenty-five percent.
+So, two hundred and fifty is twenty-five percent of one thousand.
+Now, let's find out how much money Amit needs to pay.
+How much does Amit have to pay?
+Let's see how to work it out!
+Thirty percent means thirty out of one hundred.
+So, thirty percent of one thousand eight hundred rupees equals thirty over one hundred, times one thousand eight hundred.
+One thousand eight hundred divided by one hundred equals eighteen, and eighteen times thirty equals five hundred and forty.
+So, it's five hundred and forty rupees!
+So, the discount is five hundred and forty rupees.
 To find how much you have to pay, subtract the discount from the marked price.
 Your turn! Drag each amount into its box.
-Not quite! The MP box is for the marked price, ₹1800.
-Not quite! The Discount box is for the discount, ₹540.
-₹1800 − ₹540 = ₹1260.
-So, you pay ₹1260 for the sneakers!
-540 is what percent of 1800?
-540 is the part, and 1800 is the whole.
-540 ÷ 1800 × 100 = 30%.
-So, 540 is 30% of 1800!
+Not quite! The Discount box is for the discount, five hundred and forty rupees.
+Not quite! The M P box is for the marked price, one thousand eight hundred rupees.
+One thousand eight hundred rupees minus five hundred and forty rupees equals one thousand two hundred and sixty rupees.
+So, you pay one thousand two hundred and sixty rupees for the sneakers!
+We found the discount and selling price.
+Let's check how thirty percent comes using the discount amount.
+Five hundred and forty is what percent of one thousand eight hundred?
+Five hundred and forty is the part, and one thousand eight hundred is the whole.
+Five hundred and forty divided by one thousand eight hundred, times one hundred equals thirty percent.
+So, five hundred and forty is thirty percent of one thousand eight hundred!
 Here, the part is the discount, and the whole is the marked price.
-So, Discount % = Discount ÷ Marked Price × 100.
-Use the arrows to walk into a shop!
-This shirt is ₹1,500, with 20% off.
-What is the sale price of this shirt?
-Not quite! Find the 20% discount first. 20% of ₹1,500 = ₹300.
-Great! The sale price is ₹1,200. Do you want to buy this shirt?
-Take your time and look around!
-Great! You bought the shirt!
-This bottomwear is ₹1,200, with 10% off.
-What is the sale price of this bottomwear?
-Not quite! Find the 10% discount first. 10% of ₹1,200 = ₹120.
-Great! The sale price is ₹1,080. Do you want to buy this bottomwear?
-Great! You bought the bottomwear!
-This watch is ₹1,000, with 20% off.
-What is the sale price of this watch?
-Not quite! Find the 20% discount first. 20% of ₹1,000 = ₹200.
-Great! The sale price is ₹800. Do you want to buy this watch?
-Great! You bought the watch!
-These sunglasses are ₹800, with 20% off.
-What is the sale price of these sunglasses?
-Not quite! Find the 20% discount first. 20% of ₹800 = ₹160.
-Great! The sale price is ₹640. Do you want to buy these sunglasses?
-Great! You bought the sunglasses!
-Total amount: ₹3,720.
-Money left: ₹1,280.
+So, Discount percentage equals Discount divided by Marked Price, times one hundred.
+Use the controller to walk into a shop!
+Use the controller to walk to the next shop!
+Tap a shirt to find its selling price!
+Not quite! The discount is twenty percent of one thousand two hundred rupees.
+Blue shirt, one thousand two hundred rupees minus two hundred and forty rupees equals nine hundred and sixty rupees.
+Let's check the selling price of the green shirt!
+Let's check the selling price of the blue shirt!
+Not quite! Take one hundred and fifty rupees off one thousand rupees.
+Green shirt: one thousand rupees minus one hundred and fifty rupees equals eight hundred and fifty rupees.
+Which shirt is the better deal? Tap it!
+Not quite! Buy the one that costs less.
+Correct! The green shirt costs one hundred and ten rupees less.
+Great! You bought the green shirt!
+You bought this shirt already!
+Tap one to find its selling price!
+Not quite! The discount is thirty percent of one thousand eight hundred rupees.
+Jeans: one thousand eight hundred rupees minus five hundred and forty rupees equals one thousand two hundred and sixty rupees.
+Let's check the selling price of the trousers!
+Let's check the selling price of the jeans!
+Not quite! Take three hundred rupees off one thousand six hundred rupees.
+Trousers: one thousand six hundred rupees minus three hundred rupees equals one thousand three hundred rupees.
+Which bottomwear is the better deal? Tap it!
+Correct! The jeans cost forty rupees less.
+Great! You bought the jeans!
+You bought this bottomwear already!
+Tap a watch to find its selling price!
+Not quite! The discount is twenty percent of two thousand rupees.
+Silver watch: two thousand rupees minus four hundred rupees equals one thousand six hundred rupees.
+Let's check the selling price of the brown watch!
+Let's check the selling price of the silver watch!
+Not quite! Take two hundred and fifty rupees off one thousand eight hundred rupees.
+Brown watch, one thousand eight hundred rupees minus two hundred and fifty rupees equals one thousand five hundred and fifty rupees.
+Which watch is the better deal? Tap it!
+Correct! The brown watch costs fifty rupees less.
+Great! You bought the brown watch!
+You bought this watch already!
+Black sunglasses: one thousand two hundred rupees minus two hundred and forty rupees equals nine hundred and sixty rupees.
+Let's check the selling price of the brown sunglasses!
+Let's check the selling price of the black sunglasses!
+Not quite! The discount is ten percent of nine hundred rupees.
+Brown sunglasses: nine hundred rupees minus ninety rupees equals eight hundred and ten rupees.
+Which sunglasses are the better deal? Tap them!
+Correct! The brown sunglasses cost one hundred and fifty rupees less.
+Great! You bought the brown sunglasses!
+You bought these sunglasses already!
+Total amount: four thousand four hundred and seventy rupees.
+Money left: five hundred and thirty rupees.
 Wow! You found the best deals for the party!
-You have successfully helped Aniket get ready for the party!
+You have successfully helped Amit get ready for the party!
 Wow! You did it!

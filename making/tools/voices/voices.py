@@ -1,11 +1,9 @@
-# Amit (the boy), his father and the shopkeeper, voiced with Chatterbox (Resemble AI's open-source voice model, MIT
-# licence), each cloned from his reference in refs/: his own studio clips (the TTS studio's Puck, Fenrir and Charon) shaped
-# with the WORLD vocoder as making/tools/vo_deepen.py does, made on 2026-10-26 from the clips in git before that day's commit:
-#   Amit      vo001 vo047 vo102 vo005   pitch × 1.25, throat × 1.10: younger, a boy's voice (about 245 Hz; the studio's
-#                                         "Male Child" was nearer a teenager, about 185 Hz)
-#   Father      vo002 vo133 vo134         as they were (deepened before, about 135 Hz)
-#   Shopkeeper  vo021 vo022 vo023         pitch × 0.66, throat × 0.88: deeper (about 125 Hz; his studio clips were at about
-#                                         195 Hz, a woman's range)
+# A line none of the user's recordings has, voiced with Chatterbox (Resemble AI's open-source voice model, MIT licence),
+# cloned from its speaker's reference in refs/. Since 2026-11-03 every line in the game is from the user's recordings
+# (making/source/FINAL.mp3, boy.mp3, father.mp3, shop.mp3: Swifty, Amit, his father, the shopkeeper), cut and, on a film,
+# laid on the lips by recording_cut.py, and each refs/<who>.flac is that speaker's lines from them, as said (Amit about
+# 219 Hz, his father about 118 Hz, the shopkeeper about 130 Hz). (From 2026-10-26 to 11-03 the three men were Chatterbox
+# voices from their studio clips shaped with the WORLD vocoder, making/tools/vo_deepen.py: in git's history.)
 # Don't shape the clips in assets/vo again: they are these voices already. Each line (its spoken form, from
 # making/tools/vo_script.json): takes (seeds 1000, 1001, …) until one has exactly its words (whisper) and its pitch in the voice's
 # range, at least TAKES and at most MAX_TAKES; the likest of those to the voice kept, trimmed, as loud as Swifty's clips
@@ -24,6 +22,8 @@ import json, os, re, subprocess, sys, warnings
 warnings.filterwarnings('ignore')
 os.environ.setdefault('PYTORCH_ENABLE_MPS_FALLBACK', '1')
 import numpy as np, soundfile as sf, torch, parselmouth, pyloudnorm as pyln, librosa
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from lips import STRETCH, reach, spans_of, paired, stretches, align, speech_seconds, fit  # noqa: E402 (laying a voice on its lips)
 
 HERE = os.path.dirname(os.path.abspath(__file__)) + '/'
 GAME = os.path.dirname(os.path.dirname(os.path.dirname(HERE.rstrip('/')))) + '/'  # the project (this is making/tools/voices/)
@@ -40,18 +40,14 @@ LUFS = -16.0  # (Swifty's clips, measured)
 os.makedirs(f'{OUT}/takes', exist_ok=True)
 
 VOICES = {  # how lively (exaggeration), how closely it keeps to the usual pace (cfg: lower is slower), the pitch range to keep (Hz)
-    'Amit': dict(exaggeration=0.7, cfg=0.3, range=(205, 290)),
-    'Father': dict(exaggeration=0.55, cfg=0.3, range=(100, 145)),
-    'Shopkeeper': dict(exaggeration=0.6, cfg=0.3, range=(105, 150)),
-    # Swifty's lines come from the user's recording (swifty_cut.py); only a line it doesn't have is made, when asked for
-    # by its id, cloned from refs/swifty.flac (four of her clips from the recording, as they are): "You bought … already!"
+    'Amit': dict(exaggeration=0.7, cfg=0.3, range=(190, 255)),  # (his recording's voice, about 219 Hz; only a line it lacks)
+    'Father': dict(exaggeration=0.55, cfg=0.3, range=(100, 145)),  # (his recording's voice, about 118 Hz; only a line it lacks)
+    'Shopkeeper': dict(exaggeration=0.6, cfg=0.3, range=(105, 150)),  # (his recording's voice, about 130 Hz)
+    # Swifty's lines come from the user's recording (making/source/FINAL.mp3, 2026-11-03: recording_cut.py); only a line it
+    # doesn't have is made, when asked for by its id, cloned from refs/swifty.flac (six of her clips from it, as they are)
     'Swifty': dict(exaggeration=0.5, cfg=0.5, range=(215, 330)),
 }
 TARGETS = json.load(open(os.environ['TARGETS'])) if os.environ.get('TARGETS') else {}  # {id: seconds of speech}
-STRETCH = 0.85  # a take is slowed (or sped up) by no more than this, to the length wanted
-# …and a phrase laid on its lips (see align): a word or two (up to a second long, as the lips have it: "Great!",
-# "Discount?") drawn out by up to ×1.5, as a voice does; a longer phrase by up to ×1.3
-reach = lambda seconds: (1 / 1.5, 1.5) if seconds <= 1.0 else (1 / 1.3, 1.3)
 SR = 24000
 
 # ---------- words as said (to compare whisper's words with the line's) ----------
@@ -121,95 +117,6 @@ def trim(y, sr):
     return y
 
 
-def spans_of(y, sr, d=0.12):
-    """Where a voice talks: its stretches between pauses (quiet at least `d` s), in seconds from its start."""
-    path = f'{OUT}/measure.wav'
-    sf.write(path, np.concatenate([np.zeros(int(0.30 * sr)), y, np.zeros(int(0.40 * sr))]).astype(np.float32), sr)
-    out = subprocess.run(['ffmpeg', '-hide_banner', '-nostats', '-i', path, '-af', f'silencedetect=noise=-38dB:d={d}', '-f', 'null', '-'],
-                         capture_output=True, text=True).stderr
-    length = float(re.search(r'Duration: (\d+):(\d+):([\d.]+)', out).group(3))
-    marks = [(k, float(t)) for k, t in re.findall(r'silence_(start|end): ([0-9.]+)', out)]
-    spans, at = [], 0.0
-    for kind, t in marks:
-        if kind == 'start' and t > at + 0.02:
-            spans.append([at - 0.30, t - 0.30])
-        if kind == 'end':
-            at = t
-    if not marks or marks[-1][0] == 'end':
-        spans.append([at - 0.30, length - 0.30])
-    return [x for x in spans if x[1] - x[0] > 0.05]
-
-
-def paired(ours, target):
-    """A voice's stretches and the lips' paired up, as many of each: the voice's joined at its shortest pauses where it
-    has more, the lips' where they have more."""
-    ours, target = [list(x) for x in ours], [list(x) for x in target]
-    for many in (ours, target):
-        while len(many) > min(len(ours), len(target)):
-            k = min(range(len(many) - 1), key=lambda i: many[i + 1][0] - many[i][1])
-            many[k][1] = many.pop(k + 1)[1]
-    return list(zip(ours, target))
-
-
-def stretches(ours, target):
-    """How much longer each of the voice's stretches must last to fill its stretch of the lips."""
-    return [(e - s) / max(0.05, b - a) for (a, b), (s, e) in paired(ours, target)]
-
-
-def align(y, sr, target):
-    """The voice laid on its character's lips (target: [[from, to] …], seconds from the first word, at the film's pace):
-    cut in its pauses into as many pieces as the lips have stretches (see paired), each piece fitted to its stretch by no
-    more than STRETCH and started with it (a piece longer than its stretch still ends before the next one starts)."""
-    pairs = paired(spans_of(y, sr), target)
-    pieces, cursor = [], 0
-    for n, ((a, b), (s, e)) in enumerate(pairs):
-        lo = a - 0.04 if n == 0 else (pairs[n - 1][0][1] + a) / 2  # (cut in the middle of the pause before it…)
-        hi = b + 0.08 if n == len(pairs) - 1 else (b + pairs[n + 1][0][0]) / 2  # (…and after it)
-        piece = y[max(0, int(lo * sr)):min(len(y), int(hi * sr))].copy()
-        lo_k, hi_k = reach(e - s)
-        k = min(hi_k, max(lo_k, (e - s) / max(0.05, b - a)))  # (how much longer it is made)
-        if abs(k - 1) > 0.01:
-            piece = fit(piece, sr, 1 / k)
-        fade = int(0.006 * sr)
-        piece[:fade] *= np.linspace(0, 1, fade)
-        piece[-fade:] *= np.linspace(1, 0, fade)
-        lead = (a - max(0.0, lo)) * k  # (the quiet it starts with, as made)
-        at = max(0, cursor - int(lead * sr), int((s - lead + 0.04) * sr))  # (its first word on its lips; never on the words before)
-        pieces.append((at, piece))
-        cursor = at + int(((b - max(0.0, lo)) * k + 0.03) * sr)  # (where its words end: its quiet end may go under the next)
-    out = np.zeros(max(at + len(piece) for at, piece in pieces) + int(0.1 * sr))
-    for at, piece in pieces:
-        out[at:at + len(piece)] += piece
-    return out
-
-
-def speech_seconds(y, sr):
-    """How long a voice talks, measured as making/tools/flow_import.py measures the game's clips: with the quiet the finished
-    clip has before and after it (making/tools/voices/finish.py: 0.30 s and 0.40 s), its quiet start and end left out."""
-    path = f'{OUT}/measure.wav'
-    sf.write(path, np.concatenate([np.zeros(int(0.30 * sr)), y, np.zeros(int(0.40 * sr))]).astype(np.float32), sr)
-    out = subprocess.run(['ffmpeg', '-hide_banner', '-nostats', '-i', path, '-af', 'silencedetect=noise=-38dB:d=0.18', '-f', 'null', '-'],
-                         capture_output=True, text=True).stderr
-    length = float(re.search(r'Duration: (\d+):(\d+):([\d.]+)', out).group(3))
-    marks = [(k, float(t)) for k, t in re.findall(r'silence_(start|end): ([0-9.]+)', out)]
-    spans, at = [], 0.0
-    for kind, t in marks:
-        if kind == 'start' and t > at + 0.02:
-            spans.append((at, t))
-        if kind == 'end':
-            at = t
-    if not marks or marks[-1][0] == 'end':
-        spans.append((at, length))
-    spans = [x for x in spans if x[1] - x[0] > 0.05]
-    return spans[-1][1] - spans[0][0] if spans else length
-
-
-def fit(y, sr, tempo):
-    """The voice faster (tempo > 1) or slower, its pitch kept (ffmpeg's atempo)."""
-    a, b = f'{OUT}/fit-in.wav', f'{OUT}/fit-out.wav'
-    sf.write(a, y.astype(np.float32), sr)
-    subprocess.run(['ffmpeg', '-v', 'error', '-y', '-i', a, '-af', f'atempo={tempo:.5f}', b], check=True)
-    return sf.read(b)[0]
 
 
 def heard(path):
