@@ -25,8 +25,10 @@
   const recorded = !/[?&]vo=0\b/.test(location.search) && !!player.canPlayType('audio/ogg; codecs="opus"');
   // A line's key: its text as shown, without highlight marks ({…}, *…*), line breaks as spaces.
   const key = text => String(text).replace(/[{}*]/g, '').replace(/\s+/g, ' ').trim();
-  // A translated line → the same line in English (js/i18n.js); English stays as it is.
-  const english = text => (window.I18n ? I18n.source(text) : text);
+  // A translated line → the same line in English (js/i18n.js): the first that has a recording, if it translates more than
+  // one alike; English stays as it is.
+  const englishes = text => (window.I18n ? I18n.sources(text) : [String(text)]);
+  const english = text => { const all = englishes(text); return all.find(e => LINES[key(e)]) || all[0]; };
   // [clip, seconds, own]: the language's own recording of the line (`own`: clip is its address; seconds may be null),
   // or else the English recording (its words, or the English words of a translated line).
   const clipOf = text => {

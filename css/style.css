@@ -2761,3 +2761,11 @@ kbd {
 .dc-buy { position: absolute; z-index: 10; flex: none; width: 260px; height: 84px; margin-left: -130px; border-radius: 24px; font-family: 'Baloo 2', system-ui, sans-serif;
   font-size: 40px; font-weight: 800; pointer-events: auto; }
 .dc-buy svg { width: 40px; height: 40px; }
+
+/* ---------- The game in another language (index.html?lan=hi: js/i18n.js sets <html lang>) ----------
+   Hindi, Marathi, Telugu, Gujarati and Odia write vowel signs above and below their letters, so words that can run onto
+   a second line, or sit in a stack (a scene's name over its line), get the room for them. English is untouched. */
+html:not([lang="en"]) .si-text strong { line-height: 1.4; }
+html:not([lang="en"]) .si-text small { line-height: 1.45; }
+html:not([lang="en"]) :is(.is-v2 .b-text, .q-line, .is-v2 .hint-strip, .pqp-question, .qd-name, .ph-list-title, .ic-title, .pmc-text,
+  .is-v2 .pop-card--mp .cn-meaning) { line-height: 1.45; }

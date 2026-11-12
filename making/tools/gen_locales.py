@@ -21,9 +21,10 @@ TAG = re.compile(r'</?([a-z][\w-]*)\s*/?>')
 
 
 def marks(value):
-    """The placeholders and tags a line (or each line of a list) carries."""
-    items = value if isinstance(value, list) else [value]
-    return [(Counter(PLACE.findall(s)), Counter(TAG.findall(s))) for s in items]
+    """The placeholders and tags a line (or all the items of a list: in a translation they may move from one item to
+    another, as the words do) carries."""
+    text = ''.join(value) if isinstance(value, list) else value
+    return [(Counter(PLACE.findall(text)), Counter(TAG.findall(text)))]
 
 
 def check(data):
@@ -58,15 +59,14 @@ def check(data):
                 problems.append(f'{lang}.{k}: {len(v)} items, English has {len(e)}')
                 continue
             if isinstance(e, (str, list)):
-                for i, ((pv, tv), (pe, te)) in enumerate(zip(marks(v), marks(e))):
-                    at = f'{lang}.{k}' + (f'[{i}]' if isinstance(e, list) else '')
-                    if pv != pe:
-                        problems.append(f'{at}: placeholders {dict(pv)} ≠ English {dict(pe)}')
-                    if tv != te:
-                        problems.append(f'{at}: tags {dict(tv)} ≠ English {dict(te)}')
-                    s = v[i] if isinstance(v, list) else v
+                (pv, tv), (pe, te) = marks(v)[0], marks(e)[0]
+                if pv != pe:
+                    problems.append(f'{lang}.{k}: placeholders {dict(pv)} ≠ English {dict(pe)}')
+                if tv != te:
+                    problems.append(f'{lang}.{k}: tags {dict(tv)} ≠ English {dict(te)}')
+                for i, s in enumerate(v if isinstance(v, list) else [v]):
                     if not s.strip():
-                        problems.append(f'{at}: empty')
+                        problems.append(f'{lang}.{k}' + (f'[{i}]' if isinstance(e, list) else '') + ': empty')
     for lang in data.get('supportedLanguages', {}):
         if lang not in data:
             problems.append(f'supportedLanguages lists "{lang}", which has no words')

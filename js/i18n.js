@@ -73,7 +73,8 @@ var I18n = (function () {
 
   var _data = null;
   var _lang = 'en';
-  var _source = Object.create(null);          /* a line of this language (plain) → the same line in English */
+  var _source = Object.create(null);          /* a line of this language (plain) → the same line in English (each, if
+                                                 the translation says two English lines alike: see sources) */
   var _keyOf = Object.create(null);           /* a line of this language (plain) → its key (for its recording) */
 
   /* ---------- which language ---------- */
@@ -161,7 +162,10 @@ var I18n = (function () {
   }
   function _note(text, enText, id) {
     if (!text) return;
-    if (enText && text !== enText && !(text in _source)) _source[text] = enText;
+    if (enText && text !== enText) {
+      var list = _source[text] || (_source[text] = []);
+      if (list.indexOf(enText) < 0) list.push(enText);
+    }
     if (id && !(text in _keyOf)) _keyOf[text] = id;
   }
   /* every line of the chosen language, against its English and its key */
@@ -221,8 +225,13 @@ var I18n = (function () {
   }
   /* the English of a line on the screen, or the line itself (English already, or never one of ours) */
   function source(text) {
+    return sources(text)[0];
+  }
+  /* …every English line it translates: a translation may say two English lines alike (a scene's name and a line said,
+     "Let’s first recall…" and "let’s first recall…"); the voice-over takes the first that has a recording */
+  function sources(text) {
     var n = norm(text);
-    return (n in _source) ? _source[n] : String(text);
+    return (n in _source) ? _source[n].slice() : [String(text)];
   }
 
   /* ---------- the voice-over of a language of its own (see the header) ---------- */
@@ -338,6 +347,7 @@ var I18n = (function () {
     has: has,
     norm: norm,
     source: source,
+    sources: sources,
     hasVoice: hasVoice,
     voice: voice,
     applyStatic: applyStatic,
