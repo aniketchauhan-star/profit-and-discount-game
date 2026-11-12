@@ -3898,6 +3898,779 @@ window.GAME_LOCALES = {
           3.47
         ]
       }
+    },
+    "gu": {
+      "dir": "assets/VO-GU/",
+      "files": {
+        "homePlan": [
+          "homePlan.ogg",
+          4.05
+        ],
+        "homeAdvice": [
+          "homeAdvice.ogg",
+          3.87
+        ],
+        "homePromise": [
+          "homePromise.ogg",
+          0.91
+        ],
+        "subBrowse": [
+          "subBrowse.ogg",
+          2.04
+        ],
+        "browseLine": [
+          "subBrowse.ogg",
+          2.04
+        ],
+        "subAsk": [
+          "subAsk.ogg",
+          1.88
+        ],
+        "askHowMuch": [
+          "subAsk.ogg",
+          1.88
+        ],
+        "askPrice": [
+          "askPrice.ogg",
+          1.49
+        ],
+        "askCostly": [
+          "askCostly.ogg",
+          2.25
+        ],
+        "askCheckPrice": [
+          "askCheckPrice.ogg",
+          2.27
+        ],
+        "subShock": [
+          "subShock.ogg",
+          3.08
+        ],
+        "shockLine": [
+          "subShock.ogg",
+          3.08
+        ],
+        "mpDefinition.0": [
+          "mpDefinition.0.ogg",
+          2.04
+        ],
+        "mpDefinition.1": [
+          "mpDefinition.1.ogg",
+          1.8
+        ],
+        "mpqHint": [
+          "mpqHint.ogg",
+          3.47
+        ],
+        "mpqSaid": [
+          "mpqSaid.ogg",
+          7.08
+        ],
+        "revealPart1": [
+          "revealPart1.ogg",
+          3.79
+        ],
+        "revealPart2": [
+          "revealPart2.ogg",
+          3.47
+        ],
+        "revealPart3": [
+          "revealPart3.ogg",
+          1.96
+        ],
+        "subDiscount": [
+          "subDiscount.ogg",
+          1.57
+        ],
+        "discountThought": [
+          "subDiscount.ogg",
+          1.57
+        ],
+        "discountDefinition.0": [
+          "discountDefinition.0.ogg",
+          3.79
+        ],
+        "discountDefinition.1": [
+          "discountDefinition.1.ogg",
+          0.99
+        ],
+        "dqHint": [
+          "dqHint.ogg",
+          5.41
+        ],
+        "dqSaid": [
+          "dqSaid.ogg",
+          4.99
+        ],
+        "payThanks": [
+          "payThanks.ogg",
+          0.99
+        ],
+        "leaveBookDone": [
+          "leaveBookDone.ogg",
+          3.32
+        ],
+        "subLeave": [
+          "subLeave.ogg",
+          3.4
+        ],
+        "leaveToSneakers": [
+          "subLeave.ogg",
+          3.4
+        ],
+        "formulaSaid.0": [
+          "formulaSaid.0.ogg",
+          1.15
+        ],
+        "formulaSaid.1": [
+          "formulaSaid.1.ogg",
+          1.41
+        ],
+        "formulaSaid.2": [
+          "formulaSaid.2.ogg",
+          1.25
+        ],
+        "formulaSo": [
+          "formulaSo.ogg",
+          3.0
+        ],
+        "termDiscount": [
+          "termDiscount.ogg",
+          0.85
+        ],
+        "barDiscount": [
+          "termDiscount.ogg",
+          0.85
+        ],
+        "reductionNote": [
+          "termDiscount.ogg",
+          0.85
+        ],
+        "frSaid.0": [
+          "termDiscount.ogg",
+          0.85
+        ],
+        "frSaid.1": [
+          "frSaid.1.ogg",
+          2.04
+        ],
+        "frSaid.2": [
+          "frSaid.2.ogg",
+          1.88
+        ],
+        "frLetters.0": [
+          "frLetters.0.ogg",
+          3.32
+        ],
+        "frLetters.1": [
+          "frLetters.1.ogg",
+          4.05
+        ],
+        "frLetters.2": [
+          "frLetters.2.ogg",
+          3.55
+        ],
+        "frShortSaid.0": [
+          "frShortSaid.0.ogg",
+          1.31
+        ],
+        "frShortSaid.1": [
+          "frShortSaid.1.ogg",
+          1.3
+        ],
+        "frShortSaid.2": [
+          "frShortSaid.2.ogg",
+          1.23
+        ],
+        "subSneakers": [
+          "subSneakers.ogg",
+          2.9
+        ],
+        "sneakersLine": [
+          "subSneakers.ogg",
+          2.9
+        ],
+        "shoeOff": [
+          "shoeOff.ogg",
+          2.43
+        ],
+        "subConfused": [
+          "subConfused.ogg",
+          3.71
+        ],
+        "shoePrice": [
+          "subConfused.ogg",
+          3.71
+        ],
+        "smqHint": [
+          "smqHint.ogg",
+          4.28
+        ],
+        "smqSaid": [
+          "smqSaid.ogg",
+          8.05
+        ],
+        "subOffMeans": [
+          "subOffMeans.ogg",
+          3.4
+        ],
+        "shoePay": [
+          "subOffMeans.ogg",
+          3.4
+        ],
+        "offMeans.0": [
+          "offMeans.0.ogg",
+          1.41
+        ],
+        "offMeans.1": [
+          "offMeans.1.ogg",
+          1.49
+        ],
+        "recallLine.0": [
+          "recallLine.0.ogg",
+          3.87
+        ],
+        "subRecall": [
+          "subRecall.ogg",
+          4.13
+        ],
+        "recallLine.1": [
+          "subRecall.ogg",
+          4.13
+        ],
+        "subPercentRule": [
+          "subPercentRule.ogg",
+          1.65
+        ],
+        "prQuestion": [
+          "subPercentRule.ogg",
+          1.65
+        ],
+        "prRoles.0": [
+          "prRoles.0.ogg",
+          1.8
+        ],
+        "prRoles.1": [
+          "prRoles.1.ogg",
+          2.0
+        ],
+        "percentRuleSaid.0": [
+          "percentRuleSaid.0.ogg",
+          1.88
+        ],
+        "percentRuleSaid.1": [
+          "percentRuleSaid.1.ogg",
+          2.04
+        ],
+        "percentRuleSaid.2": [
+          "percentRuleSaid.2.ogg",
+          1.72
+        ],
+        "putSaid.0": [
+          "putSaid.0.ogg",
+          1.49
+        ],
+        "putSaid.1": [
+          "putSaid.1.ogg",
+          1.5
+        ],
+        "prSign": [
+          "prSign.ogg",
+          2.69
+        ],
+        "subWhatPercent": [
+          "subWhatPercent.ogg",
+          2.77
+        ],
+        "wpQuestion": [
+          "subWhatPercent.ogg",
+          2.77
+        ],
+        "wpRoles.0": [
+          "wpRoles.0.ogg",
+          2.04
+        ],
+        "wpRoles.1": [
+          "wpRoles.1.ogg",
+          1.96
+        ],
+        "wpWork": [
+          "wpWork.ogg",
+          3.16
+        ],
+        "wpEquals": [
+          "wpEquals.ogg",
+          1.31
+        ],
+        "wpSo": [
+          "wpSo.ogg",
+          3.97
+        ],
+        "practice": [
+          "practice.ogg",
+          1.88
+        ],
+        "subCheck": [
+          "subCheck.ogg",
+          3.4
+        ],
+        "cfuQuestion": [
+          "subCheck.ogg",
+          3.4
+        ],
+        "notQuite": [
+          "notQuite.ogg",
+          0.95
+        ],
+        "cfuIsPart": [
+          "cfuIsPart.ogg",
+          1.8
+        ],
+        "cfuIsWhole": [
+          "cfuIsWhole.ogg",
+          1.72
+        ],
+        "cfuSum": [
+          "cfuSum.ogg",
+          5.25
+        ],
+        "correct": [
+          "correct.ogg",
+          0.7
+        ],
+        "cfuSo": [
+          "cfuSo.ogg",
+          4.13
+        ],
+        "toPaySo": [
+          "toPaySo.ogg",
+          2.35
+        ],
+        "thMeans": [
+          "thMeans.ogg",
+          1.15
+        ],
+        "thOutOf100": [
+          "thOutOf100.ogg",
+          1.15
+        ],
+        "thOfMp": [
+          "thOfMp.ogg",
+          4.05
+        ],
+        "thFraction": [
+          "thFraction.ogg",
+          3.87
+        ],
+        "thDivide": [
+          "thDivide.ogg",
+          4.44
+        ],
+        "thMultiply": [
+          "thMultiply.ogg",
+          3.4
+        ],
+        "thAnswer": [
+          "thAnswer.ogg",
+          2.59
+        ],
+        "thDiscountIs": [
+          "thDiscountIs.ogg",
+          2.93
+        ],
+        "toPayIntro": [
+          "toPayIntro.ogg",
+          4.44
+        ],
+        "subToPay": [
+          "subToPay.ogg",
+          1.96
+        ],
+        "toPayQuestion": [
+          "subToPay.ogg",
+          1.96
+        ],
+        "payWorkFind": [
+          "payWorkFind.ogg",
+          2.27
+        ],
+        "payWorkSubtract": [
+          "payWorkSubtract.ogg",
+          2.93
+        ],
+        "payWorkTry": [
+          "payWorkTry.ogg",
+          4.28
+        ],
+        "payWrongMp": [
+          "payWrongMp.ogg",
+          7.47
+        ],
+        "payWrongD": [
+          "payWrongD.ogg",
+          6.4
+        ],
+        "payWorkSum": [
+          "payWorkSum.ogg",
+          3.63
+        ],
+        "payWorkEquals": [
+          "payWorkEquals.ogg",
+          2.77
+        ],
+        "payWorkSo": [
+          "payWorkSo.ogg",
+          4.13
+        ],
+        "finalLine.0": [
+          "finalLine.0.ogg",
+          2.04
+        ],
+        "finalLine.1": [
+          "finalLine.1.ogg",
+          2.59
+        ],
+        "subPctOfMp": [
+          "subPctOfMp.ogg",
+          3.55
+        ],
+        "poQuestion": [
+          "subPctOfMp.ogg",
+          3.55
+        ],
+        "poRoles.0": [
+          "poRoles.0.ogg",
+          2.35
+        ],
+        "poRoles.1": [
+          "poRoles.1.ogg",
+          2.69
+        ],
+        "poWork": [
+          "poWork.ogg",
+          3.63
+        ],
+        "poEquals": [
+          "poEquals.ogg",
+          1.57
+        ],
+        "poSo": [
+          "poSo.ogg",
+          4.99
+        ],
+        "poPartIs": [
+          "poPartIs.ogg",
+          2.04
+        ],
+        "poWholeIs": [
+          "poWholeIs.ogg",
+          2.51
+        ],
+        "poRule": [
+          "poRule.ogg",
+          6.35
+        ],
+        "subReturn": [
+          "subReturn.ogg",
+          1.57
+        ],
+        "returnAsk": [
+          "subReturn.ogg",
+          1.57
+        ],
+        "returnLearnt": [
+          "returnLearnt.ogg",
+          5.25
+        ],
+        "subPartyMoney": [
+          "subPartyMoney.ogg",
+          1.49
+        ],
+        "moneyHere": [
+          "subPartyMoney.ogg",
+          1.49
+        ],
+        "moneyUse": [
+          "moneyUse.ogg",
+          4.68
+        ],
+        "partyDealLeft": [
+          "partyDealLeft.ogg",
+          3.0
+        ],
+        "partyDealReally": [
+          "partyDealReally.ogg",
+          0.76
+        ],
+        "subPartyDeal": [
+          "subPartyDeal.ogg",
+          2.69
+        ],
+        "partyDealOffers": [
+          "subPartyDeal.ogg",
+          2.69
+        ],
+        "tryAgain": [
+          "tryAgain.ogg",
+          1.2
+        ],
+        "frInShort": [
+          "frInShort.ogg",
+          1.88
+        ],
+        "inviteWow": [
+          "inviteWow.ogg",
+          3.24
+        ],
+        "inviteOutfit": [
+          "inviteOutfit.ogg",
+          2.05
+        ],
+        "toMallLine": [
+          "toMallLine.ogg",
+          2.69
+        ],
+        "hadShirt": [
+          "hadShirt.ogg",
+          1.72
+        ],
+        "hadPants": [
+          "hadPants.ogg",
+          1.88
+        ],
+        "hadWatch": [
+          "hadWatch.ogg",
+          1.88
+        ],
+        "hadSunglasses": [
+          "hadSunglasses.ogg",
+          2.04
+        ],
+        "partyWow": [
+          "partyWow.ogg",
+          3.55
+        ],
+        "missionText": [
+          "missionText.ogg",
+          3.55
+        ],
+        "missionWow": [
+          "missionWow.ogg",
+          1.8
+        ],
+        "whichShirt": [
+          "whichShirt.ogg",
+          3.63
+        ],
+        "whichPants": [
+          "whichPants.ogg",
+          3.47
+        ],
+        "whichWatch": [
+          "whichWatch.ogg",
+          3.79
+        ],
+        "whichSunglasses": [
+          "whichSunglasses.ogg",
+          3.79
+        ],
+        "sumShirtBlue": [
+          "sumShirtBlue.ogg",
+          7.81
+        ],
+        "sumShirtGreen": [
+          "sumShirtGreen.ogg",
+          6.84
+        ],
+        "sumPantsJeans": [
+          "sumPantsJeans.ogg",
+          7.31
+        ],
+        "sumPantsTrousers": [
+          "sumPantsTrousers.ogg",
+          6.77
+        ],
+        "sumWatchSilver": [
+          "sumWatchSilver.ogg",
+          6.77
+        ],
+        "sumWatchBrown": [
+          "sumWatchBrown.ogg",
+          9.09
+        ],
+        "sumSunglassesBlack": [
+          "sumSunglassesBlack.ogg",
+          8.52
+        ],
+        "sumSunglassesBrown": [
+          "sumSunglassesBrown.ogg",
+          6.43
+        ],
+        "rightShirt": [
+          "rightShirt.ogg",
+          3.79
+        ],
+        "rightPants": [
+          "rightPants.ogg",
+          2.77
+        ],
+        "rightWatch": [
+          "rightWatch.ogg",
+          3.79
+        ],
+        "rightSunglasses": [
+          "rightSunglasses.ogg",
+          4.36
+        ],
+        "doneShirt": [
+          "doneShirt.ogg",
+          2.35
+        ],
+        "donePants": [
+          "donePants.ogg",
+          1.96
+        ],
+        "doneWatch": [
+          "doneWatch.ogg",
+          2.77
+        ],
+        "doneSunglasses": [
+          "doneSunglasses.ogg",
+          2.77
+        ],
+        "partyTotal|amount=₹4,470": [
+          "partyTotal_amount_4_470.ogg",
+          2.93
+        ],
+        "partyMoneyLeft|amount=₹530": [
+          "partyMoneyLeft_amount_530.ogg",
+          2.19
+        ],
+        "mallHow": [
+          "mallHow.ogg",
+          2.85
+        ],
+        "pickShirt": [
+          "pickShirt.ogg",
+          3.4
+        ],
+        "hintShirtBlue": [
+          "hintShirtBlue.ogg",
+          5.8
+        ],
+        "hintSunglassesBlack": [
+          "hintShirtBlue.ogg",
+          5.8
+        ],
+        "hintShirtGreen": [
+          "hintShirtGreen.ogg",
+          6.61
+        ],
+        "nextShirtGreen": [
+          "nextShirtGreen.ogg",
+          3.08
+        ],
+        "nextShirtBlue": [
+          "nextShirtBlue.ogg",
+          3.16
+        ],
+        "pickPants": [
+          "pickPants.ogg",
+          3.24
+        ],
+        "pickSunglasses": [
+          "pickPants.ogg",
+          3.24
+        ],
+        "hintPantsJeans": [
+          "hintPantsJeans.ogg",
+          4.6
+        ],
+        "hintPantsTrousers": [
+          "hintPantsTrousers.ogg",
+          4.91
+        ],
+        "nextPantsTrousers": [
+          "nextPantsTrousers.ogg",
+          2.85
+        ],
+        "nextPantsJeans": [
+          "nextPantsJeans.ogg",
+          2.77
+        ],
+        "pickWatch": [
+          "pickWatch.ogg",
+          3.63
+        ],
+        "hintWatchSilver": [
+          "hintWatchSilver.ogg",
+          4.28
+        ],
+        "hintWatchBrown": [
+          "hintWatchBrown.ogg",
+          6.2
+        ],
+        "nextWatchBrown": [
+          "nextWatchBrown.ogg",
+          3.4
+        ],
+        "nextWatchSilver": [
+          "nextWatchSilver.ogg",
+          3.4
+        ],
+        "hintSunglassesBrown": [
+          "hintSunglassesBrown.ogg",
+          4.28
+        ],
+        "nextSunglassesBrown": [
+          "nextSunglassesBrown.ogg",
+          3.63
+        ],
+        "nextSunglassesBlack": [
+          "nextSunglassesBlack.ogg",
+          3.47
+        ],
+        "buyLess": [
+          "buyLess.ogg",
+          3.87
+        ],
+        "mallNext": [
+          "mallNext.ogg",
+          3.32
+        ],
+        "poFound": [
+          "poFound.ogg",
+          2.93
+        ],
+        "poCheck": [
+          "poCheck.ogg",
+          5.41
+        ],
+        "mpqWhy": [
+          "mpqWhy.ogg",
+          4.83
+        ],
+        "mpqReason": [
+          "mpqWhy.ogg",
+          4.83
+        ],
+        "smqWhy": [
+          "smqWhy.ogg",
+          6.77
+        ],
+        "smqReason": [
+          "smqWhy.ogg",
+          6.77
+        ],
+        "dqWhy": [
+          "dqWhy.ogg",
+          4.21
+        ],
+        "dqReason": [
+          "dqWhy.ogg",
+          4.21
+        ]
+      }
     }
   }
 };
