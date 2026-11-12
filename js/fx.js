@@ -207,6 +207,8 @@
   // `text` is a string ('\n' = new line) or segments: [{ t: "It's " }, { t: '₹800', em: true }, { t: '!' }];
   // a segment can also carry a class of its own, e.g. { t: 'Selling Price', cls: 'stress' } ('key' = a new word, in red),
   // and `end: true` closes a part of the line, so it can be typed out (and spoken) part by part.
+  // (A word in an Indian script is one piece: its vowel signs and joined letters can't be drawn apart from their letter.)
+  const INDIC = /[\u0900-\u0DFF\u200C\u200D]/;
   function buildLetters(host, text) {
     const segments = typeof text === 'string' ? [{ t: text }] : text;
     const letters = [];
@@ -222,7 +224,7 @@
             return;
           }
           const word = el('span', 'b-word', target);
-          Array.from(part).forEach((c, i, all) => {
+          (INDIC.test(part) ? [part] : Array.from(part)).forEach((c, i, all) => {
             const letter = el('span', 'ch', word);
             letter.textContent = c;
             letter.dataset.part = partNo;
@@ -318,7 +320,7 @@
     const words = [...root.querySelectorAll('.b-word')].filter(w => !w.classList.contains('was-said') &&
       (part === undefined || +w.firstElementChild.dataset.part === part));
     if (!words.length) return;
-    const share = (w, i) => w.textContent.length + 1 + (i > 0 && /[!?.,]$/.test(words[i - 1].textContent) ? 3 : 0);
+    const share = (w, i) => w.textContent.length + 1 + (i > 0 && /[!?.,।]$/.test(words[i - 1].textContent) ? 3 : 0);
     const total = words.reduce((sum, w, i) => sum + share(w, i), 0);
     const unit = seconds ? Math.max(16, ((seconds - 0.35) * 1000) / total) : 62;
     if (!light) {
@@ -1030,8 +1032,8 @@
     <path d="M206 510 C236 482 176 462 220 442 C246 430 226 416 236 406 L244 406 C238 418 262 432 232 448 C196 466 254 486 232 510 Z" fill="url(#${id}r)"/>
   </g>
   <rect class="mp-cover-line" x="14" y="10" width="350" height="500" rx="18"/>
-  <text class="mp-book-title" x="80" y="84">A Brighter</text>
-  <text class="mp-book-title" x="80" y="126">Tomorrow</text>
+  <text class="mp-book-title" x="80" y="84">${I18n.t('bookTitle1')}</text>
+  <text class="mp-book-title" x="80" y="126">${I18n.t('bookTitle2')}</text>
   <path class="mp-book-text" d="M80 168 H318 M80 192 H300 M80 216 H312 M80 240 H262"/>
   <g class="mp-sticker" transform="translate(236 412) rotate(-3)">
     <rect class="mp-sticker-card" width="112" height="78" rx="10"/>
@@ -1114,7 +1116,7 @@
     if (note) note.textContent = tenths.label;
     root.setAttribute('role', 'img');
     root.setAttribute('aria-label', tenths
-      ? `${total.value} cut into ten parts of ${tenths.each}; ${tenths.label}`
+      ? I18n.t('ariaBarTenths', { total: total.value, each: tenths.each, label: tenths.label })
       : `${total.value} ${total.label} = ${parts.map(p => `${p.value} ${p.label}`).join(' + ')}`);
     [root, ...(note ? [note] : [])].forEach(n => { n.style.opacity = '0'; });
     return {
@@ -1153,7 +1155,7 @@
     const caption = el('div', 'g100-label', root);
     caption.textContent = label;
     root.setAttribute('role', 'img');
-    root.setAttribute('aria-label', `A grid of 100 squares, ${shade} shaded: ${label}`);
+    root.setAttribute('aria-label', I18n.t('ariaGrid100', { shade, label }));
     root.style.opacity = '0';
     caption.style.opacity = '0';
     return {
@@ -1357,6 +1359,19 @@
    * Reveal it with open() → term(i) / op(i) (the strip) → showShort() → lightUp(i) → fly(i) / shortOp(i).
    * ping(node) makes a part pop. `foot` is the empty space at the bottom (it keeps the formula a little above the middle).
    */
+  // A word's first letter as it is drawn: in an Indian script with its vowel signs, and a joined letter with the next.
+  const VIRAMA = /[\u094D\u09CD\u0A4D\u0ACD\u0B4D\u0BCD\u0C4D\u0CCD\u0D4D]$/;
+  function firstLetter(word) {
+    const one = s => (/^.\p{M}*/u.exec(s) || [''])[0];
+    let first = one(word);
+    while (VIRAMA.test(first) && first.length < word.length) {
+      const next = one(word.slice(first.length));
+      if (!next) break;
+      first += next;
+    }
+    return first;
+  }
+
   function formulaReveal(parent, { terms, ops }) {
     const root = el('div', 'mp', parent); // the same centring wrapper as the price panels
     const panel = el('div', 'fr-panel', root);
@@ -1378,8 +1393,9 @@
       const firsts = [];
       term.words.split(' ').forEach((word, j) => {
         if (j) long.appendChild(document.createTextNode(' '));
-        firsts.push(Object.assign(el('span', 'fr-ini', long), { textContent: word[0] }));
-        long.appendChild(document.createTextNode(word.slice(1)));
+        const first = firstLetter(word);
+        firsts.push(Object.assign(el('span', 'fr-ini', long), { textContent: first }));
+        long.appendChild(document.createTextNode(word.slice(first.length)));
       });
       longTerms.push(long);
       initials.push(firsts);
@@ -1388,7 +1404,7 @@
       shortTerms.push(short);
     });
     panel.setAttribute('role', 'group');
-    panel.setAttribute('aria-label', terms.map((t, i) => `${i ? ops[i - 1] + ' ' : ''}${t.words}`).join(' ') + '. In short: ' +
+    panel.setAttribute('aria-label', terms.map((t, i) => `${i ? ops[i - 1] + ' ' : ''}${t.words}`).join(' ') + `. ${I18n.t('ariaInShort')} ` +
       terms.map((t, i) => `${i ? ops[i - 1] + ' ' : ''}${t.short}`).join(' '));
     [panel, strip, shortBox, ...longTerms, ...longOps, ...shortOps, ...letters.flat()].forEach(n => { n.style.opacity = '0'; });
     const showStrip = sheetFirst(strip);
@@ -1446,6 +1462,7 @@
         Sound.swish();
         await Promise.all(initials[i].map(async (ini, j) => {
           const target = letters[i][j];
+          if (!target) return; // (a short form with fewer letters than the words have)
           const chip = el('span', `fr-chip tone-${terms[i].tone}`, panel);
           chip.textContent = ini.textContent;
           const a = local(ini);
@@ -1465,6 +1482,7 @@
           target.style.opacity = '';
           chip.remove();
         }));
+        letters[i].forEach(l => { l.style.opacity = ''; }); // (and any letter no word gave)
         Sound.pop();
         await reveal(shortTerms[i], [{ transform: 'scale(1.15)' }, { transform: 'none' }], {
           duration: T(300), easing: 'cubic-bezier(.3,1.6,.5,1)',
@@ -1579,14 +1597,14 @@
     strip.textContent = question;
     const hintEl = hint ? el('div', 'pqp-hint', side) : null;
     if (hint) {
-      el('span', 'pqp-hint-label', hintEl).textContent = 'Hint:';
+      el('span', 'pqp-hint-label', hintEl).textContent = I18n.t('hintLabel');
       hint.forEach(seg => { el('span', seg.cls || '', hintEl).textContent = seg.t; });
     }
     const below = el('div', 'pqp-answers', side);
     const slot = hint ? null : el('div', 'q-slot', side); // under the answers: what to remember after a wrong answer
     panel.setAttribute('role', 'group');
     panel.setAttribute('aria-label', `${price}, ${off.join(' ')}. ${question.replace(/\n/g, ' ')}` +
-      (hint ? ` Hint: ${hint.map(seg => seg.t).join(' ')}` : ''));
+      (hint ? ` ${I18n.t('hintLabel')} ${hint.map(seg => seg.t).join(' ')}` : ''));
     [panel, strip, hintEl].forEach(n => { if (n) n.style.opacity = '0'; });
     return {
       el: root,
@@ -1713,7 +1731,7 @@
     panel.setAttribute('aria-label', [
       ...boxes.map(b => `${b.label} ${b.value}`),
       ...lines.map(l => `${l.label.textContent} = ${l.parts.map(n => (n.classList.contains('pf-frac')
-        ? `${n.firstChild.textContent} over ${n.lastChild.textContent}`
+        ? `${n.firstChild.textContent} ${I18n.t('ariaOver')} ${n.lastChild.textContent}`
         : n.classList.contains('ws-slot') ? n.lastChild.textContent : n.textContent)).join(' ')}`),
     ].join('. '));
     [panel, sheet, ...boxEls, ...arrows, ...lines.flatMap(l => [l.label, l.eq, ...l.parts])].forEach(n => { n.style.opacity = '0'; });
@@ -1953,7 +1971,7 @@
         value.classList.add('ws-drag');
         value.tabIndex = 0;
         value.setAttribute('role', 'button');
-        value.setAttribute('aria-label', `${value.textContent}: drag it into its box`);
+        value.setAttribute('aria-label', I18n.t('ariaDragValue', { value: value.textContent }));
         value.addEventListener('pointerdown', e => {
           if (filled.has(n) || moving.has(n) || held) return;
           e.preventDefault();
@@ -2002,7 +2020,7 @@
       boxes.forEach((box, m) => {
         box.tabIndex = 0;
         box.setAttribute('role', 'button');
-        box.setAttribute('aria-label', `the ${box.firstChild.textContent} box`);
+        box.setAttribute('aria-label', I18n.t('ariaDropBox', { name: box.firstChild.textContent }));
         const put = () => {
           if (picked < 0 || filled.has(m)) return;
           wait();
@@ -2173,6 +2191,7 @@
         ], { duration: T(620), easing: 'cubic-bezier(.2,.8,.3,1)' });
       },
       tag(role) {
+        if (!tags[role]) return; // (a question without that amount marked)
         tags[role].classList.add('is-' + role);
         replay(tags[role], 'is-ping');
       },
@@ -2272,7 +2291,7 @@
       return { f, num, bar, den };
     };
     const times = expr => Object.assign(el('span', 'pf-times', expr), { textContent: '× 100' });
-    const rows = [row('Percentage'), row(''), row('')];
+    const rows = [row(I18n.t('termPercentage')), row(''), row('')];
     const words = fraction(rows[0].expr, part.label, whole.label);
     const sums = fraction(rows[1].expr, numbers[0], numbers[1], v);
     const by100 = [times(rows[0].expr), times(rows[1].expr)];
@@ -2293,7 +2312,7 @@
     const hint = words.num.lastElementChild;
     panel.setAttribute('role', 'group');
     panel.setAttribute('aria-label', `${question.map(q => q.t).join('')} ${part.label} = ${part.value}, ${whole.label} = ${whole.value}. ` +
-      `Percentage = ${part.label} ÷ ${whole.label} × 100 = ${numbers[0]} ÷ ${numbers[1]} × 100 = ${answer}`);
+      `${I18n.t('termPercentage')} = ${part.label} ÷ ${whole.label} × 100 = ${numbers[0]} ÷ ${numbers[1]} × 100 = ${answer}`);
     [panel, boxes.part, boxes.whole, rows[0].label, words.f, hint, sums.bar, sums.num, sums.den, ans,
       ...rows.map(r => r.eq), ...by100].forEach(n => { n.style.opacity = '0'; });
     sheet.style.opacity = '0'; // it appears with its first line (never empty)
@@ -2790,15 +2809,15 @@
     Object.assign(el('img', 'ph-wallet-icon', purse), { src: wallet, alt: '' });
     const amount = el('span', 'ph-amount', purse);
     amount.textContent = inr(money);
-    purse.setAttribute('aria-label', `Wallet: ${inr(money)}`);
+    purse.setAttribute('aria-label', I18n.t('ariaWallet', { amount: inr(money) }));
     const list = el('div', 'ph-list', root);
-    el('span', 'ph-list-title', list).textContent = 'Shopping List';
+    el('span', 'ph-list-title', list).textContent = I18n.t('shoppingList');
     const row = el('div', 'ph-slots', list);
     const slots = items.map(it => {
       const slot = el('i', it.done ? 'ph-slot is-done' : 'ph-slot', row);
       Object.assign(el('img', '', slot), { src: it.icon, alt: '' });
       el('b', 'ph-tick', slot).innerHTML = ICON_CHECK;
-      slot.setAttribute('aria-label', `${it.name}${it.done ? ': bought' : ''}`);
+      slot.setAttribute('aria-label', it.done ? I18n.t('ariaBought', { name: it.name }) : it.name);
       return slot;
     });
     let shown = money;
@@ -2810,7 +2829,7 @@
       async count(to, ms = 1100) {
         const from = shown;
         shown = to;
-        purse.setAttribute('aria-label', `Wallet: ${inr(to)}`);
+        purse.setAttribute('aria-label', I18n.t('ariaWallet', { amount: inr(to) }));
         if (reducedMotion) {
           amount.textContent = inr(to);
           return;
@@ -2847,7 +2866,7 @@
   function joystick(parent, { base, knob, cls = '' } = {}) {
     const root = el('div', classes('joy2', cls), parent);
     root.setAttribute('role', 'group');
-    root.setAttribute('aria-label', 'Controller: press and drag to walk, or use the arrow keys');
+    root.setAttribute('aria-label', I18n.t('ariaController'));
     Object.assign(el('img', 'joy2-base', root), { src: base, alt: '', draggable: false });
     const knobEl = el('div', 'joy2-knob', root);
     Object.assign(el('img', '', knobEl), { src: knob, alt: '', draggable: false });
@@ -3097,8 +3116,8 @@
       buy.type = 'button';
       buy.dataset.deal = String(i);
       buy.disabled = true; // (till showBuys)
-      buy.innerHTML = `${PARTY_ICONS.cart}<span>Buy</span>`;
-      buy.setAttribute('aria-label', `Buy the ${d.name.toLowerCase()}, ${inr(d.pay)}`);
+      buy.innerHTML = `${PARTY_ICONS.cart}<span>${I18n.t('btnBuy')}</span>`;
+      buy.setAttribute('aria-label', I18n.t('ariaBuy', { name: d.name.toLowerCase(), price: inr(d.pay) }));
       buy.addEventListener('click', () => {
         if (buy.disabled || root.classList.contains('is-paid')) return;
         Sound.click();
@@ -3175,12 +3194,12 @@
         const { row } = rows[i];
         row.classList.add('is-best');
         const badge = el('span', 'dc-badge', row);
-        badge.innerHTML = `${ICON_CHECK}<span>Better deal</span>`;
+        badge.innerHTML = `${ICON_CHECK}<span>${I18n.t('betterDeal')}</span>`;
         popIn(badge, 460);
         rows.forEach(r => { if (!r.buy.disabled) gone(r.buy); });
       },
       // Paid: a stamp across it.
-      stamp(i, text = 'PAID') {
+      stamp(i, text = I18n.t('paid')) {
         root.classList.add('is-paid');
         const st = el('div', 'pc2-stamp dc-stamp', rows[i].row);
         st.textContent = text;
@@ -3224,10 +3243,10 @@
     });
     el('div', 'pt-line', card);
     const totalRow = el('div', 'pt-sum', card);
-    el('span', '', totalRow).textContent = 'Total Amount';
+    el('span', '', totalRow).textContent = I18n.t('totalAmount');
     el('b', '', totalRow).textContent = inr(total);
     const leftRow = el('div', 'pt-sum pt-left', card);
-    el('span', '', leftRow).textContent = 'Money Left';
+    el('span', '', leftRow).textContent = I18n.t('moneyLeft');
     el('b', '', leftRow).textContent = inr(left);
     [totalRow, leftRow].forEach(n => { n.style.opacity = '0'; });
     root.style.opacity = '0';
