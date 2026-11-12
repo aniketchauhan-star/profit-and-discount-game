@@ -1,0 +1,1004 @@
+{
+ "homePlan": {
+  "speaker": "Amit",
+  "spoken": "बाबा, मला मॉलमधून एक पुस्तक आणि नवीन बूट घ्यायचे आहेत.",
+  "credits": 54,
+  "seconds": 4.44
+ },
+ "askPrice": {
+  "speaker": "Shopkeeper",
+  "spoken": "हे आठशे रुपयांना आहे!",
+  "credits": 21,
+  "seconds": 1.31
+ },
+ "cfuSum": {
+  "speaker": "Swifty",
+  "spoken": "दोनशे पन्नास भागिले एक हजार गुणिले शंभर बरोबर पंचवीस टक्के.",
+  "credits": 59,
+  "seconds": 6.43
+ },
+ "homeAdvice": {
+  "speaker": "Father",
+  "spoken": "ठीक आहे. पण किमतींची तुलना कर आणि विचार करून खरेदी कर.",
+  "credits": 54,
+  "seconds": 5.15
+ },
+ "homePromise": {
+  "speaker": "Amit",
+  "spoken": "हो, नक्की!",
+  "credits": 10,
+  "seconds": 0.91
+ },
+ "subBrowse": {
+  "speaker": "Amit",
+  "spoken": "हे पुस्तक रंजक दिसतंय!",
+  "credits": 22,
+  "seconds": 1.96
+ },
+ "subAsk": {
+  "speaker": "Amit",
+  "spoken": "हे पुस्तक कितीला आहे?",
+  "credits": 21,
+  "seconds": 1.31
+ },
+ "askCostly": {
+  "speaker": "Amit",
+  "spoken": "काका, हे खूपच महाग आहे.",
+  "credits": 23,
+  "seconds": 2.04
+ },
+ "askCheckPrice": {
+  "speaker": "Shopkeeper",
+  "spoken": "पुस्तकावरची छापलेली किंमत बघ.",
+  "credits": 29,
+  "seconds": 2.12
+ },
+ "subShock": {
+  "speaker": "Amit",
+  "spoken": "अरे! यावर छापलेली किंमत तर एक हजार रुपये आहे.",
+  "credits": 45,
+  "seconds": 3.55
+ },
+ "mpDefinition.0": {
+  "speaker": "Swifty",
+  "spoken": "वस्तूवर छापलेल्या किमतीला",
+  "credits": 25,
+  "seconds": 1.88
+ },
+ "mpDefinition.1": {
+  "speaker": "Swifty",
+  "spoken": "तिची छापील किंमत म्हणतात.",
+  "credits": 25,
+  "seconds": 2.04
+ },
+ "mpqHint": {
+  "speaker": "Swifty",
+  "spoken": "थोडे चुकले! पुस्तकावर छापलेली किंमत पाहा.",
+  "credits": 41,
+  "seconds": 3.63
+ },
+ "mpqSaid": {
+  "speaker": "Swifty",
+  "spoken": "बरोबर! पुस्तकावर छापलेली किंमत, एक हजार रुपये, हीच त्याची छापील किंमत आहे.",
+  "credits": 74,
+  "seconds": 6.19
+ },
+ "revealPart1": {
+  "speaker": "Shopkeeper",
+  "spoken": "बघ, पुस्तकावर छापलेली किंमत एक हजार रुपये आहे,",
+  "credits": 46,
+  "seconds": 2.69
+ },
+ "revealPart2": {
+  "speaker": "Shopkeeper",
+  "spoken": "पण मी ते तुला आठशे रुपयांना विकतोय.",
+  "credits": 35,
+  "seconds": 2.04
+ },
+ "revealPart3": {
+  "speaker": "Shopkeeper",
+  "spoken": "मी तुला सूट दिली.",
+  "credits": 17,
+  "seconds": 1.49
+ },
+ "subDiscount": {
+  "speaker": "Amit",
+  "spoken": "सूट? म्हणजे काय?",
+  "credits": 16,
+  "seconds": 1.49
+ },
+ "discountDefinition.0": {
+  "speaker": "Swifty",
+  "spoken": "वस्तूच्या छापील किमतीत केलेल्या कपातीला",
+  "credits": 39,
+  "seconds": 3.0
+ },
+ "discountDefinition.1": {
+  "speaker": "Swifty",
+  "spoken": "सूट म्हणतात.",
+  "credits": 12,
+  "seconds": 1.01
+ },
+ "dqHint": {
+  "speaker": "Swifty",
+  "spoken": "थोडे चुकले! आठशे रुपये ही दुकानदाराची विक्री किंमत आहे.",
+  "credits": 55,
+  "seconds": 4.44
+ },
+ "dqSaid": {
+  "speaker": "Swifty",
+  "spoken": "हो! अमितने छापील किमतीपेक्षा दोनशे रुपये कमी दिले.",
+  "credits": 50,
+  "seconds": 4.91
+ },
+ "payThanks": {
+  "speaker": "Amit",
+  "spoken": "धन्यवाद, काका!",
+  "credits": 14,
+  "seconds": 0.91
+ },
+ "leaveBookDone": {
+  "speaker": "Swifty",
+  "spoken": "अमितने पुस्तक घेतले आणि त्याला सूट म्हणजे काय ते समजले.",
+  "credits": 55,
+  "seconds": 3.79
+ },
+ "subLeave": {
+  "speaker": "Swifty",
+  "spoken": "चला, अमितला बूट घ्यायला मदत करूया!",
+  "credits": 34,
+  "seconds": 2.43
+ },
+ "formulaSaid.0": {
+  "speaker": "Swifty",
+  "spoken": "छापील किंमत,",
+  "credits": 12,
+  "seconds": 1.41
+ },
+ "formulaSaid.1": {
+  "speaker": "Swifty",
+  "spoken": "वजा विक्री किंमत,",
+  "credits": 17,
+  "seconds": 1.41
+ },
+ "formulaSaid.2": {
+  "speaker": "Swifty",
+  "spoken": "बरोबर सूट.",
+  "credits": 10,
+  "seconds": 0.91
+ },
+ "formulaSo": {
+  "speaker": "Swifty",
+  "spoken": "म्हणजे, सूट दोनशे रुपये आहे.",
+  "credits": 28,
+  "seconds": 2.59
+ },
+ "termDiscount": {
+  "speaker": "Swifty",
+  "spoken": "सूट",
+  "credits": 3,
+  "seconds": 0.65
+ },
+ "frSaid.1": {
+  "speaker": "Swifty",
+  "spoken": "बरोबर छापील किंमत,",
+  "credits": 18,
+  "seconds": 1.57
+ },
+ "frSaid.2": {
+  "speaker": "Swifty",
+  "spoken": "वजा विक्री किंमत.",
+  "credits": 17,
+  "seconds": 1.31
+ },
+ "frLetters.0": {
+  "speaker": "Swifty",
+  "spoken": "डी म्हणजे सूट, डिस्काउंट,",
+  "credits": 25,
+  "seconds": 2.59
+ },
+ "frLetters.1": {
+  "speaker": "Swifty",
+  "spoken": "एम पी म्हणजे छापील किंमत, मार्क्ड प्राइस,",
+  "credits": 41,
+  "seconds": 3.0
+ },
+ "frLetters.2": {
+  "speaker": "Swifty",
+  "spoken": "एस पी म्हणजे विक्री किंमत, सेलिंग प्राइस.",
+  "credits": 41,
+  "seconds": 2.69
+ },
+ "frShortSaid.0": {
+  "speaker": "Swifty",
+  "spoken": "म्हणजे, डी",
+  "credits": 10,
+  "seconds": 1.31
+ },
+ "frShortSaid.1": {
+  "speaker": "Swifty",
+  "spoken": "बरोबर एम पी",
+  "credits": 11,
+  "seconds": 0.68
+ },
+ "frShortSaid.2": {
+  "speaker": "Swifty",
+  "spoken": "वजा एस पी.",
+  "credits": 10,
+  "seconds": 1.07
+ },
+ "subSneakers": {
+  "speaker": "Amit",
+  "spoken": "वा, किती छान बूट! मला खूप आवडले.",
+  "credits": 32,
+  "seconds": 2.85
+ },
+ "shoeOff": {
+  "speaker": "Amit",
+  "spoken": "इथे तीस टक्के ऑफ म्हणजे काय?",
+  "credits": 28,
+  "seconds": 2.19
+ },
+ "subConfused": {
+  "speaker": "Amit",
+  "spoken": "याच्या टॅगवर किंमत एक हजार आठशे रुपये आहे.",
+  "credits": 42,
+  "seconds": 3.4
+ },
+ "smqHint": {
+  "speaker": "Swifty",
+  "spoken": "थोडे चुकले! बुटांच्या टॅगवरची किंमत पाहा.",
+  "credits": 41,
+  "seconds": 3.63
+ },
+ "smqSaid": {
+  "speaker": "Swifty",
+  "spoken": "बरोबर! बुटांच्या टॅगवरची किंमत एक हजार आठशे रुपये आहे: हीच त्यांची छापील किंमत.",
+  "credits": 79,
+  "seconds": 8.36
+ },
+ "subOffMeans": {
+  "speaker": "Amit",
+  "spoken": "ही सूट असेल, तर मला नक्की किती पैसे द्यावे लागतील?",
+  "credits": 50,
+  "seconds": 3.4
+ },
+ "offMeans.0": {
+  "speaker": "Swifty",
+  "spoken": "इथे तीस टक्के ऑफ म्हणजे",
+  "credits": 23,
+  "seconds": 1.8
+ },
+ "offMeans.1": {
+  "speaker": "Swifty",
+  "spoken": "तीस टक्के सूट.",
+  "credits": 14,
+  "seconds": 0.99
+ },
+ "recallLine.0": {
+  "speaker": "Swifty",
+  "spoken": "अमितला या बुटांसाठी किती पैसे द्यावे लागतील हे काढण्यासाठी,",
+  "credits": 59,
+  "seconds": 4.05
+ },
+ "subRecall": {
+  "speaker": "Swifty",
+  "spoken": "आधी टक्केवारी कशी काढतात ते आठवूया.",
+  "credits": 35,
+  "seconds": 2.59
+ },
+ "subPercentRule": {
+  "speaker": "Swifty",
+  "spoken": "ए हे बी चे किती टक्के आहे?",
+  "credits": 26,
+  "seconds": 1.96
+ },
+ "prRoles.0": {
+  "speaker": "Swifty",
+  "spoken": "ए म्हणजे भाग,",
+  "credits": 13,
+  "seconds": 1.15
+ },
+ "prRoles.1": {
+  "speaker": "Swifty",
+  "spoken": "आणि बी म्हणजे पूर्ण.",
+  "credits": 20,
+  "seconds": 1.49
+ },
+ "percentRuleSaid.0": {
+  "speaker": "Swifty",
+  "spoken": "टक्केवारी काढण्यासाठी,",
+  "credits": 22,
+  "seconds": 1.49
+ },
+ "percentRuleSaid.1": {
+  "speaker": "Swifty",
+  "spoken": "भागाला पूर्णाने भागा,",
+  "credits": 21,
+  "seconds": 1.57
+ },
+ "percentRuleSaid.2": {
+  "speaker": "Swifty",
+  "spoken": "मग शंभरने गुणा.",
+  "credits": 15,
+  "seconds": 1.31
+ },
+ "putSaid.0": {
+  "speaker": "Swifty",
+  "spoken": "भाग वर लिहा,",
+  "credits": 12,
+  "seconds": 0.91
+ },
+ "putSaid.1": {
+  "speaker": "Swifty",
+  "spoken": "आणि पूर्ण खाली.",
+  "credits": 15,
+  "seconds": 1.15
+ },
+ "prSign": {
+  "speaker": "Swifty",
+  "spoken": "मग त्यापुढे टक्क्याचे चिन्ह लिहा.",
+  "credits": 33,
+  "seconds": 2.27
+ },
+ "subWhatPercent": {
+  "speaker": "Swifty",
+  "spoken": "एकशे पंचवीस हे पाचशेचे किती टक्के आहे?",
+  "credits": 38,
+  "seconds": 3.47
+ },
+ "wpRoles.0": {
+  "speaker": "Swifty",
+  "spoken": "एकशे पंचवीस म्हणजे भाग,",
+  "credits": 23,
+  "seconds": 1.72
+ },
+ "wpRoles.1": {
+  "speaker": "Swifty",
+  "spoken": "आणि पाचशे म्हणजे पूर्ण.",
+  "credits": 23,
+  "seconds": 1.57
+ },
+ "wpWork": {
+  "speaker": "Swifty",
+  "spoken": "एकशे पंचवीस भागिले पाचशे गुणिले शंभर",
+  "credits": 36,
+  "seconds": 4.79
+ },
+ "wpEquals": {
+  "speaker": "Swifty",
+  "spoken": "बरोबर पंचवीस टक्के.",
+  "credits": 19,
+  "seconds": 1.23
+ },
+ "wpSo": {
+  "speaker": "Swifty",
+  "spoken": "म्हणजे, एकशे पंचवीस हे पाचशेचे पंचवीस टक्के आहे!",
+  "credits": 48,
+  "seconds": 4.21
+ },
+ "practice": {
+  "speaker": "Swifty",
+  "spoken": "चला, थोडा सराव करूया!",
+  "credits": 21,
+  "seconds": 1.72
+ },
+ "subCheck": {
+  "speaker": "Swifty",
+  "spoken": "दोनशे पन्नास हे एक हजाराचे किती टक्के आहे?",
+  "credits": 42,
+  "seconds": 3.63
+ },
+ "notQuite": {
+  "speaker": "Swifty",
+  "spoken": "थोडे चुकले!",
+  "credits": 11,
+  "seconds": 0.68
+ },
+ "cfuIsPart": {
+  "speaker": "Swifty",
+  "spoken": "दोनशे पन्नास म्हणजे भाग,",
+  "credits": 24,
+  "seconds": 1.8
+ },
+ "cfuIsWhole": {
+  "speaker": "Swifty",
+  "spoken": "एक हजार म्हणजे पूर्ण.",
+  "credits": 21,
+  "seconds": 1.49
+ },
+ "correct": {
+  "speaker": "Swifty",
+  "spoken": "बरोबर!",
+  "credits": 6,
+  "seconds": 0.6
+ },
+ "cfuSo": {
+  "speaker": "Swifty",
+  "spoken": "म्हणजे, दोनशे पन्नास हे एक हजाराचे पंचवीस टक्के आहे.",
+  "credits": 52,
+  "seconds": 4.36
+ },
+ "toPaySo": {
+  "speaker": "Swifty",
+  "spoken": "हे कसे काढायचे ते पाहूया!",
+  "credits": 25,
+  "seconds": 2.19
+ },
+ "thMeans": {
+  "speaker": "Swifty",
+  "spoken": "तीस टक्के म्हणजे",
+  "credits": 16,
+  "seconds": 1.15
+ },
+ "thOutOf100": {
+  "speaker": "Swifty",
+  "spoken": "शंभर पैकी तीस.",
+  "credits": 14,
+  "seconds": 1.57
+ },
+ "thOfMp": {
+  "speaker": "Swifty",
+  "spoken": "म्हणून, एक हजार आठशे रुपयांचे तीस टक्के बरोबर",
+  "credits": 45,
+  "seconds": 3.4
+ },
+ "thFraction": {
+  "speaker": "Swifty",
+  "spoken": "तीस भागिले शंभर, गुणिले एक हजार आठशे",
+  "credits": 36,
+  "seconds": 4.05
+ },
+ "thDivide": {
+  "speaker": "Swifty",
+  "spoken": "एक हजार आठशे भागिले शंभर बरोबर अठरा,",
+  "credits": 36,
+  "seconds": 4.13
+ },
+ "thMultiply": {
+  "speaker": "Swifty",
+  "spoken": "आणि अठरा गुणिले तीस बरोबर पाचशे चाळीस.",
+  "credits": 38,
+  "seconds": 4.36
+ },
+ "thAnswer": {
+  "speaker": "Swifty",
+  "spoken": "म्हणजेच पाचशे चाळीस रुपये!",
+  "credits": 26,
+  "seconds": 2.19
+ },
+ "thDiscountIs": {
+  "speaker": "Swifty",
+  "spoken": "म्हणजे, सूट पाचशे चाळीस रुपये आहे.",
+  "credits": 34,
+  "seconds": 3.0
+ },
+ "toPayIntro": {
+  "speaker": "Swifty",
+  "spoken": "आता अमितला किती पैसे द्यायचे आहेत ते शोधूया.",
+  "credits": 44,
+  "seconds": 2.85
+ },
+ "subToPay": {
+  "speaker": "Swifty",
+  "spoken": "अमितला किती पैसे द्यावे लागतील?",
+  "credits": 31,
+  "seconds": 2.19
+ },
+ "payWorkFind": {
+  "speaker": "Swifty",
+  "spoken": "किती पैसे द्यायचे ते काढण्यासाठी,",
+  "credits": 33,
+  "seconds": 2.04
+ },
+ "payWorkSubtract": {
+  "speaker": "Swifty",
+  "spoken": "छापील किमतीतून सूट वजा करा.",
+  "credits": 27,
+  "seconds": 2.19
+ },
+ "payWorkTry": {
+  "speaker": "Swifty",
+  "spoken": "आता तुमची पाळी! प्रत्येक रक्कम तिच्या चौकटीत ड्रॅग करा.",
+  "credits": 55,
+  "seconds": 4.52
+ },
+ "payWrongMp": {
+  "speaker": "Swifty",
+  "spoken": "थोडे चुकले! एम पी या चौकटीत छापील किंमत येते: एक हजार आठशे रुपये.",
+  "credits": 65,
+  "seconds": 6.35
+ },
+ "payWrongD": {
+  "speaker": "Swifty",
+  "spoken": "थोडे चुकले! सूट या चौकटीत सूट येते: पाचशे चाळीस रुपये.",
+  "credits": 54,
+  "seconds": 5.72
+ },
+ "payWorkSum": {
+  "speaker": "Swifty",
+  "spoken": "एक हजार आठशे रुपये वजा पाचशे चाळीस रुपये",
+  "credits": 40,
+  "seconds": 3.4
+ },
+ "payWorkEquals": {
+  "speaker": "Swifty",
+  "spoken": "बरोबर एक हजार दोनशे साठ रुपये.",
+  "credits": 30,
+  "seconds": 2.12
+ },
+ "payWorkSo": {
+  "speaker": "Swifty",
+  "spoken": "म्हणजे बुटांसाठी एक हजार दोनशे साठ रुपये द्यावे लागतील!",
+  "credits": 55,
+  "seconds": 4.68
+ },
+ "finalLine.0": {
+  "speaker": "Amit",
+  "spoken": "म्हणजे, तीस टक्के सूट मिळाल्यावर,",
+  "credits": 33,
+  "seconds": 2.69
+ },
+ "finalLine.1": {
+  "speaker": "Amit",
+  "spoken": "मी एक हजार दोनशे साठ रुपये देईन.",
+  "credits": 32,
+  "seconds": 1.96
+ },
+ "subPctOfMp": {
+  "speaker": "Swifty",
+  "spoken": "पाचशे चाळीस हे एक हजार आठशेचे किती टक्के आहे?",
+  "credits": 45,
+  "seconds": 4.05
+ },
+ "poRoles.0": {
+  "speaker": "Swifty",
+  "spoken": "पाचशे चाळीस म्हणजे भाग,",
+  "credits": 23,
+  "seconds": 1.88
+ },
+ "poRoles.1": {
+  "speaker": "Swifty",
+  "spoken": "आणि एक हजार आठशे म्हणजे पूर्ण.",
+  "credits": 30,
+  "seconds": 2.27
+ },
+ "poWork": {
+  "speaker": "Swifty",
+  "spoken": "पाचशे चाळीस भागिले एक हजार आठशे गुणिले शंभर",
+  "credits": 43,
+  "seconds": 7.24
+ },
+ "poEquals": {
+  "speaker": "Swifty",
+  "spoken": "बरोबर तीस टक्के.",
+  "credits": 16,
+  "seconds": 1.07
+ },
+ "poSo": {
+  "speaker": "Swifty",
+  "spoken": "म्हणजे, पाचशे चाळीस हे एक हजार आठशेचे तीस टक्के आहे!",
+  "credits": 52,
+  "seconds": 5.72
+ },
+ "poPartIs": {
+  "speaker": "Swifty",
+  "spoken": "इथे भाग म्हणजे सूट,",
+  "credits": 19,
+  "seconds": 2.19
+ },
+ "poWholeIs": {
+  "speaker": "Swifty",
+  "spoken": "आणि पूर्ण म्हणजे छापील किंमत.",
+  "credits": 29,
+  "seconds": 2.51
+ },
+ "poRule": {
+  "speaker": "Swifty",
+  "spoken": "म्हणून, सूट टक्के बरोबर सूट भागिले छापील किंमत गुणिले शंभर.",
+  "credits": 59,
+  "seconds": 6.43
+ },
+ "subReturn": {
+  "speaker": "Father",
+  "spoken": "तुझी खरेदी कशी झाली?",
+  "credits": 20,
+  "seconds": 1.23
+ },
+ "returnLearnt": {
+  "speaker": "Amit",
+  "spoken": "मस्त! मी छापील किंमत, सूट आणि टक्केवारीत सूट याबद्दल शिकलो.",
+  "credits": 59,
+  "seconds": 5.49
+ },
+ "subPartyMoney": {
+  "speaker": "Father",
+  "spoken": "हे घे पाच हजार रुपये.",
+  "credits": 21,
+  "seconds": 1.15
+ },
+ "moneyUse": {
+  "speaker": "Father",
+  "spoken": "जे शिकलास ते वापर आणि सर्वात चांगल्या ऑफर शोध.",
+  "credits": 46,
+  "seconds": 3.71
+ },
+ "partyDealLeft": {
+  "speaker": "Father",
+  "spoken": "सगळं घेऊन जे पैसे उरतील ते तुझे.",
+  "credits": 32,
+  "seconds": 2.35
+ },
+ "partyDealReally": {
+  "speaker": "Amit",
+  "spoken": "खरंच?",
+  "credits": 5,
+  "seconds": 0.99
+ },
+ "subPartyDeal": {
+  "speaker": "Amit",
+  "spoken": "मग तर मी नक्कीच सर्वात चांगल्या ऑफर शोधणार!",
+  "credits": 43,
+  "seconds": 3.08
+ },
+ "tryAgain": {
+  "speaker": "Swifty",
+  "spoken": "पुन्हा प्रयत्न करा!",
+  "credits": 19,
+  "seconds": 1.23
+ },
+ "frInShort": {
+  "speaker": "Swifty",
+  "spoken": "आता हे थोडक्यात लिहूया.",
+  "credits": 23,
+  "seconds": 1.65
+ },
+ "inviteWow": {
+  "speaker": "Amit",
+  "spoken": "वा! आज रात्री रोहनची वाढदिवसाची पार्टी आहे!",
+  "credits": 43,
+  "seconds": 3.0
+ },
+ "inviteOutfit": {
+  "speaker": "Amit",
+  "spoken": "पार्टीसाठी मला नवीन कपडे हवेत!",
+  "credits": 30,
+  "seconds": 2.19
+ },
+ "toMallLine": {
+  "speaker": "Amit",
+  "spoken": "मॉल आला! चला, खरेदी करूया!",
+  "credits": 26,
+  "seconds": 2.35
+ },
+ "hadShirt": {
+  "speaker": "Swifty",
+  "spoken": "हा शर्ट तुम्ही आधीच घेतला आहे!",
+  "credits": 30,
+  "seconds": 2.04
+ },
+ "hadPants": {
+  "speaker": "Swifty",
+  "spoken": "ही पँट तुम्ही आधीच घेतली आहे!",
+  "credits": 29,
+  "seconds": 1.8
+ },
+ "hadWatch": {
+  "speaker": "Swifty",
+  "spoken": "हे घड्याळ तुम्ही आधीच घेतले आहे!",
+  "credits": 32,
+  "seconds": 1.96
+ },
+ "hadSunglasses": {
+  "speaker": "Swifty",
+  "spoken": "हा गॉगल तुम्ही आधीच घेतला आहे!",
+  "credits": 30,
+  "seconds": 1.96
+ },
+ "partyWow": {
+  "speaker": "Swifty",
+  "spoken": "वा! तुम्ही पार्टीसाठी सर्वात चांगल्या ऑफर शोधल्या!",
+  "credits": 50,
+  "seconds": 3.63
+ },
+ "missionText": {
+  "speaker": "Swifty",
+  "spoken": "तुम्ही अमितला पार्टीसाठी तयार होण्यात छान मदत केली!",
+  "credits": 51,
+  "seconds": 3.16
+ },
+ "missionWow": {
+  "speaker": "Swifty",
+  "spoken": "वा! तुम्ही करून दाखवले!",
+  "credits": 23,
+  "seconds": 1.88
+ },
+ "whichShirt": {
+  "speaker": "Swifty",
+  "spoken": "कोणता शर्ट जास्त फायद्याचा आहे? त्यावर टॅप करा!",
+  "credits": 47,
+  "seconds": 3.0
+ },
+ "whichPants": {
+  "speaker": "Swifty",
+  "spoken": "कोणती पँट जास्त फायद्याची आहे? तिच्यावर टॅप करा!",
+  "credits": 48,
+  "seconds": 3.32
+ },
+ "whichWatch": {
+  "speaker": "Swifty",
+  "spoken": "कोणते घड्याळ जास्त फायद्याचे आहे? त्यावर टॅप करा!",
+  "credits": 49,
+  "seconds": 3.4
+ },
+ "whichSunglasses": {
+  "speaker": "Swifty",
+  "spoken": "कोणता गॉगल जास्त फायद्याचा आहे? त्यावर टॅप करा!",
+  "credits": 47,
+  "seconds": 3.4
+ },
+ "sumShirtBlue": {
+  "speaker": "Swifty",
+  "spoken": "निळा शर्ट: एक हजार दोनशे रुपये वजा दोनशे चाळीस रुपये बरोबर नऊशे साठ रुपये.",
+  "credits": 74,
+  "seconds": 8.44
+ },
+ "sumShirtGreen": {
+  "speaker": "Swifty",
+  "spoken": "हिरवा शर्ट: एक हजार रुपये वजा एकशे पन्नास रुपये बरोबर आठशे पन्नास रुपये.",
+  "credits": 72,
+  "seconds": 6.84
+ },
+ "sumPantsJeans": {
+  "speaker": "Swifty",
+  "spoken": "जीन्स: एक हजार आठशे रुपये वजा पाचशे चाळीस रुपये बरोबर एक हजार दोनशे साठ रुपये.",
+  "credits": 78,
+  "seconds": 7.97
+ },
+ "sumPantsTrousers": {
+  "speaker": "Swifty",
+  "spoken": "ट्राउझर: एक हजार सहाशे रुपये वजा तीनशे रुपये बरोबर एक हजार तीनशे रुपये.",
+  "credits": 71,
+  "seconds": 7.31
+ },
+ "sumWatchSilver": {
+  "speaker": "Swifty",
+  "spoken": "चंदेरी घड्याळ: दोन हजार रुपये वजा चारशे रुपये बरोबर एक हजार सहाशे रुपये.",
+  "credits": 72,
+  "seconds": 7.55
+ },
+ "sumWatchBrown": {
+  "speaker": "Swifty",
+  "spoken": "तपकिरी घड्याळ: एक हजार आठशे रुपये वजा दोनशे पन्नास रुपये बरोबर एक हजार पाचशे पन्नास रुपये.",
+  "credits": 90,
+  "seconds": 8.59
+ },
+ "sumSunglassesBlack": {
+  "speaker": "Swifty",
+  "spoken": "काळा गॉगल: एक हजार दोनशे रुपये वजा दोनशे चाळीस रुपये बरोबर नऊशे साठ रुपये.",
+  "credits": 74,
+  "seconds": 7.0
+ },
+ "sumSunglassesBrown": {
+  "speaker": "Swifty",
+  "spoken": "तपकिरी गॉगल: नऊशे रुपये वजा नव्वद रुपये बरोबर आठशे दहा रुपये.",
+  "credits": 61,
+  "seconds": 6.84
+ },
+ "rightShirt": {
+  "speaker": "Swifty",
+  "spoken": "बरोबर! हिरवा शर्ट एकशे दहा रुपयांनी स्वस्त आहे.",
+  "credits": 47,
+  "seconds": 3.63
+ },
+ "rightPants": {
+  "speaker": "Swifty",
+  "spoken": "बरोबर! जीन्स चाळीस रुपयांनी स्वस्त आहे.",
+  "credits": 39,
+  "seconds": 3.47
+ },
+ "rightWatch": {
+  "speaker": "Swifty",
+  "spoken": "बरोबर! तपकिरी घड्याळ पन्नास रुपयांनी स्वस्त आहे.",
+  "credits": 48,
+  "seconds": 4.05
+ },
+ "rightSunglasses": {
+  "speaker": "Swifty",
+  "spoken": "बरोबर! तपकिरी गॉगल एकशे पन्नास रुपयांनी स्वस्त आहे.",
+  "credits": 51,
+  "seconds": 4.13
+ },
+ "doneShirt": {
+  "speaker": "Swifty",
+  "spoken": "छान! तुम्ही हिरवा शर्ट घेतला!",
+  "credits": 29,
+  "seconds": 2.12
+ },
+ "donePants": {
+  "speaker": "Swifty",
+  "spoken": "छान! तुम्ही जीन्स घेतली!",
+  "credits": 24,
+  "seconds": 1.72
+ },
+ "doneWatch": {
+  "speaker": "Swifty",
+  "spoken": "छान! तुम्ही तपकिरी घड्याळ घेतले!",
+  "credits": 32,
+  "seconds": 2.27
+ },
+ "doneSunglasses": {
+  "speaker": "Swifty",
+  "spoken": "छान! तुम्ही तपकिरी गॉगल घेतला!",
+  "credits": 30,
+  "seconds": 2.12
+ },
+ "partyTotal|amount=₹4,470": {
+  "speaker": "Swifty",
+  "spoken": "एकूण रक्कम: चार हजार चारशे सत्तर रुपये.",
+  "credits": 39,
+  "seconds": 4.36
+ },
+ "partyMoneyLeft|amount=₹530": {
+  "speaker": "Swifty",
+  "spoken": "उरलेले पैसे: पाचशे तीस रुपये.",
+  "credits": 29,
+  "seconds": 2.69
+ },
+ "mallHow": {
+  "speaker": "Swifty",
+  "spoken": "कंट्रोलर वापरून एखाद्या दुकानात जा!",
+  "credits": 35,
+  "seconds": 2.19
+ },
+ "pickShirt": {
+  "speaker": "Swifty",
+  "spoken": "एखाद्या शर्टवर टॅप करा आणि त्याची विक्री किंमत काढा!",
+  "credits": 52,
+  "seconds": 4.05
+ },
+ "hintShirtBlue": {
+  "speaker": "Swifty",
+  "spoken": "थोडे चुकले! सूट आहे एक हजार दोनशे रुपयांचे वीस टक्के.",
+  "credits": 53,
+  "seconds": 5.8
+ },
+ "hintShirtGreen": {
+  "speaker": "Swifty",
+  "spoken": "थोडे चुकले! एक हजार रुपयांमधून एकशे पन्नास रुपये कमी करा.",
+  "credits": 57,
+  "seconds": 4.99
+ },
+ "nextShirtGreen": {
+  "speaker": "Swifty",
+  "spoken": "आता हिरव्या शर्टची विक्री किंमत पाहूया!",
+  "credits": 39,
+  "seconds": 2.69
+ },
+ "nextShirtBlue": {
+  "speaker": "Swifty",
+  "spoken": "आता निळ्या शर्टची विक्री किंमत पाहूया!",
+  "credits": 38,
+  "seconds": 2.51
+ },
+ "pickPants": {
+  "speaker": "Swifty",
+  "spoken": "कोणत्याही एकावर टॅप करा आणि विक्री किंमत काढा!",
+  "credits": 46,
+  "seconds": 3.16
+ },
+ "hintPantsJeans": {
+  "speaker": "Swifty",
+  "spoken": "थोडे चुकले! सूट आहे एक हजार आठशे रुपयांचे तीस टक्के.",
+  "credits": 52,
+  "seconds": 5.33
+ },
+ "hintPantsTrousers": {
+  "speaker": "Swifty",
+  "spoken": "थोडे चुकले! एक हजार सहाशे रुपयांमधून तीनशे रुपये कमी करा.",
+  "credits": 57,
+  "seconds": 5.25
+ },
+ "nextPantsTrousers": {
+  "speaker": "Swifty",
+  "spoken": "आता ट्राउझरची विक्री किंमत पाहूया!",
+  "credits": 34,
+  "seconds": 2.27
+ },
+ "nextPantsJeans": {
+  "speaker": "Swifty",
+  "spoken": "आता जीन्सची विक्री किंमत पाहूया!",
+  "credits": 32,
+  "seconds": 2.51
+ },
+ "pickWatch": {
+  "speaker": "Swifty",
+  "spoken": "एखाद्या घड्याळावर टॅप करा आणि त्याची विक्री किंमत काढा!",
+  "credits": 55,
+  "seconds": 3.87
+ },
+ "hintWatchSilver": {
+  "speaker": "Swifty",
+  "spoken": "थोडे चुकले! सूट आहे दोन हजार रुपयांचे वीस टक्के.",
+  "credits": 48,
+  "seconds": 4.6
+ },
+ "hintWatchBrown": {
+  "speaker": "Swifty",
+  "spoken": "थोडे चुकले! एक हजार आठशे रुपयांमधून दोनशे पन्नास रुपये कमी करा.",
+  "credits": 63,
+  "seconds": 5.33
+ },
+ "nextWatchBrown": {
+  "speaker": "Swifty",
+  "spoken": "आता तपकिरी घड्याळाची विक्री किंमत पाहूया!",
+  "credits": 41,
+  "seconds": 3.0
+ },
+ "nextWatchSilver": {
+  "speaker": "Swifty",
+  "spoken": "आता चंदेरी घड्याळाची विक्री किंमत पाहूया!",
+  "credits": 41,
+  "seconds": 2.93
+ },
+ "hintSunglassesBrown": {
+  "speaker": "Swifty",
+  "spoken": "थोडे चुकले! सूट आहे नऊशे रुपयांचे दहा टक्के.",
+  "credits": 44,
+  "seconds": 3.79
+ },
+ "nextSunglassesBrown": {
+  "speaker": "Swifty",
+  "spoken": "आता तपकिरी गॉगलची विक्री किंमत पाहूया!",
+  "credits": 38,
+  "seconds": 2.77
+ },
+ "nextSunglassesBlack": {
+  "speaker": "Swifty",
+  "spoken": "आता काळ्या गॉगलची विक्री किंमत पाहूया!",
+  "credits": 38,
+  "seconds": 2.85
+ },
+ "buyLess": {
+  "speaker": "Swifty",
+  "spoken": "थोडे चुकले! ज्याची किंमत कमी आहे, ते घ्या.",
+  "credits": 42,
+  "seconds": 3.55
+ },
+ "mallNext": {
+  "speaker": "Swifty",
+  "spoken": "कंट्रोलर वापरून पुढच्या दुकानात जा!",
+  "credits": 35,
+  "seconds": 2.35
+ },
+ "poFound": {
+  "speaker": "Swifty",
+  "spoken": "आपण सूट आणि विक्री किंमत काढली.",
+  "credits": 31,
+  "seconds": 2.27
+ },
+ "poCheck": {
+  "speaker": "Swifty",
+  "spoken": "आता सूट रकमेवरून तीस टक्के कसे येतात ते तपासूया.",
+  "credits": 48,
+  "seconds": 4.05
+ },
+ "mpqWhy": {
+  "speaker": "Swifty",
+  "spoken": "पुस्तकावर छापलेली किंमत, एक हजार रुपये, हीच त्याची छापील किंमत आहे.",
+  "credits": 67,
+  "seconds": 5.25
+ },
+ "smqWhy": {
+  "speaker": "Swifty",
+  "spoken": "बुटांच्या टॅगवरची किंमत एक हजार आठशे रुपये आहे: हीच त्यांची छापील किंमत.",
+  "credits": 72,
+  "seconds": 6.27
+ },
+ "dqWhy": {
+  "speaker": "Swifty",
+  "spoken": "अमितने छापील किमतीपेक्षा दोनशे रुपये कमी दिले.",
+  "credits": 46,
+  "seconds": 3.47
+ }
+}
