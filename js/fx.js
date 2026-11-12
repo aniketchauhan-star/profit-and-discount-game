@@ -1144,41 +1144,6 @@
     };
   }
 
-  /**
-   * A 10 × 10 grid of squares (the revamp, screens 28–30): `shade` of the hundred shaded in the part's colour, and under
-   * it what that is (e.g. "25 out of 100 = 25%"). fill() shades them, a row at a time.
-   */
-  function grid100(parent, { shade, label }) {
-    const root = el('div', 'g100', parent);
-    const grid = el('div', 'g100-grid', root);
-    const cells = Array.from({ length: 100 }, () => el('span', 'g100-cell', grid));
-    const caption = el('div', 'g100-label', root);
-    caption.textContent = label;
-    root.setAttribute('role', 'img');
-    root.setAttribute('aria-label', I18n.t('ariaGrid100', { shade, label }));
-    root.style.opacity = '0';
-    caption.style.opacity = '0';
-    return {
-      el: root,
-      open() {
-        return reveal(root, [{ opacity: 0, transform: 'scale(.94)' }, { opacity: 1, transform: 'none' }], { duration: T(500), easing: 'cubic-bezier(.2,.8,.3,1)' });
-      },
-      async fill(ctx) {
-        for (let i = 0; i < shade; i += 10) {
-          cells.slice(i, Math.min(shade, i + 10)).forEach(c => c.classList.add('is-on'));
-          await ctx.wait(T(150));
-        }
-        caption.style.opacity = '';
-        reveal(caption, [{ opacity: 0, transform: 'translateY(10px)' }, { opacity: 1, transform: 'none' }], { duration: T(420) });
-      },
-      shown() { // already filled (carried over from the screen before)
-        root.style.opacity = '';
-        caption.style.opacity = '';
-        cells.slice(0, shade).forEach(c => c.classList.add('is-on'));
-      },
-    };
-  }
-
   // Big down arrow (shaft and head in one outlined shape) for "this becomes that": 'blue', or 'red' for a reduction.
   const ARROW_TONES = {
     blue: ['#d9e8f6', '#6f97c2', '#2a5687'],
@@ -1505,9 +1470,8 @@
 
   // The photo of an item with its price tag hanging on it (like the white tag on the sneakers in the shop's
   // pictures), and under the photo its discount tag (like the red one on the stand), built in `host`. `knot` is
-  // where the price tag is tied, in % of the photo ([left, top]). showPhoto(), showPrice() (the tag drops on and
-  // swings on its string) and showOff() (it lands like a stamp, then a gold frame glows around it) reveal them;
-  // `percent` is the discount tag's first line (e.g. "30%").
+  // where the price tag is tied, in % of the photo ([left, top]). They start hidden; `percent` is the discount tag's
+  // first line (e.g. "30%").
   function productParts(host, { photo, price, off, knot = [50, 40] }) {
     const shot = el('div', 'pc-shot', host);
     const pic = el('div', 'pc-photo', shot);
@@ -1527,44 +1491,11 @@
     const offTag = el('div', 'pc-off', offPos);
     const lines = off.map(t => Object.assign(el('span', 'pc-off-line', offTag), { textContent: t }));
     [pic, hang, offTag].forEach(n => { n.style.opacity = '0'; });
-    const EASE = 'cubic-bezier(.2,.8,.3,1)';
-    const SWING = 'cubic-bezier(.45,0,.55,1)';
     return {
       photo: pic,
       priceTag,
       offTag,
       percent: lines[0],
-      showPhoto() {
-        Sound.bloop();
-        return reveal(pic, [
-          { opacity: 0, transform: 'translateY(30px) scale(.92)' },
-          { opacity: 1, transform: 'translateY(-4px) scale(1.01)', offset: 0.7 },
-          { opacity: 1, transform: 'none' },
-        ], { duration: T(700), easing: EASE });
-      },
-      // The price tag drops onto the sneakers and swings on its string until it hangs still.
-      showPrice() {
-        Sound.pop();
-        return reveal(hang, [
-          { opacity: 0, transform: 'translateY(-40px) rotate(-26deg)', easing: 'ease-out' },
-          { opacity: 1, transform: 'rotate(15deg)', offset: 0.3, easing: SWING },
-          { opacity: 1, transform: 'rotate(-8deg)', offset: 0.56, easing: SWING },
-          { opacity: 1, transform: 'rotate(3deg)', offset: 0.8, easing: SWING },
-          { opacity: 1, transform: 'none' },
-        ], { duration: T(1000) });
-      },
-      async showOff() {
-        Sound.stamp();
-        await reveal(offTag, [
-          { opacity: 0, transform: 'scale(1.9) rotate(-11deg)' },
-          { opacity: 1, transform: 'scale(.94) rotate(1deg)', offset: 0.62 },
-          { opacity: 1, transform: 'none' },
-        ], { duration: T(600), easing: EASE });
-        Sound.sparkle();
-        const w = offPos.offsetWidth;
-        const h = offPos.offsetHeight;
-        ring(offPos, { x: w / 2, y: h / 2, w: w + 28, h: h + 28, round: 27 });
-      },
     };
   }
 
@@ -1616,14 +1547,6 @@
       offTag: item.offTag,
       percent: item.percent,
       open: () => springUp(panel),
-      // The photo, then the price tag, then the discount tag (stamped, and framed in gold).
-      async showItem(ctx) {
-        await item.showPhoto();
-        await ctx.wait(250);
-        await item.showPrice();
-        await ctx.wait(300);
-        await item.showOff();
-      },
       // The question drops in on its strip.
       showQuestion() {
         Sound.bloop();
@@ -1632,15 +1555,6 @@
           { opacity: 1, transform: 'translateY(4px) scale(1.02)', offset: 0.7 },
           { opacity: 1, transform: 'none' },
         ], { duration: T(620), easing: 'cubic-bezier(.2,.8,.3,1)' });
-      },
-      // The hint pops in under the question.
-      showHint() {
-        Sound.pop();
-        return reveal(hintEl, [
-          { opacity: 0, transform: 'scale(.6)' },
-          { opacity: 1, transform: 'scale(1.06)', offset: 0.62 },
-          { opacity: 1, transform: 'none' },
-        ], { duration: T(520), easing: 'cubic-bezier(.2,.8,.3,1)' });
       },
       ping(node) {
         replay(node, 'is-ping');
@@ -3309,8 +3223,8 @@
 
   window.FX = {
     CANCELLED, el, fracText, settle, reveal, flyAcross, glow, motes, twinkles, burst, shine, exclaim, bubble, thought, badge, ring, question, reduction,
-    formulaNote, concept, barModel, grid100, formulaPanel, formulaReveal, productQuestion, workedSheet, strike, stickTag, choices, percentFormula,
-    questionPanel, confetti, Bird, inr, partyHud, dealCard, doneBadge, partyTable, partyMission, joystick, focusVeil, TopWalker, wrongFlash,
+    formulaNote, concept, barModel, formulaPanel, formulaReveal, productQuestion, workedSheet, strike, stickTag, choices, percentFormula,
+    questionPanel, confetti, Bird, inr, partyHud, dealCard, doneBadge, partyTable, partyMission, joystick, focusVeil, TopWalker,
     setPace(p) { pace = p; },
   };
 })();
