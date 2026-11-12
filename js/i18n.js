@@ -48,7 +48,7 @@
  * (a part of a line in parts: "key.0", "key.1"; a line with an amount filled
  * in: "key|amount=₹4,470"), with their length in seconds:
  *
- *     "voiceOver": { "hi": { "dir": "assets/vo/hi/",
+ *     "voiceOver": { "hi": { "dir": "assets/VO-HI/",
  *                            "files": { "homePlan": ["homePlan.ogg", 5.4] } } }
  *
  * I18n.voice(text) gives { src, seconds } for a line on the screen, or null.

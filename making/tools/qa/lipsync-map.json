@@ -1,109 +1,109 @@
 {
- "vo001": [
+ "homePlan": [
   "home",
   "plan"
  ],
- "vo002": [
+ "homeAdvice": [
   "home",
   "advice"
  ],
- "vo003": [
+ "homePromise": [
   "home",
   "promise"
  ],
- "vo004": [
+ "subBrowse": [
   "browse",
   "browse"
  ],
- "vo005": [
+ "subAsk": [
   "ask",
   "ask"
  ],
- "vo006": [
+ "askPrice": [
   "ask",
   "price"
  ],
- "vo139": [
+ "askCostly": [
   "ask",
   "costly"
  ],
- "vo140": [
+ "askCheckPrice": [
   "ask",
   "check-price"
  ],
- "vo146": [
+ "revealPart1": [
   "reveal",
   "reveal-1"
  ],
- "vo147": [
+ "revealPart2": [
   "reveal",
   "reveal-2"
  ],
- "vo148": [
+ "revealPart3": [
   "reveal",
   "reveal-3"
  ],
- "vo154": [
+ "payThanks": [
   "pay",
   "thanks"
  ],
- "vo157": [
+ "subSneakers": [
   "sneakers",
   "sneakers"
  ],
- "vo048": [
+ "subConfused": [
   "confused",
   "shoe-price"
  ],
- "vo046": [
+ "shoeOff": [
   "offmeans",
   "off-what"
  ],
- "vo049": [
+ "subOffMeans": [
   "offmeans",
   "shoe-ask"
  ],
- "vo102": [
+ "finalLine.0": [
   "final",
   "final-1"
  ],
- "vo103": [
+ "finalLine.1": [
   "final",
   "final-2"
  ],
- "vo127": [
+ "subReturn": [
   "return",
   "home-ask"
  ],
- "vo128": [
+ "returnLearnt": [
   "return",
   "home-learnt"
  ],
- "vo165": [
+ "inviteWow": [
   "invite",
   "inv-1"
  ],
- "vo166": [
+ "inviteOutfit": [
   "invite",
   "inv-2"
  ],
- "vo132": [
+ "subPartyMoney": [
   "partymoney",
   "money"
  ],
- "vo133": [
+ "moneyUse": [
   "partymoney",
   "deal-use"
  ],
- "vo134": [
+ "partyDealLeft": [
   "partydeal",
   "deal-left"
  ],
- "vo135": [
+ "partyDealReally": [
   "partydeal",
   "deal-really"
  ],
- "vo136": [
+ "subPartyDeal": [
   "partydeal",
   "deal-offers"
  ]

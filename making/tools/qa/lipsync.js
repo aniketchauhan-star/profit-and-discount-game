@@ -3,7 +3,7 @@
 // js/video_clips.js). Also the gap after each line before the next one (or the film's end).   node making/tools/qa/lipsync.js MAP.json
 const { chromium, GAME, LAUNCH } = require('./browser');
 const fs = require('fs');
-const MAP = JSON.parse(fs.readFileSync(process.argv[2], 'utf8')); // { voNNN: [film, line] }
+const MAP = JSON.parse(fs.readFileSync(process.argv[2], 'utf8')); // { clip (its name in assets/VO-EN/): [film, line] }
 const SCREENS = [...new Set(Object.values(MAP).map(([f]) => f))];
 (async () => {
   const browser = await chromium.launch(LAUNCH);
@@ -16,10 +16,10 @@ const SCREENS = [...new Set(Object.values(MAP).map(([f]) => f))];
     HTMLMediaElement.prototype.play = function () {
       this.muted = true; this.volume = 0;
       const src = this.getAttribute('src') || this.src || ''; // (currentSrc still names the clip before, as play() starts)
-      if (/assets\/vo\/vo\d+\.ogg/.test(src)) {
+      if (/assets\/VO-EN\/[^/?#]+\.ogg/.test(src)) {
         const s = document.querySelector('.scene.is-active:not(.is-leaving)');
         const v = s && s.querySelector('video');
-        const m = src.match(/(vo\d+)\.ogg(?:#t=([\d.]+))?/);
+        const m = src.match(/([^/?#]+)\.ogg(?:#t=([\d.]+))?/);
         window.__said.push({ vo: m[1], from: +(m[2] || 0), scene: s && s.dataset.scene, film: v ? v.currentTime : null, paused: v ? v.paused : null, at: performance.now() });
       }
       return play.call(this);
