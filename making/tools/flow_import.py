@@ -98,7 +98,7 @@ STILLS = {
 SMALLER = {'shoes-1': SNEAKERS_FILM, 'shoes-2': SNEAKERS_FILM, 'shoes-3': SNEAKERS_FILM}
 
 # Each screen's film: its parts (take, from, to: seconds in the take; to None: its end); the lines said on it (the game's
-# line ids): about when each starts, in seconds into the film as cut, and its recording (assets/vo/), and, where the
+# line ids): about when each starts, in seconds into the film as cut, and its recording (its id in vo_script.json; the clip in assets/VO-EN/), and, where the
 # take's sound runs on after the lips (a breath, a laugh), when they stop; `end`: its last
 # frame is the next screen's picture too. Where a take goes on from one screen to the next, the second part starts where
 # the first ends. Cut out: what the takes add that the game doesn't say (the shopkeeper's lips again after "It is too

@@ -4,7 +4,7 @@
 # laid on the lips by recording_cut.py, and each refs/<who>.flac is that speaker's lines from them, as said (Amit about
 # 219 Hz, his father about 118 Hz, the shopkeeper about 130 Hz). (From 2026-10-26 to 11-03 the three men were Chatterbox
 # voices from their studio clips shaped with the WORLD vocoder, making/tools/vo_deepen.py: in git's history.)
-# Don't shape the clips in assets/vo again: they are these voices already. Each line (its spoken form, from
+# Don't shape the clips in assets/VO-EN again: they are these voices already. Each line (its spoken form, from
 # making/tools/vo_script.json): takes (seeds 1000, 1001, …) until one has exactly its words (whisper) and its pitch in the voice's
 # range, at least TAKES and at most MAX_TAKES; the likest of those to the voice kept, trimmed, as loud as Swifty's clips
 # (−16 LUFS): OUT/<id>.wav. A line already in OUT is skipped (a run cut short goes on where it stopped). Then

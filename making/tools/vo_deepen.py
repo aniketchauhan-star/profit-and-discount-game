@@ -22,7 +22,7 @@ import pyworld as pw
 
 ROOT = Path(__file__).resolve().parents[2]  # the project (this tool is in making/tools/)
 SCRIPT = ROOT / 'making' / 'tools' / 'vo_script.json'
-CLIPS = ROOT / 'assets' / 'vo'
+CLIPS = ROOT / 'assets' / 'VO-EN'  # (each clip named by its line's key: "file" in vo_script.json)
 RATE = 24000   # the studio's sample rate
 FRAME = 5.0    # ms between the vocoder's frames
 MARK = 'deepened'
@@ -75,11 +75,11 @@ def main():
     ap.add_argument('--throat', type=float, default=0.85, help="the voice's colour (its formants) moves down by this")
     ap.add_argument('--check', action='store_true', help='only say which clips are done')
     a = ap.parse_args()
-    ids = [e['id'] for e in json.loads(SCRIPT.read_text(encoding='utf-8')) if e['speaker'] == a.speaker]
+    ids = {e['id']: e.get('file', e['id']) for e in json.loads(SCRIPT.read_text(encoding='utf-8')) if e['speaker'] == a.speaker}
     if not ids:
         raise SystemExit(f'no lines for {a.speaker} in {SCRIPT.name}')
-    for id_ in ids:
-        path = CLIPS / f'{id_}.ogg'
+    for id_, name in ids.items():
+        path = CLIPS / f'{name}.ogg'
         if not path.exists():
             print(f'{id_}: no clip yet')
         elif done(path):

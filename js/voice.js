@@ -5,7 +5,10 @@
    (making/source/FINAL.mp3, boy.mp3, father.mp3 and shop.mp3, cut into their
    lines by making/tools/voices/recording_cut.py, the men's laid on their lips
    in the films).
-   Each clip is found by the exact text its line shows (js/vo_lines.js). A line
+   Each clip is found by the exact text its line shows (js/vo_lines.js). In
+   another language (?lan=hi: js/i18n.js) a line plays the language's own
+   recording of it, if locales/locales.json lists one under "voiceOver", or else
+   the English recording of the same line (found by its English words). A line
    without a clip, a browser that can't play Ogg Opus, or ?vo=0 in the address
    uses the text-to-speech voices already on the player's device instead (Web
    Speech API): Rishi on a Mac, Heera / Ravi or Neerja / Prabhat on Windows,
@@ -16,13 +19,24 @@
 
   // The recorded lines: { "line as shown": [clip, seconds] } (js/vo_lines.js, made by tools/vo_build.py).
   const LINES = typeof VO_LINES === 'object' ? VO_LINES : {};
-  const DIR = 'assets/vo/';
+  const DIR = 'assets/VO-EN/'; // (each clip named by its line's key, like the other languages' packs)
   const player = new Audio(); // one audio element for every line (tablets only play from one they have unlocked)
   player.preload = 'auto';
   const recorded = !/[?&]vo=0\b/.test(location.search) && !!player.canPlayType('audio/ogg; codecs="opus"');
   // A line's key: its text as shown, without highlight marks ({…}, *…*), line breaks as spaces.
   const key = text => String(text).replace(/[{}*]/g, '').replace(/\s+/g, ' ').trim();
-  const clipOf = text => (recorded && LINES[key(text)]) || null;
+  // A translated line → the same line in English (js/i18n.js): the first that has a recording, if it translates more than
+  // one alike; English stays as it is.
+  const englishes = text => (window.I18n ? I18n.sources(text) : [String(text)]);
+  const english = text => { const all = englishes(text); return all.find(e => LINES[key(e)]) || all[0]; };
+  // [clip, seconds, own]: the language's own recording of the line (`own`: clip is its address; seconds may be null),
+  // or else the English recording (its words, or the English words of a translated line).
+  const clipOf = text => {
+    if (!recorded) return null;
+    const own = window.I18n && I18n.voice(text);
+    if (own) return [own.src, own.seconds, true];
+    return LINES[key(text)] || LINES[key(english(text))] || null;
+  };
 
   // How each character sounds in the device's voice (for a line with no clip): `gender` picks the voice, pitch
   // and rate shape it. A female part played by a male voice is pitched up (pitch + 0.45), and a male part played by a
@@ -90,7 +104,7 @@
   // Plays a recorded line on the one player (from `from` seconds into it). Resolves when it has ended or was stopped,
   // and at the latest its remaining length + 0.6 s after it starts playing (so a stalled clip never holds the game up).
   // If it can't be played (the file is missing, or play() is refused), `fallback` says the line instead.
-  function playClip([id, seconds], fallback, from = 0) {
+  function playClip([id, seconds, own], fallback, from = 0) {
     return new Promise(resolve => {
       let over = false;
       let guard = 0;
@@ -115,16 +129,17 @@
       };
       const started = () => {
         clearTimeout(guard);
-        guard = setTimeout(end, (seconds - player.currentTime) * 1000 + 600);
+        const length = seconds || (isFinite(player.duration) ? player.duration : 30); // (a recording listed without its length)
+        guard = setTimeout(end, (length - player.currentTime) * 1000 + 600);
       };
       const line = { stop() { player.pause(); end(); } };
       playing = line;
       player.addEventListener('ended', end);
       player.addEventListener('error', fail);
       player.addEventListener('playing', started);
-      guard = setTimeout(end, (seconds - from) * 1000 + 4000); // in case it never starts
+      guard = setTimeout(end, ((seconds || 30) - from) * 1000 + 4000); // in case it never starts
       player.muted = false;
-      player.src = DIR + id + '.ogg' + (from > 0 ? `#t=${from.toFixed(3)}` : '');
+      player.src = (own ? id : DIR + id + '.ogg') + (from > 0 ? `#t=${from.toFixed(3)}` : '');
       const p = player.play();
       if (p) p.catch(err => { if (err.name !== 'AbortError') fail(); }); // AbortError: stopped before it began
     });
@@ -167,10 +182,19 @@
     }
   }
 
+  // A voice of the game's language, for a line in an Indian script (Odia is "or" to the device).
+  const ownVoice = () => {
+    const lang = window.I18n ? I18n.getLang() : 'en';
+    const code = lang === 'od' ? 'or' : lang;
+    return voices.find(v => v.lang.toLowerCase().replace('_', '-').startsWith(code + '-')) || null;
+  };
+
   function speakText(text, cast) {
     return new Promise(resolve => {
       if (!synth || !text) return resolve();
-      const voice = pick(cast.gender);
+      const local = /[\u0900-\u0DFF]/.test(text); // (an English voice can't read it)
+      const voice = local ? ownVoice() : pick(cast.gender);
+      if (local && !voice) return void setTimeout(resolve, 600 + text.length * 70); // (the time it takes to read)
       const u = new SpeechSynthesisUtterance(text);
       if (voice) {
         u.voice = voice;
@@ -207,7 +231,8 @@
     if (!window.Sound || !Sound.sfxOn || document.hidden) return Promise.resolve();
     const mine = ++token;
     Sound.duck(true, 'voice');
-    const device = () => (mine === token ? speakText(spoken(text), CAST[who] || CAST.boy) : Promise.resolve());
+    const words = english(text); // (its English words, as the recordings say it; or its own, if none are known)
+    const device = () => (mine === token ? speakText(/[\u0900-\u0DFF]/.test(words) ? words.replace(/\s+/g, ' ').trim() : spoken(words), CAST[who] || CAST.boy) : Promise.resolve());
     const clip = clipOf(text);
     const run = clip ? playClip(clip, device, from) : device();
     return run.then(() => { if (mine === token) Sound.duck(false, 'voice'); });
