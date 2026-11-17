@@ -66,7 +66,7 @@ body {
 }
 
 button { font: inherit; color: inherit; }
-button:focus-visible {
+button:focus-visible, .switch input:focus-visible + .switch-track {
   outline: 6px solid var(--gold);
   outline-offset: 5px;
 }
@@ -1069,7 +1069,7 @@ button:focus-visible {
 .pf-frac { display: inline-flex; flex-direction: column; align-items: center; }
 .pf-num, .pf-den { position: relative; padding: 6px 8px 0; }
 .pf-bar { align-self: stretch; height: 5px; margin: 6px 0; border-radius: 3px; background: currentColor; } /* the fraction's colour */
-/* A fraction in running text (FX.fracText: a card): its top over its bottom, a little
+/* A fraction in running text (FX.fracText: a card, the scene list): its top over its bottom, a little
    smaller than the words, centred on the line; its negative margins keep the lines round it where they were. */
 .frac { position: relative; display: inline-flex; flex-direction: column; align-items: center; margin: -.48em .14em; vertical-align: middle; font-size: .8em; line-height: 1.04; }
 .frac-num { padding: 0 .16em .02em; }
@@ -1435,6 +1435,307 @@ button:focus-visible {
   50%      { transform: translateY(-12px); }
 }
 
+/* ---------- HUD buttons ---------- */
+
+.hud-btn {
+  position: absolute;
+  z-index: 30;
+  width: 60px;
+  height: 60px;
+  padding: 0;
+  border-radius: 20px;
+  border: 4px solid var(--ink);
+  background: linear-gradient(180deg, #fffefa 0%, #f6ecd6 100%);
+  color: var(--ink);
+  box-shadow: 0 5px 0 var(--ink), 0 10px 18px rgba(0, 0, 0, .25);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  transition: transform .15s ease, box-shadow .15s ease, background .2s ease;
+}
+.hud-btn:hover { transform: translateY(-2px) rotate(-3deg); }
+.hud-btn:active { transform: translateY(4px); box-shadow: 0 1px 0 var(--ink), 0 4px 8px rgba(0, 0, 0, .25); }
+.hud-btn svg { width: 32px; height: 32px; display: block; }
+
+.icon {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 4.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+#btn-panel { left: 30px; top: 28px; }
+
+/* ---------- Back / Next (top-right) ---------- */
+
+#nav {
+  position: absolute;
+  z-index: 30;
+  right: 30px;
+  top: 28px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  transition: opacity .35s ease, transform .35s ease;
+}
+#nav.is-hidden { opacity: 0; transform: translateY(-30px); pointer-events: none; }
+
+.nav-btn {
+  position: relative;
+  overflow: hidden;
+  height: 60px;
+  padding: 0 18px;
+  border-radius: 30px;
+  border: 4px solid var(--ink);
+  background: linear-gradient(180deg, #fffefa, #f2e8d2);
+  color: var(--ink);
+  box-shadow: 0 5px 0 var(--ink), 0 10px 18px rgba(0, 0, 0, .25);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 26px;
+  font-weight: 800;
+  line-height: 1;
+  cursor: pointer;
+  transition: transform .15s ease, box-shadow .15s ease, opacity .2s ease;
+}
+.nav-btn--primary { background: linear-gradient(180deg, #ffd866, #ffb52e); }
+.nav-btn:hover:not(:disabled) { transform: translateY(-2px); }
+.nav-btn:active:not(:disabled) { transform: translateY(4px); box-shadow: 0 1px 0 var(--ink), 0 4px 8px rgba(0, 0, 0, .25); }
+.nav-btn:disabled { opacity: .45; cursor: default; }
+.nav-label, .nav-icon { position: relative; z-index: 1; }
+.nav-label { top: 2px; }
+.nav-icon svg { width: 26px; height: 26px; display: block; }
+
+.nav-fill { /* auto-advance timer */
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 0;
+  background: rgba(255, 255, 255, .6);
+  pointer-events: none;
+}
+#btn-next.is-counting .nav-fill { animation: fill-up var(--count, 3000ms) linear forwards; }
+@keyframes fill-up {
+  from { width: 0; }
+  to   { width: 100%; }
+}
+#btn-next.is-ready { animation: ready-pulse 1.3s ease-in-out infinite; }
+@keyframes ready-pulse { /* a gold glow round the button (it and its label hold still) */
+  0%, 100% { box-shadow: 0 5px 0 var(--ink), 0 10px 18px rgba(0, 0, 0, .25), 0 0 0 0 rgba(255, 200, 61, .7); }
+  50%      { box-shadow: 0 5px 0 var(--ink), 0 10px 18px rgba(0, 0, 0, .25), 0 0 0 10px rgba(255, 200, 61, 0); }
+}
+
+#nav-count {
+  height: 44px;
+  min-width: 74px;
+  padding: 3px 14px 0;
+  border-radius: 22px;
+  border: 3px solid rgba(255, 255, 255, .9);
+  background: rgba(15, 59, 69, .85);
+  color: #fff;
+  font-size: 21px;
+  font-weight: 800;
+  display: grid;
+  place-items: center;
+}
+
+/* ---------- Side panel: jump to any scene ---------- */
+
+#panel-scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 35;
+  background: rgba(4, 16, 20, .45);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .35s ease;
+}
+#panel-scrim.is-open { opacity: 1; pointer-events: auto; }
+
+#panel {
+  position: absolute;
+  z-index: 40;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 600px;
+  padding: 32px 30px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  color: #fff;
+  background: linear-gradient(180deg, rgba(22, 74, 86, .97), rgba(11, 45, 54, .97));
+  border-right: 6px solid var(--gold);
+  box-shadow: 24px 0 70px rgba(0, 0, 0, .45);
+  transform: translateX(-108%);
+  visibility: hidden;
+  transition: transform .5s cubic-bezier(.2, .8, .2, 1), visibility 0s linear .5s;
+}
+#panel.is-open {
+  transform: none;
+  visibility: visible;
+  transition: transform .5s cubic-bezier(.2, .8, .2, 1), visibility 0s;
+}
+
+.panel-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.panel-head h2 {
+  margin: 0;
+  font-size: 54px;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: .5px;
+}
+.panel-close {
+  width: 68px;
+  height: 68px;
+  padding: 0 0 4px;
+  border-radius: 50%;
+  border: 4px solid #fff;
+  background: transparent;
+  color: #fff;
+  font-size: 50px;
+  line-height: 1;
+  cursor: pointer;
+  transition: background .2s ease, transform .2s ease;
+}
+.panel-close:hover { background: rgba(255, 255, 255, .15); transform: rotate(90deg); }
+
+#scene-list {
+  position: relative; /* rows measure their offsetTop from the list (scrolling to the current one) */
+  list-style: none;
+  margin: 0;
+  padding: 0 6px 0 0;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, .45) transparent;
+}
+#scene-list::-webkit-scrollbar { width: 8px; }
+#scene-list::-webkit-scrollbar-thumb { border-radius: 4px; background: rgba(255, 255, 255, .45); }
+#scene-list > li { flex: none; }
+.scene-item {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 34px 72px 1fr;
+  align-items: center;
+  gap: 12px;
+  padding: 2px 12px 2px 8px;
+  border-radius: 18px;
+  border: 3px solid transparent;
+  background: rgba(255, 255, 255, .07);
+  color: #fff;
+  text-align: left;
+  cursor: pointer;
+  transition: background .2s ease, border-color .2s ease, transform .2s ease;
+}
+.scene-item:hover { background: rgba(255, 255, 255, .14); transform: translateX(6px); }
+.scene-item.is-current { border-color: var(--gold); background: rgba(255, 200, 61, .16); }
+.si-num {
+  width: 34px;
+  height: 34px;
+  padding-top: 3px;
+  border-radius: 50%;
+  background: var(--gold);
+  color: var(--ink);
+  font-size: 18px;
+  font-weight: 800;
+  display: grid;
+  place-items: center;
+}
+.si-thumb {
+  position: relative;
+  width: 72px;
+  height: 40px;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 2px solid rgba(255, 255, 255, .85);
+  background: #000;
+}
+.si-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.si-thumb--sheet { background: #fff6e2; box-shadow: inset 0 0 0 3px #0f3b45; }
+.si-thumb--sheet img { object-fit: contain; padding: 16px 4px 3px 34px; }
+.si-now {
+  position: absolute;
+  left: 3px;
+  top: 3px;
+  padding: 1px 6px 0;
+  border-radius: 6px;
+  background: var(--gold);
+  color: var(--ink);
+  font-size: 12px;
+  font-weight: 800;
+  display: none;
+}
+.scene-item.is-current .si-now { display: block; }
+.si-text strong {
+  display: block;
+  font-size: 21px;
+  font-weight: 800;
+  line-height: 1.05;
+}
+.si-text small {
+  display: block;
+  margin-top: 0;
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.15;
+  opacity: .8;
+}
+
+.panel-foot { border-top: 3px solid rgba(255, 255, 255, .15); padding-top: 18px; }
+.switch {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  font-size: 28px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.switch input { position: absolute; opacity: 0; pointer-events: none; }
+.switch-track {
+  position: relative;
+  width: 84px;
+  height: 46px;
+  border-radius: 23px;
+  border: 3px solid #fff;
+  background: rgba(255, 255, 255, .2);
+  transition: background .2s ease;
+}
+.switch-thumb {
+  position: absolute;
+  left: 4px;
+  top: 4px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #fff;
+  transition: transform .2s ease;
+}
+.switch input:checked + .switch-track { background: var(--gold); }
+.switch input:checked + .switch-track .switch-thumb { transform: translateX(38px); }
+.switch-text { padding-top: 4px; }
+.keys { margin: 14px 0 0; font-size: 21px; line-height: 1.7; opacity: .8; }
+kbd {
+  display: inline-block;
+  min-width: 34px;
+  padding: 0 8px;
+  border-radius: 8px;
+  border: 2px solid rgba(255, 255, 255, .5);
+  background: rgba(255, 255, 255, .16);
+  font: 700 20px/28px var(--font);
+  text-align: center;
+}
+
 /* ---------- Loader ---------- */
 
 #loader {
@@ -1513,7 +1814,7 @@ button:focus-visible {
 
 @media (prefers-reduced-motion: reduce) {
   .mote, .twinkle { display: none; }
-  .glow, .thought-puff-bob, .start-btn, .badge-rays, .exclaim-inner, .rotate-phone, .spot-ring::after, .red-tag.is-pulsing, .cmp-box.is-key, .fm-box.is-ping, .fm-op.is-ping, .fm-box.is-ping::after, .fr-term.is-ping, .fr-op.is-ping, .pc-price.is-ping, .pc-off.is-ping, .pc-off-line.is-ping, .pqp-hint.is-ping, .pf-hint.is-ping, .pf-q-value.is-ping, .pq-opt.is-ping, .ws-panel .is-ping, .ws-drag, .ws-slot.is-waiting, .ws-slot.is-wrong {
+  .glow, .thought-puff-bob, .start-btn, .badge-rays, .exclaim-inner, #btn-next.is-ready, .rotate-phone, .spot-ring::after, .red-tag.is-pulsing, .cmp-box.is-key, .fm-box.is-ping, .fm-op.is-ping, .fm-box.is-ping::after, .fr-term.is-ping, .fr-op.is-ping, .pc-price.is-ping, .pc-off.is-ping, .pc-off-line.is-ping, .pqp-hint.is-ping, .pf-hint.is-ping, .pf-q-value.is-ping, .pq-opt.is-ping, .ws-panel .is-ping, .ws-drag, .ws-slot.is-waiting, .ws-slot.is-wrong {
     animation: none !important;
   }
   .qcard-pos { transition: none; }
@@ -2307,9 +2608,6 @@ button:focus-visible {
 .pmc-tick { position: absolute; top: -14px; right: -12px; display: grid; place-items: center; width: 48px; height: 48px; border: 4px solid #fff; border-radius: 50%; background: #1fa84a; }
 .pmc-tick svg { width: 30px; height: 30px; fill: none; stroke: #fff; stroke-width: 7; stroke-linecap: round; stroke-linejoin: round; }
 .pmc-name { display: block; margin-top: 6px; color: var(--pp-ink); font-size: 30px; font-weight: 800; }
-/* the end of the game: Play again, under the card (the shops' Buy, in the wallet's blue) */
-.pmc-again { --dk: #0f3a8f; width: max-content; margin: 30px auto 0; padding: 0 50px; background: linear-gradient(#3b86f0, #1652c6); pointer-events: auto; }
-.pmc-again svg { width: 44px; height: 44px; stroke-width: 5; }
 
 /* the bar on top: the wallet, and the shopping list (ticked as he buys) */
 .ph { position: absolute; inset: 0; z-index: 6; pointer-events: none; font-family: 'Baloo 2', system-ui, sans-serif; }
@@ -2463,3 +2761,11 @@ button:focus-visible {
 .dc-buy { position: absolute; z-index: 10; flex: none; width: 260px; height: 84px; margin-left: -130px; border-radius: 24px; font-family: 'Baloo 2', system-ui, sans-serif;
   font-size: 40px; font-weight: 800; pointer-events: auto; }
 .dc-buy svg { width: 40px; height: 40px; }
+
+/* ---------- The game in another language (index.html?lan=hi: js/i18n.js sets <html lang>) ----------
+   Hindi, Marathi, Telugu, Gujarati and Odia write vowel signs above and below their letters, so words that can run onto
+   a second line, or sit in a stack (a scene's name over its line), get the room for them. English is untouched. */
+html:not([lang="en"]) .si-text strong { line-height: 1.4; }
+html:not([lang="en"]) .si-text small { line-height: 1.45; }
+html:not([lang="en"]) :is(.is-v2 .b-text, .q-line, .is-v2 .hint-strip, .pqp-question, .qd-name, .ph-list-title, .ic-title, .pmc-text,
+  .is-v2 .pop-card--mp .cn-meaning) { line-height: 1.45; }

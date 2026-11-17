@@ -1,0 +1,110 @@
+{
+ "homePlan": [
+  "home",
+  "plan"
+ ],
+ "homeAdvice": [
+  "home",
+  "advice"
+ ],
+ "homePromise": [
+  "home",
+  "promise"
+ ],
+ "subBrowse": [
+  "browse",
+  "browse"
+ ],
+ "subAsk": [
+  "ask",
+  "ask"
+ ],
+ "askPrice": [
+  "ask",
+  "price"
+ ],
+ "askCostly": [
+  "ask",
+  "costly"
+ ],
+ "askCheckPrice": [
+  "ask",
+  "check-price"
+ ],
+ "revealPart1": [
+  "reveal",
+  "reveal-1"
+ ],
+ "revealPart2": [
+  "reveal",
+  "reveal-2"
+ ],
+ "revealPart3": [
+  "reveal",
+  "reveal-3"
+ ],
+ "payThanks": [
+  "pay",
+  "thanks"
+ ],
+ "subSneakers": [
+  "sneakers",
+  "sneakers"
+ ],
+ "subConfused": [
+  "confused",
+  "shoe-price"
+ ],
+ "shoeOff": [
+  "offmeans",
+  "off-what"
+ ],
+ "subOffMeans": [
+  "offmeans",
+  "shoe-ask"
+ ],
+ "finalLine.0": [
+  "final",
+  "final-1"
+ ],
+ "finalLine.1": [
+  "final",
+  "final-2"
+ ],
+ "subReturn": [
+  "return",
+  "home-ask"
+ ],
+ "returnLearnt": [
+  "return",
+  "home-learnt"
+ ],
+ "inviteWow": [
+  "invite",
+  "inv-1"
+ ],
+ "inviteOutfit": [
+  "invite",
+  "inv-2"
+ ],
+ "subPartyMoney": [
+  "partymoney",
+  "money"
+ ],
+ "moneyUse": [
+  "partymoney",
+  "deal-use"
+ ],
+ "partyDealLeft": [
+  "partydeal",
+  "deal-left"
+ ],
+ "partyDealReally": [
+  "partydeal",
+  "deal-really"
+ ],
+ "subPartyDeal": [
+  "partydeal",
+  "deal-offers"
+ ]
+}

@@ -2,7 +2,7 @@
    Bookstore Journey — sound
    Every sound effect is synthesised with the Web Audio API, so there are no
    effect files to load and it works offline. The background music is a file,
-   assets/audio/bg-music.mp3, played on a loop. Browsers only allow sound after the
+   assets/audio/bg-music.ogg (Ogg Opus, like the voices), played on a loop. Browsers only allow sound after the
    player clicks/taps, so game.js calls Sound.unlock() on the first input.
    ========================================================================== */
 (function () {
@@ -250,13 +250,13 @@
     },
   };
 
-  // ---------- background music: assets/audio/bg-music.mp3, on a loop ----------
+  // ---------- background music: assets/audio/bg-music.ogg, on a loop ----------
 
   // Served over http(s), it plays through the Web Audio graph like every other sound, so its level can be set
   // everywhere (on iPhones and iPads an <audio>'s own volume is fixed). Opened as a file (index.html
   // double-clicked), browsers keep the graph from hearing a file, so the <audio>'s own volume is faded instead.
   const music = (() => {
-    const SRC = 'assets/audio/bg-music.mp3';
+    const SRC = 'assets/audio/bg-music.ogg';
     const END = 143; // where the tune ends (4 s of silence follow it in the file): it starts again from the top
     const viaGraph = /^https?:$/.test(location.protocol);
     let el = null;
