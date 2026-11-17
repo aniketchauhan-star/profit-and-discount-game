@@ -3705,15 +3705,6 @@
   // Scene runner + navigation
   // ======================================================================
 
-  const readPref = (key, fallback) => {
-    try {
-      const v = localStorage.getItem(key);
-      return v === null ? fallback : v === '1';
-    } catch (e) {
-      return fallback;
-    }
-  };
-
   const Game = {
     index: -1,
     token: 0,      // bumps every time a scene starts; stale scripts see it and stop
@@ -3725,7 +3716,6 @@
     hold: null,    // { token, ms } while a scene waits to auto-advance
     countdown: 0,
     starting: false,
-    autoplay: readPref('bj.autoplay', true),
     waiting: -1,   // the screen go() waits to show until its pictures are in (see Pictures)
   };
 
@@ -3746,15 +3736,14 @@
           Game.timers.add(id);
         });
       },
-      // End of a scene: move on after `ms` (Next fills up as a timer; not stretched by PACE, so changing
-      // screens stays brisk), or wait for Next if auto-play is off. The last screen waits for Replay instead.
+      // End of a scene: move on after `ms` (not stretched by PACE, so changing screens stays brisk). The game plays
+      // through on its own: no Next, Back or scene list. The last screen is the end.
       advance(ms) {
         if (!alive()) return;
         showAll(SCENES[Game.index]); // everything said on it shows again (see dimOthers)
-        if (Game.index === LAST) return UI.setReady(true); // the story so far ends here: invite a replay
+        if (Game.index === LAST) return; // the end of the story
         Game.hold = { token, ms };
-        if (Game.autoplay) startCountdown();
-        else UI.setReady(true);
+        startCountdown();
       },
     };
   }
@@ -3765,8 +3754,6 @@
     Game.timers.clear();
     Game.hold = null;
     clearTimeout(Game.countdown);
-    UI.countdown(0);
-    UI.setReady(false);
     Sound.duck(false);
     Voice.stop();
   }
@@ -3774,25 +3761,10 @@
   function startCountdown() {
     const hold = Game.hold;
     if (!hold || hold.token !== Game.token) return;
-    UI.setReady(false);
-    UI.countdown(hold.ms);
     clearTimeout(Game.countdown);
     Game.countdown = setTimeout(() => {
       if (Game.hold === hold && hold.token === Game.token) next();
     }, hold.ms);
-  }
-
-  function setAutoplay(on) {
-    Game.autoplay = on;
-    try { localStorage.setItem('bj.autoplay', on ? '1' : '0'); } catch (e) { /* ignore */ }
-    $('#autoplay-toggle').checked = on;
-    if (on) {
-      startCountdown();
-    } else if (Game.hold && Game.hold.token === Game.token) {
-      clearTimeout(Game.countdown);
-      UI.countdown(0);
-      UI.setReady(true);
-    }
   }
 
   // mode: 'cut' (settle-in zoom), 'fade' or 'continue' (no settle). `camera` carries the
@@ -3976,7 +3948,6 @@
     Pictures.ahead(i);
     stopScene();
     clearTimeout(Game.startTimer);
-    UI.closePanel(true);
     settleTransition();
     const from = SCENES[Game.index];
     const to = SCENES[i];
@@ -3995,7 +3966,6 @@
     to.cameFrom = from ? from.id : null; // lets a screen carry on from the one before it
     if (from && !fade && !sheet) deactivate(from);
     Game.index = i;
-    UI.update();
 
     if (sheet) {
       const framed = x => !!x.snapEl;
@@ -4139,96 +4109,18 @@
     }, SNAP_MS);
   }
 
-  // Next and Back go to the screen after or before (Next on the last screen starts the story again), unless the screen
-  // says where (`next`, `back`: a screen's id): the mall and its shops aren't in a line (a shop goes back out into the mall).
+  // A screen's end moves on to the screen after it (the countdown, see advance), unless the screen says where (`next`:
+  // a screen's id): the mall and its shops aren't in a line (a shop goes back out into the mall).
   function next() {
     const scene = SCENES[Game.index];
     if (Game.index === 0) startStory();
     else if (scene.next) go(sceneIndex(scene.next()));
-    else if (Game.index >= LAST) go(1); // Replay
-    else go(Game.index + 1);
-  }
-
-  function back() {
-    const scene = SCENES[Game.index];
-    if (scene.back) go(sceneIndex(scene.back()));
-    else if (Game.index > 0) go(Game.index - 1);
+    else if (Game.index < LAST) go(Game.index + 1);
   }
 
   // ======================================================================
-  // HUD: back/next and the scene panel.
   // Music, sound and full screen have no on-screen buttons: keys M, S and F.
   // ======================================================================
-
-  const ICONS = {
-    scenes: '<rect x="6" y="8" width="15" height="13" rx="3"/><rect x="27" y="8" width="15" height="13" rx="3"/><rect x="6" y="27" width="15" height="13" rx="3"/><rect x="27" y="27" width="15" height="13" rx="3"/>',
-    back: '<path d="M30 10L16 24l14 14"/>',
-    next: '<path d="M18 10l14 14-14 14"/>',
-    replay: '<path d="M10.5 26A14 14 0 1 0 14 14.5"/><path d="M12 6v9h9"/>',
-  };
-  const icon = name => `<svg class="icon" viewBox="0 0 48 48" aria-hidden="true">${ICONS[name]}</svg>`;
-
-  const UI = {
-    update() {
-      const i = Game.index;
-      const isLast = i === LAST;
-      $('#nav').classList.toggle('is-hidden', i <= 0);
-      $('#btn-back').disabled = i <= 0;
-      $('#nav-count').textContent = `${Math.max(i, 1)} / ${LAST}`;
-      $('#btn-next .nav-label').textContent = isLast ? T('btnReplay') : T('btnNext');
-      $('#btn-next .nav-icon').innerHTML = icon(isLast ? 'replay' : 'next');
-      $('#btn-next').setAttribute('aria-label', isLast ? T('ariaReplay') : T('ariaNext'));
-      SCENES.forEach((s, k) => {
-        s.item.classList.toggle('is-current', k === i);
-        if (k === i) s.item.setAttribute('aria-current', 'step');
-        else s.item.removeAttribute('aria-current');
-      });
-    },
-    countdown(ms) {
-      const b = $('#btn-next');
-      b.classList.remove('is-counting');
-      if (ms > 0) {
-        void b.offsetWidth; // restart the fill animation
-        b.style.setProperty('--count', ms + 'ms');
-        b.classList.add('is-counting');
-      }
-    },
-    setReady(on) {
-      $('#btn-next').classList.toggle('is-ready', on);
-    },
-    get panelOpen() {
-      return $('#panel').classList.contains('is-open');
-    },
-    openPanel() {
-      $('#scene-list').querySelectorAll('img[data-src]').forEach(img => {
-        img.src = img.dataset.src;
-        delete img.dataset.src;
-      });
-      $('#panel').classList.add('is-open');
-      $('#panel-scrim').classList.add('is-open');
-      $('#panel').setAttribute('aria-hidden', 'false');
-      $('#btn-panel').setAttribute('aria-expanded', 'true');
-      Sound.swish();
-      // The list scrolls once it is taller than the panel: bring the current screen into the middle of it.
-      const list = $('#scene-list');
-      const current = SCENES[Math.max(Game.index, 0)].item;
-      const row = current.parentElement;
-      list.scrollTop = row.offsetTop - (list.clientHeight - row.offsetHeight) / 2;
-      setTimeout(() => current.focus({ preventScroll: true }), 60);
-    },
-    closePanel(silent) {
-      if (!UI.panelOpen) return;
-      $('#panel').classList.remove('is-open');
-      $('#panel-scrim').classList.remove('is-open');
-      $('#panel').setAttribute('aria-hidden', 'true');
-      $('#btn-panel').setAttribute('aria-expanded', 'false');
-      if (!silent) Sound.swish();
-    },
-    togglePanel() {
-      if (UI.panelOpen) UI.closePanel();
-      else UI.openPanel();
-    },
-  };
 
   function toggleMusic() {
     Sound.unlock();
@@ -4369,52 +4261,7 @@
     node.style.setProperty('--zoom', String(z));
   }
 
-  function buildPanel() {
-    const list = $('#scene-list');
-    SCENES.forEach((scene, i) => {
-      const li = el('li', '', list);
-      const item = el('button', 'scene-item', li);
-      item.type = 'button';
-      el('span', 'si-num', item).textContent = scene.num;
-      const thumb = el('span', 'si-thumb', item);
-      const picture = scene.react || scene.bg; // a screen's reaction picture shows best what it is about
-      if (scene.sheet) thumb.classList.add('si-thumb--sheet'); // on the big panel: a little cream panel, with Swifty's stand
-      if (picture || scene.sheet) Object.assign(el('img', '', thumb), { alt: '' }).dataset.src = picture || STAND; // (loaded when the list opens)
-      el('span', 'si-now', thumb).textContent = T('panelNow');
-      const text = el('span', 'si-text', item);
-      el('strong', '', text).textContent = scene.title;
-      FX.fracText(el('small', '', text), scene.sub);
-      item.setAttribute('aria-label', i === 0 ? T('ariaStartScreen', { title: scene.title }) : T('ariaScene', { n: i, title: scene.title }));
-      item.addEventListener('click', () => {
-        Sound.click();
-        go(i);
-      });
-      scene.item = item;
-    });
-  }
-
   function wireUI() {
-    $('#btn-panel').innerHTML = icon('scenes');
-    $('#btn-panel').setAttribute('aria-expanded', 'false');
-    $('#btn-back .nav-icon').innerHTML = icon('back');
-
-    const press = fn => () => {
-      Sound.click();
-      fn();
-    };
-    $('#btn-back').addEventListener('click', press(back));
-    $('#btn-next').addEventListener('click', press(next));
-    $('#btn-panel').addEventListener('click', press(UI.togglePanel));
-    $('#btn-panel-close').addEventListener('click', () => UI.closePanel());
-    $('#panel-scrim').addEventListener('click', () => UI.closePanel());
-
-    const auto = $('#autoplay-toggle');
-    auto.checked = Game.autoplay;
-    auto.addEventListener('change', () => {
-      Sound.click();
-      setAutoplay(auto.checked);
-    });
-
     $('#rotate-hint').addEventListener('click', e => e.currentTarget.classList.add('is-dismissed'));
 
     // Browsers only allow sound after a user gesture (a tap counts once the finger lifts); the voices' player
@@ -4427,30 +4274,10 @@
     document.addEventListener('keydown', e => {
       if (e.altKey || e.ctrlKey || e.metaKey) return;
       if (Game.steering && /^(Arrow(Up|Down|Left|Right)|[wasdWASD])$/.test(e.key)) return; // (they walk Amit: the mall's arrows)
-      const focus = document.activeElement;
-      const control = focus && (focus.tagName === 'BUTTON' || focus.tagName === 'INPUT' || focus.getAttribute('role') === 'button');
       switch (e.key) {
-        case 'ArrowRight':
-        case 'PageDown':
-          e.preventDefault();
-          next();
-          break;
-        case 'ArrowLeft':
-        case 'PageUp':
-          e.preventDefault();
-          back();
-          break;
-        case ' ':
-        case 'Enter':
-          if (control) return; // let the focused control handle it (e.g. an amount to drag, on screen 34)
-          e.preventDefault();
-          next();
-          break;
-        case 'p': case 'P': UI.togglePanel(); break;
         case 'f': case 'F': toggleFullscreen(); break;
         case 'm': case 'M': toggleMusic(); break;
         case 's': case 'S': toggleSfx(); break;
-        case 'Escape': UI.closePanel(); break;
         default: break;
       }
     });
@@ -4494,7 +4321,6 @@
     fit();
     window.addEventListener('resize', fit);
     buildScenes();
-    buildPanel();
     wireUI();
     startParallax();
 

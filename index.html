@@ -13,43 +13,7 @@
          Its words are by key (data-i18n…, js/i18n.js): locales/locales.json; the language: index.html?lan=hi -->
     <main id="stage" aria-label="Bookstore Journey story" data-i18n-attr="aria-label:ariaStage">
       <div id="scenes"></div>
-
-      <!-- Top-left: scene panel toggle -->
-      <button id="btn-panel" class="hud-btn" type="button" aria-label="Open scene list (P)" title="Scenes (P)"
-        data-i18n-attr="aria-label:ariaOpenScenes;title:titleOpenScenes"></button>
-
-      <!-- Top-right: back / next -->
-      <nav id="nav" aria-label="Scene navigation" data-i18n-attr="aria-label:ariaSceneNav">
-        <button id="btn-back" class="nav-btn" type="button" aria-label="Previous scene" data-i18n-attr="aria-label:ariaBack">
-          <span class="nav-icon" data-icon="back"></span><span class="nav-label" data-i18n="btnBack">Back</span>
-        </button>
-        <span id="nav-count" aria-live="polite"></span>
-        <button id="btn-next" class="nav-btn nav-btn--primary" type="button" aria-label="Next scene" data-i18n-attr="aria-label:ariaNext">
-          <span class="nav-fill"></span>
-          <span class="nav-label" data-i18n="btnNext">Next</span><span class="nav-icon" data-icon="next"></span>
-        </button>
-      </nav>
-
-      <!-- Side panel: jump to any scene -->
-      <div id="panel-scrim"></div>
-      <aside id="panel" aria-label="Scenes" aria-hidden="true" data-i18n-attr="aria-label:panelScenes">
-        <header class="panel-head">
-          <h2 data-i18n="panelScenes">Scenes</h2>
-          <button id="btn-panel-close" class="panel-close" type="button" aria-label="Close scene list" data-i18n-attr="aria-label:ariaCloseScenes">&times;</button>
-        </header>
-        <ol id="scene-list"></ol>
-        <footer class="panel-foot">
-          <label class="switch">
-            <input id="autoplay-toggle" type="checkbox" checked>
-            <span class="switch-track"><span class="switch-thumb"></span></span>
-            <span class="switch-text" data-i18n="autoplayScenes">Auto-play scenes</span>
-          </label>
-          <p class="keys" data-i18n-html="keysHelp">
-            <kbd>&larr;</kbd><kbd>&rarr;</kbd> change scene &middot; <kbd>P</kbd> scenes &middot;
-            <kbd>F</kbd> full screen &middot; <kbd>M</kbd> music &middot; <kbd>S</kbd> sound
-          </p>
-        </footer>
-      </aside>
+      <!-- No scene controls: the game plays through on its own (each screen moves on when it is done). -->
 
       <div id="loader">
         <div class="loader-title" data-i18n="gameName">Bookstore Journey</div>
